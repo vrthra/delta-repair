@@ -1,0 +1,336 @@
+\documentclass[sigconf,review,anonymous]{acmart}
+
+
+\usepackage{xspace}
+\usepackage{array,multirow,graphicx}
+\usepackage{float}
+\usepackage{framed}
+\setlength{\FrameSep}{3pt}
+\setlength{\OuterFrameSep}{2pt}
+\newenvironment{result}{\begin{framed}\centering\it}{\end{framed}}
+
+
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{TODO: }\emph{#1}}}
+\newcommand{\com}[1]{\textcolor{orange}{\textbf{COMMENT: }\emph{#1}}}
+\newcommand{\recheck}[1]{\textcolor{red}{#1}}
+\newcommand{\revise}[1]{\textcolor{blue}{#1}}
+
+
+\newcommand{\approach}{\textsc{Approach}\xspace}
+
+%%
+%% \BibTeX command to typeset BibTeX logo in the docs
+\AtBeginDocument{%
+  \providecommand\BibTeX{{%
+    \normalfont B\kern-0.5em{\scshape i\kern-0.25em b}\kern-0.8em\TeX}}}
+
+%% Rights management information.  This information is sent to you
+%% when you complete the rights form.  These commands have SAMPLE
+%% values in them; it is your responsibility as an author to replace
+%% the commands and values with those provided to you when you
+%% complete the rights form.
+\setcopyright{acmcopyright}
+\copyrightyear{2018}
+\acmYear{2018}
+\acmDOI{XXXXXXX.XXXXXXX}
+
+%% These commands are for a PROCEEDINGS abstract or paper.
+\acmConference[ESEC/FSE 2022]{The 30th ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering}{14 - 18 November, 2022}{Singapore}
+\acmPrice{15.00}
+\acmISBN{978-1-4503-XXXX-X/18/06}
+
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+
+\title{Input Debugging via Rich %and Fast 
+Failure Feedback}
+
+
+\author{Ben Trovato}
+\authornote{Both authors contributed equally to this research.}
+\email{trovato@corporation.com}
+\orcid{1234-5678-9012}
+\author{G.K.M. Tobin}
+\authornotemark[1]
+\email{webmaster@marysville-ohio.com}
+\affiliation{%
+  \institution{Institute for Clarity in Documentation}
+  \streetaddress{P.O. Box 1212}
+  \city{Dublin}
+  \state{Ohio}
+  \country{USA}
+  \postcode{43017-6221}
+}
+
+\author{Lars Th{\o}rv{\"a}ld}
+\affiliation{%
+  \institution{The Th{\o}rv{\"a}ld Group}
+  \streetaddress{1 Th{\o}rv{\"a}ld Circle}
+  \city{Hekla}
+  \country{Iceland}}
+\email{larst@affiliation.org}
+
+\author{Valerie B\'eranger}
+\affiliation{%
+  \institution{Inria Paris-Rocquencourt}
+  \city{Rocquencourt}
+  \country{France}
+}
+
+\author{Aparna Patel}
+\affiliation{%
+ \institution{Rajiv Gandhi University}
+ \streetaddress{Rono-Hills}
+ \city{Doimukh}
+ \state{Arunachal Pradesh}
+ \country{India}}
+
+\author{Huifen Chan}
+\affiliation{%
+  \institution{Tsinghua University}
+  \streetaddress{30 Shuangqing Rd}
+  \city{Haidian Qu}
+  \state{Beijing Shi}
+  \country{China}}
+
+\author{Charles Palmer}
+\affiliation{%
+  \institution{Palmer Research Laboratories}
+  \streetaddress{8600 Datapoint Drive}
+  \city{San Antonio}
+  \state{Texas}
+  \country{USA}
+  \postcode{78229}}
+\email{cpalmer@prl.com}
+
+\author{John Smith}
+\affiliation{%
+  \institution{The Th{\o}rv{\"a}ld Group}
+  \streetaddress{1 Th{\o}rv{\"a}ld Circle}
+  \city{Hekla}
+  \country{Iceland}}
+\email{jsmith@affiliation.org}
+
+\author{Julius P. Kumquat}
+\affiliation{%
+  \institution{The Kumquat Consortium}
+  \city{New York}
+  \country{USA}}
+\email{jpkumquat@consortium.net}
+
+%%
+%% By default, the full list of authors will be used in the page
+%% headers. Often, this list is too long, and will overlap
+%% other information printed in the page headers. This command allows
+%% the author to define a more concise list
+%% of authors' names for this purpose.
+\renewcommand{\shortauthors}{Trovato and Tobin, et al.}
+
+\date{February 2022}
+
+\begin{abstract}
+%Problem/
+%\textbf{Context:} 
+%\revise{
+Program failures are sometimes induced by %when 
+\textit{faulty inputs}, rather than \textit{buggy programs}, % are fed to \textit{valid} programs, 
+e.g., 
+%This can be 
+due to incomplete or corrupted data. When an input \textit{solely} %is responsible for the program 
+induces a failure in a valid program, the developer is saddled with the task of 
+\textit{input debugging}.  %}
+%\textbf{Objective:}  
+%\revise{
+Debugging \textit{failure-inducing inputs} involves identifying the  \textit{root cause} of the failure (e.g., the faulty input fragment)
+% causing the failure), 
+and \textit{repairing the input} such that it can be processed by the program. This is particularly difficult for structured inputs with complex input specifications (e.g., JSON).  
+%} 
+%\textbf{Methodology:} 
+%\revise{
+In this work, we present a \textit{language-agnostic, black-box} testing approach (called \approach) that leverages 
+%ich and fast 
+\textit{failure feedback} %from the program 
+to automatically debug faulty inputs. The key insight of our approach %(called \approach) 
+is to \textit{semantically} repair faulty inputs 
+%to debug inputs via %by employing %a 
+%combination of 
+%\textit{test experimentation} that leverages 
+using %leverage 
+the richness %and speed of 
+\textit{failure feedback}, %to \textit{semantically}, 
+such as 
+%Specifically, \approach uses program feedback to 
+%%. \approach employs  to identify %ing input properties such as the 
+%identify 
+the \textit{validity, incompleteness and incorrectness} checks of input fragments. 
+Given a failure-inducing input and a valid program,  
+\approach conducts test experiments semantic checks to identify %ies 
+faulty input fragments. 
+%by conducting semantic checks of input fragments (e.g., (in)completeness) using test experiments. 
+It then repairs the faulty input by removing or \textit{synthesizing} candidate input elements. % for repair.  
+\revise{In our evaluation, \todo{\approach repaired ... recovered  ...} 
+In addition, \approach overcomes the span length issue of (lexical) DDmax and outperforms DDMax by X\%, %despite %   %} In addition, \approach addresses several limitations of the state of the art, e.g., it overcomes the span length issue of (lexicial) DDmax and it does 
+without access to an input grammar (syntactic DDmax). }
+
+%\textbf{Conclusion:}
+
+
+\end{abstract}
+
+%%
+%% The code below is generated by the tool at http://dl.acm.org/ccs.cfm.
+%% Please copy and paste the code instead of the example below.
+%%
+% \begin{CCSXML}
+% <ccs2012>
+%  <concept>
+%   <concept_id>10010520.10010553.10010562</concept_id>
+%   <concept_desc>Computer systems organization~Embedded systems</concept_desc>
+%   <concept_significance>500</concept_significance>
+%  </concept>
+%  <concept>
+%   <concept_id>10010520.10010575.10010755</concept_id>
+%   <concept_desc>Computer systems organization~Redundancy</concept_desc>
+%   <concept_significance>300</concept_significance>
+%  </concept>
+%  <concept>
+%   <concept_id>10010520.10010553.10010554</concept_id>
+%   <concept_desc>Computer systems organization~Robotics</concept_desc>
+%   <concept_significance>100</concept_significance>
+%  </concept>
+%  <concept>
+%   <concept_id>10003033.10003083.10003095</concept_id>
+%   <concept_desc>Networks~Network reliability</concept_desc>
+%   <concept_significance>100</concept_significance>
+%  </concept>
+% </ccs2012>
+% \end{CCSXML}
+
+% \ccsdesc[500]{Computer systems organization~Embedded systems}
+% \ccsdesc[300]{Computer systems organization~Redundancy}
+% \ccsdesc{Computer systems organization~Robotics}
+% \ccsdesc[100]{Networks~Network reliability}
+
+%%
+%% Keywords. The author(s) should pick words that accurately describe
+%% the work being presented. Separate the keywords with commas.
+\keywords{input debugging, input repair, program failures, structured inputs}
+
+
+%% A "teaser" image appears between the author and affiliation
+%% information and the body of the document, and typically spans the
+%% page.
+% \begin{teaserfigure}
+%   \includegraphics[width=\textwidth]{sampleteaser}
+%   \caption{Seattle Mariners at Spring Training, 2010.}
+%   \Description{Enjoying the baseball game from the third-base
+%   seats. Ichiro Suzuki preparing to bat.}
+%   \label{fig:teaser}
+% \end{teaserfigure}
+
+%%
+%% This command processes the author and affiliation and title
+%% information and builds the first part of the formatted document.
+\maketitle
+
+\section{Introduction}
+
+\section{Overview}
+
+\section{Approach}
+
+\section{Experimental Setup}
+\label{sec:experimental-setup}
+
+\smallskip\noindent
+\textbf{Research Questions: } 
+\revise{
+XXXXX 
+}
+
+
+\noindent
+\textbf{RQ1 Effectiveness:} \revise{How effective is our approach (\approach) in repairing failure-inducing inputs?}
+
+
+\noindent
+\textbf{RQ2 Data Recovery and Loss:} \revise{
+}
+
+\noindent
+\textbf{RQ3 Efficiency:} \revise{
+}
+
+
+\noindent
+\textbf{RQ3 Diagnostic Quality:} \revise{
+}
+
+
+\noindent
+\textbf{RQ4 Baseline Comparison (DDmax):} \revise{How does \approach compare to the ... 
+}
+
+
+
+\noindent
+\textbf{Baseline (DDMax):}
+
+\noindent
+\textbf{Subject Programs and Commits:}
+
+
+\noindent
+\textbf{Metrics and Measure}
+
+\noindent
+\textbf{Implementation Details and Platform:}
+
+\noindent
+\textbf{Research Protocol:} 
+
+
+\section{Experimental Results}
+
+\section{Discussion}
+
+\section{Threats to Validity}
+Our approach (\approach) and empirical evaluations may be limited by the following validity threats:
+
+\noindent
+\textbf{External Validity:}
+
+\noindent
+\textbf{Internal Validity:}
+
+
+\noindent
+\textbf{Construct Validity:}
+
+
+\section{Related Work}
+
+\section{Conclusion}
+\todo{XXXX }
+
+\revise{We provide our tool, data and experimental results for easy replication, scrutiny and reuse:
+}
+
+ \begin{center}
+ \vspace{-0.2mm}
+     \textbf{\url{https://github.com/XXX}}
+ \end{center}
+ 
+% \begin{acks}
+% % To Robert, for the bagels and explaining CMYK and color spaces.
+% \end{acks}
+
+%%
+%% The next two lines define the bibliography style to be used, and
+%% the bibliography file.
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{sample-base}
+
+
+\end{document}
