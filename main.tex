@@ -310,6 +310,17 @@ Our approach (\approach) and empirical evaluations may be limited by the followi
 
 
 \section{Related Work}
+\label{sec:related_work}
+%TODO In this chapter, we discuss...
+
+\begin{description}
+
+\item[Input Rectification] is the process of transforming misbehaving inputs into inputs that behave predictably in the scope of a certain software system.
+    In \textit{Automatic Input Rectification}~\cite{Long:2012:AIR:2337223.2337233} and \emph{Living in the Comfort Zone}~\cite{Rinard:2007:LCZ:1297027.1297072}, input constraints are learned from valid inputs to solve this problem, which are used to transform malicious inputs into rectified inputs that satisfy learned constraints.
+    We do not employ such constraint learning techniques in \bfr.
+    Instead, we employ the knowledge of a grammar describing the input file format and the feedback of a subject program to transform the input files into an acceptable subset.
+    Instead of transforming inputs to comply to security-critical constraints, our goal is to recover as much of the input file as possible.
+\end{description}
 
 \section{Conclusion}
 \todo{XXXX }
@@ -330,7 +341,7 @@ Our approach (\approach) and empirical evaluations may be limited by the followi
 %% The next two lines define the bibliography style to be used, and
 %% the bibliography file.
 \bibliographystyle{ACM-Reference-Format}
-\bibliography{sample-base}
+\bibliography{bibliography}
 
 
 \end{document}
