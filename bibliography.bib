@@ -757,3 +757,58 @@ urldate = {2018-07-26}
   year={2003},
   organization={Elsevier}
 }
+
+@INPROCEEDINGS{8812141,
+    author={Tomassi, David A. and Dmeiri, Naji and Wang, Yichen and Bhowmick, Antara and Liu, Yen-Chuan and Devanbu, Premkumar T. and Vasilescu, Bogdan and Rubio-González, Cindy},
+    booktitle={2019 IEEE/ACM 41st International Conference on Software Engineering (ICSE)},
+    title={BugSwarm: Mining and Continuously Growing a Dataset of Reproducible Failures and Fixes},
+    year={2019},
+    volume={},
+    number={},
+    pages={339-349},
+    doi={10.1109/ICSE.2019.00048}
+}
+
+@inproceedings{10.1145/3180155.3180156,
+author = {Banken, Herman and Meijer, Erik and Gousios, Georgios},
+title = {Debugging Data Flows in Reactive Programs},
+year = {2018},
+isbn = {9781450356381},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3180155.3180156},
+doi = {10.1145/3180155.3180156},
+abstract = {Reactive Programming is a style of programming that provides developers with a set of abstractions that facilitate event handling and stream processing. Traditional debug tools lack support for Reactive Programming, leading developers to fallback to the most rudimentary debug tool available: logging to the console.In this paper, we present the design and implementation of RxFiddle, a visualization and debugging tool targeted to Rx, the most popular form of Reactive Programming. RxFiddle visualizes the dependencies and structure of the data flow, as well as the data inside the flow. We evaluate RxFiddle with an experiment involving 111 developers. The results show that RxFiddle can help developers finish debugging tasks faster than with traditional debugging tools.},
+booktitle = {Proceedings of the 40th International Conference on Software Engineering},
+pages = {752–763},
+numpages = {12},
+keywords = {reactive programming, debugging, visualization, program comprehension},
+location = {Gothenburg, Sweden},
+series = {ICSE '18}
+}
+
+@misc{gopinath2020fuzzing,
+      title={Fuzzing with Fast Failure Feedback}, 
+      author={Rahul Gopinath and Bachir Bendrissou and Björn Mathis and Andreas Zeller},
+      year={2020},
+      eprint={2012.13516},
+      archivePrefix={arXiv},
+      primaryClass={cs.SE}
+}
+
+@inproceedings{10.1145/3377811.3380329,
+author = {Kirschner, Lukas and Soremekun, Ezekiel and Zeller, Andreas},
+title = {Debugging Inputs},
+year = {2020},
+isbn = {9781450371216},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3377811.3380329},
+doi = {10.1145/3377811.3380329},
+abstract = {When a program fails to process an input, it need not be the program code that is at fault. It can also be that the input data is faulty, for instance as result of data corruption. To get the data processed, one then has to debug the input data---that is, (1) identify which parts of the input data prevent processing, and (2) recover as much of the (valuable) input data as possible. In this paper, we present a general-purpose algorithm called ddmax that addresses these problems automatically. Through experiments, ddmax maximizes the subset of the input that can still be processed by the program, thus recovering and repairing as much data as possible; the difference between the original failing input and the "maximized" passing input includes all input fragments that could not be processed. To the best of our knowledge, ddmax is the first approach that fixes faults in the input data without requiring program analysis. In our evaluation, ddmax repaired about 69% of input files and recovered about 78% of data within one minute per input.},
+booktitle = {Proceedings of the ACM/IEEE 42nd International Conference on Software Engineering},
+pages = {75–86},
+numpages = {12},
+location = {Seoul, South Korea},
+series = {ICSE '20}
+}

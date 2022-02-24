@@ -5,6 +5,9 @@
 \usepackage{array,multirow,graphicx}
 \usepackage{float}
 \usepackage{framed}
+\usepackage{cleveref}
+\usepackage{boxedminipage}
+\usepackage[inline]{enumitem}
 \setlength{\FrameSep}{3pt}
 \setlength{\OuterFrameSep}{2pt}
 \newenvironment{result}{\begin{framed}\centering\it}{\end{framed}}
@@ -19,6 +22,18 @@
 \newcommand{\approach}{\textsc{Approach}\xspace}
 \def\bfr{bFuzzerRepairer\xspace}
 \def\ddmin{DDMin\xspace}
+
+% Boxes around letters
+\definecolor{light-gray}{gray}{0.87}
+\makeatletter
+\newcommand\letterboxed[1]{%
+\setlength{\fboxsep}{0pt}%
+  \@tfor\@ii:=#1\do{%
+    \fcolorbox{white}{light-gray}{\texttt{\strut\@ii}}%
+  }%
+}
+\makeatother
+
 
 %%
 %% \BibTeX command to typeset BibTeX logo in the docs
@@ -237,7 +252,60 @@ without access to an input grammar (syntactic DDmax). }
 \maketitle
 
 \section{Introduction}
+% TODO ...
 
+One example for such an algorithm that localizes faults in failure-inducing inputs is \emph{Delta-Debugging}~\cite{Zeller:2002:SIF:506201.506206}.
+It minimizes an input that induces a failure in a subject program while the minimized inputs still trigger the same bug.
+In a similar manner, \emph{DDMax}~\cite{10.1145/3377811.3380329} is a modification of the Delta-Debugging algorithm that, instead of minimizing test cases, maximizes failure-inducing input files while not triggering failures in the subject program.
+
+A problem of DDMax is that it only supports deleting parts of the file under test while repairing the file.
+Especially for highly-structured input formats like the JSON file seen in \Cref{fig:bad-json-input}, it is often the case that by inserting a simple character in the file, more information can be recovered in the file than by just deleting characters.
+
+The \emph{bFuzzer} algorithm~\cite{gopinath2020fuzzing} is an input generator that determines valid continuations for input prefixes by making use of rich failure feedback.
+The subject program does not only give feedback whether an input is accepted or not, but also whether the input is incorrect or incomplete.
+Based on this input generation algorithm, \bfr makes use of this rich failure feedback to allow both insertions and deletions at the fault location.
+In the example seen in \Cref{fig:bad-json-input-repaired}, \bfr first determines a valid (incomplete) prefix of the input file, i.e., \texttt{\{ "name": "Dave"}.
+It then tries to append characters such that the prefix stays valid - in this example, \letterboxed{\}} and \letterboxed{,} are tried to be inserted.
+Then, as much of the original file is appended to the prefix, until it becomes valid (and the rest of the original file is either appended, or deleted successively).
+This results in the final repaired file seen in \Cref{fig:bad-json-input-repaired}.
+
+\begin{figure}[t]
+\begin{center}
+\letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}
+\end{center}
+%\vspace{-0.6\baselineskip}
+\caption{Failing JSON input}
+\label{fig:bad-json-input}
+\end{figure}
+
+\begin{figure}[t]
+\begin{center}
+\letterboxed{\{\ "name":\ "Daveage"\ \}}
+\end{center}
+%\vspace{-0.6\baselineskip}
+\caption{Failing input repaired with DDMax}
+\label{fig:bad-json-input-ddmax}
+\end{figure}
+
+\begin{figure}[t]
+\begin{center}
+\letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}}
+\end{center}
+%\vspace{-0.6\baselineskip}
+\caption{Failing input repaired with \bfr}
+\label{fig:bad-json-input-repaired}
+\end{figure}
+
+\begin{figure}[t]
+\begin{center}
+\letterboxed{,}
+\end{center}
+%\vspace{-0.6\baselineskip}
+\caption{Difference between failing and repaired input}
+\label{fig:bad-json-input-diff}
+\end{figure}
+
+%TODO
 \section{Overview}
 
 \section{Approach}
