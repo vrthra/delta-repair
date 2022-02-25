@@ -326,8 +326,10 @@ Particularly, we pose the following \textit{research questions} (RQ):
 % concerning the performance of \approach:
 
 \noindent
-\textbf{RQ1 Effectiveness \& Efficiency:} 
-How effective is our approach (\approach) in repairing failure-inducing inputs? How effective is our approach, i.e., what is the time performance of \approach ?
+\textbf{RQ1 Effectiveness:}  %\& Efficiency:} 
+How effective is our approach (\approach) in repairing invalid %failure-inducing 
+inputs? 
+%How effective is our approach, i.e., what is the time performance of \approach ?
 
 \noindent
 \textbf{RQ2 Data Recovery \& Loss:} 
@@ -350,7 +352,7 @@ How effective is our approach in identifying the \textit{root cause} of invalid 
 \noindent
 \textbf{RQ4 Comparison to the state-of-the-art:} 
 %\revise{
-How does \approach compare to the state-of-the-art input debugging techniques, in terms of effcectivness, efficiency, data recovery and diagnosis?
+How does \approach compare to the state-of-the-art input debugging techniques, in terms of effectiveness, efficiency, data recovery and diagnosis?
 %i.e., (DDMax \recheck{and Ddmin})?}
 %\\
 
@@ -385,18 +387,43 @@ In this work, we compare the performance of our approach to the state-of-the-art
 \textbf{Research Protocol:} 
 
 
+
+\begin{table}[!tbp]\centering
+\caption{Details of Failure-inducing Inputs}
+\begin{tabular}{|l | r | r | r | r |}
+\hline
+&  \multicolumn{4}{c|}{\textbf{Number of Invalid Inputs}}  \\
+\textbf{Type of Invalid Inputs} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+\textbf{Real-Word Inputs} & 101 & 107 & 50 & 148 \\
+\textbf{Single Mutation} & 50 & 50 & 50 & 50 \\
+\textbf{Multiple Mutations} & 50 & 50 & 50 & 50 \\
+\hline
+\textbf{Total } (806) & 201 & 207 & 150 & 248 \\
+\hline
+\end{tabular}
+\label{tab:input-details}
+\vspace{-0.5cm}
+\end{table}
+
 \section{Experimental Results}
 
-In this section, we discuss the findings %results 
+In this section, we 
+discuss the %findings %
+results 
 of our empirical evaluations. 
 % for each of the posed research questions. 
 
 \noindent
 \textbf{RQ1 Effectiveness:} 
-We evaluate the effectiveness of our approach using \recheck{807} invalid input files from \recheck{four} inout formats (namely) .  
+We evaluate the effectiveness of our approach using \recheck{806} invalid input files from \recheck{four} input formats, namely INI, JSON, SEXP, and TINYC.  \recheck{Table X} provides details of the number of real-world and mutated invalid inputs for each input format. In this experiment, 
 %and efficiency of our approach 
-Specifically, we measure total number of repaired files for all four input formats. We also compare the effectiveness of \approach to that of \recheck{four} state-of-the-art techniques, namely the error-recovery of the subject program (\textit{baseline}) and \textit{ANTLR}, as well as the two maximizing variants of delta debugging, i.e., \textit{lexical ddmax} and \textit{syntactic ddmax}. 
-
+%Specifically, 
+we measure the total number of files repaired by our approach, in comparison to the number of repairs achieved % compare to %as well as 
+the state-of-the-art techniques,  
+%for all four input formats. We also compare the effectiveness of \approach to that of \recheck{four} state-of-the-art techniques, 
+namely the built-in error-recovery of the subject program (called \textit{baseline}) and \textit{ANTLR}, and % as well as 
+the two maximizing variants of delta debugging, i.e., \textit{lexical ddmax} and \textit{syntactic ddmax}.   \recheck{Table X} and \recheck{Figure X} highlight the (overall) effectiveness of each approach, as well as their effectiveness  for each input format. 
 % to determine the strengths %and complementarity 
 %of our approach. 
 % and the time taken to achieve this repair. 
@@ -405,9 +432,9 @@ Specifically, we measure total number of repaired files for all four input forma
 \todo{tables and figures}
 
 In our evaluation, %we found that 
-\textit{our approach (\approach) is highly effective in repairing invalid input files, it repaired about four out of every five invalid input}. \approach repaired about \recheck{81\% (650 out of 807)} of invalid inputs, and also \textit{outperformed all four state-of-the art-techniques by up to \recheck{X\%}}. 
+\textit{our approach (\approach) is highly effective in repairing invalid input files, it repaired about four out of every five invalid input}. \approach repaired about \recheck{81\% (650 out of 806)} of invalid inputs, and also \textit{outperformed all four state-of-the art-techniques by up to \recheck{X\%}}. 
 On one hand, \approach is about 20x as effective as the error recovery of the subject programs (33 repairs), and about almost twice as (or 43\% more) effective than ANTLR's inbuilt error-recovery strategy (344 repairs). On the other hand, our approach outperformed the second most effective technique (\textit{ddmax}) by up to \recheck{18\%}. \approach is 18\% and seven percent more effective than lexical ddmax (69\%) and syntactic ddmax (75\%), respectively. 
-In summary, these results suggest that (a) \approach is highly effective in repairing invalid input files, (b) our approach more effective than the baselines, and (c) the combination of rich failure feedback and input synthesis outperforms is important for the repair of invalid input files. 
+In summary, these results suggest that (a) \approach is highly effective in repairing invalid input files, (b) our approach more effective than the baselines, and (c) the combination of rich failure feedback and input synthesis is important for the effective repair of invalid input files. 
 
 \begin{result}
 \approach is highly effective in repairing invalid input files: %, and more effective than the state-of-the-art. 
@@ -415,7 +442,29 @@ It repaired four out of five (81\%) invalid inputs and it is up to 18\% more eff
 \end{result}
 
 
-\noindent \textit{Efficiency:}
+\begin{table}[!tbp]\centering
+\caption{Details of Repaired Invalid %Failure-inducing 
+Inputs}
+\begin{tabular}{|l | l | r | r | r | r | r | r |}
+\hline
+&  \multicolumn{5}{c|}{\textbf{Number of Repaired Inputs}}  \\
+\textbf{Technique(s)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} & \textbf{Total} \\
+\hline
+\textbf{Both} &  201 & 105 & 121 & 84 & 511 \\
+\textbf{Ddmax Only} & 0 & 17 & 3 & 22 & 42 \\
+\textbf{\approach Only} & 0 & 68 & 1 & 70 & 139 \\
+\hline
+\textbf{Total Repaired} & 201 & 190 &  125 & 176 & 692 \\
+\hline
+%\textbf{Total Unrepaired} &  0 & 17 & 25 & 72 & 114 \\
+%\hline
+\end{tabular}
+\label{tab:repair-complementary}
+%\vspace{-0.5cm}
+\end{table}
+
+
+\noindent \textit{Compleme:}
 
 \begin{result}
 
