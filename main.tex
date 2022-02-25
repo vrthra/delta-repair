@@ -174,7 +174,7 @@ is to \textit{semantically} repair faulty inputs
 %combination of 
 %\textit{test experimentation} that leverages 
 using %leverage 
-the richness %and speed of 
+the richness of %and speed of 
 \textit{failure feedback}, %to \textit{semantically}, 
 such as 
 %Specifically, \approach uses program feedback to 
@@ -182,7 +182,8 @@ such as
 %identify 
 the \textit{validity, incompleteness and incorrectness} checks of input fragments. 
 Given a failure-inducing input and a valid program,  
-\approach conducts test experiments semantic checks to identify %ies 
+\approach performs %conducts %test experiments 
+semantic checks of input subsets to identify %ies 
 faulty input fragments. 
 %by conducting semantic checks of input fragments (e.g., (in)completeness) using test experiments. 
 It then repairs the faulty input by removing or \textit{synthesizing} candidate input elements. % for repair.  
@@ -256,7 +257,7 @@ without access to an input grammar (syntactic DDmax). }
 
 One example for such an algorithm that localizes faults in failure-inducing inputs is \emph{Delta-Debugging}~\cite{Zeller:2002:SIF:506201.506206}.
 It minimizes an input that induces a failure in a subject program while the minimized inputs still trigger the same bug.
-In a similar manner, \emph{DDMax}~\cite{10.1145/3377811.3380329} is a modification of the Delta-Debugging algorithm that, instead of minimizing test cases, maximizes failure-inducing input files while not triggering failures in the subject program.
+In a similar manner, \emph{DDMax}~\cite{kirschner2020debugging} is a modification of the Delta-Debugging algorithm that, instead of minimizing test cases, maximizes failure-inducing input files while not triggering failures in the subject program.
 
 A problem of DDMax is that it only supports deleting parts of the file under test while repairing the file.
 Especially for highly-structured input formats like the JSON file seen in \Cref{fig:bad-json-input}, it is often the case that by inserting a simple character in the file, more information can be recovered in the file than by just deleting characters.
@@ -313,39 +314,62 @@ This results in the final repaired file seen in \Cref{fig:bad-json-input-repaire
 \section{Experimental Setup}
 \label{sec:experimental-setup}
 
+This section describes the experimental setup of this work. 
+
 \smallskip\noindent
 \textbf{Research Questions: } 
-\revise{
-XXXXX 
-}
-
-
-\noindent
-\textbf{RQ1 Effectiveness:} \revise{How effective is our approach (\approach) in repairing failure-inducing inputs?}
-
+In this paper, %addresses the following
+we evaluate the effectiveness, efficiency, data recovery and diagnostic quality of our approach, %as well as,
+%and 
+we also evaluate how it compares to the state-of-the-art techniques. 
+Particularly, we pose the following \textit{research questions} (RQ):
+% concerning the performance of \approach:
 
 \noindent
-\textbf{RQ2 Data Recovery and Loss:} \revise{
-}
+\textbf{RQ1 Effectiveness \& Efficiency:} 
+How effective is our approach (\approach) in repairing failure-inducing inputs? How effective is our approach, i.e., what is the time performance of \approach ?
 
 \noindent
-\textbf{RQ3 Efficiency:} \revise{
-}
+\textbf{RQ2 Data Recovery \& Loss:} 
+%\revise{
+How much input data is recovered by \approach, and how much input data loss is incurred?
+%}
 
-
-\noindent
-\textbf{RQ3 Diagnostic Quality:} \revise{
-}
-
-
-\noindent
-\textbf{RQ4 Baseline Comparison (DDmax):} \revise{How does \approach compare to the ... 
-}
-
-
+%\noindent
+%\textbf{RQ3 Efficiency:} 
+%%\revise{
+%How effective is our approach, i.e., what is the time performance of \approach ?
+%%}
 
 \noindent
-\textbf{Baseline (DDMax):}
+\textbf{RQ3 Diagnostic Quality:} 
+%\revise{
+How effective is our approach in identifying the \textit{root cause} of invalid inputs, especially in comparison to the state-of-the-art methods (DDmin and DDmax)?
+%}
+
+\noindent
+\textbf{RQ4 Comparison to the state-of-the-art:} 
+%\revise{
+How does \approach compare to the state-of-the-art input debugging techniques, in terms of effcectivness, efficiency, data recovery and diagnosis?
+%i.e., (DDMax \recheck{and Ddmin})?}
+%\\
+
+\noindent
+\textbf{State-of-the-art:} 
+In this work, we compare the performance of our approach to the state-of-the-art techniques. Specifically, we compare to (a) the built-in error-recovery technique of the subject programs (\textit{baseline}), (b) the inbuilt error recovery strategy of the ANTLR parser generator (\textit{ANTLR})~\cite{}, (c) the minimizing variant of delta debugging (DDMin)~\cite{} and (d) three variants of the maximizing variant of delta debugging (DDMax)~\cite{kirschner2020debugging}.
+
+\todo{cite and create command shortcuts for the state-of-the-art}
+
+\noindent \textit{Baseline:}
+
+\noindent \textit{ANTLR:}
+
+\noindent \textit{DDMin:}
+
+\noindent \textit{DDMax:}
+
+
+
 
 \noindent
 \textbf{Subject Programs and Commits:}
@@ -362,6 +386,85 @@ XXXXX
 
 
 \section{Experimental Results}
+
+In this section, we discuss the findings %results 
+of our empirical evaluations. 
+% for each of the posed research questions. 
+
+\noindent
+\textbf{RQ1 Effectiveness:} 
+We evaluate the effectiveness of our approach using \recheck{807} invalid input files from \recheck{four} inout formats (namely) .  
+%and efficiency of our approach 
+Specifically, we measure total number of repaired files for all four input formats. We also compare the effectiveness of \approach to that of \recheck{four} state-of-the-art techniques, namely the error-recovery of the subject program (\textit{baseline}) and \textit{ANTLR}, as well as the two maximizing variants of delta debugging, i.e., \textit{lexical ddmax} and \textit{syntactic ddmax}. 
+
+% to determine the strengths %and complementarity 
+%of our approach. 
+% and the time taken to achieve this repair. 
+
+%\noindent \textit{Effectiveness:} 
+\todo{tables and figures}
+
+In our evaluation, %we found that 
+\textit{our approach (\approach) is highly effective in repairing invalid input files, it repaired about four out of every five invalid input}. \approach repaired about \recheck{81\% (650 out of 807)} of invalid inputs, and also \textit{outperformed all four state-of-the art-techniques by up to \recheck{X\%}}. 
+On one hand, \approach is about 20x as effective as the error recovery of the subject programs (33 repairs), and about almost twice as (or 43\% more) effective than ANTLR's inbuilt error-recovery strategy (344 repairs). On the other hand, our approach outperformed the second most effective technique (\textit{ddmax}) by up to \recheck{18\%}. \approach is 18\% and seven percent more effective than lexical ddmax (69\%) and syntactic ddmax (75\%), respectively. 
+In summary, these results suggest that (a) \approach is highly effective in repairing invalid input files, (b) our approach more effective than the baselines, and (c) the combination of rich failure feedback and input synthesis outperforms is important for the repair of invalid input files. 
+
+\begin{result}
+\approach is highly effective in repairing invalid input files: %, and more effective than the state-of-the-art. 
+It repaired four out of five (81\%) invalid inputs and it is up to 18\% more effective than the best baseline. 
+\end{result}
+
+
+\noindent \textit{Efficiency:}
+
+\begin{result}
+
+\end{result}
+
+\noindent
+\textbf{RQ2 Data Recovery \& Loss:} 
+
+\begin{result}
+
+\end{result}
+
+
+\noindent
+\textbf{RQ3 Diagnostic Quality:} 
+
+\begin{result}
+XXXX
+XXXX
+\end{result}
+
+
+%\noindent
+%\textbf{RQ4 Comparison to the state-of-the-art:} 
+%
+%
+%\noindent \textit{ Effectiveness \& Efficiency:}
+%\begin{result}
+%
+%\end{result}
+%%
+%%\noindent \textit{Efficiency:}
+%%\begin{result}
+%%
+%%\end{result}
+%
+%\noindent \textit{Data Recovery \& Loss:}
+%
+%\begin{result}
+%
+%\end{result}
+%
+%\noindent \textit{Diagnostic Quality:}
+%
+%\begin{result}
+%
+%\end{result}
+
+
 
 \section{Discussion}
 
