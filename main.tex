@@ -694,12 +694,28 @@ Inputs}
 &  \multicolumn{5}{c|}{\textbf{Number of Repaired Inputs}}  \\
 \textbf{Technique(s)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} & \textbf{Total (\%)} \\
 \hline
-\textbf{Both} &  201 & 105 & 121 & 84 & 511 (74\%) \\
-\textbf{Ddmax Only} & 0 & 17 & 3 & 22 & 42 (6\%) \\
-\textbf{\approach Only} & 0 & 68 & 1 & 70 & 139 (20\%) \\
+\textbf{Lex. ddmax } & 0 & 3 & 0 & 3 & 6  (0.8\%) \\
+\textbf{Syn. ddmax } & 0 & 6 & 23 & 12 & 41  (5.6\%)  \\
+\textbf{\approach } & 0 & 27 & 0 & 63 & 90 (12.3\%)  \\
 \hline
-\textbf{Total Repaired} & 201 & 190 &  125 & 176 & 692  \\
+\textbf{Lex. $\cap$ Syn.} & 0 & 14 & 3 & 19 & 36  (4.9\%) \\
+\textbf{Lex. $\cap$ Appr.} & 0 & 26 & 0 & 3 & 29  (4.0\%) \\
+\textbf{Syn. $\cap$ Appr.} & 0 & 41 & 1 & 7 & 49  (6.7\%) \\
 \hline
+\textbf{All 3 techs.}
+%Lex. $\cap$ Syn. $\cap$ Appr.} 
+& 201 & 79 & 121 & 81 & 482  (65.8\%)\\
+%\textbf{Both} &  201 & 105 & 121 & 84 & 511 (74\%) \\
+%\textbf{Ddmax Only} & 0 & 17 & 3 & 22 & 42 (6\%) \\
+%\textbf{\approach Only} & 0 & 68 & 1 & 70 & 139 (20\%) \\
+\hline
+\textbf{All Repairs} & 201 & 196 & 148 & 188 &  733  (N/A)\\
+\hline
+%\textbf{No Repairs} & 0 & 2 & 11 & 60 & 73 \\
+%\hline
+%\textbf{Total Repaired} & & & & & \\
+%\textbf{Total Repaired} & 201 & 190 &  125 & 176 & 692  \\
+%\hline
 %\textbf{Total Unrepaired} &  0 & 17 & 25 & 72 & 114 \\
 %\hline
 \end{tabular}
@@ -709,10 +725,18 @@ Inputs}
 
 
 
-\begin{figure*}[!tbp]
+\begin{figure}[!tbp]
 \vspace{-0.1cm}
 \centering
 \includegraphics[width=0.45\textwidth]{figures/effectiveness.png}
+\caption{Number of files repaired by each approach}
+\label{fig:repair-effectiveness}
+%\vspace{-0.6cm}
+\end{figure}
+
+\begin{figure}[!tbp]
+\vspace{-0.4cm}
+\centering
 \begin{minipage}[b]{0.45\textwidth}
     \centering
     \begin{tikzpicture}[circ/.style={draw=black,line width=1pt,fill=none,shape=circle,minimum width=2.5cm,minimum height=2.5cm},lbl/.style={font=\bfseries}]
@@ -732,11 +756,12 @@ Inputs}
         \node[lbl] at ($(g3.center) + (0,.2)$) {90};
     \end{tikzpicture}
 \end{minipage}
-%\vspace{-0.6cm}
-\caption{The total number of files that could be repaired for each approach}
+\vspace{-0.4cm}
+\caption{Venn Diagram showing the number of invalid inputs repaired (solely) by a (combinations of) technique(s) %, or the combination of approaches
+}
 \label{fig:repair-complementarity}
-%\vspace{-0.6cm}
-\end{figure*}
+\vspace{-0.4cm}
+\end{figure}
 
 %\begin{figure}[!tbp]
 %\vspace{-0.1cm}
@@ -749,12 +774,37 @@ Inputs}
 %\vspace{-0.6cm}
 %\end{figure}
 
-\noindent \textit{Complementarity to Ddmax:} In our evaluation, we found that \textit{one in five (20\% of) invalid inputs could be repaired solely by \approach}. \autoref{tab:repair-complementarity} and \autoref{fig:repair-complementarity} highlight the complementarity of \approach to ddmax. 
+\noindent \textit{Complementarity to Ddmax:} We further inspect repairs achieved by each approach, in order to understand their complementarity. In this experiment, we inspect the number of unique repairs achieved \textit{solely} by a single approach (e.g., \textit{only} \approach), or two or more approaches (e.g., all approaches).  The goal is to determine if there are sets of inputs that are solely repaired by a single approach. \autoref{fig:repair-complementarity} and \autoref{tab:repair-complementarity} highlights our findings on complementarity. 
+%demonstrate that our approach complements 
+%the complementarity of our approach to 
+%DDmax. 
 
+In our evaluation, we found that about 12\% of all repairs could only be completed by \approach, which is is up to 15 times as many as DDmax repairs (\textit{see} \autoref{fig:repair-complementarity}). 
+%our 
+\approach solely repaired more than 
+%for %repairs 
+\textit{one in every eight} invalid inputs (12\% of repairs), %\approach is the solely repaired them, 
+%i.e., 
+all of which ddmax could not repair. % these inputs. %. In addition, \approach \textit{solely} repairs 
+%which 
+%This is up to 15 times as many as DDmax repairs.
+\autoref{tab:repair-complementarity} shows that for lexical ddmax, our approach \textit{solely} repaired 15x as many invalid files as lexical ddmax (90 versus six), while it repairs more than twice as many files as syntactic ddmax (90 versus 41). 
+% \textit{one in five (20\% of) invalid inputs could be repaired solely by \approach}. \autoref{tab:repair-complementarity} and \autoref{fig:repair-complementarity} highlight the complementarity of \approach to ddmax. 
+These findings show that our approach not only outperforms ddmax, it is also complementary to ddmax. This is evident since it solely completes (12\% of) repairs that could not be completed by the state-of-the-art (ddmax). Further 
+%experiment 
+inspection suggests that this unique repairs are due to the\textit{ rich failure feedback} and \textit{repair via insertion} components of \approach. 
+%insertion and 
+
+% performance   
 
 
 \begin{result}
-
+%Our input repair 
+\approach 
+%not only outperforms the baseline, but 
+outperforms and complements the best state-of-the-art method (ddmax).
+%\approach 
+It is the only technique that can solely complete 12\% of all repairs, which is up to 15 times as many as ddmax. 
 \end{result}
 
 \noindent
