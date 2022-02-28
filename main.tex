@@ -642,7 +642,7 @@ In this work, we compare the performance of our approach to the state-of-the-art
 %\textbf{Total \#Repairs} & 763  & 510  & 490  & 425 &  2188 \\ 			
 %\hline
 \end{tabular}
-\label{tab:effectivness}
+\label{tab:effectiveness}
 %\vspace{-0.5cm}
 \end{table}
 
@@ -666,19 +666,27 @@ we measure the total number of files repaired by our approach, in comparison to
 four state-of-the-art techniques,  
 %for all four input formats. We also compare the effectiveness of \approach to that of \recheck{four} state-of-the-art techniques, 
 namely the built-in error-recovery of the subject program (called \textit{baseline}) and \textit{ANTLR}, and % as well as 
-the two maximizing variants of delta debugging, i.e., \textit{lexical ddmax} and \textit{syntactic ddmax}.   \recheck{Table X} and \recheck{Figure X} highlight the (overall) effectiveness of each approach, as well as their effectiveness  for each input format. 
+the two maximizing variants of delta debugging, i.e., \textit{lexical ddmax} and \textit{syntactic ddmax}.   \autoref{tab:effectiveness} and \autoref{fig:effectiveness} highlight the (overall) effectiveness of each approach %, as well as their effectiveness 
+for each input format. 
 % to determine the strengths %and complementarity 
 %of our approach. 
 % and the time taken to achieve this repair. 
 
 %\noindent \textit{Effectiveness:} 
-\todo{tables and figures}
+%\todo{tables and figures}
 
 \noindent \textit{Repair Effectiveness:} In our evaluation, %we found that 
-\textit{our approach (\approach) is highly effective in repairing invalid input files, it repaired about four out of every five invalid input}. \approach repaired about \recheck{81\% (650 out of 806)} of invalid inputs, and also \textit{outperformed all four state-of-the art-techniques by up to \recheck{X\%}}. 
-On one hand, \approach is about 20x as effective as the error recovery of the subject programs (33 repairs), and about almost twice as (or 43\% more) effective than ANTLR's inbuilt error-recovery strategy (344 repairs). On the other hand, our approach outperformed the second most effective technique (\textit{ddmax}) by up to \recheck{18\%}. \approach is 18\% and seven percent more effective than lexical ddmax (69\%) and syntactic ddmax (75\%), respectively. 
+\textit{our approach (\approach) is highly effective in repairing invalid input files, it repaired about four out of every five invalid input}. \approach repaired about \recheck{81\% (650 out of 806)} of invalid inputs, and it is \textit{up to 20 times more effective than %outperformed all four 
+the state-of-the art-techniques}. 
+\autoref{tab:effectiveness} 
+%illustrates these results. 
+shows that for most (three out of four) input formats, our approach performed best (except for SExp).  \approach is up to 45\% and 29\% more effective than lexical and syntactic ddmax %for two input formats 
+%(CJSON and TinyC), 
+respectively.  
+% and shows that for 
+On one hand, \approach is about 20x as effective as the error recovery of the subject programs (33 repairs), and almost twice as (or 43\% more) effective than ANTLR's inbuilt error-recovery strategy (344 repairs). On the other hand, our approach outperformed the second most effective technique (\textit{ddmax}) by up to \recheck{18\%}. \approach is 18\% and seven percent more effective than lexical ddmax (69\%) and syntactic ddmax (75\%), respectively. 
 In summary, these results suggest that %(a) \approach is highly effective in repairing invalid input files, (b) our approach more effective than the baselines, and (c) 
-the combination of rich failure feedback and input synthesis is important for the effective repair of invalid input files, this is evident by the effectiveness of \approach in comparison to the baselines.  
+the \textit{combination of rich failure feedback and input synthesis} is important for the effective repair of invalid input files, this is evident by the effectiveness of \approach in comparison to the baselines.  
 
 \begin{result}
 \approach is highly effective in repairing invalid input files: %, and more effective than the state-of-the-art. 
@@ -730,7 +738,7 @@ Inputs}
 \centering
 \includegraphics[width=0.45\textwidth]{figures/effectiveness.png}
 \caption{Number of files repaired by each approach}
-\label{fig:repair-effectiveness}
+\label{fig:effectiveness}
 %\vspace{-0.6cm}
 \end{figure}
 
