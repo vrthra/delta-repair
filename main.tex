@@ -5,6 +5,9 @@
 \usepackage{array,multirow,graphicx}
 \usepackage{float}
 \usepackage{framed}
+\usepackage{tikz}
+\usetikzlibrary{calc,positioning}
+\usepackage{hyperref}
 \usepackage{cleveref}
 \usepackage{boxedminipage}
 \usepackage[inline]{enumitem}
@@ -22,6 +25,43 @@
 \newcommand{\approach}{\textsc{Approach}\xspace}
 \def\bfr{bFuzzerRepairer\xspace}
 \def\ddmin{DDMin\xspace}
+\newcommand{\ddmax}{\textit{ddmax}\xspace}
+\newcommand{\ddmaxg}{\textit{ddmaxg}\xspace}
+\newcommand{\bsimple}{\textit{bsimple}\xspace}
+\newcommand{\brepair}{\textit{brepair}\xspace}
+
+\usepackage{pifont}
+\newcommand{\pass}{\text{\ding{52}}\xspace}
+\newcommand{\fail}{\text{\ding{56}}\xspace}
+
+\tikzset{inlinenode/.style={draw=white,text=black,fill=light-gray,inner sep=.1em,outer sep=0em}}
+\newcommand{\inlinenode}[1]{\text{\hspace{.1em}\tikz[baseline=(n.base)]{\node[inlinenode] (n) {\strut \hspace*{.3em}#1\hspace*{.3em}};}\hspace{.1em}}}
+\newcommand{\inlinetext}[1]{\text{\hspace{.1em}\tikz[baseline=(n.base)]{\node[inlinenode] (n) {\strut \hspace*{.3em}\letterboxed{#1}\hspace*{.3em}};}\hspace{.1em}}}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=0.3pt] (char) {#1};}}
+
+\tikzset{%
+gparsetreenode/.style={minimum width=6mm,minimum height=5mm},
+lparsetreenode/.style={gparsetreenode,rectangle,draw=white,text=black,fill=white,align=center},
+lparsetreeerrornode/.style={lparsetreenode,font=\bfseries},
+lparsetreephantomnode/.style={gparsetreenode,edge from parent/.append style={draw=none},shape=coordinate,minimum width=15mm},
+lparsetreestrikethrough/.style={draw=black,thick},
+lparsetreedeletednode/.style={lparsetreenode,append after command={\pgfextra \draw[lparsetreestrikethrough] (\tikzlastnode.north west) -- (\tikzlastnode.south east); \draw[lparsetreestrikethrough] (\tikzlastnode.north east) -- (\tikzlastnode.south west);\endpgfextra}},
+lparsetree/.style={node distance=5mm,level distance=10mm,every node/.style={lparsetreenode},edge from parent/.style={draw=black,-latex,shorten >=.5mm}
+},
+lflowchartnode/.style={lparsetreenode,draw=black,rounded corners=.5pt},
+blockdiagramlines/.style={draw,stroke=black,line width=1.2pt},
+blockdiagramarrow/.style={blockdiagramlines,->},
+blockdiagramdashedarrow/.style={blockdiagramarrow,dashed},
+blockdiagramannot/.style={blockdiagramlines,text=black,align=center},
+blockdiagramblock/.style={lflowchartnode,blockdiagramannot,minimum width=1.5cm,minimum height=0.5cm,text width=1.9cm},
+blockdiagrammicroblock/.style={blockdiagramannot,font=\tiny,minimum width=1.5cm,minimum height=.5cm,rounded corners=.5pt},
+blockdiagramarrowcaption/.style={font=\scriptsize\sffamily,inner sep=1.5pt,text=black},
+blockdiagramouterbox/.style={blockdiagramlines,densely dotted,line width=.7pt},
+blockdiagramouterboxcaption/.style={blockdiagramarrowcaption,font=\itshape\scriptsize,inner sep=1pt},
+pics/numbering/.style args={#1}{code={
+    \node[draw=black,shape=circle,fill=white,text=black,font=\ttfamily\scriptsize,inner sep=1pt,text width=8pt,align=center,outer sep=0] (-number) {#1};
+}}}
 
 % Boxes around letters
 \definecolor{light-gray}{gray}{0.87}
@@ -352,7 +392,142 @@ Then, \bfr tries both inserting the \letterboxed{\}} from the original file and 
 \section{Experimental Setup}
 \label{sec:experimental-setup}
 
+%TODO This is copied from ddmax, change?
+\begin{figure*}[t]
+\newlength\nodedst\setlength\nodedst{.5cm}
+\newlength\ndist\setlength\ndist{.1\nodedst}
+\def\arrowsep{0.12cm}
+\begin{tikzpicture}[node distance=\nodedst]
+%\small \centering
+    %Blocks----------
+    \node[blockdiagramblock] at (0,0) (corr) {Corrupted\\files};
+
+    \node[shape=coordinate, right=1.5 of corr] (ddmaxanchor) {};
+    \node[blockdiagramblock,above=0 of ddmaxanchor,anchor=south west] (ddmaxg) {\ddmax};
+    \node[blockdiagramblock,below=.25 of ddmaxanchor,anchor=north west] (ddmax) {\brepair};
+    \node[blockdiagramblock,above=.5 of ddmaxg] (parsetree) {Parse Tree};
+    \node[blockdiagramblock,above=.25 of parsetree] (antlr) {ANTLR};
+    \node[blockdiagramblock,above=.25 of antlr] (cfg) {Grammar};
+    \node[blockdiagramblock,right=1.5 of parsetree] (output) {Repaired\\File};
+    \node[blockdiagramblock,below=1 of output] (subject) {Subject\\Program};
+    \node[right=1.5 of subject.east,yshift=\arrowsep] (succ) {\pass};
+    \node[below=2 * \arrowsep of succ.center,anchor=center] (fail) {\fail};
+    \node[blockdiagramblock,above=1.5 of output] (diff) {Differencing};
+    \node[align=left,anchor=north west] at (succ.west |- diff.north) (distance) {Size Change\\Levenshtein};
+    \node[blockdiagramblock,above=.5 of corr] (mutator) {Mutate};
+    \node[blockdiagramblock,anchor=south west] at (mutator.west |- cfg.center) (working) {Valid\\crawled Files};
+    \node[blockdiagramblock,below=.25 of ddmax.south west, anchor=north west] (ddmin) {\ddmin};
+    \node[blockdiagramblock,below=.5 of corr] (realworld) {Real-World\\invalid files};
+    \node[align=left,anchor=west,yshift=-\arrowsep] at (subject.west |- ddmin.east) (minsizechg) {Diagnosis Size};
+    \node[blockdiagramblock,left=1 of corr.west,anchor=east] (filter) {Filter};
+    \node[blockdiagramblock,anchor=south east] at (filter.east |- mutator.south) (crawledall) {All\\crawled files};
+    %Arrows------------
+    \draw[blockdiagramarrow] (crawledall) -- (filter);
+    \draw[blockdiagramarrow] ([yshift=\arrowsep]filter.east) to[out=0,in=180] (working.west);
+    \draw[blockdiagramarrow] ([yshift=-\arrowsep]filter.east) to[out=0,in=180] (realworld.west);
+    \draw[blockdiagramarrow] (cfg) -- (antlr);
+    \draw[blockdiagramarrow] ([yshift=\arrowsep]corr.east) to[out=0,in=180,looseness=1.1] ([yshift=\arrowsep]antlr.west);
+    \draw[blockdiagramarrow] ([yshift=-\arrowsep]corr.east) to[out=0,in=180] ([yshift=\arrowsep]ddmax.west);
+    \draw[blockdiagramarrow] ([yshift=\arrowsep]ddmax.east) to[out=0,in=180] ([yshift = -2 * \arrowsep]output.west);
+    \draw[blockdiagramarrow] ([yshift=\arrowsep]ddmaxg.east) to[out=0,in=180] ([yshift = 0 * \arrowsep]output.west);
+    \draw[blockdiagramarrow] ([yshift=0 * \arrowsep]parsetree.east) to[out=0,in=180] ([yshift = 2 * \arrowsep]output.west);
+    \draw[blockdiagramarrow] (antlr) -- (parsetree);
+    \draw[blockdiagramarrow] (output) to[out=270,in=90] (subject);
+    \draw[blockdiagramarrow] (output) to[out=90,in=270] (diff);
+    \draw[blockdiagramarrow] (parsetree) -- (ddmaxg);
+    \draw[blockdiagramarrow] (working) -- (mutator);
+    \draw[blockdiagramarrow] (mutator) -- (corr);
+    \node[shape=coordinate] at (diff.center -| cfg.west) (diffanchor) {};
+    \draw[blockdiagramarrow] (working.east |- diff.west) -- (diff.west);
+    \draw[blockdiagramdashedarrow] (diff) -- (diff.east -| distance.west);
+    \draw[blockdiagramdashedarrow] ([yshift=0*\arrowsep]subject.west) to[out=180,in=0] node[blockdiagramarrowcaption,pos=.5,anchor=south,align=center]{} ([yshift=-\arrowsep]ddmax.east);
+    \draw[blockdiagramdashedarrow] ([yshift=1.5*\arrowsep]subject.west) to[out=180,in=0] node[blockdiagramarrowcaption,pos=.5,anchor=south,align=center]{} ([yshift=-\arrowsep]ddmaxg.east);
+    \draw[blockdiagramdashedarrow] ([yshift=-1.5*\arrowsep]subject.west) to[out=180,in=0] node[blockdiagramarrowcaption,pos=.5,anchor=south,align=center]{} ([yshift=\arrowsep]ddmin.east);
+    \draw[blockdiagramdashedarrow] ([yshift=\arrowsep]subject.east) to[out=0,in=180] (succ.west);
+    \draw[blockdiagramdashedarrow] ([yshift=-\arrowsep]subject.east) to[out=0,in=180] (fail.west);
+    \draw[blockdiagramdashedarrow] ([yshift=-\arrowsep]ddmin.east) to[out=0,in=180] (minsizechg.west);
+%    \draw[blockdiagramarrow] (corr) to[out=270,in=180] ([yshift=-1\nodedst]ddmin.south west) to[] ([yshift=-1\nodedst]ddmin.south east) to[out=0,in=270,looseness=.5] (subject);
+    \draw[blockdiagramarrow] ([yshift=1.5*\arrowsep]realworld.east) to[out=0,in=180,looseness=.9] ([yshift=-\arrowsep]antlr.west);
+    \draw[blockdiagramarrow] ([yshift=0*\arrowsep]realworld.east) to[out=0,in=180] ([yshift=-\arrowsep]ddmax.west);
+    \draw[blockdiagramarrow] ([yshift=-1.5*\arrowsep]realworld.east) to[out=0,in=180] ([yshift=0*\arrowsep]ddmin.west);
+    %Outer Boxes
+    \draw[blockdiagramouterbox] ([xshift=-1.5 * \arrowsep,yshift=-1.5 * \arrowsep]subject.south west) rectangle ([xshift=1.5 * \arrowsep,yshift=1.5 * \arrowsep]diff.north east) node[blockdiagramouterboxcaption,anchor=south east,pos=1] {Test Driver};
+    \draw[blockdiagramouterbox] ([xshift=-1.5 * \arrowsep,yshift=-1.5 * \arrowsep]ddmin.south west) rectangle ([xshift=1.5 * \arrowsep,yshift=1.5 * \arrowsep]ddmaxg.north east) node[blockdiagramouterboxcaption,anchor=north west,pos=0] {Repair algorithms};
+    \draw[blockdiagramouterbox] ([xshift=-1.5 * \arrowsep,yshift=-1.5 * \arrowsep]parsetree.south west) rectangle ([xshift=1.5 * \arrowsep,yshift=1.5 * \arrowsep]cfg.east |- diff.north) node[blockdiagramouterboxcaption,anchor=south east,pos=1] {ANTLR};
+    %Numberings-----------------------
+    \draw[draw=none] (mutator.south east) -- (corr.north west) pic[pos=.5,xshift=-.5\nodedst] {numbering=2};
+    \draw[draw=none] (parsetree.north west) -- (antlr.south west) pic[pos=.4,xshift=-.2\nodedst] {numbering=3};
+    \draw[draw=none] (corr.north east) -- (ddmax.west) pic[pos=.7] {numbering=4};
+    \draw[draw=none] (ddmax.north east) -- (subject.west) pic[pos=.6] {numbering=5};
+    \draw[draw=none] (diff.south) -- (output.north east) pic[pos=.2,xshift=.2\nodedst] {numbering=6};
+    \draw[draw=none] (subject.south east) -- (fail.south west) pic[pos=.7,yshift=-.1\nodedst] {numbering=7};
+    \draw[draw=none] (ddmin.south west) -- (realworld.south east) pic[pos=.1,yshift=-.1\nodedst] {numbering=8};
+    \draw[draw=none] (filter.east) -- (corr.west) pic[pos=.4] {numbering=1};
+\end{tikzpicture}
+% \vspace*{-0.1in}
+    \caption{Workflow of the \ddmax evaluation}\label{fig:ddmax_flowchart}
+    % \vspace*{-0.1in}
+\end{figure*}
+\newcommand{\refnumber}[1]{\hyperref[fig:ddmax_flowchart]{Step~#1}}
+
+
 This section describes the experimental setup of this work. 
+
+\subsubsection*{\bf Workflow}
+\Cref{fig:ddmax_flowchart} shows the workflow of our evaluation.
+We first crawl a large set of real-world invalid files and select seed files according to \Cref{sec:prevalence}.
+The seed files are filtered into valid and invalid files (\refnumber{1}).
+Duplicates and files that have a wrong format are deleted beforehand.
+Then, for each format, 50 valid \textit{crawled files} are selected and mutated using one mutation and up to 16 mutations to produce two additional sets of corrupted input files (\refnumber{2}).
+We feed each invalid file to each subject program, and an \textit{ANTLR} parser (\refnumber{3}).
+\textit{ANTLR} executes its default \textit{error recovery strategy} to recover from errors while generating a parse tree for the input.
+Next, we feed the invalid file to the repair algorithms, i.e., \textit{lexical} \ddmax, \textit{syntactic} \ddmax and the \brepair and \bsimple algorithms (\refnumber{4}).
+The repair algorithms test the input under repair repeatedly using the rich failure feedback from the subject program (\refnumber{5}).
+Then, we feed the unmutated original files and the resulting repaired file from each technique to the \textit{differencing} framework (\refnumber{6}), which computes the \textit{change in file size} and \textit{Levenshtein distance} for both files.
+We also save the feedback from the subject program (\refnumber{7}).
+Finally, we execute \ddmin on the real-world invalid inputs (\refnumber{8}) and report the content and size of the result.
+
+We implemented the repair algorithms in 2.1k~LOC of  \texttt{Java} code.
+\textit{ANTLR} also implements an inbuilt error recovery strategy which is designed to recover from lexing or parsing errors (e.g. missing/wrong tokens or incomplete parse trees)~\cite{antlrjavadocdefaulterrorstrategy}.
+%The real-world corrupted files are treated differently from the artificially mutated files, because we do not have working reference files for each corrupted file (i.e. the unmutated version of each file). We feed the corrupted real-world files into our \textit{lexical \ddmax} and evaluate the change in file size (i.e. the data loss on byte-level). We cannot evaluate the other metrics without unmutated files.
+
+%TODO This is copied from ddmax, -->change?:
+\subsubsection*{\bf Mutations}
+In addition to the real-world invalid inputs (\textit{cf. \Cref{sec:prevalence}}), we also simulate real-world data corruption by applying \textit{byte-level} mutations on valid input files.
+These mutations were chosen because they are similar to the corruptions observed in real-world invalid files (\textit{see \Cref{sec:prevalence} and \Cref{sec:diagnosis}}).
+We perform the following mutations at a random position in each valid input file: \textit{byte insertion}, \textit{byte deletion} and \textit{byte flip}.
+To simulate \textit{single data corruption}, we randomly choose one of these mutations and apply it once on the valid input file.
+For \textit{multiple data corruptions}, we perform up to 16~random mutations on each input file.
+A mutation is only successful (for an input format), if \textit{at least} one of the subject programs (that passes before) fails after the mutation.
+These criteria are similar to how we collected invalid input files in the wild.
+
+\subsubsection*{\bf Metrics and Measures}
+To determine the quality of repaired files, we use the following metrics and tools:
+\begin{enumerate}
+    \item \textbf{File Size Difference: } We evaluate the difference in \textit{file size} of the \emph{recovered inputs} of the different repair algorithms and the original \textit{valid input}.
+    We use these measurements to account for the amount of data recovered as well as the amount of data loss incurred.
+\item \textbf{Levenshtein Distance: } Additionally, we measure the data loss between \textit{valid input} and \textit{repaired file} using the Levenshtein distance~\cite{levDistance}.
+\end{enumerate}
+
+\subsubsection*{\bf Research Protocol}
+For each input format, we collect real-world invalid input files.
+We also collect 50 valid real-world inputs and mutate those into a set with single and up to 16 multiple mutations.
+Then, we execute all files on the subject programs, in order to determine the number of input files which fail for each subject program.
+We proceed to run the repair algorithms on each invalid or mutated input file.
+In particular, we are interested in determining the following:
+%\begin{enumerate}
+%\item[a] 
+(1.) \textit{\textbf{Baseline:}} the number of invalid input files which are accepted by a subject program as \textit{valid inputs} (i.e. non-failure-inducing inputs processed by the program without leading to a crash), in order to measure the \textit{effectiveness} of the built-in \textit{error recovery} feature of the program;  and
+%\item[b]  
+(2.) \textit{\textbf{ANTLR:}} the number of invalid inputs which are repaired by ANTLR inbuilt \textit{error recovery strategy};
+%\item[c]  
+(3) \textit{\textbf{bRepair:}} the number of invalid inputs which are repaired by \brepair.
+
+We conducted the experiments on a Dell Precision 7510 
+with four physical CPU cores %(8~virtual cores) 
+and 32GB of RAM, specifically an Intel(R) Core i7 6820hq @ 2.70GHz, 8~virtual cores, running 64-bit Arch Linux.
+%All our prototypes are single-threaded.
+
 
 \smallskip\noindent
 \textbf{Research Questions: } 
