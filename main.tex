@@ -488,22 +488,25 @@ and 32GB of RAM, specifically an Intel(R) Core i7 6820hq @ 2.70GHz, 8~virtual co
 \smallskip\noindent
 \textbf{Research Questions: } 
 In this paper, %addresses the following
-we evaluate the effectiveness, efficiency, data recovery and diagnostic quality of our approach, %as well as,
+we investigate the effectiveness, data recovery, diagnostic quality and efficiency of our approach via several experiments. For each experiment, %as well as,
 %and 
-we also evaluate how it compares to the state-of-the-art techniques. 
-Particularly, we pose the following \textit{research questions} (RQ):
+we also examine how \approach compares to the state-of-the-art techniques, namely \textit{baseline} (built-in repair of subject programs), \textit{ANTLR}'s error recovery strategy, lexical ddmax and syntactic ddmax.  
+%Particularly, 
+To this end, we pose the following \textit{research questions} (RQ):
 % concerning the performance of \approach:
 
 \noindent
 \textbf{RQ1 Effectiveness:}  %\& Efficiency:} 
 How effective is our approach (\approach) in repairing invalid %failure-inducing 
-inputs? 
+inputs, and how does it compare to the state-of-the-art methods? 
 %How effective is our approach, i.e., what is the time performance of \approach ?
 
 \noindent
 \textbf{RQ2 Data Recovery \& Loss:} 
 %\revise{
-How much input data is recovered by \approach, and how much input data loss is incurred?
+How much input data is recovered by \approach, and how much input data loss is incurred?  Does it recover as much data as the 
+%the data recovery of \approach compare to 
+the state-of-the-art methods?
 %}
 
 %\noindent
@@ -517,13 +520,27 @@ How much input data is recovered by \approach, and how much input data loss is i
 %\revise{
 How effective is our approach in identifying the \textit{root cause} of invalid inputs, especially in comparison to the state-of-the-art methods (DDmin and DDmax)?
 %}
+%
+%\noindent
+%\textbf{RQ4 Comparison to the state-of-the-art:} 
+%%\revise{
+%How does \approach compare to the state-of-the-art input debugging techniques, in terms of effectiveness, efficiency, data recovery and diagnosis?
+%%i.e., (DDMax \recheck{and Ddmin})?}
+%\\
 
 \noindent
-\textbf{RQ4 Comparison to the state-of-the-art:} 
+\textbf{RQ4 Efficiency:} %ectiveness:} 
 %\revise{
-How does \approach compare to the state-of-the-art input debugging techniques, in terms of effectiveness, efficiency, data recovery and diagnosis?
+What is the efficiency (time performance) of 
+%How does 
+\approach? Is it as effective as the 
+%especially in comparison %compare 
+%to 
+the state-of-the-art %input debugging 
+techniques?
+%, in terms of effectiveness, efficiency, data recovery and diagnosis?
 %i.e., (DDMax \recheck{and Ddmin})?}
-%\\
+
 
 \noindent
 \textbf{State-of-the-art:} 
@@ -631,7 +648,7 @@ for each input format.
 %\noindent \textit{Effectiveness:} 
 %\todo{tables and figures}
 
-\noindent \textit{Repair Effectiveness:} In our evaluation, %we found that 
+\noindent \textbf{\textit{Repair Effectiveness:}} In our evaluation, %we found that 
 \textit{our approach (\approach) is highly effective in repairing invalid input files, it repaired about four out of every five invalid input}. \approach repaired about \recheck{81\% (650 out of 806)} of invalid inputs, and it is \textit{up to 20 times more effective than %outperformed all four 
 the state-of-the art-techniques}. 
 \autoref{tab:effectiveness} 
@@ -770,14 +787,15 @@ BRepair    201    173      122          154
 %\vspace{-0.6cm}
 %\end{figure}
 
-\noindent \textit{Complementarity to Ddmax:} We further inspect repairs achieved by each approach, in order to understand their complementarity. In this experiment, we inspect the number of unique repairs achieved \textit{solely} by a single approach (e.g., \textit{only} \approach), or two or more approaches (e.g., all approaches).  The goal is to determine if there are sets of inputs that are solely repaired by a single approach. \autoref{fig:repair-complementarity} and \autoref{tab:repair-complementarity} highlights our findings on complementarity. 
+\noindent \textbf{\textit{Complementarity to Ddmax:}} We further inspect the unique repairs achieved by each approach, in order to understand the complementarity of our approach to the state-of-the-art methods. In this experiment, we inspect the number of unique repairs achieved \textit{solely} by a single approach (e.g., \textit{only} \approach), or two or more approaches (e.g., all approaches).  The goal is to determine if there are unique sets of inputs that are solely repaired by a single approach, and not by other approaches. \autoref{fig:repair-complementarity} and \autoref{tab:repair-complementarity} highlight our findings on the complementarity of \approach to ddmax. 
+%to the state-of-the-art.
 %demonstrate that our approach complements 
 %the complementarity of our approach to 
 %DDmax. 
 
 In our evaluation, we found that about 12\% of all repairs could only be completed by \approach, which is is up to 15 times as many as DDmax repairs (\textit{see} \autoref{fig:repair-complementarity}). 
 %our 
-\approach solely repaired more than 
+\approach \textit{solely} repaired more than 
 %for %repairs 
 \textit{one in every eight} invalid inputs (12\% of repairs), %\approach is the solely repaired them, 
 %i.e., 
@@ -786,9 +804,10 @@ all of which ddmax could not repair. % these inputs. %. In addition, \approach \
 %This is up to 15 times as many as DDmax repairs.
 \autoref{tab:repair-complementarity} shows that for lexical ddmax, our approach \textit{solely} repaired 15x as many invalid files as lexical ddmax (90 versus six), while it repairs more than twice as many files as syntactic ddmax (90 versus 41). 
 % \textit{one in five (20\% of) invalid inputs could be repaired solely by \approach}. \autoref{tab:repair-complementarity} and \autoref{fig:repair-complementarity} highlight the complementarity of \approach to ddmax. 
-These findings show that our approach not only outperforms ddmax, it is also complementary to ddmax. This is evident since it solely completes (12\% of) repairs that could not be completed by the state-of-the-art (ddmax). Further 
+These findings show that our approach not only outperforms ddmax, but it is also complementary to ddmax: It solely repairs 90 (11\% of all) invalid inputs, all of which ddmax could not repair. %This is evident since it solely completes (12\% of) repairs that could not be completed by the state-of-the-art (ddmax). 
+Further 
 %experiment 
-inspection suggests that this unique repairs are due to the\textit{ rich failure feedback} and \textit{repair via insertion} components of \approach. 
+inspection suggests that this unique repairs achieved by \approach are due to the \textit{rich failure feedback} and \textit{repair via insertion} synergy of \approach. 
 %insertion and 
 
 % performance   
