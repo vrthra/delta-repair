@@ -190,54 +190,76 @@ pics/numbering/.style args={#1}{code={
 \date{February 2022}
 
 \begin{abstract}
-%Problem/
-%\textbf{Context:} 
-%\revise{
-Program failures are sometimes induced by %when 
-\textit{faulty inputs}, rather than \textit{buggy programs}, % are fed to \textit{valid} programs, 
-e.g., 
-%This can be 
-due to incomplete or corrupted data. When an input \textit{solely} %is responsible for the program 
-induces a failure in a valid program, the developer is saddled with the task of 
-\textit{input debugging}.  %}
-%\textbf{Objective:}  
-%\revise{
-Debugging \textit{failure-inducing inputs} involves identifying the  \textit{root cause} of the failure (e.g., the faulty input fragment)
-% causing the failure), 
-and \textit{repairing the input} such that it can be processed by the program. This is particularly difficult for structured inputs with complex input specifications (e.g., JSON).  
-%} 
-%\textbf{Methodology:} 
-%\revise{
-In this work, we present a \textit{language-agnostic, black-box} testing approach (called \approach) that leverages 
-%ich and fast 
-\textit{failure feedback} %from the program 
-to automatically debug faulty inputs. The key insight of our approach %(called \approach) 
-is to \textit{semantically} repair faulty inputs 
-%to debug inputs via %by employing %a 
-%combination of 
-%\textit{test experimentation} that leverages 
-using %leverage 
-the richness of %and speed of 
-\textit{failure feedback}, %to \textit{semantically}, 
-such as 
-%Specifically, \approach uses program feedback to 
-%%. \approach employs  to identify %ing input properties such as the 
-%identify 
-the \textit{validity, incompleteness and incorrectness} checks of input fragments. 
-Given a failure-inducing input and a valid program,  
-\approach performs %conducts %test experiments 
-semantic checks of input subsets to identify %ies 
-faulty input fragments. 
-%by conducting semantic checks of input fragments (e.g., (in)completeness) using test experiments. 
-It then repairs the faulty input by removing or \textit{synthesizing} candidate input elements. % for repair.  
-\revise{In our evaluation, \todo{\approach repaired ... recovered  ...} 
-In addition, \approach overcomes the span length issue of (lexical) DDmax and outperforms DDMax by X\%, %despite %   %} In addition, \approach addresses several limitations of the state of the art, e.g., it overcomes the span length issue of (lexicial) DDmax and it does 
-without access to an input grammar (syntactic DDmax). }
+Data cleansing and data repair are some of the most intensive tasks in many
+fields that aggregate data from multiple resources. In many cases, the data may
+be entered by hand, and is often almost parsable by machines. In such cases, a
+data engineer has to manually repair the corrupt data such that it follows a
+given format, and hence processable by the next program. Such manual repair can
+be time consuming, and error-prone.
 
-%\textbf{Conclusion:}
+In this work, we show how to incorporate error-feedback to parsers such that
+the feedback is sufficient to repair the input string with maximal closeness to
+the semantics of input data.
 
+Given nothing but a conforming program, and a corrupt input, our \approach
+provides a set of repairs prioritized by the distance of the repair from the
+original input.
 
+We show that our approach can remove the limitations inherent in ddmax, the
+previously best known approach. In our evaluation of \approach, we found that
+it can outperform ddmax in input repair, and can repair all input corruptions
+that were induced.
 \end{abstract}
+
+% \begin{abstract}
+% %Problem/
+% %\textbf{Context:} 
+% %\revise{
+% Program failures are sometimes induced by %when 
+% \textit{faulty inputs}, rather than \textit{buggy programs}, % are fed to \textit{valid} programs, 
+% e.g., 
+% %This can be 
+% due to incomplete or corrupted data. When an input \textit{solely} %is responsible for the program 
+% induces a failure in a valid program, the developer is saddled with the task of 
+% \textit{input debugging}.  %}
+% %\textbf{Objective:}  
+% %\revise{
+% Debugging \textit{failure-inducing inputs} involves identifying the  \textit{root cause} of the failure (e.g., the faulty input fragment)
+% % causing the failure), 
+% and \textit{repairing the input} such that it can be processed by the program. This is particularly difficult for structured inputs with complex input specifications (e.g., JSON).  
+% %} 
+% %\textbf{Methodology:} 
+% %\revise{
+% In this work, we present a \textit{language-agnostic, black-box} testing approach (called \approach) that leverages 
+% %ich and fast 
+% \textit{failure feedback} %from the program 
+% to automatically debug faulty inputs. The key insight of our approach %(called \approach) 
+% is to \textit{semantically} repair faulty inputs 
+% %to debug inputs via %by employing %a 
+% %combination of 
+% %\textit{test experimentation} that leverages 
+% using %leverage 
+% the richness of %and speed of 
+% \textit{failure feedback}, %to \textit{semantically}, 
+% such as 
+% %Specifically, \approach uses program feedback to 
+% %%. \approach employs  to identify %ing input properties such as the 
+% %identify 
+% the \textit{validity, incompleteness and incorrectness} checks of input fragments. 
+% Given a failure-inducing input and a valid program,  
+% \approach performs %conducts %test experiments 
+% semantic checks of input subsets to identify %ies 
+% faulty input fragments. 
+% %by conducting semantic checks of input fragments (e.g., (in)completeness) using test experiments. 
+% It then repairs the faulty input by removing or \textit{synthesizing} candidate input elements. % for repair.  
+% \revise{In our evaluation, \todo{\approach repaired ... recovered  ...} 
+% In addition, \approach overcomes the span length issue of (lexical) DDmax and outperforms DDMax by X\%, %despite %   %} In addition, \approach addresses several limitations of the state of the art, e.g., it overcomes the span length issue of (lexicial) DDmax and it does 
+% without access to an input grammar (syntactic DDmax). }
+% 
+% %\textbf{Conclusion:}
+% 
+% 
+% \end{abstract}
 
 %%
 %% The code below is generated by the tool at http://dl.acm.org/ccs.cfm.
