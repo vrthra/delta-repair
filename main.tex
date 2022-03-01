@@ -730,14 +730,15 @@ BRepair    201    173      122          154
     reverse legend=true,
     xticklabels from table={\effectivenessdata}{Label},
     xticklabel style={text width=2cm,align=center,font=\footnotesize},
+    xtick style={draw=none},
 ]
-    \addplot [pattern=north east lines] table [y=INI, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addplot [fill=darkgray] table [y=INI, meta=Label, x expr=\coordindex] {\effectivenessdata};
     \addlegendentry{INI}
-    \addplot [pattern=grid] table [y=cJSON, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addplot [fill=gray] table [y=cJSON, meta=Label, x expr=\coordindex] {\effectivenessdata};
     \addlegendentry{cJSON}
-    \addplot [pattern=north west lines] table [y=SExpParser, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addplot [fill=lightgray] table [y=SExpParser, meta=Label, x expr=\coordindex] {\effectivenessdata};
     \addlegendentry{SExpParser}
-    \addplot [pattern=dots,nodes near coords,point meta=y] table [y=TinyC, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addplot [fill=white,nodes near coords,point meta=y] table [y=TinyC, meta=Label, x expr=\coordindex] {\effectivenessdata};
     \addlegendentry{TinyC}
 \end{axis}
 \end{tikzpicture}
