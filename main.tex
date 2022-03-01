@@ -5,7 +5,7 @@
 \usepackage{array,multirow,graphicx}
 \usepackage{float}
 \usepackage{framed}
-\usepackage{tikz}
+\usepackage{tikz,pgfplots,pgfplotstable}
 \usetikzlibrary{calc,positioning}
 \usepackage{hyperref}
 \usepackage{cleveref}
@@ -678,7 +678,40 @@ Inputs}
 \begin{figure}[!tbp]
 \vspace{-0.1cm}
 \centering
-\includegraphics[width=0.45\textwidth]{figures/effectiveness.png}
+%\includegraphics[width=0.45\textwidth]{figures/effectiveness.png}
+\pgfplotstableread{
+Label      INI    cJSON    SExpParser   TinyC
+Baseline   27     6        0            0
+ANTLR      133    69       96           46
+Lex.ddmax  201    122      124          106
+Syn.ddmax  201    140      148          119
+BRepair    201    173      122          154
+    }\effectivenessdata
+\begin{minipage}{.45\textwidth}
+\begin{tikzpicture}
+
+    \begin{axis}[
+        ybar stacked,
+        ymin=0,
+        ymax=750,
+        xtick=data,
+        legend style={cells={anchor=west}, legend pos=north west},
+        reverse legend=true,
+        xticklabels from table={\effectivenessdata}{Label},
+        xticklabel style={text width=2cm,align=center,font=\footnotesize},
+    ]
+    \addplot [fill=green!80] table [y=INI, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addlegendentry{INI}
+    \addplot [fill=blue!60] table [y=cJSON, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addlegendentry{cJSON}
+    \addplot [fill=orange!60] table [y=SExpParser, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addlegendentry{SExpParser}
+    \addplot [fill=red!60,nodes near coords,point meta=y] table [y=TinyC, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addlegendentry{TinyC}
+
+    \end{axis}
+    \end{tikzpicture}
+\end{minipage}
 \caption{Number of files repaired by each approach}
 \label{fig:effectiveness}
 %\vspace{-0.6cm}
