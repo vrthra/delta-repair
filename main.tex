@@ -400,8 +400,8 @@ Then, \bfr tries both inserting the \letterboxed{\}} from the original file and 
 \def\arrowsep{0.20cm}
 \begin{tikzpicture}[node distance=\nodedst]
     \node[blockdiagramblock,font=\normalfont\scriptsize] (search) {Search longest incomplete prefix};
-    \node[blockdiagramblock,right=2 of search] (pop) {Pop element from PQ};
-    \draw[blockdiagramarrow] (search) -- (pop) node[simpletext,pos=.5,above,font=\scriptsize] {Push prefix to PQ};
+    \node[blockdiagramblock,right=3 of search.north east] (pop) {Pop element from PQ};
+    \draw[blockdiagramarrow] ([yshift=-\arrowsep]search.north east) -- ([yshift=-\arrowsep]pop.west |- search.north east) node[simpletext,pos=.5,above,font=\scriptsize] {Push prefix to PQ};
     \node[blockdiagramblock,right=of pop] (correct) {Input is correct?};
     \draw[blockdiagramarrow] (pop) -- (correct);
     \node[simpletext,right=of correct] (return) {Return input};
@@ -410,9 +410,14 @@ Then, \bfr tries both inserting the \letterboxed{\}} from the original file and 
     \node[blockdiagramblock,left=of tryDelete] (tryNewInsert) {Insert Character};
     \draw[blockdiagramarrow] (correct) -- (return) node[simpletext,pos=.4,above] {\pass};
     \draw[blockdiagramarrow] (correct) -- (tryOrigInsert) node[simpletext,pos=.4,right] {\fail};
-    \draw[blockdiagramarrow] ([xshift=-2 * \arrowsep]tryOrigInsert.north) to[out=90,in=270,looseness=0.4] node[simpletext,pos=.5,above,sloped,inner sep=1pt] {Incomplete?} (search);
+    \draw[blockdiagramarrow] ([xshift=-2 * \arrowsep]tryOrigInsert.south) to[out=270,in=315,looseness=0.6] node[simpletext,pos=.5,below,sloped,inner sep=1pt] {Incomplete?} ($(tryNewInsert.south west) - (.7,.3)$) to[out=135,in=270] (search);
     \draw[blockdiagramarrow] (tryOrigInsert) -- (tryDelete);
     \draw[blockdiagramarrow] (tryDelete) -- (tryNewInsert);
+    \node[simpletext,below=.3 of tryDelete.south,inner sep=1pt] (pqins1) {push PQ};
+    \draw[blockdiagramarrow,dashed] (tryDelete) -- (pqins1);
+    \node[simpletext,above=.5 of tryNewInsert,inner sep=1pt] (pqins2) {push PQ};
+    \draw[blockdiagramarrow,dashed] (tryNewInsert) -- (pqins2) node[simpletext,left,pos=.5] {Incomplete?};
+    \draw[blockdiagramarrow] ([xshift=2 * \arrowsep]tryNewInsert.north) to[out=90,in=270] (pop);
     %TODO
 \end{tikzpicture}
 % \vspace*{-0.1in}
