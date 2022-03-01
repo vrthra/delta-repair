@@ -6,7 +6,7 @@
 \usepackage{float}
 \usepackage{framed}
 \usepackage{tikz,pgfplots,pgfplotstable}
-\usetikzlibrary{calc,positioning}
+\usetikzlibrary{calc,positioning,patterns}
 \usepackage{hyperref}
 \usepackage{cleveref}
 \usepackage{boxedminipage}
@@ -689,29 +689,27 @@ BRepair    201    173      122          154
     }\effectivenessdata
 \begin{minipage}{.45\textwidth}
 \begin{tikzpicture}
-
-    \begin{axis}[
-        ybar stacked,
-        ymin=0,
-        ymax=750,
-        xtick=data,
-        bar width=25,
-        legend style={cells={anchor=west}, legend pos=north west},
-        reverse legend=true,
-        xticklabels from table={\effectivenessdata}{Label},
-        xticklabel style={text width=2cm,align=center,font=\footnotesize},
-    ]
-    \addplot [fill=green!80] table [y=INI, meta=Label, x expr=\coordindex] {\effectivenessdata};
+\begin{axis}[
+    ybar stacked,
+    ymin=0,
+    ymax=750,
+    xtick=data,
+    bar width=25,
+    legend style={cells={anchor=west}, legend pos=north west},
+    reverse legend=true,
+    xticklabels from table={\effectivenessdata}{Label},
+    xticklabel style={text width=2cm,align=center,font=\footnotesize},
+]
+    \addplot [pattern=north east lines] table [y=INI, meta=Label, x expr=\coordindex] {\effectivenessdata};
     \addlegendentry{INI}
-    \addplot [fill=blue!60] table [y=cJSON, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addplot [pattern=grid] table [y=cJSON, meta=Label, x expr=\coordindex] {\effectivenessdata};
     \addlegendentry{cJSON}
-    \addplot [fill=orange!60] table [y=SExpParser, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addplot [pattern=north west lines] table [y=SExpParser, meta=Label, x expr=\coordindex] {\effectivenessdata};
     \addlegendentry{SExpParser}
-    \addplot [fill=red!60,nodes near coords,point meta=y] table [y=TinyC, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addplot [pattern=dots,nodes near coords,point meta=y] table [y=TinyC, meta=Label, x expr=\coordindex] {\effectivenessdata};
     \addlegendentry{TinyC}
-
-    \end{axis}
-    \end{tikzpicture}
+\end{axis}
+\end{tikzpicture}
 \end{minipage}
 \caption{Number of files repaired by each approach}
 \label{fig:effectiveness}
