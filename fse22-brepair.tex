@@ -652,11 +652,15 @@ results
 of our empirical evaluations. 
 % for each of the posed research questions. 
 
+\todo{RQ1: we need to discuss the number of repair attempts or input fragments tested for feedback for \approach versus ddmax}
+
 \noindent
 \textbf{RQ1 Effectiveness:} 
 We evaluate the effectiveness of our approach using 806 invalid input files belonging to four different input formats, namely INI, cJSON, SExp, and TinyC.  \autoref{tab:input-details} provides details of the %number of 
 %real-world and mutated 
-invalid inputs used for each input format. In this experiment, 
+invalid inputs used for each input format. 
+We also examine the contribution of the insertion  of input elements (i.e., input synthesis) to the effectiveness of our approach. 
+In this experiment, 
 %and efficiency of our approach 
 %Specifically, 
 we measure the total number of files repaired by our approach, in comparison to 
@@ -666,6 +670,7 @@ four state-of-the-art techniques,
 namely the built-in error-recovery of the subject program (called \textit{baseline}) and \textit{ANTLR}, and % as well as 
 the two maximizing variants of delta debugging, i.e., \textit{lexical ddmax} and \textit{syntactic ddmax}.   \autoref{tab:effectiveness} and \autoref{fig:effectiveness} highlight the (overall) effectiveness of each approach %, as well as their effectiveness 
 for each input format. 
+
 % to determine the strengths %and complementarity 
 %of our approach. 
 % and the time taken to achieve this repair. 
@@ -813,6 +818,41 @@ BRepair    201    173      122          154
 %\vspace{-0.6cm}
 %\end{figure}
 
+\noindent
+\textbf{\textit{Contribution of %\approach's 
+Input Synthesis:}} We further examine the contribution of input synthesis, i.e., the insertion of input elements to the effectiveness of our approach. This is particularly important since in comparison to ddmax, \approach not only removes invalid input fragments, it also synthesis input elements during repair. 
+%To achieve this, 
+Using the 321 inputs repaired by all approaches with edit distance data, 
+we examine the number of deletion and insertions performed by \approach, this is reported in \autoref{tab:brepair-insertions}. 
+% reports the number of deletions and insertions performed by \approach. 
+
+In this experiment, we found that \textit{input synthesis accounts for almost half (49\%) of the repair operations of \approach}. Indeed, \approach performed more insertion than deletion operations for two inpit formats (CJSON and SExp). This result demonstrates the importance of \textit{input synthesis} in comparison to \textit{repairing to subsets}. This demonstrates the advantage of input synthesis via rich failure feedback, and implies that insertion operations are equally as important as deletion operations for effective input repair. 
+
+\begin{result}
+Input synthesis is vital to the effectiveness of \approach: Almost half (49\%) of \approach's repair operations are %due to input syntehesis, i.e. 
+insertion operations. % of input elements. 
+\end{result}
+
+
+\begin{table}[!tbp]\centering
+\caption{Number of edit operations (insertion/deletions) performed by \approach, higher number operations are in \textbf{bold}}
+%\vspace{-0.5cm} 
+\small
+\begin{tabular}{|l | c | r  r  r  r |}
+\hline
+&  \multicolumn{5}{c|}{\textbf{Number of  Operations}}  \\
+\textbf{Ops.} & \textbf{ALL (\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+\textbf{Insert} & 751 (49\%) & 83 (38\%) &	\textbf{318 (51\%)} &	\textbf{126 (53\%)} &	224 (48\%) \\ 
+\textbf{Delete}  & \textbf{794 (51\%)} & \textbf{135 (62\%)} &	308 (49\%) &	110 (52\%) &	\textbf{241 (51\%)} \\ 
+\hline
+\end{tabular}
+\label{tab:brepair-insertions}
+%\vspace{-0.5cm}
+\end{table}
+
+
+
 \noindent \textbf{\textit{Complementarity to Ddmax:}} We further inspect the unique repairs achieved by each approach, in order to understand the complementarity of our approach to the state-of-the-art methods. In this experiment, we inspect the number of unique repairs achieved \textit{solely} by a single approach (e.g., \textit{only} \approach), or two or more approaches (e.g., all approaches).  The goal is to determine if there are unique sets of inputs that are solely repaired by a single approach, and not by other approaches. \autoref{fig:repair-complementarity} and \autoref{tab:repair-complementarity} highlight our findings on the complementarity of \approach to ddmax. 
 %to the state-of-the-art.
 %demonstrate that our approach complements 
@@ -849,7 +889,7 @@ It is the only technique that can solely complete 12\% of all repairs, which is 
 \end{result}
 
 \noindent
-\textbf{RQ2 Data Recovery and Data Loss:} In this experiment, we investigate the amount of data recovered (and lost) by our approach (\approach).  We also examine the contribution of the insertion  of input elements (i.e., input synthesis) to the effectiveness of our approach. To this end, we compute the file sizes of repaired inputs, and the edit distance between the repaired input and the original input using Levenshtein distance. In addition, we compare the data loss and recovery achieved by our approach to that of the state of the art, i.e. ddmax. 
+\textbf{RQ2 Data Recovery and Data Loss:} In this experiment, we investigate the amount of data recovered (and lost) by our approach (\approach). To this end, we compute the file sizes of repaired inputs, and the edit distance between the repaired input and the original input using Levenshtein distance. In addition, we compare the data loss and recovery achieved by our approach to that of the state of the art, i.e. ddmax. 
 %For this experiment, we computed the (difference in) files sizes and the Levenshtein distance between the original input and the repaired inputs. 
 For a fair evaluation of data recovery, we used 475 inputs that were completely repaired by all three approaches (lexical ddmax, syntactic ddmax and \approach). 
 % before a timeout to evaluate data recovery in terms of file sizes.  % and which were completely repaired by all three approaches before a timeout. 
@@ -896,19 +936,33 @@ a set of 321 completely repaired inputs %by all three approaches which %(321) in
 %which the Levenshtein distance implementation could compute %their edit distance 
 where edit distance could be computed within a threshold of 750 edit distances (about 30 seconds). 
 
-We found that 
+We found that \textit{\approach achieves a low data loss of about 13 edit distances,on avarage},  which is \textit{up to 23 times lower than (lexical) ddmax}. \autoref{tab:data-loss} shows this result of this experiment. For almost all input formats, \approach achieved a lower data loss than syntactic and lexical ddmaz (except for INI and SExp). This performance is attributed to the rich fasilure feedback of \approach, which allows it to distinguish between incomplete and incorrect input fragments. 
 
 \begin{result}
-XXXXXX
+\approach has a high data recovery rate (98\%, on average) and its data %The data recovery and 
+loss is up to 23 times lower than that of ddmax (e.g., INI).     
 \end{result}
 
 
-\noindent
-\textbf{\textit{Contribution of \approach's Input Synthesis:}} 
-
-\begin{result}
-XXXXXX
-\end{result}
+\begin{table}[!tbp]\centering
+\caption{Data Loss (Levenshtein distance) of \approach vs. the state-of-the-art (ddmax), minimum data loss and significant \% reduction in data loss are in \textbf{bold}}
+%\vspace{-0.5cm} 
+\begin{tabular}{|l | c | r  r  r  r |}
+\hline
+&  \multicolumn{5}{c|}{\textbf{Average Data Loss }}  \\
+\textbf{Techniques} & \textbf{ALL} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+\textbf{Lex. ddmax} & 17.5 & \textbf{10.2} &	56.5 &	\textbf{6.6} &	 8.4 \\	
+\textbf{Syn. ddmax} & 119.6 &  258.1 & 76.6 &	75.2 &	30.6 \\
+\textbf{\approach} & \textbf{13.0}  & 11.2 &	\textbf{35.0} &	7.3 & \textbf{4.0} \\
+\hline
+\textbf{\% Reduc. vs. Lex.} & \textbf{35\%} &  -9\% & \textbf{61\%} & -9\% & \textbf{108\%} \\
+\textbf{\% Reduc. vs. Syn.} & \textbf{818\%} & \textbf{2195\%} &	\textbf{119\%} & \textbf{936\%} &\textbf{ 656\%} \\
+\hline
+\end{tabular}
+\label{tab:data-loss}
+%\vspace{-0.5cm}
+\end{table}
 
 
 \noindent
