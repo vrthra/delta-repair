@@ -497,7 +497,7 @@ inputs, and how does it compare to the state-of-the-art methods?
 %How effective is our approach, i.e., what is the time performance of \approach ?
 
 \noindent
-\textbf{RQ2 Data Recovery \& Loss:} 
+\textbf{RQ2 Data Recovery and Data Loss:} 
 %\revise{
 How much input data is recovered by \approach, and how much input data loss is incurred?  Does it recover as much data as the 
 %the data recovery of \approach compare to 
@@ -818,15 +818,58 @@ It is the only technique that can solely complete 12\% of all repairs, which is 
 \end{result}
 
 \noindent
-\textbf{RQ2 Data Recovery \& Loss:} 
+\textbf{RQ2 Data Recovery and Data Loss:} In this experiment, we investigate the amount of data recovered (and lost) by our approach (\approach).  We also examine the contribution of the insertion  of input elements (i.e., input synthesis) to the effectiveness of our approach. To this end, we compute the file sizes of repaired inputs, and the edit distance between the repaired input and the original input using Levenshtein distance. In addition, we compare the data loss and recovery achieved by our approach to that of the state of the art, i.e. ddmax. For this experiment, we computed the (difference in) files sizes and the Levenshtein distance between the original input and the repaired inputs. For a fair evaluation of data recovery, we used 475 inputs that were completely repaired by all three approaches (lexical ddmax, syntactic ddmax and \approach) before a timeout.  For a balanced and tractable evaluation of data loss, we employed the set of 321 completely repaired inputs by all three approaches which %(321) inputs that 
+the Levenshtein distance algorithm could compute their edit distance within a threshold of 750 edit distances (about 30 seconds). % and which were completely repaired by all three approaches before a timeout. 
+%This resulted in a set of set of (321) inputs for the evaluation of data loss. 
+\recheck{Table X and Figure X} illustrate the data loss and recovery achieved by each approach. 
 
+
+\begin{table}[!tbp]\centering
+\caption{Data Recovery of \approach vs. the state-of-the-art}
+%\vspace{-0.5cm} 
+\begin{tabular}{|l | c | r  r  r  r |}
+\hline
+&  \multicolumn{5}{c|}{\textbf{\% Data Recovered by Approach}}  \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
+\textbf{Techniques} & \textbf{Avg. (Tot.)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+%\textbf{Baseline}   & (\%) & &  & 	& \\
+%\textbf{ANTLR} & (\%) & &  & 	& \\
+\textbf{Lex. ddmax} & 86\% (87\%) & \textbf{86.6\%} & 87.1\%	 & 98.5\%	& 70.0\% \\			
+\textbf{Syn. ddmax} & 80\% (70\%) & 68.5\% & 83.8\%  & 96.9\%	& 70.6\% \\	
+\hline 
+\textbf{\approach} & \textbf{ 95\% (88\%)} & \textbf{86.6\%} & \textbf{96.0\%} & \textbf{100.0\%}	& \textbf{97.6\%} \\
+\hline
+\textbf{Impr. vs. Lex.} & \textbf{13\%} (1\%) & 0.1\%	& \textbf{10.2\%}	& 1.5\%	& \textbf{39.4\%} \\
+\textbf{Impr. vs. Syn.} & \textbf{21\% (25\%)} & \textbf{26.5\%} 	& \textbf{14.5\%}	& 3.1\%	& \textbf{38.2\% }\\
+\hline
+%\textbf{Total \#Repairs} & (\%) & &  & 	& \\		
+%\hline
+\end{tabular}
+\label{tab:data-recovery}
+%\vspace{-0.5cm}
+\end{table}
+
+
+
+Our evaluation results show that .... 
+ 
 \begin{result}
-
+XXXXXX
 \end{result}
 
 
 \noindent
 \textbf{RQ3 Diagnostic Quality:} 
+
+\begin{result}
+XXXX
+XXXX
+\end{result}
+
+
+\noindent
+\textbf{RQ4 Efficiency:}
 
 \begin{result}
 XXXX
