@@ -41,8 +41,9 @@
             \node[shape=circle,draw,inner sep=0.3pt] (char) {#1};}}
 
 \tikzset{%
+simpletext/.style={draw=none,text=black,font=\normalfont\normalsize,align=center},
 gparsetreenode/.style={minimum width=6mm,minimum height=5mm},
-lparsetreenode/.style={gparsetreenode,rectangle,draw=white,text=black,fill=white,align=center},
+lparsetreenode/.style={gparsetreenode,simpletext,rectangle,draw=white,fill=white,align=center},
 lparsetreeerrornode/.style={lparsetreenode,font=\bfseries},
 lparsetreephantomnode/.style={gparsetreenode,edge from parent/.append style={draw=none},shape=coordinate,minimum width=15mm},
 lparsetreestrikethrough/.style={draw=black,thick},
@@ -398,71 +399,12 @@ Then, \bfr tries both inserting the \letterboxed{\}} from the original file and 
 \newlength\ndist\setlength\ndist{.1\nodedst}
 \def\arrowsep{0.12cm}
 \begin{tikzpicture}[node distance=\nodedst]
-%\small \centering
-    %Blocks----------
-    \node[blockdiagramblock] at (0,0) (corr) {Corrupted\\files};
-
-    \node[shape=coordinate, right=1.5 of corr] (ddmaxanchor) {};
-    \node[blockdiagramblock,above=0 of ddmaxanchor,anchor=south west] (ddmaxg) {\ddmax};
-    \node[blockdiagramblock,below=.25 of ddmaxanchor,anchor=north west] (ddmax) {\brepair};
-    \node[blockdiagramblock,above=.5 of ddmaxg] (parsetree) {Parse Tree};
-    \node[blockdiagramblock,above=.25 of parsetree] (antlr) {ANTLR};
-    \node[blockdiagramblock,above=.25 of antlr] (cfg) {Grammar};
-    \node[blockdiagramblock,right=1.5 of parsetree] (output) {Repaired\\File};
-    \node[blockdiagramblock,below=1 of output] (subject) {Subject\\Program};
-    \node[right=1.5 of subject.east,yshift=\arrowsep] (succ) {\pass};
-    \node[below=2 * \arrowsep of succ.center,anchor=center] (fail) {\fail};
-    \node[blockdiagramblock,above=1.5 of output] (diff) {Differencing};
-    \node[align=left,anchor=north west] at (succ.west |- diff.north) (distance) {Size Change\\Levenshtein};
-    \node[blockdiagramblock,above=.5 of corr] (mutator) {Mutate};
-    \node[blockdiagramblock,anchor=south west] at (mutator.west |- cfg.center) (working) {Valid\\crawled Files};
-    \node[blockdiagramblock,below=.25 of ddmax.south west, anchor=north west] (ddmin) {\ddmin};
-    \node[blockdiagramblock,below=.5 of corr] (realworld) {Real-World\\invalid files};
-    \node[align=left,anchor=west,yshift=-\arrowsep] at (subject.west |- ddmin.east) (minsizechg) {Diagnosis Size};
-    \node[blockdiagramblock,left=1 of corr.west,anchor=east] (filter) {Filter};
-    \node[blockdiagramblock,anchor=south east] at (filter.east |- mutator.south) (crawledall) {All\\crawled files};
-    %Arrows------------
-    \draw[blockdiagramarrow] (crawledall) -- (filter);
-    \draw[blockdiagramarrow] ([yshift=\arrowsep]filter.east) to[out=0,in=180] (working.west);
-    \draw[blockdiagramarrow] ([yshift=-\arrowsep]filter.east) to[out=0,in=180] (realworld.west);
-    \draw[blockdiagramarrow] (cfg) -- (antlr);
-    \draw[blockdiagramarrow] ([yshift=\arrowsep]corr.east) to[out=0,in=180,looseness=1.1] ([yshift=\arrowsep]antlr.west);
-    \draw[blockdiagramarrow] ([yshift=-\arrowsep]corr.east) to[out=0,in=180] ([yshift=\arrowsep]ddmax.west);
-    \draw[blockdiagramarrow] ([yshift=\arrowsep]ddmax.east) to[out=0,in=180] ([yshift = -2 * \arrowsep]output.west);
-    \draw[blockdiagramarrow] ([yshift=\arrowsep]ddmaxg.east) to[out=0,in=180] ([yshift = 0 * \arrowsep]output.west);
-    \draw[blockdiagramarrow] ([yshift=0 * \arrowsep]parsetree.east) to[out=0,in=180] ([yshift = 2 * \arrowsep]output.west);
-    \draw[blockdiagramarrow] (antlr) -- (parsetree);
-    \draw[blockdiagramarrow] (output) to[out=270,in=90] (subject);
-    \draw[blockdiagramarrow] (output) to[out=90,in=270] (diff);
-    \draw[blockdiagramarrow] (parsetree) -- (ddmaxg);
-    \draw[blockdiagramarrow] (working) -- (mutator);
-    \draw[blockdiagramarrow] (mutator) -- (corr);
-    \node[shape=coordinate] at (diff.center -| cfg.west) (diffanchor) {};
-    \draw[blockdiagramarrow] (working.east |- diff.west) -- (diff.west);
-    \draw[blockdiagramdashedarrow] (diff) -- (diff.east -| distance.west);
-    \draw[blockdiagramdashedarrow] ([yshift=0*\arrowsep]subject.west) to[out=180,in=0] node[blockdiagramarrowcaption,pos=.5,anchor=south,align=center]{} ([yshift=-\arrowsep]ddmax.east);
-    \draw[blockdiagramdashedarrow] ([yshift=1.5*\arrowsep]subject.west) to[out=180,in=0] node[blockdiagramarrowcaption,pos=.5,anchor=south,align=center]{} ([yshift=-\arrowsep]ddmaxg.east);
-    \draw[blockdiagramdashedarrow] ([yshift=-1.5*\arrowsep]subject.west) to[out=180,in=0] node[blockdiagramarrowcaption,pos=.5,anchor=south,align=center]{} ([yshift=\arrowsep]ddmin.east);
-    \draw[blockdiagramdashedarrow] ([yshift=\arrowsep]subject.east) to[out=0,in=180] (succ.west);
-    \draw[blockdiagramdashedarrow] ([yshift=-\arrowsep]subject.east) to[out=0,in=180] (fail.west);
-    \draw[blockdiagramdashedarrow] ([yshift=-\arrowsep]ddmin.east) to[out=0,in=180] (minsizechg.west);
-%    \draw[blockdiagramarrow] (corr) to[out=270,in=180] ([yshift=-1\nodedst]ddmin.south west) to[] ([yshift=-1\nodedst]ddmin.south east) to[out=0,in=270,looseness=.5] (subject);
-    \draw[blockdiagramarrow] ([yshift=1.5*\arrowsep]realworld.east) to[out=0,in=180,looseness=.9] ([yshift=-\arrowsep]antlr.west);
-    \draw[blockdiagramarrow] ([yshift=0*\arrowsep]realworld.east) to[out=0,in=180] ([yshift=-\arrowsep]ddmax.west);
-    \draw[blockdiagramarrow] ([yshift=-1.5*\arrowsep]realworld.east) to[out=0,in=180] ([yshift=0*\arrowsep]ddmin.west);
-    %Outer Boxes
-    \draw[blockdiagramouterbox] ([xshift=-1.5 * \arrowsep,yshift=-1.5 * \arrowsep]subject.south west) rectangle ([xshift=1.5 * \arrowsep,yshift=1.5 * \arrowsep]diff.north east) node[blockdiagramouterboxcaption,anchor=south east,pos=1] {Test Driver};
-    \draw[blockdiagramouterbox] ([xshift=-1.5 * \arrowsep,yshift=-1.5 * \arrowsep]ddmin.south west) rectangle ([xshift=1.5 * \arrowsep,yshift=1.5 * \arrowsep]ddmaxg.north east) node[blockdiagramouterboxcaption,anchor=north west,pos=0] {Repair algorithms};
-    \draw[blockdiagramouterbox] ([xshift=-1.5 * \arrowsep,yshift=-1.5 * \arrowsep]parsetree.south west) rectangle ([xshift=1.5 * \arrowsep,yshift=1.5 * \arrowsep]cfg.east |- diff.north) node[blockdiagramouterboxcaption,anchor=south east,pos=1] {ANTLR};
-    %Numberings-----------------------
-    \draw[draw=none] (mutator.south east) -- (corr.north west) pic[pos=.5,xshift=-.5\nodedst] {numbering=2};
-    \draw[draw=none] (parsetree.north west) -- (antlr.south west) pic[pos=.4,xshift=-.2\nodedst] {numbering=3};
-    \draw[draw=none] (corr.north east) -- (ddmax.west) pic[pos=.7] {numbering=4};
-    \draw[draw=none] (ddmax.north east) -- (subject.west) pic[pos=.6] {numbering=5};
-    \draw[draw=none] (diff.south) -- (output.north east) pic[pos=.2,xshift=.2\nodedst] {numbering=6};
-    \draw[draw=none] (subject.south east) -- (fail.south west) pic[pos=.7,yshift=-.1\nodedst] {numbering=7};
-    \draw[draw=none] (ddmin.south west) -- (realworld.south east) pic[pos=.1,yshift=-.1\nodedst] {numbering=8};
-    \draw[draw=none] (filter.east) -- (corr.west) pic[pos=.4] {numbering=1};
+    \node[blockdiagramblock] (correct) {Input is correct?};
+    \node[simpletext,below=of correct] (return) {Return input};
+    \node[blockdiagramblock,right=of correct,font=\normalfont\scriptsize] (search) {Search longest incomplete prefix};
+    \draw[blockdiagramarrow] (correct) -- (return) node[simpletext,pos=.4,right] {\pass};
+    \draw[blockdiagramarrow] (correct) -- (search) node[simpletext,pos=.4,above] {\fail};
+    %TODO
 \end{tikzpicture}
 % \vspace*{-0.1in}
     \caption{Workflow of the evaluation}\label{fig:ddmax_flowchart}
