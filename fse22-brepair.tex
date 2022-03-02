@@ -353,7 +353,17 @@ implementation in mind. Another issue is that many such documents are created
 by hand, and the process of manual generation can be error-prone.
 
 The problem is that such documents can be \emph{almost} but \emph{not quite}
-parsable by the parser at hand.
+parsable by the parser at hand. So, consuming such resources, and aggregating
+them often involves trying to maximally parse documents by minimizing
+parse errors. If the parser at hand conforms to a context-free grammar, and the
+formal grammar is available, this issue can be solved using
+\emph{error-correcting} parsers~\cite{aho1972minimum}.
+The idea in such parsers is to generate a universal grammar that captures
+any mutation of the base grammar. Any parse of the input string that employs a
+mutation is penalized, and the parse with minimal mutation is chosen as the
+best parse, and the corresponding mutation the best repair. The limitation of
+this approach is that it assumes the existence of a formal grammar in the first
+place.
 
 
 One example for such an algorithm that localizes faults in failure-inducing inputs is \emph{Delta-Debugging}~\cite{Zeller:2002:SIF:506201.506206}.
