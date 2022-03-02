@@ -492,34 +492,6 @@ fragments alone can lead to significant corruption of information.
 % The \emph{bFuzzer} algorithm~\cite{gopinath2020fuzzing} is an input generator that determines valid continuations for input prefixes by making use of rich failure feedback.
 % The subject program does not only give feedback whether an input is accepted or not, but also whether the input is incorrect or incomplete.
 % Based on this input generation algorithm, \bfr makes use of this rich failure feedback to allow both insertions and deletions at the fault location.
-% In the example seen in \Cref{fig:bad-json-input-repaired}, \bfr first determines a valid (incomplete) prefix of the input file, i.e., \texttt{\{ "name": "Dave"}.
-% It then tries to append characters such that the prefix stays valid - in this example, \letterboxed{\}} and \letterboxed{,} are tried to be inserted.
-% Then, as much of the original file is appended to the prefix, until it becomes valid (and the rest of the original file is either appended, or deleted successively).
-% This results in the final repaired file seen in \Cref{fig:bad-json-input-repaired}.
-% \begin{figure}
-% \begin{center}
-% \letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}}
-% \end{center}
-% %\vspace{-0.6\baselineskip}
-% \caption{Failing input repaired with \bfr}
-% \label{fig:bad-json-input-repaired}
-% \end{figure}
-% \begin{figure}
-% \begin{center}
-% \letterboxed{,}
-% \end{center}
-% %\vspace{-0.6\baselineskip}
-% \caption{Difference between failing and repaired input}
-% \label{fig:bad-json-input-diff}
-% \end{figure}
-% \begin{figure}
-% \begin{center}
-% \letterboxed{\{\ "item":\ "Apple",\ "price":\ "***3.45\ "\}}
-% \end{center}
-% %\vspace{-0.6\baselineskip}
-% \caption{Failing input repaired with \bfr}
-% \label{fig:bad-json-input-repaired-asterisks}
-% \end{figure}
 % 
 % 
 % %TODO ...
@@ -573,6 +545,35 @@ find the least cost modification that would let the parse proceed further,
 generating a larger prefix. Proceeding in this fashion, the algorithm generates
 a set of plausible repairs ordered by their edit distance that can be used by
 the developer for fixing the input corruption.
+
+In the example seen in \Cref{fig:bad-json-input-repaired}, \brepair first determines a valid (incomplete) prefix of the input file, i.e., \texttt{\{ "name": "Dave"}.
+It then tries to append characters such that the prefix stays valid - in this example, \letterboxed{\}} and \letterboxed{,} are tried to be inserted.
+Then, as much of the original file is appended to the prefix, until it becomes valid (and the rest of the original file is either appended, or deleted successively).
+This results in the final repaired file seen in \Cref{fig:bad-json-input-repaired}.
+\begin{figure}
+\begin{center}
+\letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}}
+\end{center}
+%\vspace{-0.6\baselineskip}
+\caption{Failing input repaired with \brepair}
+\label{fig:bad-json-input-repaired}
+\end{figure}
+\begin{figure}
+\begin{center}
+\letterboxed{,}
+\end{center}
+%\vspace{-0.6\baselineskip}
+\caption{Difference between failing and repaired input}
+\label{fig:bad-json-input-diff}
+\end{figure}
+\begin{figure}
+\begin{center}
+\letterboxed{\{\ "item":\ "Apple",\ "price":\ "***3.45\ "\}}
+\end{center}
+%\vspace{-0.6\baselineskip}
+\caption{Failing input repaired with \brepair}
+\label{fig:bad-json-input-repaired-asterisks}
+\end{figure}
 
 %TODO
 \section{Overview}
