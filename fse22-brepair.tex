@@ -558,6 +558,14 @@ processor to indicate whether the input is merely incomplete -- that is, the
 input is a prefix of a valid acceptable input -- or is incorrect -- that is, no
 suffix to this input will result in a valid input.
 
+This requirement is not hard to accomplish. In most cases, parsers already
+provide precise information as to the point at which the parse failed, which
+can be used directly in our algorithm. In the cases where parers do not provide
+this information, obtaining this information by external instrumentation is
+possible as demonstrated by Bj\"orn et al.~\cite{mathis2019parser}. If
+the program is hard to instrument, adding failure feedback that we require is
+not difficult~\cite{gopinath2020fuzzing}.
+
 %TODO
 \section{Overview}
 
