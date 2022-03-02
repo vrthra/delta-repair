@@ -407,7 +407,7 @@ Unfortunately, these two constraints form the biggest limitations of \ddmax.
 \letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45 \}}
 \end{center}
 %\vspace{-0.6\baselineskip}
-\caption{Invalid JSON input which \ddmax fails to repair}
+\caption{Invalid JSON which \ddmax fails to repair}
 \label{fig:bad-json-input-asterisks}
 \end{figure}
 
@@ -448,8 +448,18 @@ not applicable to JSON.
 
 \noindent\textbf{Limited Options for Repair.} The second major limitation of
 \ddmax is that the only operation in its toolbox is \emph{deletion} of input
-fragments.
-
+fragments. Consider \Cref{fig:bad-json-deletion}.
+\begin{figure}
+\begin{center}
+\letterboxed{\{\ "fruits:\ ["Apple",\ "Orange",\ "Banana"]\}}
+\end{center}
+%\vspace{-0.6\baselineskip}
+\caption{Invalid JSON with non-optimal repair by \ddmax}
+\label{fig:bad-json-deletion}
+\end{figure}
+Here, there is a missing quote in the key. \ddmax repair of this string will
+result in \letterboxed{\{\ \}}. The problem is that, deletion of
+fragments alone can lead to significant loss of information.
 
 % A problem of DDMax is that it only supports deleting parts of the file under test while repairing the file.
 %Especially for highly-structured input formats like the JSON file seen in \Cref{fig:bad-json-input}, it is often the case that by inserting a simple character in the file, more information can be recovered in the file than by just deleting characters.
