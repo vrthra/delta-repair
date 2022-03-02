@@ -381,16 +381,84 @@ In circumstances where one can't rely on a base grammar, the only option so far
 has been \ddmax~\cite{kirschner2020debugging}. The \ddmax works similar to
 delta-debugging~\cite{zeller2002simplifying}, but in reverse. The idea
 is that given a corrupt input which induces a parse error, and a way to
-decompose the input into independent deltas, one can successively minimize the
-parse-error inducing part of the input resulting in a maximal parsing input.
+decompose the input into independent fragments (called deltas), one can
+successively minimize the parse-error inducing part of the input resulting in a
+maximal parsing input.
+
+\ddmax works very well when the input document and parser follows the
+constraints it imposes. Notabily, the independence of deltas (that each delta
+can be added or removed independently of others), and one is looking for a
+maximal \emph{subset} of deltas.
+
+Unfortunately, these two constraints form the biggest limitations of \ddmax.
+
+%---
+% Example for Span Problem
+%---
+\begin{figure}
+\begin{center}
+%{ "item": "Apple", "price": ***3.45 }%37
+%{ "item": "Apple",%18
+% "price": ***3.45 }%19
+% "price":%9
+% ***3.45 }%10
+% ***3%5
+%.45 }%5
+\letterboxed{\{\ "item":\ "Apple",\ "price":\ **3.45 \}}
+\end{center}
+%\vspace{-0.6\baselineskip}
+\caption{Invalid JSON input which \ddmax fails to repair}
+\label{fig:bad-json-input-asterisks}
+\end{figure}
+
+\noindent\textbf{Limited repairability.} One of the biggest limitations of
+\ddmax is its assumption that the input can be decomposed into independent
+fragments. \ddmax works very well when the input can be split into independent
+deltas. The problem is that in most cases, the input may have a rich structure,
+and may not be decomposable effectively into independent deltas. As an example,
+consider \Cref{fig:bad-json-input-asterisks} similar to Kirchner et
+al.~\cite[Figure 1]{kirschner2020debugging}. Here, the JSON string is invalid
+because it contains three \<*> characters. The operation of \ddmax is as follows:
+
+\begin{enumerate}
+\item Split the string in half, resulting in\\
+$\Delta_1$=\letterboxed{\{\ "item":\ "Apple",} \\% 18
+$\Delta_2$=\letterboxed{\ "price": ***3.45\ \}}. % 19
+\item Neither of these result in valid independent fragments. That is, removing
+neither results in the rest of the string becoming valid. Hence split it
+again into quarters, we focus on ($\Delta_{2}$) since it contains the invalid fragment,
+and hence if removed, makes the rest of the string valid:\\
+$\Delta_{2.1}$ = \letterboxed{\ "price":} \\ %9
+$\Delta_{2.1}$ = \letterboxed{\ ***3.45\ \}}%10.
+\item None of these fragments can be excluded independently resulting in a
+no-failure input. So we try again. This time, let us focus in $\Delta_{2.2}$ since it
+contains the invalid input. We split that into:\\
+$\Delta_{2.2.1}$ = \letterboxed{\ ***3\\}\\ %5
+$\Delta_{2.2.2}$ = \letterboxed{.45\ \}}. %4
+\item Excluding neither will produce a valid JSON input. So we try again,
+focusing on $\Delta_{2.2.1}$ now since it contains the failuring inducing fragment;
+producing:\\
+$\Delta_{2.2.1.1}$ = \letterboxed{\ *}\\ %2
+$\Delta_{2.2.1.2}$ = \letterboxed{**3}\\ %3
+neither will succeed in removing the invalid fragment completely.
+\end{enumerate}
+That is, this particular invalid JSON string can't be repaired by \ddmax. This
+happens because the constraint, that each frament be independently removable is
+not applicable to JSON.
+
+\noindent\textbf{Limited Options for Repair.} The second major limitation of
+\ddmax is that the only operation in its toolbox is \emph{deletion} of input
+fragments.
+
+
+% A problem of DDMax is that it only supports deleting parts of the file under test while repairing the file.
+%Especially for highly-structured input formats like the JSON file seen in \Cref{fig:bad-json-input}, it is often the case that by inserting a simple character in the file, more information can be recovered in the file than by just deleting characters.
+
+%--
 
 %One example for such an algorithm that localizes faults in failure-inducing inputs is \emph{Delta-Debugging}~\cite{zeller2002simplifying}.
 %It minimizes an input that induces a failure in a subject program while the minimized inputs still trigger the same bug.
 %In a similar manner, \emph{DDMax}~\cite{kirschner2020debugging} is a modification of the Delta-Debugging algorithm that, instead of minimizing test cases, maximizes failure-inducing input files while not triggering failures in the subject program.
-
-A problem of DDMax is that it only supports deleting parts of the file under test while repairing the file.
-Especially for highly-structured input formats like the JSON file seen in \Cref{fig:bad-json-input}, it is often the case that by inserting a simple character in the file, more information can be recovered in the file than by just deleting characters.
-
 The \emph{bFuzzer} algorithm~\cite{gopinath2020fuzzing} is an input generator that determines valid continuations for input prefixes by making use of rich failure feedback.
 The subject program does not only give feedback whether an input is accepted or not, but also whether the input is incorrect or incomplete.
 Based on this input generation algorithm, \bfr makes use of this rich failure feedback to allow both insertions and deletions at the fault location.
@@ -402,7 +470,7 @@ This results in the final repaired file seen in \Cref{fig:bad-json-input-repaire
 %---
 % Example for Insertion
 %---
-\begin{figure}[t]
+\begin{figure}
 \begin{center}
 \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}
 \end{center}
@@ -410,7 +478,7 @@ This results in the final repaired file seen in \Cref{fig:bad-json-input-repaire
 \caption{Failing JSON input}
 \label{fig:bad-json-input}
 \end{figure}
-\begin{figure}[t]
+\begin{figure}
 \begin{center}
 \letterboxed{\{\ "name":\ "Daveage"\ \}}
 \end{center}
@@ -418,7 +486,7 @@ This results in the final repaired file seen in \Cref{fig:bad-json-input-repaire
 \caption{Failing input repaired with DDMax}
 \label{fig:bad-json-input-ddmax}
 \end{figure}
-\begin{figure}[t]
+\begin{figure}
 \begin{center}
 \letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}}
 \end{center}
@@ -426,7 +494,7 @@ This results in the final repaired file seen in \Cref{fig:bad-json-input-repaire
 \caption{Failing input repaired with \bfr}
 \label{fig:bad-json-input-repaired}
 \end{figure}
-\begin{figure}[t]
+\begin{figure}
 \begin{center}
 \letterboxed{,}
 \end{center}
@@ -434,6 +502,15 @@ This results in the final repaired file seen in \Cref{fig:bad-json-input-repaire
 \caption{Difference between failing and repaired input}
 \label{fig:bad-json-input-diff}
 \end{figure}
+\begin{figure}
+\begin{center}
+\letterboxed{\{\ "item":\ "Apple",\ "price":\ "***3.45\ "\}}
+\end{center}
+%\vspace{-0.6\baselineskip}
+\caption{Failing input repaired with \bfr}
+\label{fig:bad-json-input-repaired-asterisks}
+\end{figure}
+
 
 %TODO ...
 Another problem occurring with DDMax is that it works very inefficient on inputs where the failure-inducing characters span a certain range in the file.% TODO which range?
@@ -453,25 +530,6 @@ It then tries to insert characters (a \letterboxed{"} and a \letterboxed{ } whic
 In the alternative where the \letterboxed{"} was inserted, \letterboxed{***3.45\ } can successfully be inserted from the original file.
 Then, \bfr tries both inserting the \letterboxed{\}} from the original file and another \letterboxed{"} which succeeds and results in the repaired file.
 
-%---
-% Example for Span Problem
-%---
-\begin{figure}[t]
-\begin{center}
-\letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\ \}}
-\end{center}
-%\vspace{-0.6\baselineskip}
-\caption{Failing JSON input that cannot be efficiently repaired with DDMax}
-\label{fig:bad-json-input-asterisks}
-\end{figure}
-\begin{figure}[t]
-\begin{center}
-\letterboxed{\{\ "item":\ "Apple",\ "price":\ "***3.45\ "\}}
-\end{center}
-%\vspace{-0.6\baselineskip}
-\caption{Failing input repaired with \bfr}
-\label{fig:bad-json-input-repaired-asterisks}
-\end{figure}
 
 %TODO
 \section{Overview}
@@ -482,7 +540,7 @@ Then, \bfr tries both inserting the \letterboxed{\}} from the original file and 
 \label{sec:experimental-setup}
 
 %TODO This is copied from ddmax, change?
-\begin{figure*}[t]
+\begin{figure*}
 \newlength\nodedst\setlength\nodedst{.5cm}
 \newlength\ndist\setlength\ndist{.1\nodedst}
 \def\arrowsep{0.20cm}
