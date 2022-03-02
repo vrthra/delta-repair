@@ -378,10 +378,13 @@ contain important information. Hence, relying on error-correcting parsers may
 be unoptimal for fixing error corruption.
 
 In circumstances where one can't rely on a base grammar, the only option so far
-has been \ddmax~\cite{kirschner2020debugging}.
+has been \ddmax~\cite{kirschner2020debugging}. The \ddmax works similar to
+delta-debugging~\cite{zeller2002simplifying}, but in reverse. The idea
+is that given a corrupt input which induces a parse error, and a way to
+decompose the input into independent deltas, one can successively minimize the
+parse-error inducing part of the input resulting in a maximal parsing input.
 
-
-%One example for such an algorithm that localizes faults in failure-inducing inputs is \emph{Delta-Debugging}~\cite{Zeller:2002:SIF:506201.506206}.
+%One example for such an algorithm that localizes faults in failure-inducing inputs is \emph{Delta-Debugging}~\cite{zeller2002simplifying}.
 %It minimizes an input that induces a failure in a subject program while the minimized inputs still trigger the same bug.
 %In a similar manner, \emph{DDMax}~\cite{kirschner2020debugging} is a modification of the Delta-Debugging algorithm that, instead of minimizing test cases, maximizes failure-inducing input files while not triggering failures in the subject program.
 
@@ -1105,7 +1108,7 @@ In \emph{S-DAGs}~\cite{scheffczyk2004s}, semantic consistency constraints are en
 While this is a whitebox approach that facilitates program analysis, \bfr relies on the feedback of the subject program in a black-box approach that results from executing the broken inputs.
 
 \item[Input Debugging], in contrast to program debugging, aims to change inputs to localize faults in subject programs.
-    There is numerous work that focuses on simplifying failure-inducing inputs~\cite{Zeller:2002:SIF:506201.506206, clause2009penumbra, hierarchicalDD, sterling2007automated}.
+    There is numerous work that focuses on simplifying failure-inducing inputs~\cite{zeller2002simplifying, clause2009penumbra, hierarchicalDD, sterling2007automated}.
     Closely related to \bfr are particularly \cite{hierarchicalDD} and \cite{sterling2007automated}, which both aim to minimize the input files while still triggering a bug in the subject program, just like \ddmin.
     In contrast, \bfr tries to maximize the inputs while avoiding to trigger the bug in the subject program.
 
