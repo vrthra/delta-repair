@@ -52,8 +52,8 @@ Failure Feedback}
 \newcommand{\approach}{\textsc{BRepair}\xspace}
 \def\bfr{bFuzzerRepairer\xspace}
 \def\ddmin{DDMin\xspace}
-\newcommand{\ddmax}{\textit{ddmax}\xspace}
-\newcommand{\ddmaxg}{\textit{ddmaxg}\xspace}
+\newcommand{\ddmax}{\textit{DDMax}\xspace}
+\newcommand{\ddmaxg}{\textit{DDmaxG}\xspace}
 \newcommand{\bsimple}{\textit{bsimple}\xspace}
 \newcommand{\brepair}{\textit{brepair}\xspace}
 
@@ -377,10 +377,13 @@ beyond the base grammar (e.g comments and unquoted keys in JSON) which may
 contain important information. Hence, relying on error-correcting parsers may
 be unoptimal for fixing error corruption.
 
+In circumstances where one can't rely on a base grammar, the only option so far
+has been \ddmax~\cite{kirschner2020debugging}.
 
-One example for such an algorithm that localizes faults in failure-inducing inputs is \emph{Delta-Debugging}~\cite{Zeller:2002:SIF:506201.506206}.
-It minimizes an input that induces a failure in a subject program while the minimized inputs still trigger the same bug.
-In a similar manner, \emph{DDMax}~\cite{kirschner2020debugging} is a modification of the Delta-Debugging algorithm that, instead of minimizing test cases, maximizes failure-inducing input files while not triggering failures in the subject program.
+
+%One example for such an algorithm that localizes faults in failure-inducing inputs is \emph{Delta-Debugging}~\cite{Zeller:2002:SIF:506201.506206}.
+%It minimizes an input that induces a failure in a subject program while the minimized inputs still trigger the same bug.
+%In a similar manner, \emph{DDMax}~\cite{kirschner2020debugging} is a modification of the Delta-Debugging algorithm that, instead of minimizing test cases, maximizes failure-inducing input files while not triggering failures in the subject program.
 
 A problem of DDMax is that it only supports deleting parts of the file under test while repairing the file.
 Especially for highly-structured input formats like the JSON file seen in \Cref{fig:bad-json-input}, it is often the case that by inserting a simple character in the file, more information can be recovered in the file than by just deleting characters.
