@@ -11,3 +11,9 @@ submission:
 
 clean:
 	latexmk -C
+
+pull:
+	git pull --rebase origin main --autostash
+
+push:
+	git push origin main
