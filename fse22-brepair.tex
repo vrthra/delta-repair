@@ -222,7 +222,7 @@ In this work, we show that incorporating light-weight error-feedback to parsers
 is sufficient to repair any corrupt input string with maximal closeness to the
 semantics of input data.
 
-Given a conforming program, and any corrupt input, our \approach provides a set
+Given a conforming program, and any corrupt input, \approach provides a set
 of repairs prioritized by the distance of the repair from the original input.
 
 We show that our approach can remove the limitations inherent in \ddmax, the
@@ -342,8 +342,18 @@ that were induced.
 
 Data, especially from external, often human sources need to be collected and
 aggregated before information processing algorithms can be run on it to extract
-insights. During
+insights. Unfortunately, not every source may agree on the format. For example,
+there are numerous JSON libraries with slightly different definitions of what
+the JSON format is~\cite{harrand2021behavioral,seriot2016parsing}. Further,
+there are numerous data base systems with slightly different supported SQL
+formats~\cite{arvin2018comparison}, and a variety of markdown syntaxes with
+subtle differences~\cite{visnoviz2019comparison}. That is, it is often
+impossible to parse a document that was generated with a different
+implementation in mind. Another issue is that many such documents are created
+by hand, and the process of manual generation can be error-prone.
 
+The problem is that such documents can be \emph{almost} but \emph{not quite}
+parsable by the parser at hand.
 
 
 One example for such an algorithm that localizes faults in failure-inducing inputs is \emph{Delta-Debugging}~\cite{Zeller:2002:SIF:506201.506206}.
