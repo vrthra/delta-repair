@@ -23,6 +23,9 @@ Failure Feedback}
 \setlength{\OuterFrameSep}{2pt}
 \newenvironment{result}{\begin{framed}\centering\it}{\end{framed}}
 
+%% Identifiers
+\def\|#1|{\textit{#1}}
+\def\<#1>{\texttt{#1}}
 
 \newcounter{todocounter}
 \newcommand{\todo}[1]{\marginpar{$|$}\textcolor{red}{\stepcounter{todocounter}\footnote[\thetodocounter]{\textcolor{red}{\textbf{TODO }}\textit{#1}}}}
@@ -347,7 +350,9 @@ there are numerous JSON libraries with slightly different definitions of what
 the JSON format is~\cite{harrand2021behavioral,seriot2016parsing}. Further,
 there are numerous data base systems with slightly different supported SQL
 formats~\cite{arvin2018comparison}, and a variety of markdown syntaxes with
-subtle differences~\cite{visnoviz2019comparison}. That is, it is often
+subtle differences~\cite{visnoviz2019comparison}. The subtle difference between
+various \<C> dialects are also well known.
+That is, it is often
 impossible to parse a document that was generated with a different
 implementation in mind. Another issue is that many such documents are created
 by hand, and the process of manual generation can be error-prone.
@@ -363,7 +368,14 @@ any mutation of the base grammar. Any parse of the input string that employs a
 mutation is penalized, and the parse with minimal mutation is chosen as the
 best parse, and the corresponding mutation the best repair. The limitation of
 this approach is that it assumes the existence of a formal grammar in the first
-place.
+place. However, formats such as markdown~\cite{gruber2004markdown} does not have
+a formal grammar; Documents in languages such as \<C> can contain semantic
+information that is not captured in the contex-free grammar, and may not be
+discardable. Finally, even when the base grammar is context-free grammar (as in
+the case of JSON) the serializer and deserializer may implement common subsets
+beyond the base grammar (e.g comments and unquoted keys in JSON) which may
+contain important information. Hence, relying on error-correcting parsers may
+be unoptimal for fixing error corruption.
 
 
 One example for such an algorithm that localizes faults in failure-inducing inputs is \emph{Delta-Debugging}~\cite{Zeller:2002:SIF:506201.506206}.
