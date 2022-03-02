@@ -566,6 +566,14 @@ possible as demonstrated by Bj\"orn et al.~\cite{mathis2019parser}. If
 the program is hard to instrument, adding failure feedback that we require is
 not difficult~\cite{gopinath2020fuzzing}.
 
+Our \brepair algorithm starts with the corrupted input and quickly finds the
+maximal parsable prefix using a binary search. It then iteratively applies
+deletion, insertion, and alteration of the character at the point of failure to
+find the least cost modification that would let the parse proceed further,
+generating a larger prefix. Proceeding in this fashion, the algorithm generates
+a set of plausible repairs ordered by their edit distance that can be used by
+the developer for fixing the input corruption.
+
 %TODO
 \section{Overview}
 
