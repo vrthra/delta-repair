@@ -541,6 +541,23 @@ fragments alone can lead to significant corruption of information.
 % Then, \bfr tries both inserting the \letterboxed{\}} from the original file and another \letterboxed{"} which succeeds and results in the repaired file.
 % 
 
+This is, of course, not an ideal state of affairs. Unfortunately, \ddmax is
+likely the best one can do unless one is willing to test all possible
+subsequences of the input, which leads to combinatorial explosion. The main
+issue here is that unlike with delta-debugging~\cite{zeller2002simplifying},
+there is no real definition of progress. We do not know if 
+\letterboxed{\{\ "A":\ *3\}} is better than
+\letterboxed{\{\ "A":\ **3\}} or
+\letterboxed{\{\ A":\ **3\}} because all three returns the same
+result -- parse error.
+
+All is, however, not lost. This paper shows that such corrupted inputs can
+still be repaired adequately if the input processor can provide at least some
+indication of progress. When given an input, we require the input
+processor to indicate whether the input is merely incomplete -- that is, the
+input is a prefix of a valid acceptable input -- or is incorrect -- that is, no
+suffix to this input will result in a valid input.
+
 %TODO
 \section{Overview}
 
