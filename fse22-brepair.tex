@@ -448,35 +448,16 @@ not applicable to JSON.
 
 \noindent\textbf{Limited Options for Repair.} The second major limitation of
 \ddmax is that the only operation in its toolbox is \emph{deletion} of input
-fragments. Consider \Cref{fig:bad-json-deletion}.
-\begin{figure}
-\begin{center}
-\letterboxed{\{\ "fruits:\ ["Apple",\ "Orange",\ "Banana"]\}}
-\end{center}
-%\vspace{-0.6\baselineskip}
-\caption{Invalid JSON with non-optimal repair by \ddmax}
-\label{fig:bad-json-deletion}
-\end{figure}
-Here, there is a missing quote in the key. \ddmax repair of this string will
-result in \letterboxed{\{\ \}}. The problem is that, deletion of
-fragments alone can lead to significant loss of information.
-
-% A problem of DDMax is that it only supports deleting parts of the file under test while repairing the file.
-%Especially for highly-structured input formats like the JSON file seen in \Cref{fig:bad-json-input}, it is often the case that by inserting a simple character in the file, more information can be recovered in the file than by just deleting characters.
-
-%--
-
-%One example for such an algorithm that localizes faults in failure-inducing inputs is \emph{Delta-Debugging}~\cite{zeller2002simplifying}.
-%It minimizes an input that induces a failure in a subject program while the minimized inputs still trigger the same bug.
-%In a similar manner, \emph{DDMax}~\cite{kirschner2020debugging} is a modification of the Delta-Debugging algorithm that, instead of minimizing test cases, maximizes failure-inducing input files while not triggering failures in the subject program.
-The \emph{bFuzzer} algorithm~\cite{gopinath2020fuzzing} is an input generator that determines valid continuations for input prefixes by making use of rich failure feedback.
-The subject program does not only give feedback whether an input is accepted or not, but also whether the input is incorrect or incomplete.
-Based on this input generation algorithm, \bfr makes use of this rich failure feedback to allow both insertions and deletions at the fault location.
-In the example seen in \Cref{fig:bad-json-input-repaired}, \bfr first determines a valid (incomplete) prefix of the input file, i.e., \texttt{\{ "name": "Dave"}.
-It then tries to append characters such that the prefix stays valid - in this example, \letterboxed{\}} and \letterboxed{,} are tried to be inserted.
-Then, as much of the original file is appended to the prefix, until it becomes valid (and the rest of the original file is either appended, or deleted successively).
-This results in the final repaired file seen in \Cref{fig:bad-json-input-repaired}.
-
+fragments. Consider \Cref{fig:bad-json-input}.
+%\Cref{fig:bad-json-deletion}.
+%\begin{figure}
+%\begin{center}
+%\letterboxed{\{\ "fruits:\ ["Apple",\ "Orange",\ "Banana"]\}}
+%\end{center}
+%%\vspace{-0.6\baselineskip}
+%\caption{Invalid JSON with non-optimal repair by \ddmax}
+%\label{fig:bad-json-deletion}
+%\end{figure}
 %---
 % Example for Insertion
 %---
@@ -496,6 +477,26 @@ This results in the final repaired file seen in \Cref{fig:bad-json-input-repaire
 \caption{Failing input repaired with DDMax}
 \label{fig:bad-json-input-ddmax}
 \end{figure}
+
+Here, there is a missing quote in the key. \ddmax repair of this string will
+result in \Cref{fig:bad-json-input-ddmax}. The problem is that, deletion of
+fragments alone can lead to significant corruption of information.
+
+% A problem of DDMax is that it only supports deleting parts of the file under test while repairing the file.
+%Especially for highly-structured input formats like the JSON file seen in \Cref{fig:bad-json-input}, it is often the case that by inserting a simple character in the file, more information can be recovered in the file than by just deleting characters.
+
+%--
+
+%One example for such an algorithm that localizes faults in failure-inducing inputs is \emph{Delta-Debugging}~\cite{zeller2002simplifying}.
+%It minimizes an input that induces a failure in a subject program while the minimized inputs still trigger the same bug.
+%In a similar manner, \emph{DDMax}~\cite{kirschner2020debugging} is a modification of the Delta-Debugging algorithm that, instead of minimizing test cases, maximizes failure-inducing input files while not triggering failures in the subject program.
+The \emph{bFuzzer} algorithm~\cite{gopinath2020fuzzing} is an input generator that determines valid continuations for input prefixes by making use of rich failure feedback.
+The subject program does not only give feedback whether an input is accepted or not, but also whether the input is incorrect or incomplete.
+Based on this input generation algorithm, \bfr makes use of this rich failure feedback to allow both insertions and deletions at the fault location.
+In the example seen in \Cref{fig:bad-json-input-repaired}, \bfr first determines a valid (incomplete) prefix of the input file, i.e., \texttt{\{ "name": "Dave"}.
+It then tries to append characters such that the prefix stays valid - in this example, \letterboxed{\}} and \letterboxed{,} are tried to be inserted.
+Then, as much of the original file is appended to the prefix, until it becomes valid (and the rest of the original file is either appended, or deleted successively).
+This results in the final repaired file seen in \Cref{fig:bad-json-input-repaired}.
 \begin{figure}
 \begin{center}
 \letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}}
