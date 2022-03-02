@@ -212,18 +212,18 @@ pics/numbering/.style args={#1}{code={
 \begin{abstract}
 Data cleansing and data repair are some of the most intensive tasks in many
 fields that aggregate data from multiple resources. In many cases, the data may
-be entered by hand, and is often almost parsable by machines. In such cases, a
+be entered by hand, and while ostensibly conforming to a given format, is often
+unparsable by machines. In such cases, a
 data engineer has to manually repair the corrupt data such that it follows a
 given format, and hence processable by the next program. Such manual repair can
 be time consuming, and error-prone.
 
-In this work, we show how to incorporate error-feedback to parsers such that
-the feedback is sufficient to repair the input string with maximal closeness to
-the semantics of input data.
+In this work, we show that incorporating light-weight error-feedback to parsers
+is sufficient to repair any corrupt input string with maximal closeness to the
+semantics of input data.
 
-Given nothing but a conforming program, and a corrupt input, our \approach
-provides a set of repairs prioritized by the distance of the repair from the
-original input.
+Given a conforming program, and any corrupt input, our \approach provides a set
+of repairs prioritized by the distance of the repair from the original input.
 
 We show that our approach can remove the limitations inherent in \ddmax, the
 previously best known approach, both in terms of what it can repair, as well as
@@ -342,7 +342,7 @@ that were induced.
 
 Data, especially from external, often human sources need to be collected and
 aggregated before information processing algorithms can be run on it to extract
-insights.
+insights. During
 
 
 
