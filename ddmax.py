@@ -39,27 +39,27 @@ def ddmax2(cprime_y, n):
 
     if passing_deltas: # increase to complement
         #if \exist i \in {1..n} such that test(c_x - delta_i) holds
-        CX_minus_delta_i = passing_deltas[0]
+        CX_minus_delta_i = passing_deltas[0] # get the first such passing
         #pudb.set_trace()
         return ddmax2(CX_minus_delta_i, 2)
 
-    #else:
+    #Fig 5: else, if exist i such that test(c'y union delta_i) holds, increase to subset
     passing_deltas = []
     for delta_i in delta_n:
-        c_union_delta_i = cprime_y + delta_i
-        delta_x_idxs = [i for i,s in enumerate(CX_S) if i in c_union_delta_i]
-        s = to_str(delta_x_idxs)
-        if test(s):
+        cprime_y_union_delta_i = cprime_y + delta_i # these are indexes
+        delta_x_idxs = [i for i,s in enumerate(CX_S) if i in cprime_y_union_delta_i]
+        if test(to_str(delta_x_idxs)):
             passing_deltas.append(delta_x_idxs)
     if passing_deltas: # increase to subset
         # if \exist i \in {1 ... n}. test(cprime_y\union delta_i) holds
-        delta_x_idxs = passing_deltas[0]
+        delta_x_idxs = passing_deltas[0] # get the first such passing
         #pudb.set_trace()
         return ddmax2(delta_x_idxs, max(n-1, 2))
 
-    #else:
-    #CX_minus_cprime_y = CX_S - cprime_y
+    #Fig 5: else, if n < len(delta), increase granularity
+    #note: CX_minus_cprime_y = CX_S - cprime_y
     if n < len(CX_minus_cprime_y):
+        # Fig 5: ddmax2(c'y, min(|cx|, 2n))
         return ddmax2(cprime_y, min(len(CX_S), 2*n))
     #else:
     return cprime_y
