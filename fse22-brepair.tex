@@ -620,9 +620,10 @@ as the solution.
 
 \todo{
 \textbf{note:} In the algorithm, we need to limit possible insertions.
-Unconstrained insertions are possible only for a single character, and if we
-have constraints on the initial character, we should limit the total number of
-choices, beyond which deletion should take precedence.
+Unconstrained insertions are possible only for two characters. If we
+have constraints on the initial character, more insertions can be allowed,
+until the choices reach a configurable number (e.g. 100,000)
+beyond which deletion should take precedence.
 }
 
 %TODO
