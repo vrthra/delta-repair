@@ -61,15 +61,14 @@ def ddmax2(cprime_y, n):
     for delta_i in delta_n:
         # c'y union delta_i
         cprime_y_union_delta_i = union(cprime_y, delta_i) # these are indexes
-        delta_x_idxs = intersect(CX_I, cprime_y_union_delta_i) # idempotent
-        s = to_str(delta_x_idxs)
+        s = to_str(cprime_y_union_delta_i)
         if test(s):
-            passing_deltas.append((s, delta_x_idxs))
+            passing_deltas.append((s, cprime_y_union_delta_i))
     if passing_deltas: # increase to subset
-        # if \exist i \in {1 ... n}. test(cprime_y\union delta_i) holds
-        delta_x_idxs = passing_deltas[0][1] # get the first such passing
+        # if \exist i \in {1 ... n}. test(cprime_y_union delta_i) holds
+        cprime_y_union_delta_i = passing_deltas[0][1] # get the first such passing
         #pudb.set_trace()
-        return ddmax2(delta_x_idxs, max(n-1, 2))
+        return ddmax2(cprime_y_union_delta_i, max(n-1, 2))
 
     #Fig 5: else, if n < len(delta), increase granularity
     #note: CX_minus_cprime_y = CX_S - cprime_y
