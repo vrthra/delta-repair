@@ -34,7 +34,7 @@ def ddmax2(cprime_y, n):
     passing_deltas = []
     for delta_i in delta_n:
         CX_minus_delta_i = [i for i,s in enumerate(CX_S) if i not in delta_i]
-        if test(to_str(CX_minus_delta_i))
+        if test(to_str(CX_minus_delta_i)):
             passing_deltas.append(CX_minus_delta_i)
 
     if passing_deltas: # increase to complement
