@@ -11,22 +11,22 @@ def test(s):
         return False
     return True
 
-cx_s = None
+CX_S = None
 
 def ddmax2(cy_i, n):
     # delta is cx - c'y
-    cx_cy_i = [i for i,s in enumerate(cx_s) if i not in cy_i]
+    cx_cy_i = [i for i,s in enumerate(CX_S) if i not in cy_i]
     delta = cx_cy_i
     if len(delta) < n: return cy_i
 
     # split delta to n parts
     delta_n = split_idxs(delta, n)
-    strs_n = [to_str(d, cx_s) for d in delta_n]
+    strs_n = [to_str(d, CX_S) for d in delta_n]
     passing_deltas = []
     for delta_i in delta_n:
         # test c_x - delta_i
-        delta_x_idxs = [i for i,s in enumerate(cx_s) if i not in delta_i]
-        s = to_str(delta_x_idxs, cx_s)
+        delta_x_idxs = [i for i,s in enumerate(CX_S) if i not in delta_i]
+        s = to_str(delta_x_idxs, CX_S)
         if test(s):
             passing_deltas.append(delta_x_idxs)
     if passing_deltas: # increase to complement
@@ -39,8 +39,8 @@ def ddmax2(cy_i, n):
     passing_deltas = []
     for delta_i in delta_n:
         c_union_delta_i = cy_i + delta_i
-        delta_x_idxs = [i for i,s in enumerate(cx_s) if i in c_union_delta_i]
-        s = to_str(delta_x_idxs, cx_s)
+        delta_x_idxs = [i for i,s in enumerate(CX_S) if i in c_union_delta_i]
+        s = to_str(delta_x_idxs, CX_S)
         if test(s):
             passing_deltas.append(delta_x_idxs)
     if passing_deltas: # increase to subset
@@ -50,9 +50,9 @@ def ddmax2(cy_i, n):
         return ddmax2(delta_x_idxs, max(n-1, 2))
 
     #else:
-    #cx_cy_i = cx_s - cy_i
+    #cx_cy_i = CX_S - cy_i
     if n < len(cx_cy_i):
-        return ddmax2(cy_i, min(len(cx_s), 2*n))
+        return ddmax2(cy_i, min(len(CX_S), 2*n))
     #else:
     return cy_i
 
@@ -74,13 +74,13 @@ def split_idxs(lst,n, round_down=True):
 
 
 def ddmax(cx):
-    global cx_s
-    cx_s = list(cx)
+    global CX_S
+    CX_S = list(cx)
     empty_idxs = []
     # From Fig 5.
-    # ddmax(cx_s) = ddmax2(empty_idxs, 2) where
+    # ddmax(CX_S) = ddmax2(empty_idxs, 2) where
     sol_idxs = ddmax2(empty_idxs, 2)
-    return ''.join([s for i,s in enumerate(cx_s) if i in sol_idxs] )
+    return ''.join([s for i,s in enumerate(CX_S) if i in sol_idxs] )
 
 inputstr = '{ "item": "Apple", "price": ***3.45 }'
 #inputstr = '[*1, *2]'
