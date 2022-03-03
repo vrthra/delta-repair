@@ -13,51 +13,59 @@ def test(s):
 
 CX_S = None
 
-def ddmax2(cy_i, n):
-    # delta is cx - c'y
-    cx_cy_i = [i for i,s in enumerate(CX_S) if i not in cy_i]
-    delta = cx_cy_i
-    if len(delta) < n: return cy_i
+# Fig 5: c'y contains the indexes of passing chars. Initially empty when n = 2
+# c'y is subset of cx such that test(c'y) succeeds, and delta = cx-c'y is 1-minimal
+def ddmax2(cprime_y, n):
+    CX_minus_cprime_y = [i for i,s in enumerate(CX_S) if i not in cprime_y]
+    # Fig 5: where delta = CX - c'y
+    delta = CX_minus_cprime_y
 
-    # split delta to n parts
+    # Fig 5: recursion invariant for ddmax2 is test(cprime_y) and n <= len(delta)
+    assert n <= len(delta)
+    #TODO: if len(delta) < n: return cprime_y
+
+    # Fig 5: For all delta_n[i] len(delta_n[i]) ~ (len(delta)/n) holds
+    # split delta to n parts giving us delta_i == delta_n[i]
+    # Fig 5: all delta_n[i] are pairwise disjoint
     delta_n = split_idxs(delta, n)
-    strs_n = [to_str(d, CX_S) for d in delta_n]
+    # strs_n = [to_str(d) for d in delta_n]
+
+    # Fig 5: if exist i such that test(cx-delta_i) holds, increase to complement
     passing_deltas = []
     for delta_i in delta_n:
-        # test c_x - delta_i
-        delta_x_idxs = [i for i,s in enumerate(CX_S) if i not in delta_i]
-        s = to_str(delta_x_idxs, CX_S)
-        if test(s):
-            passing_deltas.append(delta_x_idxs)
+        CX_minus_delta_i = [i for i,s in enumerate(CX_S) if i not in delta_i]
+        if test(to_str(CX_minus_delta_i))
+            passing_deltas.append(CX_minus_delta_i)
+
     if passing_deltas: # increase to complement
         #if \exist i \in {1..n} such that test(c_x - delta_i) holds
-        delta_x_idxs = passing_deltas[0]
+        CX_minus_delta_i = passing_deltas[0]
         #pudb.set_trace()
-        return ddmax2(delta_x_idxs, 2)
+        return ddmax2(CX_minus_delta_i, 2)
 
     #else:
     passing_deltas = []
     for delta_i in delta_n:
-        c_union_delta_i = cy_i + delta_i
+        c_union_delta_i = cprime_y + delta_i
         delta_x_idxs = [i for i,s in enumerate(CX_S) if i in c_union_delta_i]
-        s = to_str(delta_x_idxs, CX_S)
+        s = to_str(delta_x_idxs)
         if test(s):
             passing_deltas.append(delta_x_idxs)
     if passing_deltas: # increase to subset
-        # if \exist i \in {1 ... n}. test(cy_i\union delta_i) holds
+        # if \exist i \in {1 ... n}. test(cprime_y\union delta_i) holds
         delta_x_idxs = passing_deltas[0]
         #pudb.set_trace()
         return ddmax2(delta_x_idxs, max(n-1, 2))
 
     #else:
-    #cx_cy_i = CX_S - cy_i
-    if n < len(cx_cy_i):
-        return ddmax2(cy_i, min(len(CX_S), 2*n))
+    #CX_minus_cprime_y = CX_S - cprime_y
+    if n < len(CX_minus_cprime_y):
+        return ddmax2(cprime_y, min(len(CX_S), 2*n))
     #else:
-    return cy_i
+    return cprime_y
 
-def to_str(idxs, s):
-    return ''.join([s[i] for i in idxs])
+def to_str(idxs):
+    return ''.join([CX_S[i] for i in idxs])
 
 # Choose one of the two:
 #round down
@@ -86,7 +94,7 @@ inputstr = '{ "item": "Apple", "price": ***3.45 }'
 #inputstr = '[*1, *2]'
 
 if __name__ == "__main__":
-    s = sys.argv[1] # inputstr
+    #s = sys.argv[1] # inputstr
     s = inputstr
     assert not test(s)
     solution = ddmax(s)
