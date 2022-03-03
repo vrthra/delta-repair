@@ -12,11 +12,19 @@ def test(s):
     return True
 
 CX_S = None
+CX_I = None
+
+def minus(first, second):
+    return [i for i in first if i not in second]
+
+def union(first, second):
+    return list(sorted(first + second))
+
 
 # Fig 5: c'y contains the indexes of passing chars. Initially empty when n = 2
 # c'y is subset of cx such that test(c'y) succeeds, and delta = cx-c'y is 1-minimal
 def ddmax2(cprime_y, n):
-    CX_minus_cprime_y = [i for i,s in enumerate(CX_S) if i not in cprime_y]
+    CX_minus_cprime_y = minus(CX_I, cprime_y)
     # Fig 5: where delta = CX - c'y
     delta = CX_minus_cprime_y
 
@@ -33,7 +41,7 @@ def ddmax2(cprime_y, n):
     # Fig 5: if exist i such that test(cx-delta_i) holds, increase to complement
     passing_deltas = []
     for delta_i in delta_n:
-        CX_minus_delta_i = [i for i,s in enumerate(CX_S) if i not in delta_i]
+        CX_minus_delta_i = minus(CX_I, delta_i)
         s = to_str(CX_minus_delta_i)
         if test(s):
             passing_deltas.append((s, CX_minus_delta_i))
@@ -48,7 +56,7 @@ def ddmax2(cprime_y, n):
     passing_deltas = []
     for delta_i in delta_n:
         cprime_y_union_delta_i = cprime_y + delta_i # these are indexes
-        delta_x_idxs = [i for i,s in enumerate(CX_S) if i in cprime_y_union_delta_i]
+        delta_x_idxs = union(CX_I, cprime_y_union_delta_i)
         s = to_str(delta_x_idxs)
         if test(s):
             passing_deltas.append((s, delta_x_idxs))
@@ -85,8 +93,9 @@ def split_idxs(lst,n, round_down=True):
 
 
 def ddmax(cx):
-    global CX_S
+    global CX_S, CX_I
     CX_S = list(cx)
+    CX_I = list(range(len(cx)))
     empty_idxs = []
     # From Fig 5.
     # ddmax(CX_S) = ddmax2(empty_idxs, 2) where
