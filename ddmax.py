@@ -108,13 +108,14 @@ def ddmax(cx):
 
 inputstr = '{ "item": "Apple", "price": ***3.45 }'
 #inputstr = '[*1, *2]'
+inputstr = '[*1, *2]'
 
 if __name__ == "__main__":
     #s = sys.argv[1] # inputstr
     s = inputstr
     assert not test(s)
     solution = ddmax(s)
-    print('SOLUTION:', solution)
+    print('SOLUTION:', repr(solution))
     
 # python3 -m pudb ddmax.py '{1:$+1}'  
 # python3 -m pudb ddmax.py '{123:$+1}'
