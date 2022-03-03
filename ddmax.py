@@ -81,7 +81,7 @@ def ddmax2(cprime_y, n):
     #Fig 5: else, if n < len(delta), increase granularity
     if increase_grannularity(n, CX_minus_cprime_y):
         # Fig 5: ddmax2(c'y, min(|cx|, 2n))  <-- this is buggy
-        return ddmax2(cprime_y, min(len(CX_S), 2*n)) # XXX: BUGGY but from Fig 5.
+        return ddmax2(cprime_y, min(len(CX_S) - len(cprime_y), 2*n)) # XXX: BUGGY but from Fig 5.
 
     # Fig5: otherwise done
     return cprime_y
