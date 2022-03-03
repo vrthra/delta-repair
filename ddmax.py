@@ -34,12 +34,13 @@ def ddmax2(cprime_y, n):
     passing_deltas = []
     for delta_i in delta_n:
         CX_minus_delta_i = [i for i,s in enumerate(CX_S) if i not in delta_i]
-        if test(to_str(CX_minus_delta_i)):
-            passing_deltas.append(CX_minus_delta_i)
+        s = to_str(CX_minus_delta_i)
+        if test(s):
+            passing_deltas.append((s, CX_minus_delta_i))
 
     if passing_deltas: # increase to complement
         #if \exist i \in {1..n} such that test(c_x - delta_i) holds
-        CX_minus_delta_i = passing_deltas[0] # get the first such passing
+        CX_minus_delta_i = passing_deltas[0][1] # get the first such passing
         #pudb.set_trace()
         return ddmax2(CX_minus_delta_i, 2)
 
@@ -48,11 +49,12 @@ def ddmax2(cprime_y, n):
     for delta_i in delta_n:
         cprime_y_union_delta_i = cprime_y + delta_i # these are indexes
         delta_x_idxs = [i for i,s in enumerate(CX_S) if i in cprime_y_union_delta_i]
-        if test(to_str(delta_x_idxs)):
-            passing_deltas.append(delta_x_idxs)
+        s = to_str(delta_x_idxs)
+        if test(s):
+            passing_deltas.append((s, delta_x_idxs))
     if passing_deltas: # increase to subset
         # if \exist i \in {1 ... n}. test(cprime_y\union delta_i) holds
-        delta_x_idxs = passing_deltas[0] # get the first such passing
+        delta_x_idxs = passing_deltas[0][1] # get the first such passing
         #pudb.set_trace()
         return ddmax2(delta_x_idxs, max(n-1, 2))
 
