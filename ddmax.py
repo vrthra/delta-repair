@@ -20,6 +20,10 @@ def minus(first, second):
 def union(first, second):
     return list(sorted(first + second))
 
+def intersect(first, second):
+    return [i for i in first if i in second]
+
+
 
 # Fig 5: c'y contains the indexes of passing chars. Initially empty when n = 2
 # c'y is subset of cx such that test(c'y) succeeds, and delta = cx-c'y is 1-minimal
@@ -55,8 +59,9 @@ def ddmax2(cprime_y, n):
     #Fig 5: else, if exist i such that test(c'y union delta_i) holds, increase to subset
     passing_deltas = []
     for delta_i in delta_n:
-        cprime_y_union_delta_i = cprime_y + delta_i # these are indexes
-        delta_x_idxs = union(CX_I, cprime_y_union_delta_i)
+        # c'y union delta_i
+        cprime_y_union_delta_i = union(cprime_y, delta_i) # these are indexes
+        delta_x_idxs = intersect(CX_I, cprime_y_union_delta_i) # idempotent
         s = to_str(delta_x_idxs)
         if test(s):
             passing_deltas.append((s, delta_x_idxs))
