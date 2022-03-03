@@ -23,13 +23,33 @@ def union(first, second):
 def intersect(first, second):
     return [i for i in first if i in second]
 
+def increase_to_complement(delta_n):
+    # Fig 5: if exist i such that test(cx-delta_i) holds, increase to complement
+    for delta_i in delta_n:
+        CX_minus_delta_i = minus(CX_I, delta_i)
+        s = to_str(CX_minus_delta_i)
+        if test(s):
+            return CX_minus_delta_i
+    return None
 
+def increase_to_subset(delta_n, cprime_y):
+    for delta_i in delta_n:
+        # c'y union delta_i
+        cprime_y_union_delta_i = union(cprime_y, delta_i) # these are indexes
+        s = to_str(cprime_y_union_delta_i)
+        if test(s):
+            return cprime_y_union_delta_i
+    return None
+
+def increase_grannularity(n, CX_minus_cprime_y):
+    return n < len(CX_minus_cprime_y)
 
 # Fig 5: c'y contains the indexes of passing chars. Initially empty when n = 2
 # c'y is subset of cx such that test(c'y) succeeds, and delta = cx-c'y is 1-minimal
 def ddmax2(cprime_y, n):
-
-    if (len(cprime_y) + 1) == len(CX_S): # Base case where the number of excluded bytes from the input has a size of 1, i.e. cannot be minimized further
+    # Base case where the number of excluded bytes from the input has a size of
+    # 1, i.e. cannot be minimized further
+    if (len(cprime_y) + 1) == len(CX_S):
         print("DeltaSet is 1-minimal.")
         return cprime_y
 
@@ -47,41 +67,23 @@ def ddmax2(cprime_y, n):
     delta_n = split_idxs(delta, n)
     # strs_n = [to_str(d) for d in delta_n]
 
-    # Fig 5: if exist i such that test(cx-delta_i) holds, increase to complement
-    passing_deltas = []
-    for delta_i in delta_n:
-        CX_minus_delta_i = minus(CX_I, delta_i)
-        s = to_str(CX_minus_delta_i)
-        if test(s):
-            passing_deltas.append((s, CX_minus_delta_i))
-
-    if passing_deltas: # increase to complement
+    CX_minus_delta_i =  increase_to_complement(delta_n)
+    if CX_minus_delta_i:
         #if \exist i \in {1..n} such that test(c_x - delta_i) holds
-        CX_minus_delta_i = passing_deltas[0][1] # get the first such passing
-        #pudb.set_trace()
         return ddmax2(CX_minus_delta_i, 2)
 
-    #Fig 5: else, if exist i such that test(c'y union delta_i) holds, increase to subset
-    passing_deltas = []
-    for delta_i in delta_n:
-        # c'y union delta_i
-        cprime_y_union_delta_i = union(cprime_y, delta_i) # these are indexes
-        s = to_str(cprime_y_union_delta_i)
-        if test(s):
-            passing_deltas.append((s, cprime_y_union_delta_i))
-    if passing_deltas: # increase to subset
+    cprime_y_union_delta_i = increase_to_subset(delta_n, cprime_y)
+    if cprime_y_union_delta_i: # increase to subset
         # if \exist i \in {1 ... n}. test(cprime_y_union delta_i) holds
-        cprime_y_union_delta_i = passing_deltas[0][1] # get the first such passing
-        #pudb.set_trace()
         return ddmax2(cprime_y_union_delta_i, max(n-1, 2))
 
+
     #Fig 5: else, if n < len(delta), increase granularity
-    #note: CX_minus_cprime_y = CX_S - cprime_y
-    if n < len(CX_minus_cprime_y):
+    if increase_grannularity(n, CX_minus_cprime_y):
         # Fig 5: ddmax2(c'y, min(|cx|, 2n))  <-- this is buggy
         return ddmax2(cprime_y, min(len(CX_S), 2*n)) # XXX: BUGGY but from Fig 5.
-        #return ddmax2(cprime_y, min(len(CX_minus_cprime_y), 2*n)) # THIS WILL WORK:
-    #else:
+
+    # Fig5: otherwise done
     return cprime_y
 
 def to_str(idxs):
@@ -111,7 +113,9 @@ def ddmax(cx):
     sol_idxs = ddmax2(empty_idxs, 2)
     return ''.join([s for i,s in enumerate(CX_S) if i in sol_idxs] )
 
+inputstr = '{ "item": "Apple", "price": ***3.45 }'
 inputstr = '{ "product": "Apple", "price": **3.45 }'
+inputstr = '[*1, *2]'
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
