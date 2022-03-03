@@ -111,8 +111,10 @@ inputstr = '{ "item": "Apple", "price": ***3.45 }'
 inputstr = '[*1, *2]'
 
 if __name__ == "__main__":
-    #s = sys.argv[1] # inputstr
-    s = inputstr
+    if len(sys.argv) > 1:
+        s = sys.argv[1] # inputstr
+    else:
+        s = inputstr
     assert not test(s)
     solution = ddmax(s)
     print('SOLUTION:', repr(solution))
