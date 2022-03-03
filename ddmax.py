@@ -62,7 +62,8 @@ def ddmax2(cprime_y, n):
     #note: CX_minus_cprime_y = CX_S - cprime_y
     if n < len(CX_minus_cprime_y):
         # Fig 5: ddmax2(c'y, min(|cx|, 2n))
-        return ddmax2(cprime_y, min(len(CX_S), 2*n))
+        return ddmax2(cprime_y, min(len(CX_S), 2*n)) # XXX: LIKELY BUGGY
+        # THIS WILL WORK: return ddmax2(cprime_y, min(len(CX_minus_cprime_y), 2*n))
     #else:
     return cprime_y
 
