@@ -581,7 +581,6 @@ three, we choose \\
 \letterboxed{\{\ "item":\ "Apple",\ "price":\ 3.45\}}\\
 as the solution.
 
-
 %at which boundary the prefix shifts between incomplete and incorrect.
 % It then iteratively applies
 % deletion, insertion, and alteration of the character at the point of failure to
@@ -618,6 +617,13 @@ as the solution.
 % \caption{Failing input repaired with \brepair}
 % \label{fig:bad-json-input-repaired-asterisks}
 % \end{figure}
+
+\todo{
+\textbf{note:} In the algorithm, we need to limit possible insertions.
+Unconstrained insertions are possible only for a single character, and if we
+have constraints on the initial character, we should limit the total number of
+choices, beyond which deletion should take precedence.
+}
 
 %TODO
 \section{Overview}
