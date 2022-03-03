@@ -28,6 +28,11 @@ def intersect(first, second):
 # Fig 5: c'y contains the indexes of passing chars. Initially empty when n = 2
 # c'y is subset of cx such that test(c'y) succeeds, and delta = cx-c'y is 1-minimal
 def ddmax2(cprime_y, n):
+
+    if (len(cprime_y) + 1) == len(CX_S): # Base case where the number of excluded bytes from the input has a size of 1, i.e. cannot be minimized further
+        print("DeltaSet is 1-minimal.")
+        return cprime_y
+
     CX_minus_cprime_y = minus(CX_I, cprime_y)
     # Fig 5: where delta = CX - c'y
     delta = CX_minus_cprime_y
@@ -75,7 +80,7 @@ def ddmax2(cprime_y, n):
     if n < len(CX_minus_cprime_y):
         # Fig 5: ddmax2(c'y, min(|cx|, 2n))  <-- this is buggy
         return ddmax2(cprime_y, min(len(CX_S), 2*n)) # XXX: BUGGY but from Fig 5.
-        #return ddmax2(cprime_y, min(len(CX_minus_cprime_y), 2*n)) # THIS WILL WORK: 
+        #return ddmax2(cprime_y, min(len(CX_minus_cprime_y), 2*n)) # THIS WILL WORK:
     #else:
     return cprime_y
 
@@ -106,9 +111,7 @@ def ddmax(cx):
     sol_idxs = ddmax2(empty_idxs, 2)
     return ''.join([s for i,s in enumerate(CX_S) if i in sol_idxs] )
 
-inputstr = '{ "item": "Apple", "price": ***3.45 }'
-#inputstr = '[*1, *2]'
-inputstr = '[*1, *2]'
+inputstr = '{ "product": "Apple", "price": **3.45 }'
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
@@ -118,6 +121,6 @@ if __name__ == "__main__":
     assert not test(s)
     solution = ddmax(s)
     print('SOLUTION:', repr(solution))
-    
+
 # python3 -m pudb ddmax.py '{1:$+1}'  
 # python3 -m pudb ddmax.py '{123:$+1}'
