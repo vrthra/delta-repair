@@ -74,8 +74,8 @@ def ddmax2(cprime_y, n):
     #note: CX_minus_cprime_y = CX_S - cprime_y
     if n < len(CX_minus_cprime_y):
         # Fig 5: ddmax2(c'y, min(|cx|, 2n))  <-- this is buggy
-        #return ddmax2(cprime_y, min(len(CX_S), 2*n)) # XXX: BUGGY but from Fig 5.
-        return ddmax2(cprime_y, min(len(CX_minus_cprime_y), 2*n)) # THIS WILL WORK: 
+        return ddmax2(cprime_y, min(len(CX_S), 2*n)) # XXX: BUGGY but from Fig 5.
+        #return ddmax2(cprime_y, min(len(CX_minus_cprime_y), 2*n)) # THIS WILL WORK: 
     #else:
     return cprime_y
 
@@ -84,7 +84,7 @@ def to_str(idxs):
 
 # Choose one of the two:
 #round down
-def split_idxs(lst,n, round_down=True):
+def split_idxs(lst,n, round_down=False):
     stride = len(lst)//n
     rem =  len(lst) - (stride * n)
     if not rem:
