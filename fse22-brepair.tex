@@ -664,12 +664,15 @@ The \emph{maximizing Delta Debugging algorithm} $\ddmax(c)$ is
 \ddmax(\cfail) &= \ddmax_2(\emptyset, 2) \quad \text{where} \\
 \ddmax_2(\dpass, n) &=
 \begin{cases}
-\ddmax_2(\cfail - \Delta_i, 2) & \text{\hphantom{else }if $\exists i \in \{1, \dots, n\} \cdot \test(\cfail - \Delta_i) = \pass$ (``increase to complement'')} \\
+    %if len(minus(CX_I, cprime_y)) == 1: return cprime_y
+\dpass & \text{\hphantom{else }if $|\cfail - \Delta_i| = 1$ (``base case$^{\textcolor{red}{a}}$'')} \\
+%
+\ddmax_2(\cfail - \Delta_i, 2) & \text{else if $\exists i \in \{1, \dots, n\} \cdot \test(\cfail - \Delta_i) = \pass$ (``increase to complement'')} \\
 %
 \ddmax_2\bigl(\dpass \cup \Delta_i, \max(n - 1, 2)\bigr) &
 \text{else if $\exists i \in \{1, \dots, n\} \cdot \test(\dpass \cup \Delta_i) = \pass$ (``increase to subset'')} \\
 %
-\ddmax_2\bigl(\dpass, \min(|\cfail|, 2n)\bigr) & \text{else if $n < |\cfail - \dpass|$ (``increase granularity'')} \\
+  \ddmax_2\bigl(\dpass, \min(|\cfail - \dpass|, 2n)\bigr) & \text{else if $n < |\cfail - \dpass|$ (``increase granularity$^{\text{\textcolor{red}{b}}}$'')} \\
 \dpass & \text{otherwise (``done'').}
 \end{cases}
 \end{align*}
@@ -678,7 +681,9 @@ $\Delta_i$ are pairwise disjoint, and $\forall \Delta_i \cdot |\Delta_i| \approx
 holds.
 
 The recursion invariant (and thus precondition) for $\ddmax_2$ is
-$\test(\dpass) = \pass \land n \leq |\Delta|$.
+$\test(\dpass) = \pass \land n \leq |\Delta|$.\\
+\textcolor{red}{a}: bugfix\\
+\textcolor{red}{b}: bugfix
 \end{minipage}
 \end{boxedminipage}
 %\vspace{-0.5\baselineskip}
