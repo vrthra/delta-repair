@@ -48,6 +48,28 @@ Failure Feedback}
 }{
 }
 
+%--
+
+% Own commands
+\newcommand{\dd}{\textit{dd}\xspace}
+\newcommand{\ddmin}{\textit{ddmin}\xspace}
+%\newcommand{\ddmax}{\textit{ddmax}\xspace}
+\newcommand{\test}{\textit{test}\xspace}
+%\newcommand{\ddmaxg}{\textit{syntactic ddmax}\xspace}
+
+\usepackage{pifont}
+\newcommand{\pass}{\text{\ding{52}}\xspace}
+\newcommand{\fail}{\text{\ding{56}}\xspace}
+% \newcommand{\unresolved}{\textbf{?}}
+\newcommand{\unresolved}{\lower0.1ex\hbox{\includegraphics*[height=1.7ex]{question.pdf}}}
+
+
+\newcommand{\cpass}{{c_{\scriptscriptstyle \pass}}}
+\newcommand{\cfail}{{c_{\scriptscriptstyle \fail}}}
+\newcommand{\dpass}{{c'_{\scriptscriptstyle \pass}}}
+\newcommand{\dfail}{{c'_{\scriptscriptstyle \fail}}}
+
+%--
 
 \newcommand{\approach}{\textsc{BRepair}\xspace}
 \def\bfr{bFuzzerRepairer\xspace}
@@ -56,10 +78,6 @@ Failure Feedback}
 \newcommand{\ddmaxg}{\textit{DDmaxG}\xspace}
 \newcommand{\bsimple}{\textit{bsimple}\xspace}
 \newcommand{\brepair}{\textit{brepair}\xspace}
-
-\usepackage{pifont}
-\newcommand{\pass}{\text{\ding{52}}\xspace}
-\newcommand{\fail}{\text{\ding{56}}\xspace}
 
 \tikzset{inlinenode/.style={draw=white,text=black,fill=light-gray,inner sep=.1em,outer sep=0em}}
 \newcommand{\inlinenode}[1]{\text{\hspace{.1em}\tikz[baseline=(n.base)]{\node[inlinenode] (n) {\strut \hspace*{.3em}#1\hspace*{.3em}};}\hspace{.1em}}}
@@ -628,6 +646,47 @@ beyond which deletion should take precedence.
 
 %TODO
 \section{Overview}
+
+\begin{figure*}[t]
+\begin{boxedminipage}{\textwidth}
+\smallskip
+\ \begin{minipage}{0.9\textwidth}
+\subsection*{Maximizing Delta Debugging Algorithm}
+\medskip
+
+Let $\test$ and $\cfail$ be given such that $\test(\emptyset) = \pass \land
+\test(\cfail) = \fail$ hold.
+
+The goal is to find $\dpass = \ddmax(\cfail)$ such that $\dpass \subset \cfail$, $\test(\dpass) = \pass$, and~$\Delta = \cfail - \dpass$ is 1-minimal.
+
+The \emph{maximizing Delta Debugging algorithm} $\ddmax(c)$ is
+\begin{align*}
+\ddmax(\cfail) &= \ddmax_2(\emptyset, 2) \quad \text{where} \\
+\ddmax_2(\dpass, n) &=
+\begin{cases}
+\ddmax_2(\cfail - \Delta_i, 2) & \text{\hphantom{else }if $\exists i \in \{1, \dots, n\} \cdot \test(\cfail - \Delta_i) = \pass$ (``increase to complement'')} \\
+%
+\ddmax_2\bigl(\dpass \cup \Delta_i, \max(n - 1, 2)\bigr) &
+\text{else if $\exists i \in \{1, \dots, n\} \cdot \test(\dpass \cup \Delta_i) = \pass$ (``increase to subset'')} \\
+%
+\ddmax_2\bigl(\dpass, \min(|\cfail|, 2n)\bigr) & \text{else if $n < |\cfail - \dpass|$ (``increase granularity'')} \\
+\dpass & \text{otherwise (``done'').}
+\end{cases}
+\end{align*}
+where $\Delta = \cfail - \dpass = \Delta_1 \cup \Delta_2 \cup \dots \cup \Delta_n$, all
+$\Delta_i$ are pairwise disjoint, and $\forall \Delta_i \cdot |\Delta_i| \approx |\cfail - \dpass| / n$
+holds.
+
+The recursion invariant (and thus precondition) for $\ddmax_2$ is
+$\test(\dpass) = \pass \land n \leq |\Delta|$.
+\end{minipage}
+\end{boxedminipage}
+%\vspace{-0.5\baselineskip}
+\caption{Maximizing Lexical Delta Debugging algorithm}
+%\vspace{-0.5\baselineskip}
+\label{fig:ddmax}
+\end{figure*}
+
 
 \section{Approach}
 
