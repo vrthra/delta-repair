@@ -682,8 +682,8 @@ holds.
 
 The recursion invariant (and thus precondition) for $\ddmax_2$ is
 $\test(\dpass) = \pass \land n \leq |\Delta|$.\\
-\textcolor{red}{a}: Bugfix: This base case is necessary to ensure that \letterboxed{1*1} does not violate the invariant $n \leq |\Delta|$.\\
-\textcolor{red}{b}: Bugfix: We should look for minimum of the remaining string so that invariant $n \leq |\Delta|$ is not violated for \letterboxed{\{*"":2\}}.
+\textcolor{red}{a}: Bugfix: This base case is necessary to ensure that repairing JSON input \letterboxed{1*1} does not violate the invariant $n \leq |\Delta|$.\\
+\textcolor{red}{b}: Bugfix: We should look for minimum of the remaining so that invariant $n \leq |\Delta|$ is not violated for JSON input \letterboxed{\{*"":2\}}.
 \end{minipage}
 \end{boxedminipage}
 %\vspace{-0.5\baselineskip}
