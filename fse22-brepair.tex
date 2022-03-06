@@ -377,15 +377,18 @@ are created by hand, and the process of manual generation can be error-prone.
 Given such artifacts that are \emph{almost} but \emph{not quite} parsable,
 consuming such resources, and aggregating them often involves trying to
 maximally parse them by minimizing parse errors~\cite{kirschner2020debugging}.
-If the parser at hand conforms to a context-free grammar, and an acceptable
-formal grammar is available, this issue can be solved using
-\emph{error-correcting} parsers~\cite{aho1972minimum}.
+If the parser at hand conforms to a formal specification such as a context-free
+grammar, and this grammar is available,
+%context-free grammar, and an acceptable formal grammar is available,
+the challenge of repairing the input and making it parsable can be solved using
+\emph{error-correcting} parsers~\cite{aho1972minimum,diekmann2020dont}.
 The idea in such parsers is to generate a universal grammar that captures
 any mutation of the base grammar. Any parse of the input string that employs a
 mutation is penalized, and the parse with minimal mutation is chosen as the
 best parse, and the corresponding mutation the best repair. The limitation of
 this approach is that it assumes the existence of a formal grammar in the first
-place. However, formats such as markdown~\cite{gruber2004markdown} does not have
+place, which completely captures the intended structure.
+However, formats such as markdown~\cite{gruber2004markdown} does not have
 a formal grammar; Documents in languages such as \<C> can contain semantic
 information that is not captured in the contex-free grammar, and may not be
 discardable. Finally, even when the base grammar is context-free grammar (as in
@@ -401,6 +404,8 @@ is that given a corrupt input which induces a parse error, and a way to
 decompose the input into independent fragments (called deltas), one can
 successively minimize the parse-error inducing part of the input resulting in a
 maximal parsing input.
+
+\todo{Write about multiple errors}
 
 \ddmax works very well when the input document and parser follows the
 constraints it imposes. Notabily, the independence of deltas (that each delta
