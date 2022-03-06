@@ -479,6 +479,40 @@ have no problems maximizing any inputs. However, this can be a rather strong
 constraint in practice.
 
 \subsection{Limitations due to multiple faults}
+\todo{I think that all these issues with \ddmax has one single cause -- the
+rich input structure. I have mentioned it above. Perhaps we should simply
+consolidate all into one.}
+Another issue (acknowledged by the \ddmax paper) is that multiple errors and
+multiple repairs can be a limitation. \ddmax paper claims that ``when given
+inputs with multiple errors, \ddmax will produce an input that repairs all of
+them. However, if theere are multiple ways to repair the input, \ddmax will
+produce only one''. The problem is that, \ddmax's choice need not be optimal.
+For example, consider \Cref{fig:bad-json-input2}. \ddmax repairs this input
+to \<123456> which loses the structure as well as changes the type from
+\<string> to \<number>. Hence, \ddmax can't repair inputs with multiple faults
+effectively.
+
+%One of the ambiguities here is that it is not immediately
+%clear what a repair means. For example the empty set $\emptyset$ is assumed to
+%be passing. Hence, is $\emptyset$ a valid repair?
+
+\begin{figure}
+\begin{center}
+\letterboxed{\{\"ABCD":[*"1,2,3,4,5,6"]*\}}
+\end{center}
+%\vspace{-0.6\baselineskip}
+\caption{\ddmax repairs this JSON to ``\<123456>''}
+\label{fig:bad-json-input2}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\letterboxed{\{\ "name":\ "Daveage"\ \}}
+\end{center}
+%\vspace{-0.6\baselineskip}
+\caption{Failing input repaired with DDMax}
+\label{fig:bad-json-input-ddmax}
+\end{figure}
 
 \subsection{Limited Options for Repair}
 The second major limitation of
