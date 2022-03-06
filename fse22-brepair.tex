@@ -422,14 +422,14 @@ maximal parsing input.
 \label{fig:bad-json-input-asterisks}
 \end{figure}
 
-\noindent\textbf{Limited repairability.} One of the biggest limitations of
-\ddmax is its assumption that the input can be decomposed into independent
-fragments. \ddmax works very well when the input can be split into independent
-deltas. The problem is that in most cases, the input may have a rich structure,
-and may not be decomposable effectively into independent deltas. As an example,
-consider \Cref{fig:bad-json-input-asterisks} similar to Kirchner et
-al.~\cite[Figure 1]{kirschner2020debugging}. Here, the JSON string is invalid
-because it contains three \<*> characters. The operation of \ddmax is as follows:
+\subsection{Incompleteness due to spans.}
+One of the major problems with \ddmax is that it can fail when certain
+corruption patterns are encountered din the input string.
+
+As an example, consider \Cref{fig:bad-json-input-asterisks}. This is very
+similar to Kirchner et al.~\cite[Figure 1]{kirschner2020debugging}.
+Here, the JSON string is invalid because it contains three \letterboxed{*}
+characters. The operation of \ddmax is as follows:
 
 \begin{enumerate}
 \item Split the string in half, resulting in\\
