@@ -474,8 +474,9 @@ fragment can be independently removed without impacting the failure. An
 equivalent condition for \ddmax would be that one can add each non-failure
 causing fragment to the passing input independently. However, this fails
 when we have rich input structure as illustrated by the above example.
-(Of course, once we require that condition, the original \ddmin with inverted
-predicates will suffice.)
+Of course, onece the input processor conforms to this constraint, \ddmax will
+have no problems maximizing any inputs. However, this can be a rather strong
+constraint in practice.
 
 \subsection{Limitations due to multiple faults}
 
@@ -662,7 +663,7 @@ beyond which deletion should take precedence.
 \\
 \noindent\textbf{Contributions.}
 \begin{itemize}
-  \item We identify one of the major limitations to \ddmax -- the span problem.
+  \item We identify one of the major limitations to \ddmax -- the limitation due to rich struture, which can be fixed only by requiring additional constraints.
   \item We provide two bug fixes to \ddmax.
   \item We propose \approach which does not have these limitations.
 \end{itemize}
