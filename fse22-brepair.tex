@@ -407,7 +407,8 @@ maximal parsing input.
 
 
 \ddmax works very well for most inputs. However, it has three major limitations:
-(1)~Incompleteness due to spans, (2)~inability to fix multiple inputs, and
+(1)~Limitations due to rich input structure,
+(2)~inability to fix multiple inputs, and
 (3)~limited repair options available. We explain each in turn.
 
 %---
@@ -425,7 +426,7 @@ maximal parsing input.
 
 \end{figure}
 
-\subsection{Incompleteness due to spans.}
+\subsection{Limitations due to rich input structure}
 One of the major problems with \ddmax is that it can fail when certain
 corruption patterns are encountered din the input string.
 
@@ -464,10 +465,22 @@ That is, this particular invalid JSON string can't be repaired by \ddmax.
 While this may seem like not much of information loss, consider
 \Cref{fig:bad-json-input-asterisks} which is similar to
 Kirchner et al.~\cite[Figure 1]{kirschner2020debugging} but with an extra
-\letterboxed{*}. This results in a fix of \mbox{``\<\ \ \ \ 3.45>''}, resulting
-in information loss.
+\letterboxed{*}. This results in a repair of \mbox{``\<\ \ \ \ 3.45>''},
+resulting in information loss.
 
-\noindent\textbf{Limited Options for Repair.} The second major limitation of
+One of the issues here is that unlike \ddmin, \ddmax can't require independence
+of $\Delta$ sequences. That is, \ddmin requires that each non-failure causing
+fragment can be independently removed without impacting the failure. An
+equivalent condition for \ddmax would be that one can add each non-failure
+causing fragment to the passing input independently. However, this fails
+when we have rich input structure as illustrated by the above example.
+(Of course, once we require that condition, the original \ddmin with inverted
+predicates will suffice.)
+
+\subsection{Limitations due to multiple faults}
+
+\subsection{Limited Options for Repair}
+The second major limitation of
 \ddmax is that the only operation in its toolbox is \emph{deletion} of input
 fragments. Consider \Cref{fig:bad-json-input}.
 %\Cref{fig:bad-json-deletion}.
