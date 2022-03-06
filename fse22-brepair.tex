@@ -408,7 +408,7 @@ maximal parsing input.
 
 \ddmax works very well for most inputs. However, it has three major limitations:
 (1)~Incompleteness due to spans, (2)~inability to fix multiple inputs, and
-(3)~limited repair options available.
+(3)~limited repair options available. We explain each in turn.
 
 %---
 % Example for Span Problem
@@ -636,7 +636,13 @@ have constraints on the initial character, more insertions can be allowed,
 until the choices reach a configurable number (e.g. 100,000)
 beyond which deletion should take precedence.
 }
-
+\\
+\noindent\textbf{Contributions.}
+\begin{itemize}
+  \item We identify one of the major limitations to \ddmax -- the span problem.
+  \item We provide two bug fixes to \ddmax.
+  \item We propose \approach which does not have these limitations.
+\end{itemize}
 %TODO
 \section{Overview}
 
