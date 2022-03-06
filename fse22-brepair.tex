@@ -418,101 +418,48 @@ maximal parsing input.
 \letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\ \}}
 \end{center}
 %\vspace{-0.6\baselineskip}
-\caption{Invalid JSON which \ddmax fails to repair}
+  \caption{\ddmax repairs this JSON to \mbox{``\<\ \ \ \ 3.45>''}}
+   %\Cref{fig:bad-json-input-asterisks}. This is very
+%similar to Kirchner et al.~\cite[Figure 1]{kirschner2020debugging} 
 \label{fig:bad-json-input-asterisks}
+
 \end{figure}
 
 \subsection{Incompleteness due to spans.}
 One of the major problems with \ddmax is that it can fail when certain
 corruption patterns are encountered din the input string.
 
-As an example, consider \Cref{fig:bad-json-input-asterisks}. This is very
-similar to Kirchner et al.~\cite[Figure 1]{kirschner2020debugging}.
+As an example, consider the fragment \letterboxed{[**]}.
 Here, the JSON string is invalid because it contains three \letterboxed{*}
 characters. The operation of \ddmax (\Cref{fig:ddmax}) is as follows:
 
 \begin{enumerate}
 \item The operation starts with $\ddmax_2(\emptyset, 2)$
-\item  $|\cfail - \emptyset| = 37$. Hence, the base case does not apply
+\item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply
 \item Increase to complement:\\
-$\cfail - \Delta_2$= \letterboxed{\ "price":\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_1$=\letterboxed{\{\ "item":\ "Apple",} \fail \\
-Both fails
+$\cfail - \Delta_2$= \letterboxed{*]} \fail \\
+$\cfail - \Delta_2$= \letterboxed{[*} \fail \\
 \item Increase to subset:\\
-$\cfail - \Delta_1$=\letterboxed{\{\ "item":\ "Apple",} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\ "price":\ ***3.45\ \}} \fail \\
-Both fails
+$\cfail \cup \Delta_1$=\letterboxed{[*} \fail \\
+$\cfail \cup \Delta_2$= \letterboxed{*]} \fail \\
 \item Increase grannularity: $n < |\cfail-\dpass|$ which is $2 < |\cfail-\emptyset|$ \pass \\
-  Hence the next iteration is: %$\ddmax_2\bigl(\dpass, \min(|\cfail - \dpass|, 2n)\bigr) $\\
+  Hence the next iteration is:
   $\ddmax_2\bigl(\emptyset, 4)\bigr) $
-\item  $|\cfail - \emptyset| = 37$. Hence, the base case does not apply.
+\item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply.
 \item Increase to complement:\\
-$\cfail - \Delta_2$= \letterboxed{"Apple",\ "price":\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{\ "item":\ "price":\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{\ "item":\ "price":\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{\ "item":\ "Apple",\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{\ "item":\ "Apple",\ "price":\ **} \fail 
+$\cfail - \Delta_2$= \letterboxed{**]} \fail \\
+$\cfail - \Delta_2$= \letterboxed{[*]} \fail \\
+$\cfail - \Delta_2$= \letterboxed{[*]} \fail \\
+$\cfail - \Delta_2$= \letterboxed{[*]} \fail \\
+$\cfail - \Delta_2$= \letterboxed{[**} \fail \\
 \item Increase to subset:\\
-$\cfail \cup \Delta_1$=\letterboxed{\{\ "item":\ } \fail \\
-$\cfail \cup \Delta_1$=\letterboxed{"Apple",\ "} \fail \\
-$\cfail \cup \Delta_2$= \letterboxed{price":\ **} \fail \\
-$\cfail \cup \Delta_2$= \letterboxed{*3.45\ \}} \fail \\
-\item Increase grannularity: $n < |\cfail-\dpass|$ which is $2 < |\cfail-\emptyset|$ \pass \\
-  Hence the next iteration is: %$\ddmax_2\bigl(\dpass, \min(|\cfail - \dpass|, 2n)\bigr) $\\
-  $\ddmax_2\bigl(\emptyset, 8)\bigr) $
-\item  $|\cfail - \emptyset| = 37$. Hence, the base case does not apply.
-\item Increase to complement:\\
-$\cfail - \Delta_2$= \letterboxed{em":\ "Apple",\ "price":\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{ "it"Apple",\ "price":\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{ "item":\ e",\ "price":\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{ "item":\ "Applprice":\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{ "item":\ "Apple", "":\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{ "item":\ "Apple", "price*3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{ "item":\ "Apple", "price": **\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{ "item":\ "Apple", "price": ***3.45} \fail \\
-\item Increase to subset:\\
-$\cfail \cup \Delta_1$=\letterboxed{\{\ "it} \fail \\
-$\cfail \cup \Delta_1$=\letterboxed{em":\ } \fail \\
-$\cfail \cup \Delta_1$=\letterboxed{"Appl} \fail \\
-$\cfail \cup \Delta_1$=\letterboxed{e",\ "} \fail \\
-$\cfail \cup \Delta_1$=\letterboxed{price} \fail \\
-$\cfail \cup \Delta_1$=\letterboxed{":\ **} \fail \\
-$\cfail \cup \Delta_1$=\letterboxed{*3.45} \fail \\
-$\cfail \cup \Delta_1$=\letterboxed{\ \}} \fail \\
-\item Increase grannularity: $n < |\cfail-\dpass|$ which is $2 < |\cfail-\emptyset|$ \pass \\
-  Hence the next iteration is: %$\ddmax_2\bigl(\dpass, \min(|\cfail - \dpass|, 2n)\bigr) $\\
-  $\ddmax_2\bigl(\emptyset, 16)\bigr) $
-\item Increase to complement:\\
-%$\cfail - \Delta_2$= \letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{item":\ "Apple",\ "price":\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{\ "m":\ "Apple",\ "price":\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{\ "ite\ "Apple",\ "price":\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{\ "item":pple",\ "price":\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{\ "item":\ "Ae",\ "price":\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{\ "item":\ "Appl\ "price":\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{\ "item":\ "Apple",rice":\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{\ "item":\ "Apple",\ "pe":\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{\ "item":\ "Apple",\ "pric\ ***3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{\ "item":\ "Apple",\ "price":*3.45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{\ "item":\ "Apple",\ "price":\ **45\ \}} \fail \\
-$\cfail - \Delta_2$= \letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.\}} \fail \\
-\item Increase to subset:\\
-%$\cfail \cup \Delta_2$= \letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\ \}} \fail \\
-$\cfail \cup \Delta_2$= \letterboxed{\{\ "} \fail \\
-$\cfail \cup \Delta_2$= \letterboxed{ite} \fail \\
-$\cfail \cup \Delta_2$= \letterboxed{m":} \fail \\
-$\cfail \cup \Delta_2$= \letterboxed{ "A} \fail \\
-$\cfail \cup \Delta_2$= \letterboxed{ppl} \fail \\
-$\cfail \cup \Delta_2$= \letterboxed{e",} \fail \\
-$\cfail \cup \Delta_2$= \letterboxed{\ "p} \fail \\
-$\cfail \cup \Delta_2$= \letterboxed{ric} \fail \\
-$\cfail \cup \Delta_2$= \letterboxed{e":} \fail \\
-$\cfail \cup \Delta_2$= \letterboxed{\ **} \fail \\
-$\cfail \cup \Delta_2$= \letterboxed{*3.} \fail \\
-$\cfail \cup \Delta_2$= \letterboxed{45\ } \pass \\
-\item  Hence the next iteration is: %$\ddmax_2\bigl(\dpass, \min(|\cfail - \dpass|, 2n)\bigr) $\\
-  $\ddmax_2\bigl(\text{45 }, 15)\bigr) $
-
+$\cfail \cup \Delta_1$=\letterboxed{[} \fail \\
+$\cfail \cup \Delta_1$=\letterboxed{*} \fail \\
+$\cfail \cup \Delta_1$=\letterboxed{*} \fail \\
+$\cfail \cup \Delta_1$=\letterboxed{*} \fail \\
+$\cfail \cup \Delta_1$=\letterboxed{]} \fail \\
+\item Increase to grannularity: $4 < 4$ \fail\\
+\item The solution is $\emptyset$.
 \end{enumerate}
 
 

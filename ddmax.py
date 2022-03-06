@@ -28,6 +28,7 @@ def increase_to_complement(delta_n):
     for delta_i in delta_n:
         CX_minus_delta_i = minus(CX_I, delta_i)
         s = to_str(CX_minus_delta_i)
+        print('increase_to_complement:', repr(s))
         if test(s):
             return CX_minus_delta_i
     return None
@@ -37,18 +38,23 @@ def increase_to_subset(delta_n, cprime_y):
         # c'y union delta_i
         cprime_y_union_delta_i = union(cprime_y, delta_i) # these are indexes
         s = to_str(cprime_y_union_delta_i)
+        print('increase_to_subset:', repr(s))
         if test(s):
             return cprime_y_union_delta_i
     return None
 
 def increase_grannularity(n, CX_minus_cprime_y):
+    print('increase_grannularity: %d < %d: %s' %( n, len(CX_minus_cprime_y), n < len(CX_minus_cprime_y)))
     return n < len(CX_minus_cprime_y)
 
 # Fig 5: c'y contains the indexes of passing chars. Initially empty when n = 2
 # c'y is subset of cx such that test(c'y) succeeds, and delta = cx-c'y is 1-minimal
 def ddmax2(cprime_y, n):
+    print('ddmax2: %s %d' %(repr(to_str(cprime_y)), n))
+
     # Base case where the number of excluded bytes from the input has a size of
     # 1, i.e. cannot be minimized further
+    print('base: %d == 1?' % len(minus(CX_I, cprime_y)))
     if len(minus(CX_I, cprime_y)) == 1: # NOT in Fig 5.
         return cprime_y
 
@@ -94,12 +100,22 @@ def split_idxs(lst,n, round_down=False):
     stride = len(lst)//n
     rem =  len(lst) - (stride * n)
     if not rem:
-        return  [lst[i*stride:(i*stride+stride)] for i in range(0,n)]
+        v = []
+        for i in range(0,n):
+            v.append(lst[i*stride:(i*stride+stride)])
+        return v
     if round_down:
-        return [lst[i*stride:(i*stride+stride)] for i in range(0,n-1)] + [lst[stride*(n-1):]]
+        v = []
+        for i in range(0,n-1):
+            v.append(lst[i*stride:(i*stride+stride)])
+        v.append(lst[stride*(n-1):])
+        return v
     else:
         stride += 1
-        return  [lst[i*stride:(i*stride+stride)] for i in range(0,n)]
+        v = []
+        for i in range(0,n):
+            v.append(lst[i*stride:(i*stride+stride)])
+        return v
 
 
 def ddmax(cx):
