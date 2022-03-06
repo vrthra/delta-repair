@@ -1080,7 +1080,7 @@ BRepair    201    173      122          154
         \node[lbl] at ($(g3.center) + (0,.2)$) {90};
     \end{tikzpicture}
 \end{minipage}
-\vspace{-0.4cm}
+%\vspace{-0.4cm}
 \caption{Venn Diagram showing the number of invalid inputs repaired (solely) by a (combinations of) technique(s) %, or the combination of approaches
 }
 \label{fig:repair-complementarity}
@@ -1264,7 +1264,7 @@ XXXX
 %\vspace{-0.5cm} 
 \begin{tabular}{|l | c | r  r | r  r |}
 \hline
-& \textbf{\#Repairs}&  \multicolumn{2}{c|}{\textbf{Runtime (ms)}} & \multicolumn{2}{c|}{\textbf{\#Program Runs}}  \\
+& \textbf{\#Repaired}&  \multicolumn{2}{c|}{\textbf{Runtime (s)}} & \multicolumn{2}{c|}{\textbf{\#Prog. Runs}}  \\
 \textbf{Techniques} & \textbf{Inputs} &  \textbf{Avg.}  & \textbf{Total} & \textbf{Avg.}  & \textbf{Total} \\
 \hline
 \textbf{Lex. ddmax} & & & & & \\
@@ -1280,17 +1280,29 @@ XXXX
 
 \noindent
 \textbf{RQ4 Efficiency:}
-Let us evaluate the time performance of our approach, i.e., we investigate how long does it take \approach to repair an invalid input, in comparison to the state-of-the-art ddmax. In addition, we also evaluate the number of repair attempts, i.e., test experiments with input fragments, performed by each approach. \recheck{\autoref{tab:efficiency} and figure X} illustrate the efficiency of our approach compared to the state-of-the-art methods. 
+Let us evaluate the time performance of our approach, i.e., we investigate how long it takes \approach to repair an invalid input, in comparison to the state-of-the-art ddmax. %In addition, w
+We also evaluate the number of repair attempts, i.e., number of program runs %test experiments with input fragments, 
+performed by each approach. \recheck{\autoref{tab:efficiency} and figure X} illustrate the efficiency of our approach compared to the state-of-the-art methods. 
 
-In this evaluation, we found that \approach is efficient in input repair. It is reasonably fast, it takes about \recheck{three} seconds to repair an invalid input file on average. 
-\approach is more efficient than lexical ddmax, but less efficienct than synatactic ddmax. 
-The time performance is twice faster than lexical ddmax, and two times slower than syntactic ddmax. This is expected since the main time consuming component of these approaches is the number of repair attempts and both lexical ddmax and \approach perform more test experiments than syntactic ddmax, since it levergaes the input grammr to reduce the number of test experiments. 
+In this evaluation, we found that \textit{\approach is efficient in input repair: It is reasonably fast, it takes about \recheck{2.8} seconds to repair an invalid input file, on average}. 
+\approach is more efficient than lexical ddmax (\recheck{5} seconds), but less efficient than synatactic ddmax (\recheck{1.2} seconds). 
+%The time performance of 
+This implies that \approach is twice as fast as %er than 
+lexical ddmax, but twice slower than syntactic ddmax. This is expected since the execution time of %repair attempts (i.e., 
+program runs %) 
+is the main time-consuming component of \approach, as well as ddmax. However, this cost is much lower for syntactic ddmax (\recheck{X} runs) 
+%these approaches is the number of repair attempts and both lexical ddmax and \approach perform more test experiments than syntactic ddmax, 
+since it leverages the input grammar to reduce the number of test experiments. 
 %, i.e. test experiments with input fragments. 
-Inspecting the number of repair attempts (aka program runs) shows that \approach performed \recheck{X} as less repair attempts as lexical ddmax, and 
-\recheck{X} as many repair attempts as lexical ddmax. 
-We observe that the number of repair attempts (program runs) is the main performance bottlenec of all three approaches. % to the 
-These results suggest that \approach is %not very time-consuming or 
-inexpensive, it as a reasonable number of repair attempts and time performance, especially in  comparison to lexical ddmax. 
+\recheck{\autoref{tab:efficiency}  and Table/Figure X show} the %Inspecting 
+the number of %repair attempts (aka 
+program run performed for all approaches. %) 
+It shows that \approach performed \recheck{X} less repair attempts than lexical ddmax (\recheck{X vs. X} runs), and 
+\recheck{X} as many repair attempts as lexical ddmax (\recheck{X vs. X} runs). 
+%We observe that 
+These results suggest that the number of program runs is the main performance bottleneck of all three approaches. % to the 
+%These results suggest that \approach is %not very time-consuming or 
+%inexpensive, it as a reasonable number of repair attempts and time performance, especially in  comparison to lexical ddmax. 
 
 \begin{result}
 Our approach is reasonably fast, 
