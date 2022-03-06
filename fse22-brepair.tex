@@ -429,34 +429,32 @@ maximal parsing input.
 One of the major problems with \ddmax is that it can fail when certain
 corruption patterns are encountered din the input string.
 
-As an example, consider the fragment \letterboxed{[**]}.
-Here, the JSON string is invalid because it contains three \letterboxed{*}
-characters. The operation of \ddmax (\Cref{fig:ddmax}) is as follows:
+As an example, consider the fragment \letterboxed{[*+]}.
+Here, the JSON string is invalid because it contains two invalid characters.
+The operation of \ddmax (\Cref{fig:ddmax}) is as follows:
 
 \begin{enumerate}
 \item The operation starts with $\ddmax_2(\emptyset, 2)$
 \item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply
 \item Increase to complement:\\
-$\cfail - \Delta_2$= \letterboxed{*]} \fail \\
+$\cfail - \Delta_2$= \letterboxed{+]} \fail \\
 $\cfail - \Delta_2$= \letterboxed{[*} \fail \\
 \item Increase to subset:\\
 $\cfail \cup \Delta_1$=\letterboxed{[*} \fail \\
-$\cfail \cup \Delta_2$= \letterboxed{*]} \fail \\
+$\cfail \cup \Delta_2$= \letterboxed{+]} \fail \\
 \item Increase grannularity: $n < |\cfail-\dpass|$ which is $2 < |\cfail-\emptyset|$ \pass \\
   Hence the next iteration is:
   $\ddmax_2\bigl(\emptyset, 4)\bigr) $
 \item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply.
 \item Increase to complement:\\
-$\cfail - \Delta_2$= \letterboxed{**]} \fail \\
+$\cfail - \Delta_2$= \letterboxed{*+]} \fail \\
+$\cfail - \Delta_2$= \letterboxed{[+]} \fail \\
 $\cfail - \Delta_2$= \letterboxed{[*]} \fail \\
-$\cfail - \Delta_2$= \letterboxed{[*]} \fail \\
-$\cfail - \Delta_2$= \letterboxed{[*]} \fail \\
-$\cfail - \Delta_2$= \letterboxed{[**} \fail \\
+$\cfail - \Delta_2$= \letterboxed{[*+} \fail \\
 \item Increase to subset:\\
 $\cfail \cup \Delta_1$=\letterboxed{[} \fail \\
 $\cfail \cup \Delta_1$=\letterboxed{*} \fail \\
-$\cfail \cup \Delta_1$=\letterboxed{*} \fail \\
-$\cfail \cup \Delta_1$=\letterboxed{*} \fail \\
+$\cfail \cup \Delta_1$=\letterboxed{+} \fail \\
 $\cfail \cup \Delta_1$=\letterboxed{]} \fail \\
 \item Increase to grannularity: $4 < 4$ \fail\\
 \item The solution is $\emptyset$.
