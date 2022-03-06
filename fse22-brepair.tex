@@ -1106,7 +1106,7 @@ Using the 321 inputs repaired by all approaches with edit distance data,
 we examine the number of deletion and insertions performed by \approach, this is reported in \autoref{tab:brepair-insertions}. 
 % reports the number of deletions and insertions performed by \approach. 
 
-In this experiment, we found that \textit{input synthesis accounts for almost half (49\%) of the repair operations of \approach}. Indeed, \approach performed more insertion than deletion operations for two inpit formats (CJSON and SExp). This result demonstrates the importance of \textit{input synthesis} in comparison to \textit{repairing to subsets}. This demonstrates the advantage of input synthesis via rich failure feedback, and implies that insertion operations are equally as important as deletion operations for effective input repair. 
+In this experiment, we found that \textit{input synthesis accounts for almost half (49\%) of the repair operations of \approach}. Indeed, \approach performed more insertion operations than deletion operations for two input formats (CJSON and SExp). This result demonstrates the importance of \textit{input synthesis} in comparison to \textit{repairing to subsets}. This demonstrates the advantage of input synthesis via rich failure feedback, and implies that insertion operations are equally as important as deletion operations for effective input repair. 
 
 \begin{result}
 Input synthesis is vital to the effectiveness of \approach: Almost half (49\%) of \approach's repair operations are %due to input syntehesis, i.e. 
@@ -1247,6 +1247,9 @@ loss is up to 23 times lower than that of ddmax (e.g., INI).
 
 \noindent
 \textbf{RQ3 Diagnostic Quality:} 
+In this experiment, we evaluate the diagnostic quality of \approach in comparison to the state-of-the-art techniques. In particular, we compare the size of the diagnoses, i.e., the isolated failure cause reported by each approach, as well as the intersection of the diagnoses reported by these approaches. We compare \approach to three main methods, namely \approach, lexical ddmax, syntactic ddmax and ddmin.  \recheck{Table x and figure X} show the diagnostic quality of our approach, in comparison to the state of the art techniques. 
+
+We found that 
 
 \begin{result}
 XXXX
@@ -1254,12 +1257,45 @@ XXXX
 \end{result}
 
 
+
+
+\begin{table}[!tbp]\centering
+\caption{Efficiency of \approach vs. the state-of-the-art (ddmax), lower runtime, smaller number of program runs and significant \% improvement in efficiency are in \textbf{bold}}
+%\vspace{-0.5cm} 
+\begin{tabular}{|l | c | r  r | r  r |}
+\hline
+& \textbf{\#Repairs}&  \multicolumn{2}{c|}{\textbf{Runtime (ms)}} & \multicolumn{2}{c|}{\textbf{\#Program Runs}}  \\
+\textbf{Techniques} & \textbf{Inputs} &  \textbf{Avg.}  & \textbf{Total} & \textbf{Avg.}  & \textbf{Total} \\
+\hline
+\textbf{Lex. ddmax} & & & & & \\
+\textbf{Syn. ddmax} & & & & & \\
+\textbf{\approach} & & & & & \\
+\hline
+%\textbf{}
+\end{tabular}
+\label{tab:efficiency}
+%\vspace{-0.5cm}
+\end{table}
+
+
 \noindent
 \textbf{RQ4 Efficiency:}
+Let us evaluate the time performance of our approach, i.e., we investigate how long does it take \approach to repair an invalid input, in comparison to the state-of-the-art ddmax. In addition, we also evaluate the number of repair attempts, i.e., test experiments with input fragments, performed by each approach. \recheck{\autoref{tab:efficiency} and figure X} illustrate the efficiency of our approach compared to the state-of-the-art methods. 
+
+In this evaluation, we found that \approach is efficient in input repair. It is reasonably fast, it takes about \recheck{three} seconds to repair an invalid input file on average. 
+\approach is more efficient than lexical ddmax, but less efficienct than synatactic ddmax. 
+The time performance is twice faster than lexical ddmax, and two times slower than syntactic ddmax. This is expected since the main time consuming component of these approaches is the number of repair attempts and both lexical ddmax and \approach perform more test experiments than syntactic ddmax, since it levergaes the input grammr to reduce the number of test experiments. 
+%, i.e. test experiments with input fragments. 
+Inspecting the number of repair attempts (aka program runs) shows that \approach performed \recheck{X} as less repair attempts as lexical ddmax, and 
+\recheck{X} as many repair attempts as lexical ddmax. 
+We observe that the number of repair attempts (program runs) is the main performance bottlenec of all three approaches. % to the 
+These results suggest that \approach is %not very time-consuming or 
+inexpensive, it as a reasonable number of repair attempts and time performance, especially in  comparison to lexical ddmax. 
 
 \begin{result}
-XXXX
-XXXX
+Our approach is reasonably fast, 
+it repairs an invalid input within \recheck{three} seconds, on average. \approach 
+is twice as effective as lexical ddmax, but only half as fast syntactic ddmax. 
 \end{result}
 
 
