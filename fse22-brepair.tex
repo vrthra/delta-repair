@@ -460,29 +460,12 @@ $\cfail \cup \Delta_1$=\letterboxed{]} \fail \\
 \item The solution is $\emptyset$.
 \end{enumerate}
 
-
-\begin{enumerate}
-\item Neither of these result in valid independent fragments. That is, removing
-neither results in the rest of the string becoming valid. Hence split it
-again into quarters, we focus on ($\Delta_{2}$) since it contains the invalid fragment,
-and hence if removed, makes the rest of the string valid:\\
-$\Delta_{2.1}$ = \letterboxed{\ "price":} \\ %9
-$\Delta_{2.1}$ = \letterboxed{\ ***3.45\ \}}%10.
-\item None of these fragments can be excluded independently resulting in a
-no-failure input. So we try again. This time, let us focus in $\Delta_{2.2}$ since it
-contains the invalid input. We split that into:\\
-$\Delta_{2.2.1}$ = \letterboxed{\ ***3\\}\\ %5
-$\Delta_{2.2.2}$ = \letterboxed{.45\ \}}. %4
-\item Excluding neither will produce a valid JSON input. So we try again,
-focusing on $\Delta_{2.2.1}$ now since it contains the failuring inducing fragment;
-producing:\\
-$\Delta_{2.2.1.1}$ = \letterboxed{\ *}\\ %2
-$\Delta_{2.2.1.2}$ = \letterboxed{**3}\\ %3
-neither will succeed in removing the invalid fragment completely.
-\end{enumerate}
-That is, this particular invalid JSON string can't be repaired by \ddmax. This
-happens because the constraint, that each frament be independently removable is
-not applicable to JSON.
+That is, this particular invalid JSON string can't be repaired by \ddmax.
+While this may seem like not much of information loss, consider
+\Cref{fig:bad-json-input-asterisks} which is similar to
+Kirchner et al.~\cite[Figure 1]{kirschner2020debugging} but with an extra
+\letterboxed{*}. This results in a fix of \mbox{``\<\ \ \ \ 3.45>''}, resulting
+in information loss.
 
 \noindent\textbf{Limited Options for Repair.} The second major limitation of
 \ddmax is that the only operation in its toolbox is \emph{deletion} of input
