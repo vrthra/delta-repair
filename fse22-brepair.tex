@@ -231,13 +231,13 @@ pics/numbering/.style args={#1}{code={
 \date{February 2022}
 
 \begin{abstract}
-Data cleansing and data repair are some of the most intensive tasks in many
-fields that aggregate data from multiple resources. In many cases, the data may
-be entered by hand, and while ostensibly conforming to a given format, is often
-unparsable by machines. In such cases, a
-data engineer has to manually repair the corrupt data such that it follows a
-given format, and hence processable by the next program. Such manual repair can
-be time consuming, and error-prone.
+Data cleansing and data repair are some of the most developer time intensive
+tasks in many fields that aggregate data from multiple resources. In many cases,
+the data may be entered by hand, and while ostensibly conforming to a given
+format, is often unparsable by machines.
+In such cases, a data engineer has to manually repair the corrupt data such that
+it follows a given format, and hence processable by the next program.
+Such manual repair can be time consuming, and error-prone.
 
 In this work, we show that incorporating light-weight error-feedback to parsers
 is sufficient to repair any corrupt input string with maximal closeness to the
@@ -363,22 +363,21 @@ that were induced.
 
 Data, especially from external, often human sources need to be collected and
 aggregated before information processing algorithms can be run on it to extract
-insights. Unfortunately, not every source may agree on the format. For example,
-there are numerous JSON libraries with slightly different definitions of what
-the JSON format is~\cite{harrand2021behavioral,seriot2016parsing}. Further,
-there are numerous data base systems with slightly different supported SQL
-formats~\cite{arvin2018comparison}, and a variety of markdown syntaxes with
-subtle differences~\cite{visnoviz2019comparison}. The subtle difference between
-various \<C> dialects are also well known.
-That is, it is often
-impossible to parse a document that was generated with a different
-implementation in mind. Another issue is that many such documents are created
-by hand, and the process of manual generation can be error-prone.
+insights. Unfortunately, not every source may agree on the format specification.
+For example, (1)~there are numerous JSON libraries with slightly different
+definitions of what the JSON format is~\cite{harrand2021behavioral,seriot2016parsing}.
+(2)~there are numerous database systems, each supporting a slightly
+different SQL format~\cite{arvin2018comparison}, (3)~a variety of markdown
+syntaxes with subtle differences~\cite{visnoviz2019comparison}, and (4)~various
+\<C> compilers each supporting a slightly different interpretation of the \<C> language.
+That is, it is often impossible to process an artifact that was generated with
+a different implementation in mind. Another issue is that many such artifacts
+are created by hand, and the process of manual generation can be error-prone.
 
-The problem is that such documents can be \emph{almost} but \emph{not quite}
-parsable by the parser at hand. So, consuming such resources, and aggregating
-them often involves trying to maximally parse documents by minimizing
-parse errors. If the parser at hand conforms to a context-free grammar, and the
+Given such artifacts that are \emph{almost} but \emph{not quite} parsable,
+consuming such resources, and aggregating them often involves trying to
+maximally parse them by minimizing parse errors~\cite{kirschner2020debugging}.
+If the parser at hand conforms to a context-free grammar, and an acceptable
 formal grammar is available, this issue can be solved using
 \emph{error-correcting} parsers~\cite{aho1972minimum}.
 The idea in such parsers is to generate a universal grammar that captures
