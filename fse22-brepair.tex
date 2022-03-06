@@ -405,27 +405,16 @@ decompose the input into independent fragments (called deltas), one can
 successively minimize the parse-error inducing part of the input resulting in a
 maximal parsing input.
 
-\todo{Write about multiple errors}
 
-\ddmax works very well when the input document and parser follows the
-constraints it imposes. Notabily, the independence of deltas (that each delta
-can be added or removed independently of others), and one is looking for a
-maximal \emph{subset} of deltas.
-
-Unfortunately, these two constraints form the biggest limitations of \ddmax.
+\ddmax works very well for most inputs. However, it has three major limitations:
+(1)~Incompleteness due to spans, (2)~inability to fix multiple inputs, and
+(3)~limited repair options available.
 
 %---
 % Example for Span Problem
 %---
 \begin{figure}
 \begin{center}
-%{ "item": "Apple", "price": ***3.45 }%37
-%{ "item": "Apple",%18
-% "price": ***3.45 }%19
-% "price":%9
-% ***3.45 }%10
-% ***3%5
-%.45 }%5
 \letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45 \}}
 \end{center}
 %\vspace{-0.6\baselineskip}
