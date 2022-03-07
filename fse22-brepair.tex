@@ -506,6 +506,14 @@ with multiple corruptions. Finally, \brepair provides both deletion and
 synthesis as repair options making it an optimal algorithm in the toolbox of
 data engineers.
 
+In our evaluation, we show that given input processors that can accurately
+signal \emph{incomplete} or \emph{incorrect} when given invalid inputs,
+\brepair can provide repairs that are more maximal than \ddmax, and correctly
+pass the parser.
+%Further, the list of repairs it suggests will include the
+%original string before corruption.
+\\
+\\
 \noindent\textbf{Contributions.}
 \begin{itemize}
   \item We identify one of the major limitations to \ddmax -- the limitation due to rich struture, which can be fixed only by requiring additional constraints.
