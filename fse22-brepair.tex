@@ -461,6 +461,23 @@ even more suboptimal to use.
 
 
 In this paper, we provide a solution.
+We show that corrupted inputs with rich structure can be repaired adequately if
+the input processor can provide at least some indication of progress.
+That is, as with \ddmax, we require the input processor to indicate if the input
+is valid.  However, when given an invalid input, we require the input processor
+to indicate whether the input is merely \emph{incomplete} -- that is, the input
+is a prefix of a valid input -- or is \emph{incorrect} -- that is, no suffix to
+this input will result in a valid input. 
+
+This requirement is not hard to accomplish. In most cases, parsers already
+provide precise information as to the point at which the parse failed, which
+can be used directly in our algorithm. In the cases where parers do not provide
+this information, obtaining this information by external instrumentation is
+possible as demonstrated by Bj\"orn et al.~\cite{mathis2019parser}. If
+the program is hard to instrument, adding failure feedback that we require is
+not difficult~\cite{gopinath2020fuzzing}.
+
+
 Our \brepair algorithm starts with the corrupted input and quickly finds the
 maximal parsable prefix using a binary search.
 For example, in \Cref{fig:bad-json-input}, \brepair finds the maximal parsable
@@ -662,21 +679,6 @@ there is no real definition of progress. We do not know if
 \letterboxed{\{\ "A":\ **3\}} or
 \letterboxed{\{\ A":\ **3\}} because all three returns the same
 result -- parse error.
-
-All is, however, not lost. This paper shows that such corrupted inputs can
-still be repaired adequately if the input processor can provide at least some
-indication of progress. When given an input, we require the input
-processor to indicate whether the input is merely incomplete -- that is, the
-input is a prefix of a valid acceptable input -- or is incorrect -- that is, no
-suffix to this input will result in a valid input.
-
-This requirement is not hard to accomplish. In most cases, parsers already
-provide precise information as to the point at which the parse failed, which
-can be used directly in our algorithm. In the cases where parers do not provide
-this information, obtaining this information by external instrumentation is
-possible as demonstrated by Bj\"orn et al.~\cite{mathis2019parser}. If
-the program is hard to instrument, adding failure feedback that we require is
-not difficult~\cite{gopinath2020fuzzing}.
 
 Our \brepair algorithm starts with the corrupted input and quickly finds the
 maximal parsable prefix using a binary search.
