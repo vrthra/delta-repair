@@ -862,6 +862,11 @@ deletion, and checks whether the deletion changes the valid substring.
 \item At the same point, \brepair also tries to insert a single character and
 checks whether the insertin changes the valid substring.
 
+\item If the deletion or any insertion results in a change of size of the valid
+substring, the particular changes are stored in a priority queue.
+% priority is, the number of edits first, followed by the size of the valid
+% substring.
+
 \end{itemize}
 
 
