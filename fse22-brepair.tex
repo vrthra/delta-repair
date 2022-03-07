@@ -405,133 +405,12 @@ decompose the input into independent fragments (called deltas), one can
 successively minimize the parse-error inducing part of the input resulting in a
 maximal parsing input.
 
-\begin{table*}\centering
-\footnotesize
-\caption{\ddmax limitations}
-\begin{tabular}{|l | c | c | l |}
-\hline
-Example & \ddmax repair & \approach repair & \ddmax limitation \\
-\hline
-\letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\}} & \letterboxed{\ \ \ \
-3.45} & \letterboxed{\{\ "item":\ "Apple",\ "price":\ 3.45\}} & Limitation due
-to spanning\\
-\letterboxed{\{\"ABCD":[*"1,2,3,4,5,6"]*\}} & 
-\letterboxed{123456} & 
-\letterboxed{\{\"ABCD":["1,2,3,4,5,6"]\}} & 
-Limitation due to multiple-faults \\
-\letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}} &
-\letterboxed{\{\ "name":\ "Daveage":\ 42\ \}} &
-\letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}} &
-Limitation due to limited repairs \\
-\hline
-\end{tabular}
-\label{tab:ddmaxlimitations}
-%\vspace{-0.5cm}
-\end{table*}
 
-\ddmax works very well for most inputs. However, it has three major limitations
+\ddmax works very well for most inputs. However, it has three major limitations:
 (1)~Limitations due to rich input structure,
 (2)~inability to fix multiple inputs, and
 (3)~limited repair options available. We explain each in turn.
-Examples of each are shown in \Cref{tab:ddmaxlimitations}.
 
-Our \brepair algorithm starts with the corrupted input and quickly finds the
-maximal parsable prefix using a binary search.
-For example, in \Cref{fig:bad-json-input}, \brepair finds the maximal parsable
-prefix to be \letterboxed{\{\ "name":\ "Dave"\ }, and the boundary happens
-at \\
-\letterboxed{\{\ "name":\ "Dave"\ "} where the parser response shifts from
-\emph{incomplete} to \emph{incorrect}.
-At this point, \brepair applies deletion, or insertion of characters
-in order. In this case, the \<"> is deleted first, and the
-resulting input \\
-\letterboxed{\{\ "name":\ "Dave"\ age":\ 42 \}} is checked to
-see if it resulted in increasing the size of the maximum parsable prefix. Here,
-we see that the maximal parse boundary remains the same. Hence \brepair next
-attempts to insert a character. There are 128 printable characters in ASCII,
-out of which, only space characters and comma (\<,>) can be inserted here,
-resulting in an increase of maximal parse prefix. Out of this, comma
-results in the maximum advancement of the parse boundary, resulting in the
-newly constructed string: \\
-\letterboxed{\{\ "name":\ "Dave"\ ,\"age":\ 42\ \}}
-which is accepted as a valid repair.
-
-In the case of \Cref{fig:bad-json-input-asterisks}, \brepair quickly finds the
-first \<*> to be the parse boundary. At this point, deletion, or insertion
-fails to advance the parse boundary. Indeed, there are no possible
-insertion continuations found after \\
-\letterboxed{\{\ "item":\ "Apple",\ "price":\ *}.\\
-Hence, \brepair attempts two consecutive operations. Hence, since two
-insertions is no longer possible, it attempts a deletion followed by insertion,
-and two deletions. Deletion of a \<*> followed by insertion of \<"> does allow
-the parse to proceed, resulting in \\
-\letterboxed{\{\ "item":\ "Apple",\ "price":\ "**3.45\}}.\\
-\emph{incomplete} with an unclosed quote, and a penalty of two. We also have
-another thread with:
-\letterboxed{\{\ "item":\ "Apple",\ "price":\ }\\
-as the maximal parse boundary after deletions of two \<*> characters with the
-same penalty. Since deletion is prioritized, we apply deletion on the second
-thread where deletion is applicable, resulting in:\\
-\letterboxed{\{\ "item":\ "Apple",\ "price":\ 3.45\}}.\\
-Since the first thread does not complete with any change with a penalty of
-three, we choose \\
-\letterboxed{\{\ "item":\ "Apple",\ "price":\ 3.45\}}\\
-as the solution.
-
-%at which boundary the prefix shifts between incomplete and incorrect.
-% It then iteratively applies
-% deletion, insertion, and alteration of the character at the point of failure to
-% find the least cost modification that would let the parse proceed further,
-% generating a larger prefix. Proceeding in this fashion, the algorithm generates
-% a set of plausible repairs ordered by their edit distance that can be used by
-% the developer for fixing the input corruption.
-% 
-% In the example seen in \Cref{fig:bad-json-input-repaired}, \brepair first determines a valid (incomplete) prefix of the input file, i.e., \texttt{\{ "name": "Dave"}.
-% It then tries to append characters such that the prefix stays valid - in this example, \letterboxed{\}} and \letterboxed{,} are tried to be inserted.
-% Then, as much of the original file is appended to the prefix, until it becomes valid (and the rest of the original file is either appended, or deleted successively).
-% This results in the final repaired file seen in \Cref{fig:bad-json-input-repaired}.
-% \begin{figure}
-% \begin{center}
-% \letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}}
-% \end{center}
-% %\vspace{-0.6\baselineskip}
-% \caption{Failing input repaired with \brepair}
-% \label{fig:bad-json-input-repaired}
-% \end{figure}
-% \begin{figure}
-% \begin{center}
-% \letterboxed{,}
-% \end{center}
-% %\vspace{-0.6\baselineskip}
-% \caption{Difference between failing and repaired input}
-% \label{fig:bad-json-input-diff}
-% \end{figure}
-% \begin{figure}
-% \begin{center}
-% \letterboxed{\{\ "item":\ "Apple",\ "price":\ "***3.45\ "\}}
-% \end{center}
-% %\vspace{-0.6\baselineskip}
-% \caption{Failing input repaired with \brepair}
-% \label{fig:bad-json-input-repaired-asterisks}
-% \end{figure}
-
-\todo{
-\textbf{note:} In the algorithm, we need to limit possible insertions.
-Unconstrained insertions are possible only for two characters. If we
-have constraints on the initial character, more insertions can be allowed,
-until the choices reach a configurable number (e.g. 100,000)
-beyond which deletion should take precedence.
-}
-\\
-\noindent\textbf{Contributions.}
-\begin{itemize}
-  \item We identify one of the major limitations to \ddmax -- the limitation due to rich struture, which can be fixed only by requiring additional constraints.
-  \item We provide two bug fixes to \ddmax.
-  \item We propose \approach which does not have these limitations.
-\end{itemize}
-
-
-\section{\ddmax Overview}
 %---
 % Example for Span Problem
 %---
@@ -665,10 +544,10 @@ fragments. Consider \Cref{fig:bad-json-input}.
 \end{center}
 %\vspace{-0.6\baselineskip}
 \caption{Failing input repaired with DDMax}
-\label{fig:bad-json-input-ddmax1}
+\label{fig:bad-json-input-ddmax}
 \end{figure}
 Here, there is a missing quote in the key. \ddmax repair of this string will
-result in \Cref{fig:bad-json-input-ddmax1}. The problem is that, deletion of
+result in \Cref{fig:bad-json-input-ddmax}. The problem is that, deletion of
 fragments alone can lead to significant corruption of information.
 
 % A problem of DDMax is that it only supports deleting parts of the file under test while repairing the file.
@@ -728,6 +607,100 @@ possible as demonstrated by Bj\"orn et al.~\cite{mathis2019parser}. If
 the program is hard to instrument, adding failure feedback that we require is
 not difficult~\cite{gopinath2020fuzzing}.
 
+Our \brepair algorithm starts with the corrupted input and quickly finds the
+maximal parsable prefix using a binary search.
+For example, in \Cref{fig:bad-json-input}, \brepair finds the maximal parsable
+prefix to be \letterboxed{\{\ "name":\ "Dave"\ }, and the boundary happens
+at \\
+\letterboxed{\{\ "name":\ "Dave"\ "} where the parser response shifts from
+\emph{incomplete} to \emph{incorrect}.
+At this point, \brepair applies deletion, or insertion of characters
+in order. In this case, the \<"> is deleted first, and the
+resulting input \\
+\letterboxed{\{\ "name":\ "Dave"\ age":\ 42 \}} is checked to
+see if it resulted in increasing the size of the maximum parsable prefix. Here,
+we see that the maximal parse boundary remains the same. Hence \brepair next
+attempts to insert a character. There are 128 printable characters in ASCII,
+out of which, only space characters and comma (\<,>) can be inserted here,
+resulting in an increase of maximal parse prefix. Out of this, comma
+results in the maximum advancement of the parse boundary, resulting in the
+newly constructed string: \\
+\letterboxed{\{\ "name":\ "Dave"\ ,\"age":\ 42\ \}}
+which is accepted as a valid repair.
+
+In the case of \Cref{fig:bad-json-input-asterisks}, \brepair quickly finds the
+first \<*> to be the parse boundary. At this point, deletion, or insertion
+fails to advance the parse boundary. Indeed, there are no possible
+insertion continuations found after \\
+\letterboxed{\{\ "item":\ "Apple",\ "price":\ *}.\\
+Hence, \brepair attempts two consecutive operations. Hence, since two
+insertions is no longer possible, it attempts a deletion followed by insertion,
+and two deletions. Deletion of a \<*> followed by insertion of \<"> does allow
+the parse to proceed, resulting in \\
+\letterboxed{\{\ "item":\ "Apple",\ "price":\ "**3.45\}}.\\
+\emph{incomplete} with an unclosed quote, and a penalty of two. We also have
+another thread with:
+\letterboxed{\{\ "item":\ "Apple",\ "price":\ }\\
+as the maximal parse boundary after deletions of two \<*> characters with the
+same penalty. Since deletion is prioritized, we apply deletion on the second
+thread where deletion is applicable, resulting in:\\
+\letterboxed{\{\ "item":\ "Apple",\ "price":\ 3.45\}}.\\
+Since the first thread does not complete with any change with a penalty of
+three, we choose \\
+\letterboxed{\{\ "item":\ "Apple",\ "price":\ 3.45\}}\\
+as the solution.
+
+%at which boundary the prefix shifts between incomplete and incorrect.
+% It then iteratively applies
+% deletion, insertion, and alteration of the character at the point of failure to
+% find the least cost modification that would let the parse proceed further,
+% generating a larger prefix. Proceeding in this fashion, the algorithm generates
+% a set of plausible repairs ordered by their edit distance that can be used by
+% the developer for fixing the input corruption.
+% 
+% In the example seen in \Cref{fig:bad-json-input-repaired}, \brepair first determines a valid (incomplete) prefix of the input file, i.e., \texttt{\{ "name": "Dave"}.
+% It then tries to append characters such that the prefix stays valid - in this example, \letterboxed{\}} and \letterboxed{,} are tried to be inserted.
+% Then, as much of the original file is appended to the prefix, until it becomes valid (and the rest of the original file is either appended, or deleted successively).
+% This results in the final repaired file seen in \Cref{fig:bad-json-input-repaired}.
+% \begin{figure}
+% \begin{center}
+% \letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}}
+% \end{center}
+% %\vspace{-0.6\baselineskip}
+% \caption{Failing input repaired with \brepair}
+% \label{fig:bad-json-input-repaired}
+% \end{figure}
+% \begin{figure}
+% \begin{center}
+% \letterboxed{,}
+% \end{center}
+% %\vspace{-0.6\baselineskip}
+% \caption{Difference between failing and repaired input}
+% \label{fig:bad-json-input-diff}
+% \end{figure}
+% \begin{figure}
+% \begin{center}
+% \letterboxed{\{\ "item":\ "Apple",\ "price":\ "***3.45\ "\}}
+% \end{center}
+% %\vspace{-0.6\baselineskip}
+% \caption{Failing input repaired with \brepair}
+% \label{fig:bad-json-input-repaired-asterisks}
+% \end{figure}
+
+\todo{
+\textbf{note:} In the algorithm, we need to limit possible insertions.
+Unconstrained insertions are possible only for two characters. If we
+have constraints on the initial character, more insertions can be allowed,
+until the choices reach a configurable number (e.g. 100,000)
+beyond which deletion should take precedence.
+}
+\\
+\noindent\textbf{Contributions.}
+\begin{itemize}
+  \item We identify one of the major limitations to \ddmax -- the limitation due to rich struture, which can be fixed only by requiring additional constraints.
+  \item We provide two bug fixes to \ddmax.
+  \item We propose \approach which does not have these limitations.
+\end{itemize}
 %TODO
 \section{Overview}
 
@@ -1396,7 +1369,7 @@ of \approach %syntactic ddmax
 is much higher %lower 
 than that of syntactic ddmax 
 %and \approach, since 
-because \approach requires about three times as many program runs as syntactic ddmax (\recheck{50s vs. 1,586s} program runs). 
+because \approach requires about three times as many program runs as syntactic ddmax (\recheck{505 vs. 1,586} program runs). 
 %these approaches is the number of repair attempts and both lexical ddmax and \approach perform more test experiments than syntactic ddmax, 
 The lower program runs required by syntactic ddmax is because %since 
 it leverages the input grammar to reduce the number of test experiments. 
