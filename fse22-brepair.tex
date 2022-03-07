@@ -524,6 +524,53 @@ pass the parser.
 \end{itemize}
 
 \section{Limitations of \ddmax}
+
+\begin{figure*}[t]
+\begin{boxedminipage}{\textwidth}
+\smallskip
+\ \begin{minipage}{0.9\textwidth}
+\subsection*{Maximizing Delta Debugging Algorithm}
+\medskip
+
+Let $\test$ and $\cfail$ be given such that $\test(\emptyset) = \pass \land
+\test(\cfail) = \fail$ hold.
+
+The goal is to find $\dpass = \ddmax(\cfail)$ such that $\dpass \subset \cfail$, $\test(\dpass) = \pass$, and~$\Delta = \cfail - \dpass$ is 1-minimal.
+
+The \emph{maximizing Delta Debugging algorithm} $\ddmax(c)$ is
+\begin{align*}
+\ddmax(\cfail) &= \ddmax_2(\emptyset, 2) \quad \text{where} \\
+\ddmax_2(\dpass, n) &=
+\begin{cases}
+    %if len(minus(CX_I, cprime_y)) == 1: return cprime_y
+  \textcolor{red}{\dpass} & \text{\textcolor{red}{\hphantom{else }if $|\cfail - \dpass| = 1$} (``base case$^{\textcolor{red}{a}}$'')} \\
+%
+\ddmax_2(\cfail - \Delta_i, 2) & \text{else if $\exists i \in \{1, \dots, n\} \cdot \test(\cfail - \Delta_i) = \pass$ (``increase to complement'')} \\
+%
+\ddmax_2\bigl(\dpass \cup \Delta_i, \max(n - 1, 2)\bigr) &
+\text{else if $\exists i \in \{1, \dots, n\} \cdot \test(\dpass \cup \Delta_i) = \pass$ (``increase to subset'')} \\
+%
+  \ddmax_2\bigl(\dpass, \min(|\cfail \textcolor{red}{- \dpass}|, 2n)\bigr) & \text{else if $n < |\cfail - \dpass|$ (``increase granularity$^{\text{\textcolor{red}{b}}}$'')} \\
+\dpass & \text{otherwise (``done'').}
+\end{cases}
+\end{align*}
+where $\Delta = \cfail - \dpass = \Delta_1 \cup \Delta_2 \cup \dots \cup \Delta_n$, all
+$\Delta_i$ are pairwise disjoint, and $\forall \Delta_i \cdot |\Delta_i| \approx |\cfail - \dpass| / n$
+holds.
+
+The recursion invariant (and thus precondition) for $\ddmax_2$ is
+$\test(\dpass) = \pass \land n \leq |\Delta|$.\\
+\textcolor{red}{a}: Bugfix: This base case is necessary to ensure that repairing JSON input \letterboxed{1*1} does not violate the invariant $n \leq |\Delta|$.\\
+\textcolor{red}{b}: Bugfix: We should look for minimum of the remaining so that invariant $n \leq |\Delta|$ is not violated for JSON input \letterboxed{\{*"":2\}}.
+\end{minipage}
+\end{boxedminipage}
+%\vspace{-0.5\baselineskip}
+\caption{Maximizing Lexical Delta Debugging algorithm}
+%\vspace{-0.5\baselineskip}
+\label{fig:ddmax}
+\end{figure*}
+
+
 %---
 % Example for Span Problem
 %---
@@ -796,52 +843,6 @@ beyond which deletion should take precedence.
 \\
 %TODO
 \section{Overview}
-
-\begin{figure*}[t]
-\begin{boxedminipage}{\textwidth}
-\smallskip
-\ \begin{minipage}{0.9\textwidth}
-\subsection*{Maximizing Delta Debugging Algorithm}
-\medskip
-
-Let $\test$ and $\cfail$ be given such that $\test(\emptyset) = \pass \land
-\test(\cfail) = \fail$ hold.
-
-The goal is to find $\dpass = \ddmax(\cfail)$ such that $\dpass \subset \cfail$, $\test(\dpass) = \pass$, and~$\Delta = \cfail - \dpass$ is 1-minimal.
-
-The \emph{maximizing Delta Debugging algorithm} $\ddmax(c)$ is
-\begin{align*}
-\ddmax(\cfail) &= \ddmax_2(\emptyset, 2) \quad \text{where} \\
-\ddmax_2(\dpass, n) &=
-\begin{cases}
-    %if len(minus(CX_I, cprime_y)) == 1: return cprime_y
-  \textcolor{red}{\dpass} & \text{\textcolor{red}{\hphantom{else }if $|\cfail - \dpass| = 1$} (``base case$^{\textcolor{red}{a}}$'')} \\
-%
-\ddmax_2(\cfail - \Delta_i, 2) & \text{else if $\exists i \in \{1, \dots, n\} \cdot \test(\cfail - \Delta_i) = \pass$ (``increase to complement'')} \\
-%
-\ddmax_2\bigl(\dpass \cup \Delta_i, \max(n - 1, 2)\bigr) &
-\text{else if $\exists i \in \{1, \dots, n\} \cdot \test(\dpass \cup \Delta_i) = \pass$ (``increase to subset'')} \\
-%
-  \ddmax_2\bigl(\dpass, \min(|\cfail \textcolor{red}{- \dpass}|, 2n)\bigr) & \text{else if $n < |\cfail - \dpass|$ (``increase granularity$^{\text{\textcolor{red}{b}}}$'')} \\
-\dpass & \text{otherwise (``done'').}
-\end{cases}
-\end{align*}
-where $\Delta = \cfail - \dpass = \Delta_1 \cup \Delta_2 \cup \dots \cup \Delta_n$, all
-$\Delta_i$ are pairwise disjoint, and $\forall \Delta_i \cdot |\Delta_i| \approx |\cfail - \dpass| / n$
-holds.
-
-The recursion invariant (and thus precondition) for $\ddmax_2$ is
-$\test(\dpass) = \pass \land n \leq |\Delta|$.\\
-\textcolor{red}{a}: Bugfix: This base case is necessary to ensure that repairing JSON input \letterboxed{1*1} does not violate the invariant $n \leq |\Delta|$.\\
-\textcolor{red}{b}: Bugfix: We should look for minimum of the remaining so that invariant $n \leq |\Delta|$ is not violated for JSON input \letterboxed{\{*"":2\}}.
-\end{minipage}
-\end{boxedminipage}
-%\vspace{-0.5\baselineskip}
-\caption{Maximizing Lexical Delta Debugging algorithm}
-%\vspace{-0.5\baselineskip}
-\label{fig:ddmax}
-\end{figure*}
-
 
 \section{Approach}
 
