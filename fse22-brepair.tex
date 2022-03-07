@@ -243,12 +243,12 @@ In this work, we show that incorporating light-weight error-feedback to parsers
 is sufficient to repair any corrupt input string with maximal closeness to the
 semantics of input data.
 
-Given a conforming program, and any corrupt input, \approach provides a set
+Given a conforming program, and any corrupt input, \brepair provides a set
 of repairs prioritized by the distance of the repair from the original input.
 
 We show that our approach can remove the limitations inherent in \ddmax, the
 previously best known approach, both in terms of what it can repair, as well as
-in terms of the set of repairs offered. In our evaluation of \approach, we found
+in terms of the set of repairs offered. In our evaluation of \brepair, we found
 that it can outperform \ddmax in input repair, and can repair all input corruptions
 that were induced.
 \end{abstract}
@@ -415,7 +415,7 @@ maximal parsing input.
 \caption{\ddmax limitations}
 \begin{tabular}{|l | c | c | l |}
 \hline
-Example & \ddmax repair & \approach repair & \ddmax limitation \\
+Example & \ddmax repair & \brepair repair & \ddmax limitation \\
 \hline
 \letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\}} & \letterboxed{\ \ \ \
 3.45} & \letterboxed{\{\ "item":\ "Apple",\ "price":\ 3.45\}} & Rich structure
@@ -452,8 +452,31 @@ assumption is not met -- as in the case of inputs with a rich structure such as
 conforming to a grammar -- the repairs produced can be suboptimal as the
 examples show.
 
-However, as the existence of \ddmax shows, repairing inputs without a formal
-grammar at hand is an important task.
+However, the existence of \ddmax suggests that repairing inputs without a formal
+grammar at hand is an important task. Unfortunately, most documents in the real
+world have some syntactic or semantic constraints that makes satisfying the
+implied assumption of \ddmax (independence of fragments) unsatisfiable.  The
+second limitation of \ddmax -- the repair is restricted to deletion -- makes it
+even more suboptimal to use.
+
+
+In this paper, we provide a solution.
+We show that corrupted inputs with rich structure can be repaired adequately if
+the input processor can provide at least some indication of progress.
+That is, as with \ddmax, we require the input processor to indicate if the input
+is valid.  However, when given an invalid input, we require the input processor
+to indicate whether the input is merely \emph{incomplete} -- that is, the input
+is a prefix of a valid input -- or is \emph{incorrect} -- that is, no suffix to
+this input will result in a valid input. 
+
+This requirement is not hard to accomplish. In most cases, parsers already
+provide precise information as to the point at which the parse failed, which
+can be used directly in our algorithm. In the cases where parers do not provide
+this information, obtaining this information by external instrumentation is
+possible as demonstrated by Bj\"orn et al.~\cite{mathis2019parser}. If
+the program is hard to instrument, adding failure feedback that we require is
+not difficult~\cite{gopinath2020fuzzing}.
+
 
 Our \brepair algorithm starts with the corrupted input and quickly finds the
 maximal parsable prefix using a binary search.
@@ -476,6 +499,21 @@ newly constructed string: \\
 \letterboxed{\{\ "name":\ "Dave"\ ,\"age":\ 42\ \}}
 which is accepted as a valid repair.
 
+Unlike \ddmax, \brepair does not have the implied assumption of independence of
+fragments. Hence, it does not face any limitation when given corrupt inputs
+that should conform to a rich structure. It also does not stumble when faced
+with multiple corruptions. Finally, \brepair provides both deletion and
+synthesis as repair options making it an optimal algorithm in the toolbox of
+data engineers.
+
+\noindent\textbf{Contributions.}
+\begin{itemize}
+  \item We identify one of the major limitations to \ddmax -- the limitation due to rich struture, which can be fixed only by requiring additional constraints.
+  \item We provide two bug fixes to \ddmax.
+  \item We propose \brepair which does not have these limitations.
+\end{itemize}
+
+\section{Limitations of \ddmax}
 %---
 % Example for Span Problem
 %---
@@ -533,15 +571,15 @@ Kirchner et al.~\cite[Figure 1]{kirschner2020debugging} but with an extra
 \letterboxed{*}. This results in a repair of \mbox{``\<\ \ \ \ 3.45>''},
 resulting in information loss.
 
-One of the issues here is that unlike \ddmin, \ddmax can't require independence
-of $\Delta$ sequences. That is, \ddmin requires that each non-failure causing
-fragment can be independently removed without impacting the failure. An
-equivalent condition for \ddmax would be that one can add each non-failure
-causing fragment to the passing input independently. However, this fails
-when we have rich input structure as illustrated by the above example.
-Of course, onece the input processor conforms to this constraint, \ddmax will
-have no problems maximizing any inputs. However, this can be a rather strong
-constraint in practice.
+% One of the issues here is that unlike \ddmin, \ddmax can't require independence
+% of $\Delta$ sequences. That is, \ddmin requires that each non-failure causing
+% fragment can be independently removed without impacting the failure. An
+% equivalent condition for \ddmax would be that one can add each non-failure
+% causing fragment to the passing input independently. However, this fails
+% when we have rich input structure as illustrated by the above example.
+% Of course, onece the input processor conforms to this constraint, \ddmax will
+% have no problems maximizing any inputs. However, this can be a rather strong
+% constraint in practice.
 
 \subsection{Limitations due to multiple faults}
 \todo{I think that all these issues with \ddmax has one single cause -- the
@@ -657,20 +695,6 @@ there is no real definition of progress. We do not know if
 \letterboxed{\{\ A":\ **3\}} because all three returns the same
 result -- parse error.
 
-All is, however, not lost. This paper shows that such corrupted inputs can
-still be repaired adequately if the input processor can provide at least some
-indication of progress. When given an input, we require the input
-processor to indicate whether the input is merely incomplete -- that is, the
-input is a prefix of a valid acceptable input -- or is incorrect -- that is, no
-suffix to this input will result in a valid input.
-
-This requirement is not hard to accomplish. In most cases, parsers already
-provide precise information as to the point at which the parse failed, which
-can be used directly in our algorithm. In the cases where parers do not provide
-this information, obtaining this information by external instrumentation is
-possible as demonstrated by Bj\"orn et al.~\cite{mathis2019parser}. If
-the program is hard to instrument, adding failure feedback that we require is
-not difficult~\cite{gopinath2020fuzzing}.
 
 Our \brepair algorithm starts with the corrupted input and quickly finds the
 maximal parsable prefix using a binary search.
@@ -760,12 +784,6 @@ until the choices reach a configurable number (e.g. 100,000)
 beyond which deletion should take precedence.
 }
 \\
-\noindent\textbf{Contributions.}
-\begin{itemize}
-  \item We identify one of the major limitations to \ddmax -- the limitation due to rich struture, which can be fixed only by requiring additional constraints.
-  \item We provide two bug fixes to \ddmax.
-  \item We propose \approach which does not have these limitations.
-\end{itemize}
 %TODO
 \section{Overview}
 
