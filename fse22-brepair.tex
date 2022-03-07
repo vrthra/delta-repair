@@ -408,6 +408,30 @@ maximal parsing input.
 (1)~Limitations due to rich input structure,
 (2)~inability to fix multiple inputs, and
 (3)~limited repair options available. We explain each in turn.
+\begin{table*}\centering
+\footnotesize
+\caption{\ddmax limitations}
+\begin{tabular}{|l | c | c | l |}
+\hline
+Example & \ddmax repair & \approach repair & \ddmax limitation \\
+\hline
+\letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\}} & \letterboxed{\ \ \ \
+3.45} & \letterboxed{\{\ "item":\ "Apple",\ "price":\ 3.45\}} & Limitation due
+to spanning\\
+\letterboxed{\{\"ABCD":[*"1,2,3,4,5,6"]*\}} & 
+\letterboxed{123456} & 
+\letterboxed{\{\"ABCD":["1,2,3,4,5,6"]\}} & 
+Limitation due to multiple-faults \\
+\letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}} &
+\letterboxed{\{\ "name":\ "Daveage":\ 42\ \}} &
+\letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}} &
+Limitation due to limited repairs \\
+\hline
+\end{tabular}
+\label{tab:ddmaxlimitations}
+%\vspace{-0.5cm}
+\end{table*}
+
 
 \ddmax works very well for most inputs. However, it has three major limitations
 as we show in \Cref{tbl:ddmaxlimitations}.
@@ -506,30 +530,6 @@ beyond which deletion should take precedence.
   \item We provide two bug fixes to \ddmax.
   \item We propose \approach which does not have these limitations.
 \end{itemize}
-
-\begin{table*}\centering
-\footnotesize
-\caption{\ddmax limitations}
-\begin{tabular}{|l | c | c | l |}
-\hline
-Example & \ddmax repair & \approach repair & \ddmax limitation \\
-\hline
-\letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\}} & \letterboxed{\ \ \ \
-3.45} & \letterboxed{\{\ "item":\ "Apple",\ "price":\ 3.45\}} & Limitation due
-to spanning\\
-\letterboxed{\{\"ABCD":[*"1,2,3,4,5,6"]*\}} & 
-\letterboxed{123456} & 
-\letterboxed{\{\"ABCD":["1,2,3,4,5,6"]\}} & 
-Limitation due to multiple-faults \\
-\letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}} &
-\letterboxed{\{\ "name":\ "Daveage":\ 42\ \}} &
-\letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}} &
-Limitation due to limited repairs \\
-\hline
-\end{tabular}
-\label{tab:ddmaxlimitations}
-%\vspace{-0.5cm}
-\end{table*}
 
 
 \section{\ddmax Overview}
