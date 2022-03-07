@@ -887,8 +887,12 @@ insertion threads at any edit distance exceeds this value, we sample \<N>
 insertion threads from this group.
 % prioritize the threads by the maximum edit
 
+\item The process continues until the value is accepted at some edit distance.
+
 \item The priority queue at the end of the process forms the edit
-recommendations from the algorithm.
+recommendations from the algorithm. The top most rank forms the first level of
+suggestions at the lowest edit distance possible. If more suggestions are
+required, the process can be restarted with the threads in the next rank.
 
 \end{itemize}
 
