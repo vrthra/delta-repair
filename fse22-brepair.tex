@@ -499,7 +499,12 @@ newly constructed string: \\
 \letterboxed{\{\ "name":\ "Dave"\ ,\"age":\ 42\ \}}
 which is accepted as a valid repair.
 
-Unlike \ddmax, \brepair
+Unlike \ddmax, \brepair does not have the implied assumption of independence of
+fragments. Hence, it does not face any limitation when given corrupt inputs
+that should conform to a rich structure. It also does not stumble when faced
+with multiple corruptions. Finally, \brepair provides both deletion and
+synthesis as repair options making it an optimal algorithm in the toolbox of
+data engineers.
 
 \noindent\textbf{Contributions.}
 \begin{itemize}
