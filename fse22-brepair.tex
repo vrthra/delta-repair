@@ -499,6 +499,14 @@ newly constructed string: \\
 \letterboxed{\{\ "name":\ "Dave"\ ,\"age":\ 42\ \}}
 which is accepted as a valid repair.
 
+\noindent\textbf{Contributions.}
+\begin{itemize}
+  \item We identify one of the major limitations to \ddmax -- the limitation due to rich struture, which can be fixed only by requiring additional constraints.
+  \item We provide two bug fixes to \ddmax.
+  \item We propose \approach which does not have these limitations.
+\end{itemize}
+
+\section{Limitations of \ddmax}
 %---
 % Example for Span Problem
 %---
@@ -556,15 +564,15 @@ Kirchner et al.~\cite[Figure 1]{kirschner2020debugging} but with an extra
 \letterboxed{*}. This results in a repair of \mbox{``\<\ \ \ \ 3.45>''},
 resulting in information loss.
 
-One of the issues here is that unlike \ddmin, \ddmax can't require independence
-of $\Delta$ sequences. That is, \ddmin requires that each non-failure causing
-fragment can be independently removed without impacting the failure. An
-equivalent condition for \ddmax would be that one can add each non-failure
-causing fragment to the passing input independently. However, this fails
-when we have rich input structure as illustrated by the above example.
-Of course, onece the input processor conforms to this constraint, \ddmax will
-have no problems maximizing any inputs. However, this can be a rather strong
-constraint in practice.
+% One of the issues here is that unlike \ddmin, \ddmax can't require independence
+% of $\Delta$ sequences. That is, \ddmin requires that each non-failure causing
+% fragment can be independently removed without impacting the failure. An
+% equivalent condition for \ddmax would be that one can add each non-failure
+% causing fragment to the passing input independently. However, this fails
+% when we have rich input structure as illustrated by the above example.
+% Of course, onece the input processor conforms to this constraint, \ddmax will
+% have no problems maximizing any inputs. However, this can be a rather strong
+% constraint in practice.
 
 \subsection{Limitations due to multiple faults}
 \todo{I think that all these issues with \ddmax has one single cause -- the
@@ -680,6 +688,7 @@ there is no real definition of progress. We do not know if
 \letterboxed{\{\ A":\ **3\}} because all three returns the same
 result -- parse error.
 
+
 Our \brepair algorithm starts with the corrupted input and quickly finds the
 maximal parsable prefix using a binary search.
 For example, in \Cref{fig:bad-json-input}, \brepair finds the maximal parsable
@@ -768,12 +777,6 @@ until the choices reach a configurable number (e.g. 100,000)
 beyond which deletion should take precedence.
 }
 \\
-\noindent\textbf{Contributions.}
-\begin{itemize}
-  \item We identify one of the major limitations to \ddmax -- the limitation due to rich struture, which can be fixed only by requiring additional constraints.
-  \item We provide two bug fixes to \ddmax.
-  \item We propose \approach which does not have these limitations.
-\end{itemize}
 %TODO
 \section{Overview}
 
