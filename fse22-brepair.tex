@@ -836,15 +836,6 @@ as the solution.
 % \label{fig:bad-json-input-repaired-asterisks}
 % \end{figure}
 
-\todo{
-\textbf{note:} In the algorithm, we need to limit possible insertions.
-Unconstrained insertions are possible only for two characters. If we
-have constraints on the initial character, more insertions can be allowed,
-until the choices reach a configurable number (e.g. 100,000)
-beyond which deletion should take precedence.
-}
-\\
-%TODO
 \section{Overview}
 The \brepair algorithm works as follows.
 We start with the assumption that the parser correctly signals
@@ -856,16 +847,45 @@ binary search of the input to determine the substring at which \emph{incomplete}
 switches to \emph{incorrect}. The boundary is considered to be the first
 character that results in \emph{incorrect} response from the parser.
 
-\item At the point of boundary (the first such character), \brepair applies
+\item At the point of boundary (the first such character), we set the current
+edit distance to one. Then, \brepair applies
 deletion, and checks whether the deletion changes the valid substring.
 
 \item At the same point, \brepair also tries to insert a single character and
-checks whether the insertin changes the valid substring.
+checks whether the insertion changes the valid substring. Both single character
+deletion as well as single character insertion is an edit distance of one.
 
 \item If the deletion or any insertion results in a change of size of the valid
 substring, the particular changes are stored in a priority queue.
-% priority is, the number of edits first, followed by the size of the valid
-% substring.
+The priority is computed as the number of edits required. That is, if one
+deletion is sufficient to increase the valid substring, then the priority is
+one. Similarly, if one character insertion increased the valid substring, the
+priority is one. If however, one character had to be deleted, and another
+inserted, the priority is two.
+% first, followed by the size of the valid substring.
+%When there is a tie between deletion and insertion, deletion gets
+%the priority. When two insertions are available, one is chosen randomly.
+
+\item If the priority queue contains any items, we choose all items with the
+highest ranking (e.g. If there are items with two edits and items with one
+edit, then choose all one edit items). We call each such item a thread.
+
+\item We continue each thread until the parser output changes from
+\emph{incomplete} to \emph{incorrect}, and we repeat the process.
+
+\item If the priority queue did not contain any items, we increase the current
+edit distance by one. That is, we delete one character more and see if that
+advances the valid substring. We also try to add one character to the string
+with one character previously deleted, effectively replacing the first
+character with a new character. Similarly, we append one more character to any
+thread that already contains one character appended.
+
+\item Given that there are 128 ASCII characters, each insertion can increase
+the thread count by a multiple of 128. Hence, we limit the insertion thread
+count of a particular edit distance to a configurable \<N> value. If the number
+insertion threads at any edit distance exceeds this value, we sample \<N>
+insertion threads from this group.
+% prioritize the threads by the maximum edit
 
 \end{itemize}
 
