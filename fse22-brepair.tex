@@ -243,12 +243,12 @@ In this work, we show that incorporating light-weight error-feedback to parsers
 is sufficient to repair any corrupt input string with maximal closeness to the
 semantics of input data.
 
-Given a conforming program, and any corrupt input, \approach provides a set
+Given a conforming program, and any corrupt input, \brepair provides a set
 of repairs prioritized by the distance of the repair from the original input.
 
 We show that our approach can remove the limitations inherent in \ddmax, the
 previously best known approach, both in terms of what it can repair, as well as
-in terms of the set of repairs offered. In our evaluation of \approach, we found
+in terms of the set of repairs offered. In our evaluation of \brepair, we found
 that it can outperform \ddmax in input repair, and can repair all input corruptions
 that were induced.
 \end{abstract}
@@ -415,7 +415,7 @@ maximal parsing input.
 \caption{\ddmax limitations}
 \begin{tabular}{|l | c | c | l |}
 \hline
-Example & \ddmax repair & \approach repair & \ddmax limitation \\
+Example & \ddmax repair & \brepair repair & \ddmax limitation \\
 \hline
 \letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\}} & \letterboxed{\ \ \ \
 3.45} & \letterboxed{\{\ "item":\ "Apple",\ "price":\ 3.45\}} & Rich structure
@@ -499,11 +499,13 @@ newly constructed string: \\
 \letterboxed{\{\ "name":\ "Dave"\ ,\"age":\ 42\ \}}
 which is accepted as a valid repair.
 
+Unlike \ddmax, \brepair
+
 \noindent\textbf{Contributions.}
 \begin{itemize}
   \item We identify one of the major limitations to \ddmax -- the limitation due to rich struture, which can be fixed only by requiring additional constraints.
   \item We provide two bug fixes to \ddmax.
-  \item We propose \approach which does not have these limitations.
+  \item We propose \brepair which does not have these limitations.
 \end{itemize}
 
 \section{Limitations of \ddmax}
