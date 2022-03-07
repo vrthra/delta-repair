@@ -441,8 +441,11 @@ affecting the failure observed. When this assumption is not met, (i.e. where
 the inputs have a rich structure) the minimal fragment produced by \ddmin
 can be suboptimal. Hence, the hierarchical delta debugging~\cite{misherghi2006hdd}
 and its descendants. A similar constraint also applies to \ddmax. In \ddmax,
-the unstated but mandatory constraint is that each non-failure-inducing fragment
-can be added to the passing subset without inducing a failure.
+the unstated assumption is that each non-failure-inducing fragment
+can be added to the passing subset without inducing a failure. When this
+assumption is not met -- as in the case of inputs with a rich structure such as
+conforming to a grammar -- the repairs produced can be suboptimal as the
+examples show.
 
 Our \brepair algorithm starts with the corrupted input and quickly finds the
 maximal parsable prefix using a binary search.
