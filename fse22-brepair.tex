@@ -780,6 +780,11 @@ $\test(\dpass) = \pass \land n \leq |\Delta|$.\\
     \node[simpletext,right=.3 of tryNewInsert.east,inner sep=1pt] (pqins2) {push PQ};
     \draw[blockdiagramarrow,dashed] (tryNewInsert) -- (pqins2);
     \draw[blockdiagramarrow] (tryNewInsert) to[out=180,in=0] (pop);
+    \pic[] at (search.south east) {numbering=1};
+    \pic[] at ([yshift=-3mm]correct.south east) {numbering=2};
+    \pic[] at (tryOrigInsert.south east) {numbering=3};
+    \pic[] at (tryDelete.south east) {numbering=4};
+    \pic[] at (tryNewInsert.south east) {numbering=5};
     %TODO
 \end{tikzpicture}
 % \vspace*{-0.1in}
@@ -792,35 +797,26 @@ $\test(\dpass) = \pass \land n \leq |\Delta|$.\\
 This section describes the experimental setup of this work. 
 
 \subsubsection*{\bf Workflow}
-\Cref{fig:ddmax_flowchart} shows the workflow of our evaluation.
-We first crawl a large set of real-world invalid files and select seed files according to \Cref{sec:prevalence}.
-The seed files are filtered into valid and invalid files (\refnumber{1}).
-Duplicates and files that have a wrong format are deleted beforehand.
-Then, for each format, 50 valid \textit{crawled files} are selected and mutated using one mutation and up to 16 mutations to produce two additional sets of corrupted input files (\refnumber{2}).
-We feed each invalid file to each subject program, and an \textit{ANTLR} parser (\refnumber{3}).
-\textit{ANTLR} executes its default \textit{error recovery strategy} to recover from errors while generating a parse tree for the input.
-Next, we feed the invalid file to the repair algorithms, i.e., \textit{lexical} \ddmax, \textit{syntactic} \ddmax and the \brepair and \bsimple algorithms (\refnumber{4}).
-The repair algorithms test the input under repair repeatedly using the rich failure feedback from the subject program (\refnumber{5}).
-Then, we feed the unmutated original files and the resulting repaired file from each technique to the \textit{differencing} framework (\refnumber{6}), which computes the \textit{change in file size} and \textit{Levenshtein distance} for both files.
-We also save the feedback from the subject program (\refnumber{7}).
-Finally, we execute \ddmin on the real-world invalid inputs (\refnumber{8}) and report the content and size of the result.
+\Cref{fig:ddmax_flowchart} shows the workflow of \brepair.
+When running \brepair, it first performs a binary search on the input file in order to find the longest possible prefix that is flagged as \emph{incomplete} by the subject program (\refnumber{1}).
+This longest found prefix is then pushed onto a priority queue (\emph{PQ}) that sorts its elements based on their editing distance to the original input, prioritizing elements with a lower editing distance.
+In the next step, \brepair pops the element with the lowest editing distance from PQ and checks if the input consisting of the prefix and the remaining parts of the original input is flagged as \emph{correct}, in which case the repair is complete and the repaired input is returned (\refnumber{2}).\par
+Then, three operations are performed on the prefix that was popped from the queue:
+First, \brepair tries to append the first character of the remaining original input to the prefix (\refnumber{3}).
+If this results in an incomplete (or correct) input, this means that \brepair repaired one faulty location in the original input, since the prefix was determined as the longest possible prefix that is incomplete (\refnumber{1}).
+Threrfore, in this case, \brepair searches for a new longest incomplete prefix.
+If the operation did not succeed, \brepair pushes a new prefix onto the priority queue where the first character of the remaining original input is deleted (increasing the editing distance by 1) (\refnumber{4}).
+Finally, before popping the next prefix from the queue, \brepair tries to append all characters to the prefix that do not cause the prefix to become \emph{incorrect}, also increasing the editing distance by 1 (\refnumber{5}).
 
-We implemented the repair algorithms in 2.1k~LOC of  \texttt{Java} code.
-\textit{ANTLR} also implements an inbuilt error recovery strategy which is designed to recover from lexing or parsing errors (e.g. missing/wrong tokens or incomplete parse trees)~\cite{antlrjavadocdefaulterrorstrategy}.
-%The real-world corrupted files are treated differently from the artificially mutated files, because we do not have working reference files for each corrupted file (i.e. the unmutated version of each file). We feed the corrupted real-world files into our \textit{lexical \ddmax} and evaluate the change in file size (i.e. the data loss on byte-level). We cannot evaluate the other metrics without unmutated files.
-
-%TODO This is copied from ddmax, -->change?:
-\subsubsection*{\bf Mutations}
-In addition to the real-world invalid inputs (\textit{cf. \Cref{sec:prevalence}}), we also simulate real-world data corruption by applying \textit{byte-level} mutations on valid input files.
-These mutations were chosen because they are similar to the corruptions observed in real-world invalid files (\textit{see \Cref{sec:prevalence} and \Cref{sec:diagnosis}}).
-We perform the following mutations at a random position in each valid input file: \textit{byte insertion}, \textit{byte deletion} and \textit{byte flip}.
-To simulate \textit{single data corruption}, we randomly choose one of these mutations and apply it once on the valid input file.
-For \textit{multiple data corruptions}, we perform up to 16~random mutations on each input file.
-A mutation is only successful (for an input format), if \textit{at least} one of the subject programs (that passes before) fails after the mutation.
-These criteria are similar to how we collected invalid input files in the wild.
+\subsubsection*{\bf Test inputs}
+As test inputs, we crawled a large corpus of valid and invalid real-world files from GitHub using the GitHub crawling API~\cite{githubapi}.
+%TODO add table with number of files?
+For each format, we introduced a set of 100 artificially mutated (invalid) files that we mutated from 50 randomly selected valid real-world files.
+Half of those mutated files contain a single mutated byte and the other half contains multiple (up to 16) mutated bytes.
+Each mutation can either be a byte-flip, an insertion or a deletion, which we believe to resemble real-world corruptions as close as possible (e.g. bit rot on hard disks or transmission errors in network protocols).
 
 \subsubsection*{\bf Metrics and Measures}
-To determine the quality of repaired files, we use the following metrics and tools:
+To evaluate the repair quality of a repaired file, we measure:
 \begin{enumerate}
     \item \textbf{File Size Difference: } We evaluate the difference in \textit{file size} of the \emph{recovered inputs} of the different repair algorithms and the original \textit{valid input}.
     We use these measurements to account for the amount of data recovered as well as the amount of data loss incurred.
