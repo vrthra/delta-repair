@@ -1312,57 +1312,118 @@ XXXX
 
 
 
+
+\noindent
+\textbf{RQ4 Efficiency:}
+%\todo{mention that run-time is the execution time of the algorithm, without accounting for the time for experimental pre/post processings }
+Let us evaluate the performance of our approach. 
+%, i.e., %we investigate 
+%how long it takes \approach to repair an invalid input, in comparison to the state-of-the-art (ddmax). 
+%In addition, w
+%We also evaluate the number %of repair attempts, i.e., number of 
+%program runs %test experiments with input fragments, 
+%performed by each approach. 
+To this end, we measure the time performance (i.e., execution time) and the number of program runs performed 
+%  of input repairs that were completed 
+by \approach, in comparison to lexical ddmax and syntactic ddmax. For a balanced evaluation, we 
+%performed an experiment analysing % where we consider %for 
+analyse a set of 483 invalid inputs % files 
+that where completely repaired by all three approaches within %, in less than 
+two minutes, %. % (120,000ms). 
+%Specifically
+%To be fair, we report the execution time of each algorithm, 
+without %accounting for 
+%the time for 
+data collection and % or experimental 
+analysis time. 
+%For program runs, w
+%We also compute the number of program runs, i.e., %repair attempts, 
+%the number of program execution during the test experiments of each approach.  
+%\recheck{
+\autoref{tab:efficiency} %and figure X} 
+illustrates the efficiency of our approach compared to ddmax. %the state-of-the-art methods. 
+
+%For runtime, 
+
+In this evaluation, we found that \textit{\approach is efficient in input repair: It is reasonably fast, it takes about \recheck{1.7} seconds to repair an invalid input file, on average}. 
+\approach is 50\% more efficient than lexical ddmax (\recheck{1.7s versus 2.5s}), and syntactic ddmax is about three times as efficient as \approach (\recheck{0.6s versus 1.7s}). 
+%The time performance of 
+%This implies that \approach is twice as fast as %er than 
+%lexical ddmax, but twice slower than syntactic ddmax. 
+This result is %ese findings are 
+due to the %can be explained 
+% is expected since the execution time of %repair attempts (i.e., 
+%by the 
+number of program runs required by each approach. 
+%, which is  %) 
+%the main time-consuming component of \approach, as well as ddmax. 
+%However,
+%\recheck{
+\autoref{tab:efficiency} %} %  and Table/Figure X show} 
+shows %the %Inspecting 
+the number of %repair attempts (aka 
+program runs performed by each approach. %for all approaches.
+For instance, the execution time 
+%performance cost is much lower for 
+of \approach %syntactic ddmax 
+is much higher %lower 
+than that of syntactic ddmax 
+%and \approach, since 
+because \approach requires about three times as many program runs as syntactic ddmax (\recheck{50s vs. 1,586s} program runs). 
+%these approaches is the number of repair attempts and both lexical ddmax and \approach perform more test experiments than syntactic ddmax, 
+The lower program runs required by syntactic ddmax is because %since 
+it leverages the input grammar to reduce the number of test experiments. 
+%, i.e. test experiments with input fragments. 
+% %) 
+%It shows that \approach performed \recheck{X} less repair attempts than lexical ddmax (\recheck{X vs. X} runs), and 
+%\recheck{X} as many repair attempts as lexical ddmax (\recheck{X vs. X} runs). 
+%We observe that 
+Overall, %these results suggest that 
+\approach is reasonably efficient, and %it is 
+more efficient than lexical ddmax. %In addition, w
+We observe that the number of program runs is the main performance bottleneck of all three approaches. % to the 
+%These results suggest that \approach is %not very time-consuming or 
+%inexpensive, it as a reasonable number of repair attempts and time performance, especially in  comparison to lexical ddmax. 
+
+\begin{result}
+%Our 
+\approach %is %reasonably fast, 
+%it 
+repairs an invalid input in less than \recheck{two} (1.7) seconds, on average. %\approach 
+It is 50\% more effective than lexical ddmax, but 2x slower than syntactic ddmax. 
+% is three times as %effective as %only half as 
+%fast 
+%syntactic ddmax. 
+\end{result}
+
 \begin{table}[!tbp]\centering
-\caption{Efficiency of \approach vs. the state-of-the-art (ddmax), lower runtime, smaller number of program runs and significant \% improvement in efficiency are in \textbf{bold}}
+\caption{Efficiency of \approach vs. the state-of-the-art (ddmax), lower runtime, smaller number of program runs %and significant \% improvement in efficiency 
+are in \textbf{bold}, second-best time performance is in \textit{italics}}
 %\vspace{-0.5cm} 
-\begin{tabular}{|l | c | r  r | r  r |}
+\begin{tabular}{|l |  r  r | r  r |}
 \hline
-& \textbf{\#Repaired}&  \multicolumn{2}{c|}{\textbf{Runtime (s)}} & \multicolumn{2}{c|}{\textbf{\#Prog. Runs}}  \\
-\textbf{Techniques} & \textbf{Inputs} &  \textbf{Avg.}  & \textbf{Total} & \textbf{Avg.}  & \textbf{Total} \\
+%& \textbf{\#Repaired} 
+&  \multicolumn{2}{c|}{\textbf{Runtime (s)}} & \multicolumn{2}{c|}{\textbf{\#Prog. Runs}}  \\
+\textbf{Techniques} %& \textbf{Inputs} 
+&  \textbf{Avg.}  & \textbf{Total} & \textbf{Avg.}  & \textbf{Total} \\
 \hline
-\textbf{Lex. ddmax} & 483 & 2.5 & 1188 & 2084 & 1006682 \\
-\textbf{Syn. ddmax} & 483 & 0.6 & 280  & 505  & 244022  \\
-\textbf{\approach} &  483 & 1.7 & 845  & 1586 & 765987  \\
+\textbf{Lex. ddmax} & %483 & 
+2.5 & 1188 & 2084 & 1006682 \\
+\textbf{Syn. ddmax} & %483 & 
+\textbf{0.6} & \textbf{280}  & \textbf{505}  & \textbf{244022}  \\
 \hline
-%\textbf{}
+\textbf{\approach} &  %483 & 
+\textit{1.7} & \textit{845}  & \textit{1586} & \textit{765987}  \\
+\hline
+%\textbf{\approach vs. Lex.} &  & & & \\
+%\textbf{\approach vs. Syn.} & & & & \\
+%\hline
 \end{tabular}
 \label{tab:efficiency}
 %\vspace{-0.5cm}
 \end{table}
 
 
-\noindent
-\textbf{RQ4 Efficiency:}
-\todo{mention that run-time is the execution time of the algorithm, without accounting for the time for experimental pre/post processings }
-Let us evaluate the time performance of our approach, i.e., we investigate how long it takes \approach to repair an invalid input, in comparison to the state-of-the-art ddmax. %In addition, w
-We also evaluate the number of repair attempts, i.e., number of program runs %test experiments with input fragments, 
-performed by each approach. \recheck{\autoref{tab:efficiency} and figure X} illustrate the efficiency of our approach compared to the state-of-the-art methods. 
-
-In this evaluation, we found that \textit{\approach is efficient in input repair: It is reasonably fast, it takes about \recheck{2.8} seconds to repair an invalid input file, on average}. 
-\approach is more efficient than lexical ddmax (\recheck{5} seconds), but less efficient than synatactic ddmax (\recheck{1.2} seconds). 
-%The time performance of 
-This implies that \approach is twice as fast as %er than 
-lexical ddmax, but twice slower than syntactic ddmax. This is expected since the execution time of %repair attempts (i.e., 
-program runs %) 
-is the main time-consuming component of \approach, as well as ddmax. However, this cost is much lower for syntactic ddmax (\recheck{X} runs) 
-%these approaches is the number of repair attempts and both lexical ddmax and \approach perform more test experiments than syntactic ddmax, 
-since it leverages the input grammar to reduce the number of test experiments. 
-%, i.e. test experiments with input fragments. 
-\recheck{\autoref{tab:efficiency}  and Table/Figure X show} the %Inspecting 
-the number of %repair attempts (aka 
-program run performed for all approaches. %) 
-It shows that \approach performed \recheck{X} less repair attempts than lexical ddmax (\recheck{X vs. X} runs), and 
-\recheck{X} as many repair attempts as lexical ddmax (\recheck{X vs. X} runs). 
-%We observe that 
-These results suggest that the number of program runs is the main performance bottleneck of all three approaches. % to the 
-%These results suggest that \approach is %not very time-consuming or 
-%inexpensive, it as a reasonable number of repair attempts and time performance, especially in  comparison to lexical ddmax. 
-
-\begin{result}
-Our approach is reasonably fast, 
-it repairs an invalid input within \recheck{three} seconds, on average. \approach 
-is twice as effective as lexical ddmax, but only half as fast syntactic ddmax. 
-\end{result}
 
 
 %\noindent
@@ -1396,6 +1457,8 @@ is twice as effective as lexical ddmax, but only half as fast syntactic ddmax.
 \section{Discussion}
 
 \section{Threats to Validity}
+
+\todo{discuss threats to validity .... discuss issues like input synthesis (insertion), requires rich feedback: incorrect and incomplete input fragment}
 Our approach (\approach) and empirical evaluations may be limited by the following validity threats:
 
 \noindent
@@ -1413,50 +1476,60 @@ Our approach (\approach) and empirical evaluations may be limited by the followi
 \label{sec:related_work}
 %TODO In this chapter, we discuss...
 
-\begin{description}
+\todo{refactor this section, looks to similar to ddmax, also add Infix paper ... }
 
-\item[Input Rectification] is the process of transforming misbehaving inputs into inputs that behave predictably in the scope of a certain software system.
+%\begin{description}
+
+\noindent
+\textbf{Input Rectification} is the process of transforming misbehaving inputs into inputs that behave predictably in the scope of a certain software system.
     In \textit{Automatic Input Rectification}~\cite{Long:2012:AIR:2337223.2337233} and \emph{Living in the Comfort Zone}~\cite{Rinard:2007:LCZ:1297027.1297072}, input constraints are learned from valid inputs to solve this problem, which are used to transform malicious inputs into rectified inputs that satisfy learned constraints.
     We do not employ such constraint learning techniques in \bfr.
     Instead, we employ the knowledge of a grammar describing the input file format and the feedback of a subject program to transform the input files into an acceptable subset.
     Instead of transforming inputs to comply to security-critical constraints, our goal is to recover as much of the input file as possible.
 
-\item[File Recovery] aims to recover files that cannot be opened with a subject program due to corruption.
+\noindent
+\textbf{File Recovery} aims to recover files that cannot be opened with a subject program due to corruption.
 In \emph{S-DAGs}~\cite{scheffczyk2004s}, semantic consistency constraints are enforced on broken input files in a semi-automatic technique.
 \emph{Docovery}~\cite{docovery:ase14} takes a similar approach using symbolic execution to change broken inputs to take error-free paths in the subject program.
 While this is a whitebox approach that facilitates program analysis, \bfr relies on the feedback of the subject program in a black-box approach that results from executing the broken inputs.
 
-\item[Input Debugging], in contrast to program debugging, aims to change inputs to localize faults in subject programs.
+\noindent
+\textbf{Input Debugging}, in contrast to program debugging, aims to change inputs to localize faults in subject programs.
     There is numerous work that focuses on simplifying failure-inducing inputs~\cite{zeller2002simplifying, clause2009penumbra, hierarchicalDD, sterling2007automated}.
     Closely related to \bfr are particularly \cite{hierarchicalDD} and \cite{sterling2007automated}, which both aim to minimize the input files while still triggering a bug in the subject program, just like \ddmin.
     In contrast, \bfr tries to maximize the inputs while avoiding to trigger the bug in the subject program.
 
-\item[Data Diversity] \cite{data_diversity} transforms a failure-inducing input into an input that can be processed by a subject program while generating the same output.
+\noindent
+\textbf{Data Diversity} \cite{data_diversity} transforms a failure-inducing input into an input that can be processed by a subject program while generating the same output.
 Their approach analyzes which regions of the input cause the fault and changes those regions to avoid the fault.
 An important difference to \bfr is that we do not need any program analysis, but analyze the output of the subject program alone.
 
-\item[Data Structure Repair] iteratively fixes corrupted data structures by enforcing they conform to consistency constraints~\cite{Demsky:2003:ADR:949343.949314, 1553560, hussain2010dynamic, Demsky:2006:IED:1146238.1146266}.
+\noindent
+\textbf{Data Structure Repair} iteratively fixes corrupted data structures by enforcing they conform to consistency constraints~\cite{Demsky:2003:ADR:949343.949314, 1553560, hussain2010dynamic, Demsky:2006:IED:1146238.1146266}.
 These constraints can be extracted, specified and enforced with predicates~\cite{elkarablieh2008juzi}, model-based systems~\cite{Demsky:2003:ADR:949343.949314}, goal-directed reasoning~\cite{1553560}, dynamic symbolic execution~\cite{hussain2010dynamic} or invariants~\cite{Demsky:2006:IED:1146238.1146266}.
 Similarly to our approach, one goal in data structure repair is to successfully execute a subject program on broken input files safely and acceptably.
 However, \bfr focuses on repairing inputs while recovering as much data as possible to avoid inducing faults in the subject program.
 
-\item[Syntactic Error Recovery] is the implementation of error recovery schemes, typically in parsers and compilers~\cite{hammond1984survey, backhouse1979syntax}.
+\noindent
+\textbf{Syntactic Error Recovery} is the implementation of error recovery schemes, typically in parsers and compilers~\cite{hammond1984survey, backhouse1979syntax}.
 In most of the syntactic recovery approaches, various different techniques are employed, including insertion, deletion and replacement of symbols~\cite{anderson1981locally, cerecke2003locally, anderson1983assessment}, extending forward or backwards from a parser error~\cite{burke1982practical, mauney1982forward}, or more general methods of recovery and diagnosis~\cite{krawczyk1980error, aho1972minimum}.
 Different to \bfr, these schemes ensure the compiler does not halt while parsing, while our approach aims to fix the input inducing the failure.
 
-\item[Data Cleaning and Repair] is typically performed on complex database systems.
+\noindent
+\textbf{Data Cleaning and Repair} is typically performed on complex database systems.
 In most approaches, this includes analyzing the database to remove noisy data or fill in missing data~\cite{xiong2006enhancing, hernandez1995merge}.
 In other approaches, developers are allowed to write and apply logical rules on the database~\cite{pochampally2014fusing, galhardas2000ajax, golab2010data, jeffery2006pipelined, raman2001potter, luebbers2003systematic}.
 While all of these approaches repair database systems, \bfr repairs raw user inputs.
 
-\item[Data Testing and Debugging] aims to identify program errors caused by well-formed but incorrect data while a user modifies a database~\cite{mucslu2013data}.
+\noindent
+\textbf{Data Testing and Debugging} aims to identify program errors caused by well-formed but incorrect data while a user modifies a database~\cite{mucslu2013data}.
 In continuous data testing (CDT)~\cite{mucslu2015preventing}, likely data errors are identified by continuously executing domain-specfic test queries, in order to warn users of test failures.
 \emph{DATAXRAY}~\cite{wang2015error} also investigates the underlying conditions that cause data bugs, it reveals hidden connections and common properties among data errors.
 In contrast to \bfr, these approaches aim to guard data from new errors by detecting data errors in database systems during modification.
-\end{description}
+%\end{description}
 
 \section{Conclusion}
-\todo{XXXX }
+\todo{discuss potential future works}
 
 \revise{We provide our tool, data and experimental results for easy replication, scrutiny and reuse:
 }
