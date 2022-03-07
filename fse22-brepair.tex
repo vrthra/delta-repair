@@ -405,9 +405,6 @@ decompose the input into independent fragments (called deltas), one can
 successively minimize the parse-error inducing part of the input resulting in a
 maximal parsing input.
 
-(1)~Limitations due to rich input structure,
-(2)~inability to fix multiple inputs, and
-(3)~limited repair options available. We explain each in turn.
 \begin{table*}\centering
 \footnotesize
 \caption{\ddmax limitations}
@@ -432,9 +429,11 @@ Limitation due to limited repairs \\
 %\vspace{-0.5cm}
 \end{table*}
 
-
 \ddmax works very well for most inputs. However, it has three major limitations
-as we show in \Cref{tbl:ddmaxlimitations}.
+(1)~Limitations due to rich input structure,
+(2)~inability to fix multiple inputs, and
+(3)~limited repair options available. We explain each in turn.
+Examples of each are shown in \Cref{tab:ddmaxlimitations}.
 
 Our \brepair algorithm starts with the corrupted input and quickly finds the
 maximal parsable prefix using a binary search.
