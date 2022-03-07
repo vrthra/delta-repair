@@ -452,9 +452,15 @@ assumption is not met -- as in the case of inputs with a rich structure such as
 conforming to a grammar -- the repairs produced can be suboptimal as the
 examples show.
 
-However, as the existence of \ddmax shows, repairing inputs without a formal
-grammar at hand is an important task.
+However, the existence of \ddmax suggests that repairing inputs without a formal
+grammar at hand is an important task. Unfortunately, most documents in the real
+world have some syntactic or semantic constraints that makes satisfying the
+implied assumption of \ddmax (independence of fragments) unsatisfiable.  The
+second limitation of \ddmax -- the repair is restricted to deletion -- makes it
+even more suboptimal to use.
 
+
+In this paper, we provide a solution.
 Our \brepair algorithm starts with the corrupted input and quickly finds the
 maximal parsable prefix using a binary search.
 For example, in \Cref{fig:bad-json-input}, \brepair finds the maximal parsable
