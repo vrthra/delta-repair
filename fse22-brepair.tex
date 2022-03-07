@@ -817,6 +817,42 @@ $\test(\dpass) = \pass \land n \leq |\Delta|$.\\
 
 \section{Approach}
 
+%
+%\hline
+%Example & \ddmax repair & \approach repair & \ddmax limitation \\
+%\hline
+%\letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\}} & \letterboxed{\ \ \ \
+%3.45} & \letterboxed{\{\ "item":\ "Apple",\ "price":\ 3.45\}} & Rich structure
+%(spans) \\
+%\letterboxed{\{\"ABCD":[*"1,2,3,4,5,6"]*\}} & 
+%\letterboxed{123456} & 
+%\letterboxed{\{\"ABCD":["1,2,3,4,5,6"]\}} & 
+%Rich Structure (multiple-faults) \\
+%\letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}} &
+%\letterboxed{\{\ "name":\ "Daveage":\ 42\ \}} &
+%\letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}} &
+
+
+\begin{table*}[!tbp]\centering
+\caption{Debugging Richly Structured Inputs: \approach versus \ddmax}
+\begin{tabular}{|l | c | r | r | r | r |}
+\hline
+\textbf{Challenges} & \textbf{Sample Input}  &  \textbf{\ddmax Repair} & \textbf{\approach Repair} & \textbf{\approach Strength}  \\
+\hline 
+\textbf{Search Span} %(Rich Structure)} 
+&  \{\ "item":\ "Apple",\ "price":\ ***3.45\} & & & \\ 
+\textbf{Multiple faults} & \{\ "ABCD":[*"1,2,3,4,5,6"]*\} & & & \\ 
+\textbf{Repair to subsets} & \{\ "name":\ "Dave",\ "age":\ 42\ \} & & & \\ 
+\textbf{Rich Structure} & & & & \\ 
+\textbf{Limited Repair} & & & & \\ 
+\textbf{Failure Feedback} & & & & \\ 
+\hline
+\end{tabular}
+\label{tab:challenges-inp-debug}
+%\vspace{-0.5cm}
+\end{table*}
+
+
 \section{Experimental Setup}
 \label{sec:experimental-setup}
 
