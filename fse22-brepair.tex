@@ -457,7 +457,10 @@ grammar at hand is an important task. Unfortunately, most documents in the real
 world have some syntactic or semantic constraints that makes satisfying the
 implied assumption of \ddmax (independence of fragments) unsatisfiable.  The
 second limitation of \ddmax -- the repair is restricted to deletion -- makes it
-even more suboptimal to use.
+even more suboptimal to use. The problem is that in many circumstances such as
+disk corruption, some input characters are more likely to be changed or deleted
+rather than inserted. Hence by handling only spurious insertions, \ddmax misses
+an important repair requirement.
 
 
 In this paper, we provide a solution.
@@ -843,6 +846,24 @@ beyond which deletion should take precedence.
 \\
 %TODO
 \section{Overview}
+The \brepair algorithm works as follows.
+We start with the assumption that the parser correctly signals
+\emph{incomplete} for incomplete inputs, \emph{incorrect} for other invalid
+inputs, and \emph{complete} if the input was valid.
+\begin{itemize}
+\item \emph{Binary search.} Given any corrupt input, \brepair starts by a
+binary search of the input to determine the substring at which \emph{incomplete}
+switches to \emph{incorrect}. The boundary is considered to be the first
+character that results in \emph{incorrect} response from the parser.
+
+\item At the point of boundary (the first such character), \brepair applies
+deletion, and checks whether the deletion changes the valid substring.
+
+\item At the same point, \brepair also tries to insert a single character and
+checks whether the insertin changes the valid substring.
+
+\end{itemize}
+
 
 \section{Approach}
 
