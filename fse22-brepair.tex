@@ -405,11 +405,62 @@ decompose the input into independent fragments (called deltas), one can
 successively minimize the parse-error inducing part of the input resulting in a
 maximal parsing input.
 
+\begin{table*}\centering
+\footnotesize
+\caption{\ddmax limitations}
+\begin{tabular}{|l | c | c | l |}
+\hline
+Example & \ddmax repair & \approach repair & \ddmax limitation \\
+\hline
+\letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\}} & \letterboxed{\ \ \ \
+3.45} & \letterboxed{\{\ "item":\ "Apple",\ "price":\ 3.45\}} & Rich structure
+(spans) \\
+\letterboxed{\{\"ABCD":[*"1,2,3,4,5,6"]*\}} & 
+\letterboxed{123456} & 
+\letterboxed{\{\"ABCD":["1,2,3,4,5,6"]\}} & 
+Rich Structure (multiple-faults) \\
+\letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}} &
+\letterboxed{\{\ "name":\ "Daveage":\ 42\ \}} &
+\letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}} &
+Limited repair options (deletion) \\
+\hline
+\end{tabular}
+\label{tab:ddmaxlimitations}
+%\vspace{-0.5cm}
+\end{table*}
 
-\ddmax works very well for most inputs. However, it has three major limitations:
+\ddmax works very well for most inputs. However, it has two major limitations
 (1)~Limitations due to rich input structure,
-(2)~inability to fix multiple inputs, and
-(3)~limited repair options available. We explain each in turn.
+(2)~limited repair options available.
+We show examples of each in \Cref{tab:ddmaxlimitations}.
+
+The essential limitation is that \ddmax is modeled after \ddmin, where one of
+the unstated assumptions is that the $\delta$ fragments that are non
+contributing to the failure observed can be independently removed without
+affecting the failure observed. When this assumption is not met, (i.e. where
+the inputs have a rich structure) the minimal fragment produced by \ddmin
+can be suboptimal.
+
+Our \brepair algorithm starts with the corrupted input and quickly finds the
+maximal parsable prefix using a binary search.
+For example, in \Cref{fig:bad-json-input}, \brepair finds the maximal parsable
+prefix to be \letterboxed{\{\ "name":\ "Dave"\ }, and the boundary happens
+at \\
+\letterboxed{\{\ "name":\ "Dave"\ "} where the parser response shifts from
+\emph{incomplete} to \emph{incorrect}.
+At this point, \brepair applies deletion, or insertion of characters
+in order. In this case, the \<"> is deleted first, and the
+resulting input \\
+\letterboxed{\{\ "name":\ "Dave"\ age":\ 42 \}} is checked to
+see if it resulted in increasing the size of the maximum parsable prefix. Here,
+we see that the maximal parse boundary remains the same. Hence \brepair next
+attempts to insert a character. There are 128 printable characters in ASCII,
+out of which, only space characters and comma (\<,>) can be inserted here,
+resulting in an increase of maximal parse prefix. Out of this, comma
+results in the maximum advancement of the parse boundary, resulting in the
+newly constructed string: \\
+\letterboxed{\{\ "name":\ "Dave"\ ,\"age":\ 42\ \}}
+which is accepted as a valid repair.
 
 %---
 % Example for Span Problem
