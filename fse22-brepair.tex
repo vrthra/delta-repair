@@ -391,11 +391,16 @@ place, which completely captures the intended structure.
 However, formats such as markdown~\cite{gruber2004markdown} does not have
 a formal grammar; Documents in languages such as \<C> can contain semantic
 information that is not captured in the contex-free grammar, and may not be
-discardable. Finally, even when the base grammar is context-free grammar (as in
-the case of JSON) the serializer and deserializer may implement common subsets
-beyond the base grammar (e.g comments and unquoted keys in JSON) which may
+discardable; Some constraints such as number of columns in a \<CSV> file may
+not be captured in a grammar. Finally, even when the base grammar is context-free
+(as in the case of JSON) the serializer and deserializer may implement common
+subsets beyond the base grammar (e.g comments and unquoted keys in JSON) which may
 contain important information. Hence, relying on error-correcting parsers may
-be unoptimal for fixing error corruption.
+be suboptimal for fixing error corruption.
+%This may be because the constraints in
+%the input may not be fully captured in the grammar as in the case of CSV where
+%the number of columns may be fixed, or because such a grammar is unavailable
+%(as in the case of markdown)
 
 In circumstances where one can't rely on a base grammar, the only option so far
 has been \ddmax~\cite{kirschner2020debugging}. The \ddmax works similar to
@@ -446,6 +451,9 @@ can be added to the passing subset without inducing a failure. When this
 assumption is not met -- as in the case of inputs with a rich structure such as
 conforming to a grammar -- the repairs produced can be suboptimal as the
 examples show.
+
+However, as the existence of \ddmax shows, repairing inputs without a formal
+grammar at hand is an important task.
 
 Our \brepair algorithm starts with the corrupted input and quickly finds the
 maximal parsable prefix using a binary search.
