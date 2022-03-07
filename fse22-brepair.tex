@@ -439,7 +439,10 @@ the unstated assumptions is that the $\delta$ fragments that are non
 contributing to the failure observed can be independently removed without
 affecting the failure observed. When this assumption is not met, (i.e. where
 the inputs have a rich structure) the minimal fragment produced by \ddmin
-can be suboptimal.
+can be suboptimal. Hence, the hierarchical delta debugging~\cite{misherghi2006hdd}
+and its descendants. A similar constraint also applies to \ddmax. In \ddmax,
+the unstated but mandatory constraint is that each non-failure-inducing fragment
+can be added to the passing subset without inducing a failure.
 
 Our \brepair algorithm starts with the corrupted input and quickly finds the
 maximal parsable prefix using a binary search.
