@@ -183,4 +183,5 @@ def main(inputval):
     for fix in fixes:
         print('FIXED', repr(fix))
 
+# { "ABCD":["1,2,3,4,5,6"]}
 main(sys.argv[1])
