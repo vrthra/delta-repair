@@ -27,38 +27,62 @@ class Repair:
     def __str__(self):
         return self.inputstr[:self.boundary]
 
-    def __init__(self, inputstr, boundary, extended=False):
+    def __init__(self, inputstr, boundary, mask='', extended=False):
         self.inputstr, self.boundary = inputstr, boundary
         self.extended = extended
+        self.mask = mask
 
-    def test(self):
-        return validate_json(self.inputstr[:self.boundary])
+    def test(self, mystr):
+        return validate_json(mystr)
+
+    def status(self):
+        my_str = self.inputstr[:self.boundary]
+        if self.test(my_str)[0] == Status.Incorrect: return Status.Incorrect
+        if self.test(my_str)[0] == Status.Incomplete: return Status.Incomplete
+        # verify this is actually complete. For example, given [*1], [] is not
+        # complete. It is likely incorrect. The other chance is 12*45 where
+        # 123 is (it is not complete!) incomplete rather than incorrect. To
+        # check this, we need to check the next index too.
+        if self.boundary >= len(self.inputstr): return Status.Complete
+        my_str = self.inputstr[:self.boundary+1]
+        if self.test(my_str)[0] == Status.Incorrect: return Status.Incorrect
+        if self.test(my_str)[0] == Status.Incomplete: return Status.Incomplete
+
+        # because if 123*5 is fixed to 12395 is complete, then 1239 is
+        # incomplete
+        return status.Incomplete
+
 
     def is_incomplete(self):
-        return self.test()[0] == Status.Incomplete
+        return self.status() == Status.Incomplete
 
     def is_incorrect(self):
-        return self.test()[0] == Status.Incorrect
+        return self.status() == Status.Incorrect
 
     def is_complete(self):
-        return self.test()[0] == Status.Complete
+        return self.status() == Status.Complete
 
     def apply_delete(self):
         return Repair(self.inputstr[:self.boundary] +
-                self.inputstr[self.boundary+1:], self.boundary)
+                self.inputstr[self.boundary+1:], self.boundary,
+                mask='_D%d' % self.boundary)
 
     def apply_insert(self):
         new_items = []
         for i in string.printable:
             v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary:]
-            new_items.append(Repair(v, self.boundary))
+            new_items.append(Repair(v, self.boundary,
+                mask='_I%d' % self.boundary
+                ))
         return new_items
 
     def apply_modify(self):
         new_items = []
         for i in string.printable:
             v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary+1:]
-            new_items.append(Repair(v, self.boundary))
+            new_items.append(Repair(v, self.boundary,
+                mask='_M%d' % self.boundary
+                ))
         return new_items
 
     def extend_item(self):
@@ -150,7 +174,7 @@ def find_fixes(inputval, boundary):
         edit_dist += 1
     assert False
 
-def repair(inputval, test):
+def repair(inputval):
     assert Repair(inputval, 0).is_incomplete()
     assert Repair(inputval, len(inputval)).is_incorrect()
     # first do binary search to find the boundary
@@ -213,7 +237,7 @@ def validate_json(input_str):
 
 
 def main(inputval):
-    fixes = repair(inputval, validate_json)
+    fixes = repair(inputval)
     for fix in fixes:
         print('FIXED', repr(str(fix)))
 
