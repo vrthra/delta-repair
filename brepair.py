@@ -7,7 +7,11 @@ import random
 import enum
 
 # TODO: We need to sample from inserts and modifiers to prevent them growing
-# out of bounds.
+# out of bounds. The idea is to collect all delete,insert,modification indexes
+# and form a mask. i.e 3D_4I_5M means that at boundary 3, deletion happened,
+# then, in the resulting string, at boundary4, insertion happenbed, and in the
+# resuting, at boundary 5, modification happened. Then, we sample from the
+# items with same mask.
 
 class Status(enum.Enum):
     Complete = 0
