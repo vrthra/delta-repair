@@ -146,10 +146,14 @@ def find_fixes(inputval, boundary, is_incomplete, is_incorrect, is_complete):
                     is_incomplete,
                     is_incorrect,
                     is_complete)
+
+            completed = []
             for i in new_items:
                 heapq.heappush(Threads, (edit_dist+1, i))
                 if is_complete(i[0]):
-                    return i
+                    completed.append(i)
+            if completed:
+                return completed
         break
 
 def repair(inputval, test):
@@ -170,6 +174,6 @@ def repair(inputval, test):
 def main(inputval):
     fixes = repair(inputval, validate_json)
     for fix in fixes:
-        print(repr(fix))
+        print('FIXED', repr(fix))
 
 main(sys.argv[1])
