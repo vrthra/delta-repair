@@ -245,5 +245,6 @@ def main(inputval):
 # '{ "item": "Apple", "price": ***3.45 }'
 # '[**]'
 # '[**1]'
+# '[*1*]'
 # '{ "name": "Dave" "age": 42 }'
 main(sys.argv[1])
