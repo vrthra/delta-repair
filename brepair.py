@@ -23,11 +23,17 @@ class Repair:
         self.inputstr, self.boundary = inputstr, boundary
         self.extended = extended
         self.mask = mask
+        self._status = None
 
     def test(self, mystr):
         return validate_json(mystr)
 
     def status(self):
+        if self._status is not None: return self._status
+        self._status = self.my_status()
+        return self._status
+
+    def my_status(self):
         my_str = self.inputstr[:self.boundary]
         if self.test(my_str)[0] == Status.Incorrect: return Status.Incorrect
         if self.test(my_str)[0] == Status.Incomplete: return Status.Incomplete
@@ -78,6 +84,7 @@ class Repair:
         return new_items
 
     def extend_item(self):
+        assert self._status is None
         assert not self.extended
         # need to be done on the item becauese of invariant.
         new_val = 0
@@ -210,7 +217,14 @@ def logit(*v):
     print(EDIT_DIST, *v)
     return
 
+TESTED = {}
+
 def validate_json(input_str):
+    if input_str in TESTED: return TESTED[input_str]
+    TESTED[input_str] = _validate_json(input_str)
+    return TESTED[input_str]
+
+def _validate_json(input_str):
     try:
         json.loads(input_str)
         logit('*', repr(input_str))
