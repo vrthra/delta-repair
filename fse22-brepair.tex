@@ -391,19 +391,16 @@ mutation is penalized, and the parse with minimal mutation is chosen as the
 best parse, and the corresponding mutation the best repair. The limitation of
 this approach is that it assumes the existence of a formal grammar in the first
 place, which completely captures the intended structure. 
-%<<<<<<< HEAD
 %However, %\recheck{
 %formats such as markdown~\cite{gruber2004markdown} does not have
 %an official formal grammar; 
 %%}\todo{how do you mean? this is not true, there are markdown grammars, ANTLR also has one, Nikolas used some in his Tribble eval too.}; 
 %documents in languages such as \<C> can contain semantic
-%=======
 However, formats such as markdown~\cite{gruber2004markdown} does not have
 an official formal grammar specification.
 %how do you mean? this is not true, there are markdown grammars, ANTLR also has
 %one, Nikolas used some in his Tribble eval too.};
 Documents in languages such as \<C> can contain semantic
-%>>>>>>> 37909f898eabd5c4385d739c28f1bdabbdc176a4
 information that is not captured in the contex-free grammar, and may not be
 discardable; Some constraints such as number of columns in a \<CSV> file may
 not be captured in a grammar. Finally, even when the base grammar is context-free
@@ -626,7 +623,6 @@ The rest of this paper is structured as follows: \todo{describe sections/order}
 \section{Rich Input Structures} %Limitations of \ddmax}
 \label{sec:rich-input-structures}
 \todo{we should provide an anonymous notebook that allows to test the examples (in Table 1), it will be interesting}
-
 \todo{discuss first (two) examples}
 
 \begin{figure*}[t]
@@ -694,6 +690,52 @@ A major limitation of \ddmax is that it is ineffective when the input needs to
 conform to specifications such as context-free grammars. We discuss two
 specific instances when \ddmax can repair an input suboptimally.
 
+\subsection{Limitations due to multiple faults}
+A pattern of failure of \ddmax occurs when \ddmax is given an input with
+multiple errors.  For example, consider the JSON input \letterboxed{[*]+}.
+Here, the JSON string is invalid because of two invalid characters that are
+non-contiguous. The operation of \ddmax proceeds as follows:
+
+\begin{enumerate}
+\item The operation starts with $\ddmax_2(\emptyset, 2)$
+\item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply
+\item Increase to complement:\\
+$\cfail - \Delta_2$= \letterboxed{]+} \fail \\
+$\cfail - \Delta_2$= \letterboxed{[*} \fail \\
+\item Increase to subset:\\
+$\cfail \cup \Delta_1$=\letterboxed{[*} \fail \\
+$\cfail \cup \Delta_2$= \letterboxed{]+} \fail \\
+\item Increase grannularity: $n < |\cfail-\dpass|$ which is $2 < |\cfail-\emptyset|$ \pass \\
+  Hence the next iteration is:
+  $\ddmax_2\bigl(\emptyset, 4)\bigr) $
+\item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply.
+\item Increase to complement:\\
+$\cfail - \Delta_2$= \letterboxed{*]+} \fail \\
+$\cfail - \Delta_2$= \letterboxed{[]+} \fail \\
+$\cfail - \Delta_2$= \letterboxed{[*+} \fail \\
+$\cfail - \Delta_2$= \letterboxed{[*]} \fail \\
+\item Increase to subset:\\
+$\cfail \cup \Delta_1$=\letterboxed{[} \fail \\
+$\cfail \cup \Delta_1$=\letterboxed{*} \fail \\
+$\cfail \cup \Delta_1$=\letterboxed{]} \fail \\
+$\cfail \cup \Delta_1$=\letterboxed{+} \fail \\
+\item Increase to grannularity: $4 < 4$ \fail\\
+\item The solution is $\emptyset$.
+\end{enumerate}
+
+That is, \ddmax is unable to optimally repair inputs of this kind which
+contains multiple errors. While in this eaxmple, the data loss that occurred
+may seem somewhat limited, this need not be the case always. A similar example
+is given in \Cref{tab:ddmaxlimitations}.
+Here, \letterboxed{\{\"ABCD":[*"1,2,3,4,5,6"]*\}} contains two distinct
+corruptions.
+As in the previous case, \ddmax attempts to fix this input by dividing it into
+smaller and smaller fragments, none of which isolates an error that when
+removed, results in the solution \letterboxed{123456}, which clearly has
+suffered significant data loss including the loss of structure and change in
+input fragment type from string to number.
+Hence, \ddmax can't repair inputs with multiple faults effectively.
+
 \subsection{Effect of input decomposition}
 One of the patterns in which \ddmax can fail is when the corruption in the
 input interacts with the fragment decomposition algorithm in \ddmax.
@@ -732,7 +774,7 @@ That is, this particular invalid JSON string can't be repaired by \ddmax.
 While this may seem like not much of information loss, consider
 \Cref{fig:bad-json-input-asterisks} which is similar to
 Kirchner et al.~\cite[Figure 1]{kirschner2020debugging} but with an extra
-\letterboxed{*}. This results in a repair of \mbox{``\<\ \ \ \ 3.45>''},
+\letterboxed{*}. This results in a repair of \letterboxed{\ \ \ \ 3.45},
 resulting in information loss.
 
 The problem here is that the successive partitions attempted by \ddmax fails to
@@ -751,19 +793,6 @@ fragments discarding larger and larger chunks of data.
 % have no problems maximizing any inputs. However, this can be a rather strong
 % constraint in practice.
 
-\subsection{Limitations due to multiple faults}
-\todo{I think that all these issues with \ddmax has one single cause -- the
-rich input structure. I have mentioned it above. Perhaps we should simply
-consolidate all into one.}
-Another issue (acknowledged by the \ddmax paper) is that multiple errors and
-multiple repairs can be a limitation. \ddmax paper claims that ``when given
-inputs with multiple errors, \ddmax will produce an input that repairs all of
-them. However, if theere are multiple ways to repair the input, \ddmax will
-produce only one''. The problem is that, \ddmax's choice need not be optimal.
-For example, consider \Cref{fig:bad-json-input2}. \ddmax repairs this input
-to \<123456> which loses the structure as well as changes the type from
-\<string> to \<number>. Hence, \ddmax can't repair inputs with multiple faults
-effectively.
 
 %One of the ambiguities here is that it is not immediately
 %clear what a repair means. For example the empty set $\emptyset$ is assumed to
