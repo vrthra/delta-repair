@@ -384,18 +384,26 @@ If the parser at hand conforms to a formal specification such as a context-free
 grammar, and this grammar is available,
 %context-free grammar, and an acceptable formal grammar is available,
 the challenge of repairing the input and making it parsable can be solved using
-\emph{error-correcting} parsers~\cite{aho1972minimum,diekmann2020dont}.
+\emph{error-correcting} parsers~\cite{aho1972minimum,diekmann2020dont,parr2011ll}.
 The idea in such parsers is to generate a universal grammar that captures
 any mutation of the base grammar. Any parse of the input string that employs a
 mutation is penalized, and the parse with minimal mutation is chosen as the
 best parse, and the corresponding mutation the best repair. The limitation of
 this approach is that it assumes the existence of a formal grammar in the first
 place, which completely captures the intended structure. 
-However, %\recheck{
-formats such as markdown~\cite{gruber2004markdown} does not have
-an official formal grammar; 
-%}\todo{how do you mean? this is not true, there are markdown grammars, ANTLR also has one, Nikolas used some in his Tribble eval too.}; 
-documents in languages such as \<C> can contain semantic
+%<<<<<<< HEAD
+%However, %\recheck{
+%formats such as markdown~\cite{gruber2004markdown} does not have
+%an official formal grammar; 
+%%}\todo{how do you mean? this is not true, there are markdown grammars, ANTLR also has one, Nikolas used some in his Tribble eval too.}; 
+%documents in languages such as \<C> can contain semantic
+%=======
+However, formats such as markdown~\cite{gruber2004markdown} does not have
+an official formal grammar specification.
+%how do you mean? this is not true, there are markdown grammars, ANTLR also has
+%one, Nikolas used some in his Tribble eval too.};
+Documents in languages such as \<C> can contain semantic
+%>>>>>>> 37909f898eabd5c4385d739c28f1bdabbdc176a4
 information that is not captured in the contex-free grammar, and may not be
 discardable; Some constraints such as number of columns in a \<CSV> file may
 not be captured in a grammar. Finally, even when the base grammar is context-free
@@ -435,7 +443,7 @@ Example & \ddmax repair & \brepair repair & \ddmax limitation \\
 Rich Structure (multiple-faults) \\
 \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}} &
 %\letterboxed{\{\ "name":\ "Daveage":\ 42\ \}} &
-\letterboxed{\{ \ \ \ \ 42\ \}}  &
+\letterboxed{\ \ \ \ 42\ }  &
 \letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}} &
 Limited repair options (deletion) \\
 \hline
@@ -682,10 +690,13 @@ $\test(\dpass) = \pass \land n \leq |\Delta|$.\\
 
 \end{figure}
 
-\subsection{Limitations due to rich input structure}
-One of the major problems with \ddmax is that it can fail when certain
-corruption patterns are encountered din the input string.
+A major limitation of \ddmax is that it is ineffective when the input needs to
+conform to specifications such as context-free grammars. We discuss two
+specific instances when \ddmax can repair an input suboptimally.
 
+\subsection{Effect of input decomposition}
+One of the patterns in which \ddmax can fail is when the corruption in the
+input interacts with the fragment decomposition algorithm in \ddmax.
 As an example, consider the fragment \letterboxed{[*+]}.
 Here, the JSON string is invalid because it contains two invalid characters.
 The operation of \ddmax (\Cref{fig:ddmax}) is as follows:

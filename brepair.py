@@ -6,11 +6,32 @@ import string
 import random
 import enum
 
+CLEAR_QUEUE_AFTER_EVERY_LOCATION: bool = True
+"""If True, clear the priority queue after every repaired fault location"""
+
+CHARACTERS: list[str] = [
+    '0',  # Digits
+    '=', '\\', '/', '\t', ';', ':', '.', ',', '^', '~', '`', '\'', '"', ')', '(', '[', ']', '{', '}', '\n', ' ',  # Special characters
+    'A',  # Upper-Case characters
+    'a',  # Lowercase characters. Add all remaining lowercase characters here to test the whole character class
+    'n', 'u', 'l', 't', 'r', 'e', 'f', 'a', 's',  # JSON keyword characters (null, true, false
+]
+"""Characters to be inserted in insertion operations.
+For bRepair, those classes are defined in https://projects.cispa.saarland/lukas.kirschner/bfuzzerrepairer/-/blob/main/project/src/main/java/bfuzzerrepairer/program/repairer/brepair/CharacterClass.java
+"""
+
+USE_CHARACTER_LIST: bool = True
+"""If true, only attempt insertions from the given character list"""
+
+ALLOW_MULTIPLE_CONSECUTIVE_WHITESPACES: bool = False
+"""If True, allow inserting multiple consecutive whitespaces"""
+
 
 class Status(enum.Enum):
     Complete = 0
     Incomplete = 1
     Incorrect = -1
+
 
 class Repair:
     def __repr__(self):
@@ -24,6 +45,10 @@ class Repair:
         self.extended = extended
         self.mask = mask
         self._status = None
+
+    def full_input(self) -> str:
+        """Return the full input, ignoring the boundary"""
+        return self.inputstr
 
     def test(self, mystr):
         return validate_json(mystr)
@@ -42,14 +67,13 @@ class Repair:
         # 123 is (it is not complete!) incomplete rather than incorrect. To
         # check this, we need to check the next index too.
         if self.boundary >= len(self.inputstr): return Status.Complete
-        my_str = self.inputstr[:self.boundary+1]
+        my_str = self.inputstr[:self.boundary + 1]
         if self.test(my_str)[0] == Status.Incorrect: return Status.Incorrect
         if self.test(my_str)[0] == Status.Incomplete: return Status.Incomplete
 
         # because if 123*5 is fixed to 12395 is complete, then 1239 is
         # incomplete
         return Status.Incomplete
-
 
     def is_incomplete(self):
         return self.status() == Status.Incomplete
@@ -62,25 +86,32 @@ class Repair:
 
     def apply_delete(self):
         return Repair(self.inputstr[:self.boundary] +
-                self.inputstr[self.boundary+1:], self.boundary,
-                mask='_D%d' % self.boundary)
+                      self.inputstr[self.boundary + 1:], self.boundary,
+                      mask='_D%d' % self.boundary)
 
     def apply_insert(self):
         new_items = []
-        for i in string.printable:
+        if USE_CHARACTER_LIST:
+            possible_chars = string.printable
+        else:
+            possible_chars = CHARACTERS
+        for i in possible_chars:
+            if i.isspace() and not ALLOW_MULTIPLE_CONSECUTIVE_WHITESPACES:
+                if self.boundary > 0 and self.inputstr[self.boundary - 1].isspace():
+                    continue  # Skip consecutive whitespace
             v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary:]
             new_items.append(Repair(v, self.boundary,
-                mask='_I%d' % self.boundary
-                ))
+                                    mask='_I%d' % self.boundary
+                                    ))
         return new_items
 
     def apply_modify(self):
         new_items = []
         for i in string.printable:
-            v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary+1:]
+            v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary + 1:]
             new_items.append(Repair(v, self.boundary,
-                mask='_M%d' % self.boundary
-                ))
+                                    mask='_M%d' % self.boundary
+                                    ))
         return new_items
 
     def extend_item(self):
@@ -89,19 +120,19 @@ class Repair:
         # need to be done on the item becauese of invariant.
         new_val = 0
         while True:
-            #assert boundary+new_val <= len(inputstr) <- inserts can overshoot
-            if (self.boundary+new_val) > len(self.inputstr):
-                assert len(self.inputstr) == (self.boundary + new_val -1)
-                self.boundary = self.boundary + new_val-1
+            # assert boundary+new_val <= len(inputstr) <- inserts can overshoot
+            if (self.boundary + new_val) > len(self.inputstr):
+                assert len(self.inputstr) == (self.boundary + new_val - 1)
+                self.boundary = self.boundary + new_val - 1
                 self.extended = True
                 return self
-            s = Repair(self.inputstr, self.boundary+new_val)
+            s = Repair(self.inputstr, self.boundary + new_val)
             if s.is_incomplete():
                 new_val += 1
                 continue
             if s.is_incorrect():
                 # the current new_val is bad, so go back to previous
-                self.boundary = self.boundary + new_val-1
+                self.boundary = self.boundary + new_val - 1
                 self.extended = True
                 return self
             if s.is_complete():
@@ -111,13 +142,12 @@ class Repair:
             assert False
         assert False
 
-
     def repair_and_extend(self):
         e_arr = []
         item_d = self.apply_delete()
         ie = item_d.extend_item()
         e_arr.append(ie)
-        #return e_arr
+        # return e_arr
 
         # for insert and modify, only apepnd if it resulted in a boundary
         # increase
@@ -133,6 +163,7 @@ class Repair:
                 e_arr.append(ie)
         return e_arr
 
+
 def binary_search(array):
     left, right = 0, len(array) - 1
     # Main loop which narrows our search range.
@@ -142,12 +173,14 @@ def binary_search(array):
             left = middle
         else:
             right = middle
-    return right-1
+    return right - 1
+
 
 # at the boundary, it is always wrong.
 # the incomplete substring is one behind boundary. i.e inputval[:boundary] 
 
 MAX_NUM_PER_MASK = 1000
+
 
 # We need to sample from inserts and modifiers to prevent them growing
 # out of bounds. The idea is to collect all delete,insert,modification indexes
@@ -174,7 +207,9 @@ def sample_items_by_mask(items):
         sampled.extend(res)
     return sampled
 
+
 Threads = []
+
 
 def find_fixes(inputval, boundary):
     global Threads, EDIT_DIST
@@ -193,14 +228,19 @@ def find_fixes(inputval, boundary):
             new_items = item.repair_and_extend()
 
             for i in new_items:
-                if (edit_dist+1) not in ThreadHash: ThreadHash[edit_dist+1] = []
-                ThreadHash[edit_dist+1].append(i)
+                if (edit_dist + 1) not in ThreadHash: ThreadHash[edit_dist + 1] = []
+                ThreadHash[edit_dist + 1].append(i)
                 if i.is_complete():
                     completed.append(i)
+                    if CLEAR_QUEUE_AFTER_EVERY_LOCATION:
+                        new_boundary = binary_search(i.full_input())
+                        ThreadHash = {edit_dist + 1: [i, new_boundary]}
+                        break  # inner loop
         if completed:
             return completed
         edit_dist += 1
     assert False
+
 
 def repair(inputval):
     assert Repair(inputval, 0).is_incomplete()
@@ -208,21 +248,27 @@ def repair(inputval):
     # first do binary search to find the boundary
     # not a requirement. Extend item will do as well.
     boundary = binary_search(inputval)
-    assert Repair(inputval,boundary).is_incomplete()
-    assert Repair(inputval,boundary+1).is_incorrect()
+    assert Repair(inputval, boundary).is_incomplete()
+    assert Repair(inputval, boundary + 1).is_incorrect()
     return find_fixes(inputval, boundary)
 
+
 EDIT_DIST = 0
+
+
 def logit(*v):
     print(EDIT_DIST, *v)
     return
 
+
 TESTED = {}
+
 
 def validate_json(input_str):
     if input_str in TESTED: return TESTED[input_str]
     TESTED[input_str] = _validate_json(input_str)
     return TESTED[input_str]
+
 
 def _validate_json(input_str):
     try:
@@ -276,6 +322,7 @@ def main(inputval):
     fixes = repair(inputval)
     for fix in fixes:
         print('FIXED', repr(str(fix)))
+
 
 # '{ "ABCD":[*"1,2,3,4,5,6"]*}'
 # '{ "item": "Apple", "price": ***3.45 }'
