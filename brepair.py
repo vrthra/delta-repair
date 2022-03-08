@@ -159,6 +159,7 @@ def find_fixes(inputval, boundary):
     while True:
         # fetch the first rank groups.
         current_items = ThreadHash[edit_dist]
+        # TODO: sample here. We only want a fixed number of items per mask.
         for item in current_items:
             # try repair and extending each item until we get incorrect.
             new_items = item.repair_and_extend()
