@@ -42,7 +42,7 @@ class Repair:
 
         # because if 123*5 is fixed to 12395 is complete, then 1239 is
         # incomplete
-        return status.Incomplete
+        return Status.Incomplete
 
 
     def is_incomplete(self):
@@ -140,7 +140,7 @@ def binary_search(array):
 # at the boundary, it is always wrong.
 # the incomplete substring is one behind boundary. i.e inputval[:boundary] 
 
-MAX_NUM_PER_MASK = 10
+MAX_NUM_PER_MASK = 1000
 
 # We need to sample from inserts and modifiers to prevent them growing
 # out of bounds. The idea is to collect all delete,insert,modification indexes
@@ -165,7 +165,7 @@ def sample_items_by_mask(items):
         else:
             res = random.sample(masks[key], MAX_NUM_PER_MASK)
         sampled.extend(res)
-    return res
+    return sampled
 
 Threads = []
 
