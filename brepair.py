@@ -133,12 +133,12 @@ def repair(inputval, test):
     is_incomplete = lambda x: test(x)[0] == Status.Incomplete
     is_incorrect = lambda x: test(x)[0] == Status.Incorrect
     is_complete = lambda x: test(x)[0] == Status.Complete
-    assert is_incomplete(test(''))
+    assert is_incomplete('')
     assert is_incorrect(test(inputval))
     # first do binary search to find the boundary
     boundary = binary_search(inputval, is_incomplete)
-    assert is_incomplete(test(inputval[:boundary-1]))
-    assert is_incorrect(test(inputval[:boundary]))
+    assert is_incomplete(inputval[:boundary-1])
+    assert is_incorrect(inputval[:boundary])
     return find_fixes(inputval, boundary,
             is_incomplete,
             is_incorrect,
