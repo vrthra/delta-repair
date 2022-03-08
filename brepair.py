@@ -6,14 +6,6 @@ import string
 import random
 import enum
 
-# TODO: We need to sample from inserts and modifiers to prevent them growing
-# out of bounds. The idea is to collect all delete,insert,modification indexes
-# and form a mask. i.e 3D_4I_5M means that at boundary 3, deletion happened,
-# then, in the resulting string, at boundary4, insertion happenbed, and in the
-# resuting, at boundary 5, modification happened. Then, we sample from the
-# items with same mask. This needs to be done before extending. That is, each
-# extend, we should test all possible character extensions on the sampled
-# strings.
 
 class Status(enum.Enum):
     Complete = 0
@@ -148,6 +140,33 @@ def binary_search(array):
 # at the boundary, it is always wrong.
 # the incomplete substring is one behind boundary. i.e inputval[:boundary] 
 
+MAX_NUM_PER_MASK = 10
+
+# We need to sample from inserts and modifiers to prevent them growing
+# out of bounds. The idea is to collect all delete,insert,modification indexes
+# and form a mask. i.e 3D_4I_5M means that at boundary 3, deletion happened,
+# then, in the resulting string, at boundary4, insertion happenbed, and in the
+# resuting, at boundary 5, modification happened. Then, we sample from the
+# items with same mask. This needs to be done before extending. That is, each
+# extend, we should test all possible character extensions on the sampled
+# strings.
+
+def sample_items_by_mask(items):
+    # sample here. We only want a fixed number of items per mask.
+    masks = {}
+    for i in items:
+        if i.mask not in masks: masks[i.mask] = []
+        masks[i.mask].append(i)
+
+    sampled = []
+    for key in masks:
+        if len(masks[key]) < MAX_NUM_PER_MASK:
+            res = masks[key]
+        else:
+            res = random.sample(masks[key], MAX_NUM_PER_MASK)
+        sampled.extend(res)
+    return res
+
 Threads = []
 
 def find_fixes(inputval, boundary):
@@ -159,8 +178,8 @@ def find_fixes(inputval, boundary):
     while True:
         # fetch the first rank groups.
         current_items = ThreadHash[edit_dist]
-        # TODO: sample here. We only want a fixed number of items per mask.
-        for item in current_items:
+        chosen_items = sample_items_by_mask(current_items)
+        for item in chosen_items:
             # try repair and extending each item until we get incorrect.
             new_items = item.repair_and_extend()
 
