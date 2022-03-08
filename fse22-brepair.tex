@@ -932,7 +932,7 @@ result in
 \letterboxed{\ \ \ \ 42}.
 The problem is that, deletion of fragments alone can lead to significant
 corruption of information. In this instance, the availability of \emph{insertion}
-could have repaired the input string to
+could have repaired the input string to \\
 \letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}}. Unfortunately, because
 \ddmax is unable to synthesize any framents, opportunities for repair can be
 missed.
@@ -979,49 +979,51 @@ missed.
 %\letterboxed{\{\ A":\ **3\}} because all three returns the same
 %result -- parse error.
 
-
-Our \brepair algorithm starts with the corrupted input and quickly finds the
-maximal parsable prefix using a binary search.
-For example, in \Cref{fig:bad-json-input}, \brepair finds the maximal parsable
-prefix to be \letterboxed{\{\ "name":\ "Dave"\ }, and the boundary happens
-at \\
-\letterboxed{\{\ "name":\ "Dave"\ "} where the parser response shifts from
-\emph{incomplete} to \emph{incorrect}.
-At this point, \brepair applies deletion, or insertion of characters
-in order. In this case, the \<"> is deleted first, and the
-resulting input \\
-\letterboxed{\{\ "name":\ "Dave"\ age":\ 42 \}} is checked to
-see if it resulted in increasing the size of the maximum parsable prefix. Here,
-we see that the maximal parse boundary remains the same. Hence \brepair next
-attempts to insert a character. There are 128 printable characters in ASCII,
-out of which, only space characters and comma (\<,>) can be inserted here,
-resulting in an increase of maximal parse prefix. Out of this, comma
-results in the maximum advancement of the parse boundary, resulting in the
-newly constructed string: \\
+The \brepair algorithm on the other hand, follows in this fashion.
+\begin{enumerate}
+\item \brepair algorithm starts with the corrupted input and quickly finds the
+maximal parsable prefix using a binary search: \\
+\letterboxed{\{\ "name":\ "Dave"\ }.
+\item At this point, \brepair applies \emph{deletion}, \emph{insertin}, or
+\emph{modification} of characters in order.
+In this case, the \letterboxed{"} is deleted first, resulting in: \\
+\letterboxed{\{\ "name":\ "Dave"\ age":\ 42 \}}.
+\item The JSON parser responds with \emph{incorrect} for this input.
+\item \brepair next attempts to insert a character. Say we tried to insert
+\letterboxed{1}. This results in: \\
+\letterboxed{\{\ "name":\ "Dave"\ 1"age":\ 42 \}}.
+\item The JSON parser responds with \emph{incorrect} for this input.
+\item Indeed, only space characters and comma (\letterboxed{,}) can be
+inserted here, resulting in \emph{incomplete} from the JSON parser.
+\item Inserting the \letterboxed{,} results in a new input: \\
 \letterboxed{\{\ "name":\ "Dave"\ ,\"age":\ 42\ \}}
-which is accepted as a valid repair.
+\item This is accepted as a valid repair.
+\end{enumerate}
 
-In the case of \Cref{fig:bad-json-input-asterisks}, \brepair quickly finds the
-first \<*> to be the parse boundary. At this point, deletion, or insertion
-fails to advance the parse boundary. Indeed, there are no possible
-insertion continuations found after \\
-\letterboxed{\{\ "item":\ "Apple",\ "price":\ *}.\\
-Hence, \brepair attempts two consecutive operations. Hence, since two
-insertions is no longer possible, it attempts a deletion followed by insertion,
-and two deletions. Deletion of a \<*> followed by insertion of \<"> does allow
-the parse to proceed, resulting in \\
-\letterboxed{\{\ "item":\ "Apple",\ "price":\ "**3.45\}}.\\
-\emph{incomplete} with an unclosed quote, and a penalty of two. We also have
-another thread with:
-\letterboxed{\{\ "item":\ "Apple",\ "price":\ }\\
-as the maximal parse boundary after deletions of two \<*> characters with the
-same penalty. Since deletion is prioritized, we apply deletion on the second
-thread where deletion is applicable, resulting in:\\
-\letterboxed{\{\ "item":\ "Apple",\ "price":\ 3.45\}}.\\
-Since the first thread does not complete with any change with a penalty of
-three, we choose \\
-\letterboxed{\{\ "item":\ "Apple",\ "price":\ 3.45\}}\\
-as the solution.
+That is, the ability of \brepair to synthesize characters for repair can lead
+to more effective repairs.
+
+% In the case of \Cref{fig:bad-json-input-asterisks}, \brepair quickly finds the
+% first \<*> to be the parse boundary. At this point, deletion, or insertion
+% fails to advance the parse boundary. Indeed, there are no possible
+% insertion continuations found after \\
+% \letterboxed{\{\ "item":\ "Apple",\ "price":\ *}.\\
+% Hence, \brepair attempts two consecutive operations. Hence, since two
+% insertions is no longer possible, it attempts a deletion followed by insertion,
+% and two deletions. Deletion of a \<*> followed by insertion of \<"> does allow
+% the parse to proceed, resulting in \\
+% \letterboxed{\{\ "item":\ "Apple",\ "price":\ "**3.45\}}.\\
+% \emph{incomplete} with an unclosed quote, and a penalty of two. We also have
+% another thread with:
+% \letterboxed{\{\ "item":\ "Apple",\ "price":\ }\\
+% as the maximal parse boundary after deletions of two \<*> characters with the
+% same penalty. Since deletion is prioritized, we apply deletion on the second
+% thread where deletion is applicable, resulting in:\\
+% \letterboxed{\{\ "item":\ "Apple",\ "price":\ 3.45\}}.\\
+% Since the first thread does not complete with any change with a penalty of
+% three, we choose \\
+% \letterboxed{\{\ "item":\ "Apple",\ "price":\ 3.45\}}\\
+% as the solution.
 
 %at which boundary the prefix shifts between incomplete and incorrect.
 % It then iteratively applies
