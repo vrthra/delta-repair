@@ -11,7 +11,9 @@ import enum
 # and form a mask. i.e 3D_4I_5M means that at boundary 3, deletion happened,
 # then, in the resulting string, at boundary4, insertion happenbed, and in the
 # resuting, at boundary 5, modification happened. Then, we sample from the
-# items with same mask.
+# items with same mask. This needs to be done before extending. That is, each
+# extend, we should test all possible character extensions on the sampled
+# strings.
 
 class Status(enum.Enum):
     Complete = 0
