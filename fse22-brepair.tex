@@ -237,22 +237,18 @@ In such cases, a data engineer has to manually repair the corrupt data such that
 it follows a given format, and hence processable by the conforming program.
 Such manual repair can be time consuming, and error-prone.
 
-In this work, we show that incorporating light-weight error-feedback\todo{what is lightweight error-feedback?} to parsers
+In this work, we show that incorporating light-weight error-feedback (e.g., input incompleteness) t\todo{what is lightweight error-feedback?} to parsers
 is sufficient to repair any corrupt input data with maximal closeness to the
-semantics of the input data. We propose an approach called \brepair that leverages error-feedback (e.g., data incorrectness and incompleteness) to repair invalid inputs.\todo{We need to clarify the feedback requirement, correctness and incompleteness}
+semantics of the input data. We propose an approach called \brepair that leverages lightweight error-feedback and input synthesis to repair invalid inputs.\todo{We need to clarify the feedback requirement, correctness and incompleteness}
 Given a conforming program\todo{it is not clear, what is a conforming program, a parser or any program conforming to the input format??}, and any invalid input, \brepair provides a set
 of repairs prioritized by the distance of the repair from the original input.
 
-We show that our approach can remove the limitations inherent in \ddmax, the
-previously best known approach, both in terms of what it can repair, as well as
+We evaluate \brepair on \recheck{806} (real-world) invalid inputs using four well-known input formats, namely INI, TinyC, SExp, and cJSON. In our evaluation, we found that it is highly effective and efficient in input repair. It repairs \recheck{81}\% of invalid inputs and recovers \recheck{98\%} of input data, within two minutes. It is up to \recheck{18\%} more effective than \ddmax -- the previously best known approach. 
+Overall, our approach addresses several 
+limitations of 
+\ddmax, 
+both in terms of what it can repair, as well as
 in terms of the set of repairs offered. 
-We evaluate \brepair on \recheck{806} real-world and mutated invalid inputs using four well-known input formats, %(and their parsers), 
-namely INI, %(\recheck{X}), 
-TinyC, % (\recheck{X}), 
-SExp, % (\recheck{X}) 
-and cJSON. % (\recheck{X}). 
-In our evaluation of \brepair, we found that it is highly effective and efficient in input repair. It repairs 81\% of invalid inputs within two minutes, and outperforms \ddmax %in input repair 
-by up to \recheck{18\%}. 
 \end{abstract}
 
 % \begin{abstract}
@@ -407,12 +403,15 @@ be suboptimal for fixing error corruption.
 %(as in the case of markdown)
 
 In circumstances where one can not rely on a base grammar, the only option so far
-has been \ddmax~\cite{kirschner2020debugging}. The \ddmax works similar to
+has been \textit{lexical} \ddmax~\cite{kirschner2020debugging}. \ddmax works similar to
 delta-debugging~\cite{zeller2002simplifying}, but in reverse. The idea
 is that given a corrupt input which induces a parse error, and a way to
 decompose the input into independent fragments (called deltas), one can
 successively minimize the parse-error inducing part of the input resulting in a
-maximal parsing input.
+maximal parsing input. 
+More importantly, \citet{kirschner2020debugging} demonstrates the prevalence of invalid inputs and the importance of input repair without input grammars and program analysis.
+%using \ddmax. %}. 
+
 
 \begin{table*}\centering
 \footnotesize
@@ -438,11 +437,44 @@ Limited repair options (deletion) \\
 %\vspace{-0.5cm}
 \end{table*}
 
-\ddmax works very well for most inputs. However, it has two major limitations
-(1)~Limitations due to rich input structure,
-(2)~limited repair options available.
-We show examples of each in \Cref{tab:ddmaxlimitations}.
 
+Although \ddmax works very well for most inputs, %, it could repair 69\% of input files and recovered about 78\% of input data. 
+%However, 
+we observe it %that \ddmax 
+has certain limitations which inhibit it from completely repairing any invalid inputs. % in practice. 
+\Cref{tab:ddmaxlimitations} and \Cref{motivation} illustrate some of these limitations with simplified invalid inputs as examples. 
+Notably, these \ddmax limitations include its (1) \textit{limited repair operation} (only deletion), (2) inability to repair \textit{multiple faults in input data}, and (3)
+\textit{inherent assumptions about the richness of input structures} (e.g., its search span).
+\recheck{
+As an example, consider the following sample input ...\todo{we need to decide the most important limitation to buttress with an example here ... I think one that requires insertion and incompleteness error-feedback is the most important differentiator, or a hybrid example that also contains multiple faults ... } \todo{it should also be the same example to motivate and illustrate the way \brepair works (after the par. )}
+% we address these limitations ... 
+}
+
+%Specifically, \ddmax is limited 
+%the following  
+%() \textit{\ddmax} 
+%
+%() \textit{\ddmax repairs are limited to input subsets}, thus it can not complete repairs that require inserting new input structure (see example \recheck{X in Table X}), 
+%() \textit{\ddmax may not completely repair invalid input containing multiple faults}  (e.g., example \recheck{X in Table X}), 
+%
+%
+%() \textit{•}  (e.g., example \recheck{X in Table X}), 
+%
+%() \textit{•}  (e.g., example \recheck{X in Table X}), 
+%
+%() \textit{•}  (e.g., example \recheck{X in Table X}), 
+
+%\recheck{
+%In this work, we address these limitations ... 
+%}
+
+%\Cref{motivation} further illustrates each of these limitations, and how \brepair addresses them. 
+
+%(1)~Limitations due to rich input structure,
+%(2)~limited repair options available.
+%We show examples of each in .
+
+\todo{to Move/restructure}
 The essential limitation is that \ddmax is modeled after \ddmin, where one of
 the unstated assumptions is that the $\delta$ fragments that are non
 contributing to the failure observed can be independently removed without
@@ -456,6 +488,7 @@ assumption is not met -- as in the case of inputs with a rich structure such as
 conforming to a grammar -- the repairs produced can be suboptimal as the
 examples show.
 
+\todo{to Move/restructure}
 However, the existence of \ddmax suggests that repairing inputs without a formal
 grammar at hand is an important task. Unfortunately, most documents in the real
 world have some syntactic or semantic constraints that makes satisfying the
@@ -466,8 +499,10 @@ disk corruption, some input characters are more likely to be changed or deleted
 rather than inserted. Hence by handling only spurious insertions, \ddmax misses
 an important repair requirement.
 
+In this paper, we provide a solution that addresses these limitations of \ddmax via \textit{lightweight error-feedback and input synthesis}. The key insight of this approach is to complete \textit{semantic} repair of invalid inputs using lightweight failure feedback such as the \textit{validity, incompleteness and incorrectness} checks of input fragments. Given an invalid input and a conforming program, \approach performs test experiments of input subsets and candidate insertions to provide a set of repairs prioritized by the distance of the repair from the original input.
+\todo{what else is the main ingredient or key insight of the approach}
 
-In this paper, we provide a solution.
+\todo{to Move/restructure}
 We show that corrupted inputs with rich structure can be repaired adequately if
 the input processor can provide at least some indication of progress.
 That is, as with \ddmax, we require the input processor to indicate if the input
@@ -484,9 +519,11 @@ possible as demonstrated by Bj\"orn et al.~\cite{mathis2019parser}. If
 the program is hard to instrument, adding failure feedback that we require is
 not difficult~\todo{
 The arxiv link is~\cite{gopinath2020fuzzing} but we can't cite it because
-bFuzzer is getting submitted at FSE too.}.
+bFuzzer is getting submitted at FSE too. -> alright, we can cite it after if accepted}.
 
+\recheck{As an example, consider the input ... }
 
+\todo{to Move/restructure}
 Our \brepair algorithm starts with the corrupted input and quickly finds the
 maximal parsable prefix using a binary search.
 For example, in \Cref{fig:bad-json-input}, \brepair finds the maximal parsable
@@ -518,19 +555,31 @@ data engineers.
 In our evaluation, we show that given input processors that can accurately
 signal \emph{incomplete} or \emph{incorrect} when given invalid inputs,
 \brepair can provide repairs that are more maximal than \ddmax, and correctly
-pass the parser.
+pass the parser. 
 %Further, the list of repairs it suggests will include the
 %original string before corruption.
 \\
 \\
-\noindent\textbf{Contributions.}
+%\noindent\textbf{Contributions.}
+
+
+This paper makes the following technical contributions:
 \begin{itemize}
-  \item We identify one of the major limitations to \ddmax -- the limitation due to rich struture, which can be fixed only by requiring additional constraints.
-  \item We provide two bug fixes to \ddmax.
-  \item We propose \brepair which does not have these limitations.
+	\item \textbf{}
+	\item \textbf{}
+	\item \textbf{}
+	\item \textbf{}	
+%  \item We identify one of the major limitations to \ddmax -- the limitation due to rich struture, which can be fixed only by requiring additional constraints.
+%  \item We provide two bug fixes to \ddmax.
+%  \item We propose \brepair which does not have these limitations.
 \end{itemize}
 
-\section{Limitations of \ddmax}
+The rest of this paper is sturctured as follows:\todo{describe sections/order}
+
+
+\section{Motivation} %Limitations of \ddmax}
+\label{motivation}
+
 
 \begin{figure*}[t]
 \begin{boxedminipage}{\textwidth}
