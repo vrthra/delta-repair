@@ -6,6 +6,9 @@ import string
 import random
 import enum
 
+# TODO: We need to sample from inserts and modifiers to prevent them growing
+# out of bounds.
+
 class Status(enum.Enum):
     Complete = 0
     Incomplete = 1
