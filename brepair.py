@@ -120,7 +120,7 @@ def validate_json(input_str):
             if n >= len(input_str):
                 logit('+', input_str)
                 return Status.Incomplete, n, ''
-            elif input_str[-1] == '.' and input_str[-2].isdigit():
+            elif len(input_str) > 1 and input_str[-1] == '.' and input_str[-2].isdigit():
                 # JSON returns incorrect for [3. rather than incomplete.
                 return Status.Incomplete, n, ''
             else:
