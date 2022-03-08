@@ -913,7 +913,8 @@ That is, \brepair has no problem with rich inputs containing multiple errors.
 \todo{discuss importance of insertions and limitations of repair to subsets}
 The second major limitation of
 \ddmax is that the only operation in its toolbox is \emph{deletion} of input
-fragments. Consider \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}
+fragments. Consider\\
+\letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}
 %\Cref{fig:bad-json-deletion}.
 %\begin{figure}
 %\begin{center}
@@ -928,10 +929,13 @@ fragments. Consider \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}
 %---
 Here, there is a missing quote in the key. \ddmax repair of this string will
 result in
-
-\letterboxed{\ \ \ \ 42}
+\letterboxed{\ \ \ \ 42}.
 The problem is that, deletion of fragments alone can lead to significant
-corruption of information.
+corruption of information. In this instance, the availability of \emph{insertion}
+could have repaired the input string to
+\letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}}. Unfortunately, because
+\ddmax is unable to synthesize any framents, opportunities for repair can be
+missed.
 
 % A problem of DDMax is that it only supports deleting parts of the file under test while repairing the file.
 %Especially for highly-structured input formats like the JSON file seen in \Cref{fig:bad-json-input}, it is often the case that by inserting a simple character in the file, more information can be recovered in the file than by just deleting characters.
@@ -965,15 +969,15 @@ corruption of information.
 % Then, \bfr tries both inserting the \letterboxed{\}} from the original file and another \letterboxed{"} which succeeds and results in the repaired file.
 % 
 
-This is, of course, not an ideal state of affairs. Unfortunately, \ddmax is
-likely the best one can do unless one is willing to test all possible
-subsequences of the input, which leads to combinatorial explosion. The main
-issue here is that unlike with delta-debugging~\cite{zeller2002simplifying},
-there is no real definition of progress. We do not know if 
-\letterboxed{\{\ "A":\ *3\}} is better than
-\letterboxed{\{\ "A":\ **3\}} or
-\letterboxed{\{\ A":\ **3\}} because all three returns the same
-result -- parse error.
+%This is, of course, not an ideal state of affairs. Unfortunately, \ddmax is
+%likely the best one can do unless one is willing to test all possible
+%subsequences of the input, which leads to combinatorial explosion. The main
+%issue here is that unlike with delta-debugging~\cite{zeller2002simplifying},
+%there is no real definition of progress. We do not know if 
+%\letterboxed{\{\ "A":\ *3\}} is better than
+%\letterboxed{\{\ "A":\ **3\}} or
+%\letterboxed{\{\ A":\ **3\}} because all three returns the same
+%result -- parse error.
 
 
 Our \brepair algorithm starts with the corrupted input and quickly finds the
