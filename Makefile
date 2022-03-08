@@ -26,3 +26,6 @@ testbrepair:
 	python3 brepair.py '[**1]'  | grep FIX
 	python3 brepair.py '[*1*]'  | grep FIX
 	python3 brepair.py '{ "name": "Dave" "age": 42 }'  | grep FIX
+
+# this will fail to repair as expected because the corruption is semantic.
+# python3 brepair.py '{"":4,2}'
