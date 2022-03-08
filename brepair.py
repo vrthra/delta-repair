@@ -116,6 +116,8 @@ def repair_and_extend(item, is_incomplete, is_incorrect, is_complete):
     item_d = apply_delete(*item)
     ie = extend_item(item_d, is_incomplete, is_incorrect, is_complete)
     e_arr.append(ie)
+    # TODO
+    return e_arr
 
     # for insert and modify, only apepnd if it resulted in a boundary
     # increase
@@ -136,10 +138,12 @@ def find_fixes(inputval, boundary, is_incomplete, is_incorrect, is_complete):
     global Threads
     # First start with zero edit distance
     # priority, item where item is an array of elements 
-    heapq.heappush(Threads, (0, [(inputval, boundary)]))
-    while Threads:
+    ThreadHash = {0: [(inputval, boundary)]}
+    #heapq.heappush(Threads, (0, [(inputval, boundary)]))
+    edit_dist = 0
+    while True:
         # fetch the first rank groups.
-        edit_dist, current_items = heapq.heappop(Threads)
+        current_items = ThreadHash[edit_dist]
         for item in current_items:
             # try repair and extending each item until we get incorrect.
             new_items = repair_and_extend(item,
@@ -149,12 +153,15 @@ def find_fixes(inputval, boundary, is_incomplete, is_incorrect, is_complete):
 
             completed = []
             for i in new_items:
-                heapq.heappush(Threads, (edit_dist+1, i))
+                if (edit_dist+1) not in ThreadHash: ThreadHash[edit_dist+1] = []
+                ThreadHash[edit_dist+1].append(i)
+                #heapq.heappush(Threads, (edit_dist+1, i))
                 if is_complete(i[0]):
                     completed.append(i)
             if completed:
                 return completed
-        break
+        edit_dist += 1
+    assert False
 
 def repair(inputval, test):
     is_incomplete = lambda x: test(x)[0] == Status.Incomplete
