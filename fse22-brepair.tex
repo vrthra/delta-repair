@@ -1082,24 +1082,19 @@ to more effective repairs.
 \begin{lstlisting}
 def repair(inp):
     boundary = binary_search(inp)
-    return find_fixes(inp, boundary)
+    thread = {0: [Repair(inp, boundary)]}
+    return find_fixes(thread)
 
-def find_fixes(inp, boundary):
-    ThreadHash = {0: [Repair(inp, boundary)]}
+def find_fixes(thread):
     edit_dist = 0
     while True:
-        cur_items = ThreadHash[edit_dist]
-        chosen = sample_items_by_mask(cur_items)
-        completed = []
-        for item in chosen:
-            new_items = item.repair_and_extend()
-
-            for i in new_items:
-                ThreadHash[edit_dist + 1].append(i)
-                if i.is_complete():
-                    completed.append(i)
-        if completed:
-            return completed
+        cur_items = thread[edit_dist]
+        comp = []
+        for item in sample_items_by_mask(cur_items):
+            for i in item.repair_and_extend():
+                thread[edit_dist + 1].append(i)
+                if i.is_complete(): comp.append(i)
+        if comp: return comp
         edit_dist += 1
 \end{lstlisting}
 \begin{lstlisting}
@@ -1107,20 +1102,22 @@ class Repair:
     slots: inputstr, boundary:
     def apply_delete(self):
         return Repair(self.inputstr[:self.boundary] +
-                      self.inputstr[self.boundary + 1:], self.boundary)
+                      self.inputstr[self.boundary + 1:],
+		      self.boundary)
 
     def apply_insert(self):
         new_items = []
-        possible_chars = string.printable
-        for i in possible_chars:
-            v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary:]
+        for i in string.printable:
+            v = self.inputstr[:self.boundary] +
+	    i + self.inputstr[self.boundary:]
             new_items.append(Repair(v, self.boundary))
         return new_items
 
     def apply_modify(self):
         new_items = []
         for i in string.printable:
-            v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary + 1:]
+            v = self.inputstr[:self.boundary] +
+	    i + self.inputstr[self.boundary + 1:]
             new_items.append(Repair(v, self.boundary))
         return new_items
 \end{lstlisting}
@@ -1128,20 +1125,20 @@ class Repair:
 \begin{lstlisting}
 class Repair:
     def extend_item(self):
-        new_val = 0
+        nv = 0
         while True:
-            if (self.boundary + new_val) > len(self.inputstr):
-                self.boundary = self.boundary + new_val - 1
+            if (self.boundary + nv) > len(self.inputstr):
+                self.boundary = self.boundary + nv - 1
                 return self
-            s = Repair(self.inputstr, self.boundary + new_val)
+            s = Repair(self.inputstr, self.boundary + nv)
             if s.is_incomplete():
-                new_val += 1
+                nv += 1
                 continue
             if s.is_incorrect():
-                self.boundary = self.boundary + new_val - 1
+                self.boundary = self.boundary + nv - 1
                 return self
             if s.is_complete():
-                self.boundary = self.boundary + new_val
+                self.boundary = self.boundary + nv
                 return self
 
     def repair_and_extend(self):
