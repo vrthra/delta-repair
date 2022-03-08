@@ -200,6 +200,7 @@ def repair(inputval, test):
     assert Repair(inputval, 0).is_incomplete()
     assert Repair(inputval, len(inputval)).is_incorrect()
     # first do binary search to find the boundary
+    # not a requirement. Extend item will do as well.
     boundary = binary_search(inputval)
     assert Repair(inputval,boundary).is_incomplete()
     assert Repair(inputval,boundary+1).is_incorrect()
