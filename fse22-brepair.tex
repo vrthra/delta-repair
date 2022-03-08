@@ -656,10 +656,13 @@ $\test(\dpass) = \pass \land n \leq |\Delta|$.\\
 
 \end{figure}
 
-\subsection{Limitations due to rich input structure}
-One of the major problems with \ddmax is that it can fail when certain
-corruption patterns are encountered din the input string.
+A major limitation of \ddmax is that it is ineffective when the input needs to
+conform to specifications such as context-free grammars. We discuss two
+specific instances when \ddmax can repair an input suboptimally.
 
+\subsection{Effect of input decomposition}
+One of the patterns in which \ddmax can fail is when the corruption in the
+input interacts with the fragment decomposition algorithm in \ddmax.
 As an example, consider the fragment \letterboxed{[*+]}.
 Here, the JSON string is invalid because it contains two invalid characters.
 The operation of \ddmax (\Cref{fig:ddmax}) is as follows:
