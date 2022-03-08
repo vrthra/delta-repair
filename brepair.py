@@ -213,7 +213,7 @@ def logit(*v):
 def validate_json(input_str):
     try:
         json.loads(input_str)
-        logit('*', input_str)
+        logit('*', repr(input_str))
         return Status.Complete, -1, ''
     except Exception as e:
         msg = str(e)
