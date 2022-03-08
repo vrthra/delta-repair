@@ -788,15 +788,34 @@ That is, no single independent fragment is found, the removal of which results
 in removal of the error. Hence, \ddmax keeps searching for smaller and smaller
 fragments discarding larger and larger chunks of data.
 
-% One of the issues here is that unlike \ddmin, \ddmax can't require independence
-% of $\Delta$ sequences. That is, \ddmin requires that each non-failure causing
-% fragment can be independently removed without impacting the failure. An
-% equivalent condition for \ddmax would be that one can add each non-failure
-% causing fragment to the passing input independently. However, this fails
-% when we have rich input structure as illustrated by the above example.
-% Of course, onece the input processor conforms to this constraint, \ddmax will
-% have no problems maximizing any inputs. However, this can be a rather strong
-% constraint in practice.
+\subsection{Discussion}
+Why does \ddmax fail to repair these inputs? A major limitation of \ddmax is
+that it is modeled on \ddmin, which is an effective tool for minimization of
+failure inducing inputs. Given a failure inducing input, the idea of \ddmin is
+to successively partition the input into smaller and smaller chunks, remove one
+chunk at a time and check whether the remaining chunks are sufficient to
+reproduce the failure. As this implies, a key assumption of \ddmin is that
+we can actually remove such chunks independently. That is, if a chunk does not
+contribute to the observed failure, it can be removed without affecting the
+failure observed. Secondly, if multiple chunks independently cause
+the same failure, only one chunk will be chosen, and minimized further.
+
+The definition of \ddmax is a mirror of \ddmin. \ddmax starts with an empty
+input that is assumed to be passing. Then, it partitions the input into chunks,
+and tries to concatenate any of these chunks to the passing input, producing a
+larger passing input. If after dividing the input into \<n> chunks, none of the
+chunks could produce a passing input, it tries again by dividing the
+input into \<2n> chunks.
+
+As in the case of \ddmin, the unstated assumption here is that if a chunk was
+not responsible for the observed failure, it can be extracted independently of
+other chunks and added to the passing input fragment. This particular
+assumption need not hold when we are dealing with inputs that have a rich
+structure.
+
+Of course, if  the input processor conforms to this constraint, \ddmax will
+have no problems maximizing any inputs. However, this can be a rather strong
+constraint in practice.
 
 
 %One of the ambiguities here is that it is not immediately
@@ -822,7 +841,7 @@ fragments discarding larger and larger chunks of data.
 % \end{figure}
 
 
-\subsection{Updates to \ddmax}
+\subsection{Updates to \ddmax definition}
 %\todo{discuss the bug fixes, base case and additional constraints here }
 While evaluating \ddmax, we noticed two cases where the formal definition of
 \ddmax was underspecified. These are noted in \Cref{fig:ddmax}. Specifically,
@@ -831,6 +850,8 @@ go into unbounded recursion on inputs such as the JSON input:
 \letterboxed{1*1}. (2)~when increasing granularity, the size of the remaining
 input should be considered rather than the size of the entire text. Not doing
 this would cause an invariant fail for inputs such as \letterboxed{\{*"":2\}}.
+
+\subsection{Repair of rich inputs with \brepair}
 
 \section{Input Synthesis}
 \label{sec:input-synthesis}
