@@ -110,6 +110,55 @@ class Repair:
                 e_arr.append(ie)
         return e_arr
 
+def binary_search(array):
+    left, right = 0, len(array) - 1
+    # Main loop which narrows our search range.
+    while left + 1 < right:
+        middle = (left + right) // 2
+        if Repair(array, middle).is_incomplete():
+            left = middle
+        else:
+            right = middle
+    return right-1
+
+# at the boundary, it is always wrong.
+# the incomplete substring is one behind boundary. i.e inputval[:boundary] 
+
+Threads = []
+
+def find_fixes(inputval, boundary):
+    global Threads
+    # First start with zero edit distance
+    # priority, item where item is an array of elements 
+    ThreadHash = {0: [Repair(inputval, boundary, extended=True)]}
+    edit_dist = 0
+    while True:
+        # fetch the first rank groups.
+        current_items = ThreadHash[edit_dist]
+        for item in current_items:
+            # try repair and extending each item until we get incorrect.
+            new_items = item.repair_and_extend()
+
+            completed = []
+            for i in new_items:
+                if (edit_dist+1) not in ThreadHash: ThreadHash[edit_dist+1] = []
+                ThreadHash[edit_dist+1].append(i)
+                if i.is_complete():
+                    completed.append(i)
+            if completed:
+                return completed
+        edit_dist += 1
+    assert False
+
+def repair(inputval, test):
+    assert Repair(inputval, 0).is_incomplete()
+    assert Repair(inputval, len(inputval)).is_incorrect()
+    # first do binary search to find the boundary
+    # not a requirement. Extend item will do as well.
+    boundary = binary_search(inputval)
+    assert Repair(inputval,boundary).is_incomplete()
+    assert Repair(inputval,boundary+1).is_incorrect()
+    return find_fixes(inputval, boundary)
 
 def logit(*v):
     print(*v)
@@ -162,55 +211,6 @@ def validate_json(input_str):
         else:
             raise e
 
-def binary_search(array):
-    left, right = 0, len(array) - 1
-    # Main loop which narrows our search range.
-    while left + 1 < right:
-        middle = (left + right) // 2
-        if Repair(array, middle).is_incomplete():
-            left = middle
-        else:
-            right = middle
-    return right-1
-
-# at the boundary, it is always wrong.
-# the incomplete substring is one behind boundary. i.e inputval[:boundary] 
-
-Threads = []
-
-def find_fixes(inputval, boundary):
-    global Threads
-    # First start with zero edit distance
-    # priority, item where item is an array of elements 
-    ThreadHash = {0: [Repair(inputval, boundary, extended=True)]}
-    edit_dist = 0
-    while True:
-        # fetch the first rank groups.
-        current_items = ThreadHash[edit_dist]
-        for item in current_items:
-            # try repair and extending each item until we get incorrect.
-            new_items = item.repair_and_extend()
-
-            completed = []
-            for i in new_items:
-                if (edit_dist+1) not in ThreadHash: ThreadHash[edit_dist+1] = []
-                ThreadHash[edit_dist+1].append(i)
-                if i.is_complete():
-                    completed.append(i)
-            if completed:
-                return completed
-        edit_dist += 1
-    assert False
-
-def repair(inputval, test):
-    assert Repair(inputval, 0).is_incomplete()
-    assert Repair(inputval, len(inputval)).is_incorrect()
-    # first do binary search to find the boundary
-    # not a requirement. Extend item will do as well.
-    boundary = binary_search(inputval)
-    assert Repair(inputval,boundary).is_incomplete()
-    assert Repair(inputval,boundary+1).is_incorrect()
-    return find_fixes(inputval, boundary)
 
 def main(inputval):
     fixes = repair(inputval, validate_json)
