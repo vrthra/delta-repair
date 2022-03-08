@@ -382,15 +382,18 @@ If the parser at hand conforms to a formal specification such as a context-free
 grammar, and this grammar is available,
 %context-free grammar, and an acceptable formal grammar is available,
 the challenge of repairing the input and making it parsable can be solved using
-\emph{error-correcting} parsers~\cite{aho1972minimum,diekmann2020dont}.
+\emph{error-correcting} parsers~\cite{aho1972minimum,diekmann2020dont,parr2011ll}.
 The idea in such parsers is to generate a universal grammar that captures
 any mutation of the base grammar. Any parse of the input string that employs a
 mutation is penalized, and the parse with minimal mutation is chosen as the
 best parse, and the corresponding mutation the best repair. The limitation of
 this approach is that it assumes the existence of a formal grammar in the first
 place, which completely captures the intended structure. 
-However, \recheck{formats such as markdown~\cite{gruber2004markdown} does not have
-a formal grammar}\todo{how do you mean? this is not true, there are markdown grammars, ANTLR also has one, Nikolas used some in his Tribble eval too.}; Documents in languages such as \<C> can contain semantic
+However, formats such as markdown~\cite{gruber2004markdown} does not have
+an official formal grammar specificaiton.
+%how do you mean? this is not true, there are markdown grammars, ANTLR also has
+%one, Nikolas used some in his Tribble eval too.};
+Documents in languages such as \<C> can contain semantic
 information that is not captured in the contex-free grammar, and may not be
 discardable; Some constraints such as number of columns in a \<CSV> file may
 not be captured in a grammar. Finally, even when the base grammar is context-free
