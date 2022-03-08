@@ -179,18 +179,18 @@ def find_fixes(inputval, boundary):
         # fetch the first rank groups.
         current_items = ThreadHash[edit_dist]
         chosen_items = sample_items_by_mask(current_items)
+        completed = []
         for item in chosen_items:
             # try repair and extending each item until we get incorrect.
             new_items = item.repair_and_extend()
 
-            completed = []
             for i in new_items:
                 if (edit_dist+1) not in ThreadHash: ThreadHash[edit_dist+1] = []
                 ThreadHash[edit_dist+1].append(i)
                 if i.is_complete():
                     completed.append(i)
-            if completed:
-                return completed
+        if completed:
+            return completed
         edit_dist += 1
     assert False
 
