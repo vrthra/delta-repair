@@ -9,6 +9,21 @@ Failure Feedback}
 \renewcommand{\mytitle}{Repairing Inputs}
 
 
+\usepackage{listings}
+\lstset{ % General setup for the package
+    language=Python,
+    basicstyle=\small\sffamily,
+    numbers=left,
+    numberstyle=\tiny,
+    frame=tb,
+    tabsize=4,
+    columns=fixed,
+    showstringspaces=false,
+    showtabs=false,
+    keepspaces,
+    commentstyle=\color{green},
+    keywordstyle=\color{blue}
+}
 \usepackage{xspace}
 \usepackage{array,multirow,graphicx}
 \usepackage{float}
@@ -1064,6 +1079,35 @@ to more effective repairs.
 
 \section{\approach}
 \label{sec:brepair}
+\begin{lstlisting}
+def find_fixes(inputval, boundary):
+    ThreadHash = {0: [Repair(inputval, boundary, extended=True)]}
+    edit_dist = 0
+    while True:
+        current_items = ThreadHash[edit_dist]
+        chosen_items = sample_items_by_mask(current_items)
+        completed = []
+        for item in chosen_items:
+            new_items = item.repair_and_extend()
+
+            for i in new_items:
+                ThreadHash[edit_dist + 1].append(i)
+                if i.is_complete():
+                    completed.append(i)
+        if completed:
+            return completed
+        edit_dist += 1
+
+def repair(inputval):
+    assert Repair(inputval, 0).is_incomplete()
+    assert Repair(inputval, len(inputval)).is_incorrect()
+    boundary = binary_search(inputval)
+    assert Repair(inputval, boundary).is_incomplete()
+    assert Repair(inputval, boundary + 1).is_incorrect()
+    return find_fixes(inputval, boundary)
+
+\end{lstlisting}
+
 The \brepair algorithm works as follows.
 We start with the assumption that the parser correctly signals
 \emph{incomplete} for incomplete inputs, \emph{incorrect} for other invalid
