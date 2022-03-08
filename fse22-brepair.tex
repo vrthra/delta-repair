@@ -694,7 +694,7 @@ specific instances when \ddmax can repair an input suboptimally.
 A pattern of failure of \ddmax occurs when \ddmax is given an input with
 multiple errors.  For example, consider the JSON input \letterboxed{[*]+}.
 Here, the JSON string is invalid because of two invalid characters that are
-non-contiguous. The operation of \ddmax proceeds as follows:
+non-contiguous. The operation of \ddmax (\Cref{fig:ddmax}) proceeds as follows:
 
 \begin{enumerate}
 \item The operation starts with $\ddmax_2(\emptyset, 2)$
@@ -737,10 +737,14 @@ input fragment type from string to number.
 Hence, \ddmax can't repair inputs with multiple faults effectively.
 
 \subsection{Effect of input decomposition}
-One of the patterns in which \ddmax can fail is when the corruption in the
-input interacts with the fragment decomposition algorithm in \ddmax.
-As an example, consider the fragment \letterboxed{[*+]}.
-Here, the JSON string is invalid because it contains two invalid characters.
+Unfortunately \ddmax can produce non-optimal results even when the errors are
+contiguous, and hence considered \emph{single} by \ddmax. The problem happens
+when the corruption in the input interacts with the fragment decomposition
+algorithm of \ddmax.
+As an example, consider a variant of the previos input.
+The fragment \letterboxed{[*+]}.
+The JSON string is invalid here because it contains two invalid characters
+which are contiguous.
 The operation of \ddmax (\Cref{fig:ddmax}) is as follows:
 
 \begin{enumerate}
@@ -770,15 +774,17 @@ $\cfail \cup \Delta_1$=\letterboxed{]} \fail \\
 \item The solution is $\emptyset$.
 \end{enumerate}
 
-That is, this particular invalid JSON string can't be repaired by \ddmax.
-While this may seem like not much of information loss, consider
-\Cref{fig:bad-json-input-asterisks} which is similar to
+That is, this particular invalid JSON string also can't be repaired by \ddmax.
+As in the previous case, the data loss can be severe.
+Consider
+\letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\ \}} in
+\Cref{tab:ddmaxlimitations} which is similar to
 Kirchner et al.~\cite[Figure 1]{kirschner2020debugging} but with an extra
-\letterboxed{*}. This results in a repair of \letterboxed{\ \ \ \ 3.45},
-resulting in information loss.
+\letterboxed{*}. \ddmax repairs this input to \letterboxed{\ \ \ \ 3.45},
+resulting loss of information.
 
 The problem here is that the successive partitions attempted by \ddmax fails to
-isolate the failure causing fragment eventhough the fragment is contiguous.
+isolate the failure causing fragment even though the fragment is contiguous.
 That is, no single independent fragment is found, the removal of which results
 in removal of the error. Hence, \ddmax keeps searching for smaller and smaller
 fragments discarding larger and larger chunks of data.
