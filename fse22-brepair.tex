@@ -1081,7 +1081,7 @@ to more effective repairs.
 \label{sec:brepair}
 \begin{lstlisting}
 def find_fixes(inputval, boundary):
-    ThreadHash = {0: [Repair(inputval, boundary, extended=True)]}
+    ThreadHash = {0: [Repair(inputval, boundary)]}
     edit_dist = 0
     while True:
         current_items = ThreadHash[edit_dist]
@@ -1106,6 +1106,65 @@ def repair(inputval):
     assert Repair(inputval, boundary + 1).is_incorrect()
     return find_fixes(inputval, boundary)
 
+\end{lstlisting}
+\begin{lstlisting}
+class Repair:
+    slots: inputstr, boundary:
+    def apply_delete(self):
+        return Repair(self.inputstr[:self.boundary] +
+                      self.inputstr[self.boundary + 1:], self.boundary)
+
+    def apply_insert(self):
+        new_items = []
+        possible_chars = string.printable
+        for i in possible_chars:
+            v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary:]
+            new_items.append(Repair(v, self.boundary))
+        return new_items
+
+    def apply_modify(self):
+        new_items = []
+        for i in string.printable:
+            v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary + 1:]
+            new_items.append(Repair(v, self.boundary))
+        return new_items
+\end{lstlisting}
+
+\begin{lstlisting}
+class Repair:
+    def extend_item(self):
+        new_val = 0
+        while True:
+            if (self.boundary + new_val) > len(self.inputstr):
+                self.boundary = self.boundary + new_val - 1
+                return self
+            s = Repair(self.inputstr, self.boundary + new_val)
+            if s.is_incomplete():
+                new_val += 1
+                continue
+            if s.is_incorrect():
+                self.boundary = self.boundary + new_val - 1
+                return self
+            if s.is_complete():
+                self.boundary = self.boundary + new_val
+                return self
+
+    def repair_and_extend(self):
+        e_arr = []
+        item_d = self.apply_delete()
+        ie = item_d.extend_item()
+        e_arr.append(ie)
+
+        items_i = self.apply_insert()
+        items_m = self.apply_modify()
+
+        new_items = items_i + items_m
+        for i in new_items:
+            old_boundary = i.boundary
+            ie = i.extend_item()
+            if ie.boundary > old_boundary:
+                e_arr.append(ie)
+        return e_arr
 \end{lstlisting}
 
 The \brepair algorithm works as follows.
