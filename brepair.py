@@ -6,6 +6,9 @@ import string
 import random
 import enum
 
+# at the boundary, it is always wrong.
+# the incomplete substring is one behind boundary. i.e inputval[:boundary] 
+
 class Status(enum.Enum):
     Complete = 0
     Incomplete = 1
