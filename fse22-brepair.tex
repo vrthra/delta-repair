@@ -1013,6 +1013,22 @@ required, the process can be restarted with the threads in the next rank.
 \end{table*}
 
 
+\begin{table}[!tbp]\centering
+\caption{Subject programs used in the evaluation}
+\begin{tabular}{|l | r | l | l | l | l |}
+\hline
+\textbf{Name} & \textbf{LOC} & \textbf{License} & \textbf{Initial C.} & \textbf{Latest C.} \\
+\hline
+\textbf{INI} & 382 & New BSD & Jul 2009 & Jan 2022\\
+\textbf{cJSON} & 3062 & MIT & Aug 2009 & Jan 2022\\
+\textbf{SExpParser} & 656 & ? & Sep 2016 & Sep 2016\\
+\textbf{TinyC} & 375 & GPL 3.0 & 2001 & Apr 2018\\
+\hline
+\end{tabular}
+\label{tab:subject-programs}
+%\vspace{-0.5cm}
+\end{table}
+
 \section{Experimental Setup}
 \label{sec:experimental-setup}
 
@@ -1087,7 +1103,8 @@ To evaluate the repair quality of a repaired file, we measure:
 \subsubsection*{\bf Research Protocol}
 For each input format, we collect real-world invalid input files.
 We also collect 50 valid real-world inputs and mutate those into a set with single and up to 16 multiple mutations.
-Then, we execute all files on the subject programs, in order to determine the number of input files which fail for each subject program.
+Then, we execute all files on the subject programs shown in \Cref{tab:subject-programs}, in order to determine the number of input files which fail for each subject program.
+All subject programs are written in the C programming language and needed to be modified slightly to provide the rich failure feedback required for \approach.
 We proceed to run the repair algorithms on each invalid or mutated input file.
 In particular, we are interested in determining the following:
 %\begin{enumerate}
@@ -1190,7 +1207,6 @@ In this work, we compare the performance of our approach to the state-of-the-art
 
 \noindent
 \textbf{Research Protocol:} 
-
 
 
 \begin{table}[!tbp]\centering
