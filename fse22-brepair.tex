@@ -565,14 +565,22 @@ pass the parser.
 
 
 This paper makes the following technical contributions:
+
 \begin{itemize}
-	\item \textbf{Repairing Rich Input Structures:} \todo{add bug fixes here too . reference to \autoref{sec:rich-input-structures}.} \recheck{We identify one of the major limitations to \ddmax -- the limitation due to rich structure, which can be fixed only by requiring additional constraints, and We identify one of the major limitations to \ddmax -- the limitation due to rich structure, which can be fixed only by requiring additional constraints.}
-	\item \textbf{Input Synthesis:} \todo{discuss the repair to subset vs. insertion, refer to \autoref{sec:input-synthesis}}. 
-	\item \textbf{Lightweight Failure Feedback:} We propose \brepair which does not have these limitations. \todo{refer to \autoref{sec:brepair}}
-%	\item \textbf{}	
-%  \item We identify one of the major limitations to \ddmax -- the limitation due to rich struture, which can be fixed only by requiring additional constraints.
-%  \item We provide two bug fixes to \ddmax.
-%  \item We propose \brepair which does not have these limitations.
+\item \textbf{Repairing Rich Input Structures.} One of the major limitations of
+\ddmax is its inability to handle inputs with rich structure. We show that our
+\brepair technique can handle inputs with rich structure well.
+\item \textbf{Input Synthesis.} \ddmax is limited to \emph{deletion} of input
+fragments, which makes it unsuitable for repairing errors due to omission and
+corruption. Our \brepair technique expands the repertoir to \emph{deletion},
+\emph{insertion}, and \emph{modification}.
+%\todo{discuss the repair to subset vs. insertion, refer to \autoref{sec:input-synthesis}}. 
+\item \textbf{Lightweight Failure Feedback.} \brepair is the first technique
+tha shows how to use lightweight parser-error-feedback for input repair.
+%We propose \brepair which does not have these limitations. \todo{refer to \autoref{sec:brepair}}
+ %	\item \textbf{}	
+ %  \item We identify one of the major limitations to \ddmax -- the limitation due to rich struture, which can be fixed only by requiring additional constraints.
+ %  \item We provide two bug fixes to \ddmax.
 \end{itemize}
 
 The rest of this paper is sturctured as follows:\todo{describe sections/order}
