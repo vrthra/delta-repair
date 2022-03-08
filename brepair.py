@@ -21,9 +21,9 @@ class Repair:
     def __str__(self):
         return self.inputstr[:self.boundary]
 
-    def __init__(self, inputstr, boundary):
+    def __init__(self, inputstr, boundary, extended=False):
         self.inputstr, self.boundary = inputstr, boundary
-        self.extended = False
+        self.extended = extended
 
     def test(self):
         return validate_json(self.inputstr[:self.boundary])
@@ -176,7 +176,7 @@ def find_fixes(inputval, boundary):
     global Threads
     # First start with zero edit distance
     # priority, item where item is an array of elements 
-    ThreadHash = {0: [Repair(inputval, boundary)]}
+    ThreadHash = {0: [Repair(inputval, boundary, extended=True)]}
     edit_dist = 0
     while True:
         # fetch the first rank groups.
