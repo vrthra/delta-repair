@@ -116,8 +116,6 @@ def repair_and_extend(item, is_incomplete, is_incorrect, is_complete):
     item_d = apply_delete(*item)
     ie = extend_item(item_d, is_incomplete, is_incorrect, is_complete)
     e_arr.append(ie)
-    # TODO
-    return e_arr
 
     # for insert and modify, only apepnd if it resulted in a boundary
     # increase
