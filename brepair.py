@@ -6,6 +6,8 @@ import string
 import random
 import enum
 
+CLEAR_QUEUE_AFTER_EVERY_LOCATION:bool = True
+"""If True, clear the priority queue after every repaired fault location"""
 
 class Status(enum.Enum):
     Complete = 0
@@ -24,6 +26,10 @@ class Repair:
         self.extended = extended
         self.mask = mask
         self._status = None
+
+    def full_input(self) -> str:
+        """Return the full input, ignoring the boundary"""
+        return self.inputstr
 
     def test(self, mystr):
         return validate_json(mystr)
@@ -197,6 +203,10 @@ def find_fixes(inputval, boundary):
                 ThreadHash[edit_dist+1].append(i)
                 if i.is_complete():
                     completed.append(i)
+                    if CLEAR_QUEUE_AFTER_EVERY_LOCATION:
+                        new_boundary = binary_search(i.full_input())
+                        ThreadHash = {edit_dist + 1: [i, new_boundary]}
+                        break  # inner loop
         if completed:
             return completed
         edit_dist += 1
