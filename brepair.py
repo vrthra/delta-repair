@@ -134,7 +134,7 @@ def repair(inputval, test):
     is_incorrect = lambda x: test(x)[0] == Status.Incorrect
     is_complete = lambda x: test(x)[0] == Status.Complete
     assert is_incomplete('')
-    assert is_incorrect(test(inputval))
+    assert is_incorrect(inputval)
     # first do binary search to find the boundary
     boundary = binary_search(inputval, is_incomplete)
     assert is_incomplete(inputval[:boundary-1])
