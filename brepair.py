@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import heapq
 import sys
 import string
 import random
@@ -13,22 +14,6 @@ def new_char(seen): return random.choice([i for i in string.printable if i not i
 
 def logit(v): return
 
-def generate(prev_str=''):
-    seen = set()
-    while True:
-        char = new_char(seen)
-        curr_str = prev_str + char
-        rv, _n, _at = validate_json(curr_str)
-        if rv == Status.Complete:
-            return curr_str
-        elif rv == Status.Incomplete:
-            seen.clear()
-            prev_str = curr_str
-        elif rv == Status.Incorrect:
-            seen.add(char)
-        else:
-            raise Exception(rv)
-    return None
 
 def validate_json(input_str):
     try:
@@ -66,22 +51,6 @@ def validate_json(input_str):
         else:
             raise e
 
-def create_valid_strings(n):
-    i = 0
-    pstr = ''
-    while True:
-        created_string = generate(pstr)
-        if created_string is not None:
-            if random.randint(1,10) > 1:
-                pstr = created_string
-                continue
-            #if len(created_string) < 4: continue
-            print(repr(created_string), file=sys.stderr)
-            print(created_string)
-            i += 1
-            if (i >= n):
-                break
-
 def binary_search(array, is_incomplete):
     left, right = 0, len(array) - 1
     # Main loop which narrows our search range.
@@ -93,17 +62,107 @@ def binary_search(array, is_incomplete):
             right = middle
     return right
 
-def search_for_boundary(inputval, test):
-    return binary_search(inputval, lambda x: test(x)[0] == Status.Incomplete)
+def generate(prev_str=''):
+    seen = set()
+    while True:
+        char = new_char(seen)
+        curr_str = prev_str + char
+        rv, _n, _at = validate_json(curr_str)
+        if rv == Status.Complete:
+            return curr_str
+        elif rv == Status.Incomplete:
+            seen.clear()
+            prev_str = curr_str
+        elif rv == Status.Incorrect:
+            seen.add(char)
+        else:
+            raise Exception(rv)
+    return None
+
+
+def extend_item(item, is_incomplete, is_incomplete, is_complete):
+    inputval, boundary = item 
+    new_val = 0
+    while True:
+        s = inputval[0:boundary+new_val]
+        assert boundary+new_val < len(input_val)
+        if is_incomplete(s):
+            new_val += 1
+            continue
+        if is_incorrect(s):
+            return (inputval, boundary + new_val)
+        if is_complete(s):
+            return (inputval, boundary + new_val)
+        assert False
+    assert False
+
+
+def apply_delete(inputval, boundary):
+    return inputval[:boundary] + inputval[boundary+1:]
+
+def apply_insert(inputval, boundary):
+    new_items = []
+    for i in string.printable:
+        v = inputval[:boundary] + i + inputval[boundary:]
+        new_items.append(v)
+    return new_items
+
+def apply_modify(inputval, boundary):
+    new_items = []
+    for i in string.printable:
+        v = inputval[:boundary] + i + inputval[boundary+1:]
+        new_items.append(v)
+    return new_items
+
+def repair_and_extend(item, is_incomplete, is_incorrect, is_complete):
+    item_d = apply_delete(*item)
+    items_i = apply_insert(*item)
+    items_m = apply_modify(*item)
+
+    new_items = [item_d] + items_i, items_m
+    # now extend these.
+    e_arr = []
+    for i in new_items:
+        ie = extend_item(i, is_incomplete, is_incorrect, is_complete)
+        e_arr.append(ie)
+    return e_arr
+
+Threads = []
+
+def find_fixes(inputval, boundary, is_incomplete, is_incomplete, is_complete):
+    global Threads
+    # First start with zero edit distance
+    # priority, item where item is an array of elements 
+    heapq.heappush(Threads, (0, [(inputval, boundary)]))
+    while Threads:
+        # fetch the first rank groups.
+        edit_dist, current_items = heapq.heappop(Threads)
+        for item in current_items:
+            # try repair and extending each item until we get incorrect.
+            new_items = repair_and_extend(item,
+                    is_incomplete,
+                    is_incorrect,
+                    is_complete)
+            for i in new_items:
+                heapq.heappush(Threads, (edit_dist+1, i))
+                if is_complete(i):
+                    return i
+        break
 
 def repair(inputval, test):
-    assert test('')[0] == Status.Incomplete
-    assert test(inputval)[0] == Status.Incorrect
+    is_incomplete = lambda x: test(x)[0] == Status.Incomplete
+    is_incorrect = lambda x: test(x)[0] == Status.Incorrect
+    is_complete = lambda x: test(x)[0] == Status.Complete
+    assert is_incomplete(test(''))
+    assert is_incorrect(test(inputval))
     # first do binary search to find the boundary
-    boundary = search_for_boundary(inputval, test)
-    assert test(inputval[:boundary-1])[0] == Status.Incomplete
-    assert test(inputval[:boundary])[0] == Status.Incorrect
-
+    boundary = binary_search(inputval, is_incomplete)
+    assert is_incomplete(test(inputval[:boundary-1]))
+    assert is_incorrect(test(inputval[:boundary]))
+    return find_fixes(inputval, boundary,
+            is_incomplete,
+            is_incorrect,
+            is_complete)
 
 def main(inputval):
     fixes = repair(inputval, validate_json)
