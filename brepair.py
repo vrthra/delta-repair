@@ -170,12 +170,13 @@ def sample_items_by_mask(items):
 Threads = []
 
 def find_fixes(inputval, boundary):
-    global Threads
+    global Threads, EDIT_DIST
     # First start with zero edit distance
     # priority, item where item is an array of elements 
     ThreadHash = {0: [Repair(inputval, boundary, extended=True)]}
     edit_dist = 0
     while True:
+        EDIT_DIST = edit_dist
         # fetch the first rank groups.
         current_items = ThreadHash[edit_dist]
         chosen_items = sample_items_by_mask(current_items)
@@ -204,8 +205,9 @@ def repair(inputval):
     assert Repair(inputval,boundary+1).is_incorrect()
     return find_fixes(inputval, boundary)
 
+EDIT_DIST = 0
 def logit(*v):
-    print(*v)
+    print(EDIT_DIST, *v)
     return
 
 def validate_json(input_str):
