@@ -15,7 +15,7 @@ Failure Feedback}
     basicstyle=\small\sffamily,
     numbers=left,
     numberstyle=\tiny,
-    frame=tb,
+    frame=none,
     tabsize=4,
     columns=fixed,
     showstringspaces=false,
@@ -1080,14 +1080,18 @@ to more effective repairs.
 \section{\approach}
 \label{sec:brepair}
 \begin{lstlisting}
-def find_fixes(inputval, boundary):
-    ThreadHash = {0: [Repair(inputval, boundary)]}
+def repair(inp):
+    boundary = binary_search(inp)
+    return find_fixes(inp, boundary)
+
+def find_fixes(inp, boundary):
+    ThreadHash = {0: [Repair(inp, boundary)]}
     edit_dist = 0
     while True:
-        current_items = ThreadHash[edit_dist]
-        chosen_items = sample_items_by_mask(current_items)
+        cur_items = ThreadHash[edit_dist]
+        chosen = sample_items_by_mask(cur_items)
         completed = []
-        for item in chosen_items:
+        for item in chosen:
             new_items = item.repair_and_extend()
 
             for i in new_items:
@@ -1097,15 +1101,6 @@ def find_fixes(inputval, boundary):
         if completed:
             return completed
         edit_dist += 1
-
-def repair(inputval):
-    assert Repair(inputval, 0).is_incomplete()
-    assert Repair(inputval, len(inputval)).is_incorrect()
-    boundary = binary_search(inputval)
-    assert Repair(inputval, boundary).is_incomplete()
-    assert Repair(inputval, boundary + 1).is_incorrect()
-    return find_fixes(inputval, boundary)
-
 \end{lstlisting}
 \begin{lstlisting}
 class Repair:
