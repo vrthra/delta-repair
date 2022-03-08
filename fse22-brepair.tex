@@ -620,11 +620,6 @@ tha shows how to use lightweight parser-error-feedback for input repair.
 
 The rest of this paper is structured as follows: \todo{describe sections/order}
 
-\section{Rich Input Structures} %Limitations of \ddmax}
-\label{sec:rich-input-structures}
-\todo{we should provide an anonymous notebook that allows to test the examples (in Table 1), it will be interesting}
-\todo{discuss first (two) examples}
-
 \begin{figure*}[t]
 \begin{boxedminipage}{\textwidth}
 \smallskip
@@ -671,6 +666,11 @@ $\test(\dpass) = \pass \land n \leq |\Delta|$.\\
 \end{figure*}
 
 
+
+\section{Rich Input Structures} %Limitations of \ddmax}
+\label{sec:rich-input-structures}
+\todo{we should provide an anonymous notebook that allows to test the examples (in Table 1), it will be interesting}
+\todo{discuss first (two) examples}
 %---
 % Example for Span Problem
 %---
@@ -803,28 +803,34 @@ fragments discarding larger and larger chunks of data.
 %clear what a repair means. For example the empty set $\emptyset$ is assumed to
 %be passing. Hence, is $\emptyset$ a valid repair?
 
-\begin{figure}
-\begin{center}
-\letterboxed{\{\"ABCD":[*"1,2,3,4,5,6"]*\}}
-\end{center}
-%\vspace{-0.6\baselineskip}
-\caption{\ddmax repairs this JSON to ``\<123456>''}
-\label{fig:bad-json-input2}
-\end{figure}
+% \begin{figure}
+% \begin{center}
+% \letterboxed{\{\"ABCD":[*"1,2,3,4,5,6"]*\}}
+% \end{center}
+% %\vspace{-0.6\baselineskip}
+% \caption{\ddmax repairs this JSON to ``\<123456>''}
+% \label{fig:bad-json-input2}
+% \end{figure}
+% 
+% \begin{figure}
+% \begin{center}
+% \letterboxed{\{\ "name":\ "Daveage"\ \}}
+% \end{center}
+% %\vspace{-0.6\baselineskip}
+% \caption{Failing input repaired with DDMax}
+% \label{fig:bad-json-input-ddmax}
+% \end{figure}
 
-\begin{figure}
-\begin{center}
-\letterboxed{\{\ "name":\ "Daveage"\ \}}
-\end{center}
-%\vspace{-0.6\baselineskip}
-\caption{Failing input repaired with DDMax}
-\label{fig:bad-json-input-ddmax}
-\end{figure}
 
-
-\subsection{Other Issues with \ddmax}
-\todo{discuss the bug fixes, base case and additional constraints here }
-
+\subsection{Updates to \ddmax}
+%\todo{discuss the bug fixes, base case and additional constraints here }
+While evaluating \ddmax, we noticed two cases where the formal definition of
+\ddmax was underspecified. These are noted in \Cref{fig:ddmax}. Specifically,
+(1)~\ddmax requires the base case when $|\cfail-\cpass| = 1$. If not, \ddmax can
+go into unbounded recursion on inputs such as the JSON input:
+\letterboxed{1*1}. (2)~when increasing granularity, the size of the remaining
+input should be considered rather than the size of the entire text. Not doing
+this would cause an invariant fail for inputs such as \letterboxed{\{*"":2\}}.
 
 \section{Input Synthesis}
 \label{sec:input-synthesis}
