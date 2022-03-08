@@ -893,10 +893,27 @@ That is, \brepair has no problem with rich inputs containing multiple errors.
 
 \section{Input Synthesis}
 \label{sec:input-synthesis}
+%\begin{figure}
+%\begin{center}
+%\letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}
+%\end{center}
+%%\vspace{-0.6\baselineskip}
+%\caption{Failing JSON input}
+%\label{fig:bad-json-input}
+%\end{figure}
+%\begin{figure}
+%\begin{center}
+%\letterboxed{\{\ "name":\ "Daveage"\ \}}
+%\end{center}
+%%\vspace{-0.6\baselineskip}
+%\caption{Failing input repaired with DDMax}
+%\label{fig:bad-json-input-ddmax1}
+%\end{figure}
+
 \todo{discuss importance of insertions and limitations of repair to subsets}
 The second major limitation of
 \ddmax is that the only operation in its toolbox is \emph{deletion} of input
-fragments. Consider \Cref{fig:bad-json-input}.
+fragments. Consider \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}
 %\Cref{fig:bad-json-deletion}.
 %\begin{figure}
 %\begin{center}
@@ -909,25 +926,12 @@ fragments. Consider \Cref{fig:bad-json-input}.
 %---
 % Example for Insertion
 %---
-\begin{figure}
-\begin{center}
-\letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}
-\end{center}
-%\vspace{-0.6\baselineskip}
-\caption{Failing JSON input}
-\label{fig:bad-json-input}
-\end{figure}
-\begin{figure}
-\begin{center}
-\letterboxed{\{\ "name":\ "Daveage"\ \}}
-\end{center}
-%\vspace{-0.6\baselineskip}
-\caption{Failing input repaired with DDMax}
-\label{fig:bad-json-input-ddmax1}
-\end{figure}
 Here, there is a missing quote in the key. \ddmax repair of this string will
-result in \Cref{fig:bad-json-input-ddmax1}. The problem is that, deletion of
-fragments alone can lead to significant corruption of information.
+result in
+
+\letterboxed{\ \ \ \ 42}
+The problem is that, deletion of fragments alone can lead to significant
+corruption of information.
 
 % A problem of DDMax is that it only supports deleting parts of the file under test while repairing the file.
 %Especially for highly-structured input formats like the JSON file seen in \Cref{fig:bad-json-input}, it is often the case that by inserting a simple character in the file, more information can be recovered in the file than by just deleting characters.
