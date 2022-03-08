@@ -222,37 +222,37 @@ def validate_json(input_str):
             n = int(msg.rstrip(')').split()[-1])
             # If the error is 'outside' the string, it can still be valid
             if n >= len(input_str):
-                logit('+', input_str)
+                logit('+', repr(input_str))
                 return Status.Incomplete, n, ''
             elif len(input_str) > 1 and input_str[-1] == '.' and input_str[-2].isdigit():
                 # JSON returns incorrect for [3. rather than incomplete.
                 return Status.Incomplete, n, ''
             else:
-                logit('X', input_str)
+                logit('X', repr(input_str))
                 return Status.Incorrect, n, input_str[n]
         elif msg.startswith('Unterminated'):
             # Unterminated string starting at: line 1 column 1 (char 0)
             n = int(msg.rstrip(')').split()[-1])
             if n >= len(input_str):
-                logit('+', input_str)
+                logit('+', repr(input_str))
                 return Status.Incomplete, n, ''
             else:
-                logit('+', input_str)
+                logit('+', repr(input_str))
                 return Status.Incomplete, n, input_str[n]
         elif msg.startswith('Extra data'):
             n = int(msg.rstrip(')').split()[-1])
             if n >= len(input_str):
-                logit('X', input_str)
+                logit('X', repr(input_str))
                 return Status.Incorrect, n, ''
             else:
-                logit('X', input_str)
+                logit('X', repr(input_str))
                 return Status.Incorrect, n, input_str[n]
         elif msg.startswith('Invalid '):
             idx = msg.find('(char ')
             eidx = msg.find(')')
             s = msg[idx + 6:eidx]
             n = int(s)
-            logit('X', input_str)
+            logit('X', repr(input_str))
             return Status.Incorrect, n, input_str[n]
         else:
             raise e
