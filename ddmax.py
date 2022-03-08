@@ -129,8 +129,11 @@ def ddmax(cx):
     return ''.join([s for i,s in enumerate(CX_S) if i in sol_idxs] )
 
 inputstr = '{ "item": "Apple", "price": ***3.45 }'
-inputstr = '{ "product": "Apple", "price": **3.45 }'
-inputstr = '[*1, *2]'
+#inputstr = '{ "product": "Apple", "price": **3.45 }'
+#inputstr = '[*1, *2]'
+
+#inputstr = '{ "name": "Dave" "age": 42 }'
+#inputstr = '{"ABCD":[*"1,2,3,4,5,6"]*}'
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
