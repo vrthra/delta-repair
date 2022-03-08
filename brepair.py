@@ -82,9 +82,32 @@ def create_valid_strings(n):
             if (i >= n):
                 break
 
+def binary_search(array, is_incomplete):
+    left, right = 0, len(array) - 1
+    # Main loop which narrows our search range.
+    while left + 1 < right:
+        middle = (left + right) // 2
+        if is_incomplete(array[:middle]):
+            left = middle
+        else:
+            right = middle
+    return right
+
+def search_for_boundary(inputval, test):
+    return binary_search(inputval, lambda x: test(x)[0] == Status.Incomplete)
+
+def repair(inputval, test):
+    assert test('')[0] == Status.Incomplete
+    assert test(inputval)[0] == Status.Incorrect
+    # first do binary search to find the boundary
+    boundary = search_for_boundary(inputval, test)
+    assert test(inputval[:boundary-1])[0] == Status.Incomplete
+    assert test(inputval[:boundary])[0] == Status.Incorrect
+
 
 def main(inputval):
-    fixes = repair(inputval)
+    fixes = repair(inputval, validate_json)
     for fix in fixes:
         print(repr(fix))
 
+main(sys.argv[1])
