@@ -77,7 +77,7 @@ Failure Feedback}
 \newcommand{\ddmax}{\textit{DDMax}\xspace}
 \newcommand{\ddmaxg}{\textit{DDmaxG}\xspace}
 \newcommand{\bsimple}{\textit{bsimple}\xspace}
-\newcommand{\brepair}{\textit{brepair}\xspace}
+\newcommand{\brepair}{\textit{BRepair}\xspace}
 
 \tikzset{inlinenode/.style={draw=white,text=black,fill=light-gray,inner sep=.1em,outer sep=0em}}
 \newcommand{\inlinenode}[1]{\text{\hspace{.1em}\tikz[baseline=(n.base)]{\node[inlinenode] (n) {\strut \hspace*{.3em}#1\hspace*{.3em}};}\hspace{.1em}}}
@@ -231,26 +231,28 @@ pics/numbering/.style args={#1}{code={
 \date{February 2022}
 
 \begin{abstract}
-Data cleansing and data repair are some of the most developer time intensive
-tasks in many fields that aggregate data from multiple resources. In many cases,
-the data may be entered by hand, and while ostensibly conforming to a given
-format, is often unparsable by machines.
+Data cleansing and data repair are time-intensive tasks for developers, especially in fields that aggregate data from multiple resources (e.g., \recheck{x}). Often times,
+input data may conform to a given input format, but can not be parsed by a conforming program, for instance, due to human error or data corruption.
 In such cases, a data engineer has to manually repair the corrupt data such that
-it follows a given format, and hence processable by the next program.
+it follows a given format, and hence processable by the conforming program.
 Such manual repair can be time consuming, and error-prone.
 
-In this work, we show that incorporating light-weight error-feedback to parsers
-is sufficient to repair any corrupt input string with maximal closeness to the
-semantics of input data.
-
-Given a conforming program, and any corrupt input, \brepair provides a set
+In this work, we show that incorporating light-weight error-feedback\todo{what is lightweight error-feedback?} to parsers
+is sufficient to repair any corrupt input data with maximal closeness to the
+semantics of the input data. We propose an approach called \brepair that leverages error-feedback (e.g., data incorrectness and incompleteness) to repair invalid inputs.\todo{We need to clarify the feedback requirement, correctness and incompleteness}
+Given a conforming program\todo{it is not clear, what is a conforming program, a parser or any program conforming to the input format??}, and any invalid input, \brepair provides a set
 of repairs prioritized by the distance of the repair from the original input.
 
 We show that our approach can remove the limitations inherent in \ddmax, the
 previously best known approach, both in terms of what it can repair, as well as
-in terms of the set of repairs offered. In our evaluation of \brepair, we found
-that it can outperform \ddmax in input repair, and can repair all input corruptions
-that were induced.
+in terms of the set of repairs offered. 
+We evaluate \brepair on \recheck{806} real-world and mutated invalid inputs using four well-known input formats, %(and their parsers), 
+namely INI, %(\recheck{X}), 
+TinyC, % (\recheck{X}), 
+SExp, % (\recheck{X}) 
+and cJSON. % (\recheck{X}). 
+In our evaluation of \brepair, we found that it is highly effective and efficient in input repair. It repairs 81\% of invalid inputs within two minutes, and outperforms \ddmax %in input repair 
+by up to \recheck{18\%}. 
 \end{abstract}
 
 % \begin{abstract}
@@ -363,18 +365,20 @@ that were induced.
 
 Data, especially from external, often human sources need to be collected and
 aggregated before information processing algorithms can be run on it to extract
-insights. Unfortunately, not every source may agree on the format specification.
-For example, (1)~there are numerous JSON libraries with slightly different
-definitions of what the JSON format is~\cite{harrand2021behavioral,seriot2016parsing}.
-(2)~there are numerous database systems, each supporting a slightly
-different SQL format~\cite{arvin2018comparison}, (3)~a variety of markdown
+insights. Unfortunately, data sources may disagree on the format specification, e.g., \recheck{due to variances in the implementation of the specification}.
+For example, (1)~JSON libraries implement slightly different
+definitions of the JSON format~\cite{harrand2021behavioral,seriot2016parsing},
+(2)~different database systems support %, each supporting a 
+slightly different SQL format~\cite{arvin2018comparison}, (3)~there are a variety of markdown
 syntaxes with subtle differences~\cite{visnoviz2019comparison}, and (4)~various
-\<C> compilers each supporting a slightly different interpretation of the \<C> language.
-That is, it is often impossible to process an artifact that was generated with
-a different implementation in mind. Another issue is that many such artifacts
+\<C> compilers %each supporting a 
+provide slightly different interpretation of the \<C> language.
+Hence, it is often impossible to process an input artifact that was generated for
+a different implementation. % in mind. 
+Another issue is that many such artifacts
 are created by hand, and the process of manual generation can be error-prone.
 
-Given such artifacts that are \emph{almost} but \emph{not quite} parsable,
+Given such inputs that are \emph{almost} but \emph{not quite} parsable,
 consuming such resources, and aggregating them often involves trying to
 maximally parse them by minimizing parse errors~\cite{kirschner2020debugging}.
 If the parser at hand conforms to a formal specification such as a context-free
@@ -387,9 +391,9 @@ any mutation of the base grammar. Any parse of the input string that employs a
 mutation is penalized, and the parse with minimal mutation is chosen as the
 best parse, and the corresponding mutation the best repair. The limitation of
 this approach is that it assumes the existence of a formal grammar in the first
-place, which completely captures the intended structure.
-However, formats such as markdown~\cite{gruber2004markdown} does not have
-a formal grammar; Documents in languages such as \<C> can contain semantic
+place, which completely captures the intended structure. 
+However, \recheck{formats such as markdown~\cite{gruber2004markdown} does not have
+a formal grammar}\todo{how do you mean? this is not true, there are markdown grammars, ANTLR also has one, Nikolas used some in his Tribble eval too.}; Documents in languages such as \<C> can contain semantic
 information that is not captured in the contex-free grammar, and may not be
 discardable; Some constraints such as number of columns in a \<CSV> file may
 not be captured in a grammar. Finally, even when the base grammar is context-free
@@ -402,7 +406,7 @@ be suboptimal for fixing error corruption.
 %the number of columns may be fixed, or because such a grammar is unavailable
 %(as in the case of markdown)
 
-In circumstances where one can't rely on a base grammar, the only option so far
+In circumstances where one can not rely on a base grammar, the only option so far
 has been \ddmax~\cite{kirschner2020debugging}. The \ddmax works similar to
 delta-debugging~\cite{zeller2002simplifying}, but in reverse. The idea
 is that given a corrupt input which induces a parse error, and a way to
