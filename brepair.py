@@ -6,9 +6,6 @@ import string
 import random
 import enum
 
-# at the boundary, it is always wrong.
-# the incomplete substring is one behind boundary. i.e inputval[:boundary] 
-
 class Status(enum.Enum):
     Complete = 0
     Incomplete = 1
@@ -61,7 +58,7 @@ def binary_search(array, is_incomplete):
             left = middle
         else:
             right = middle
-    return right
+    return right-1
 
 def extend_item(item, is_incomplete, is_incorrect, is_complete):
     inputval, boundary = item 
@@ -79,6 +76,8 @@ def extend_item(item, is_incomplete, is_incorrect, is_complete):
         assert False
     assert False
 
+# at the boundary, it is always wrong.
+# the incomplete substring is one behind boundary. i.e inputval[:boundary] 
 
 def apply_delete(inputval, boundary):
     return inputval[:boundary] + inputval[boundary+1:]
@@ -102,7 +101,7 @@ def repair_and_extend(item, is_incomplete, is_incorrect, is_complete):
     items_i = apply_insert(*item)
     items_m = apply_modify(*item)
 
-    new_items = [item_d] + items_i, items_m
+    new_items = [item_d] + items_i + items_m
     # now extend these.
     e_arr = []
     for i in new_items:
@@ -140,8 +139,8 @@ def repair(inputval, test):
     assert is_incorrect(inputval)
     # first do binary search to find the boundary
     boundary = binary_search(inputval, is_incomplete)
-    assert is_incomplete(inputval[:boundary-1])
-    assert is_incorrect(inputval[:boundary])
+    assert is_incomplete(inputval[:boundary])
+    assert is_incorrect(inputval[:boundary+1])
     return find_fixes(inputval, boundary,
             is_incomplete,
             is_incorrect,
