@@ -809,9 +809,11 @@ input into \<2n> chunks.
 
 As in the case of \ddmin, the unstated assumption here is that if a chunk was
 not responsible for the observed failure, it can be extracted independently of
-other chunks and added to the passing input fragment. This particular
-assumption need not hold when we are dealing with inputs that have a rich
-structure.
+other chunks and added to the passing input fragment without changing the
+semantics. This particular assumption need not hold when we are dealing with
+inputs that have a rich structure. That is, \letterboxed{"1,2,3,4,5"} is very
+different from \letterboxed{12345} even though a significant portion of the raw
+characters from first is preservd in the second.
 
 Of course, if  the input processor conforms to this constraint, \ddmax will
 have no problems maximizing any inputs. However, this can be a rather strong
