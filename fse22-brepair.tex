@@ -858,6 +858,38 @@ input should be considered rather than the size of the entire text. Not doing
 this would cause an invariant fail for inputs such as \letterboxed{\{*"":2\}}.
 
 \subsection{Repair of rich inputs with \brepair}
+One of the strengths of \brepair is that it can effectively handle inputs with
+rich structure. Consider the input to the JSON processor: \letterboxed{\{\"ABCD":[*"1,2,3,4,5,6"]*\}}.
+(For ease of explanation, let us consider only deletion as the
+operation used.) Here, the procedure is as follows:
+
+\begin{enumerate}
+\item \brepair starts by executing a binary search for the boudary where the
+input prefix changes from \emph{incomplete} to \emph{incorrect}. This is
+obtained at index 10, providing the incomplete substring
+\letterboxed{\{\"ABCD":[}. %*"1,2,3,4,5,6"]*\}}.
+\item \brepair then appends the next character \letterboxed{*} to the input,
+resulting in \letterboxed{\{\"ABCD":[*} %"1,2,3,4,5,6"]*\}}.
+and observes the result. In this case, the JSON processor returns
+\emph{incorrect}.
+\item Hence, the newly added character is discarded, and the character at the
+next index is appeneded, resulting in
+\letterboxed{\{\"ABCD":["}. %1,2,3,4,5,6"]*\}}.
+This results in JSON processor responding \emph{incomplete}.
+\item \brepair now appends the character in the next index, resulting in
+\letterboxed{\{\"ABCD":[1"} which again results in \emph{incomplete} from JSON
+processor.
+\item Proceeding in this fashion the input reaches \\
+\letterboxed{\{\"ABCD":["1,2,3,4,5,6"]*} %\}}.
+at which point, we again have the response \emph{incorrect} from the JSON
+processor. Hence, we discard this character, and try the next character,
+resulting in
+\letterboxed{\{\"ABCD":["1,2,3,4,5,6"]\}}.
+\item The JSON processor responds with \emph{complete}.
+\end{enumerate}
+This completes the repair of the given input.
+
+That is, \brepair has no problem with rich inputs containing multiple errors.
 
 \section{Input Synthesis}
 \label{sec:input-synthesis}
