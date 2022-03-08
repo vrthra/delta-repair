@@ -5,15 +5,13 @@ import sys
 import string
 import random
 import enum
+
 class Status(enum.Enum):
     Complete = 0
     Incomplete = 1
     Incorrect = -1
 
-def new_char(seen): return random.choice([i for i in string.printable if i not in seen])
-
 def logit(v): return
-
 
 def validate_json(input_str):
     try:
@@ -62,25 +60,7 @@ def binary_search(array, is_incomplete):
             right = middle
     return right
 
-def generate(prev_str=''):
-    seen = set()
-    while True:
-        char = new_char(seen)
-        curr_str = prev_str + char
-        rv, _n, _at = validate_json(curr_str)
-        if rv == Status.Complete:
-            return curr_str
-        elif rv == Status.Incomplete:
-            seen.clear()
-            prev_str = curr_str
-        elif rv == Status.Incorrect:
-            seen.add(char)
-        else:
-            raise Exception(rv)
-    return None
-
-
-def extend_item(item, is_incomplete, is_incomplete, is_complete):
+def extend_item(item, is_incomplete, is_incorrect, is_complete):
     inputval, boundary = item 
     new_val = 0
     while True:
@@ -129,7 +109,7 @@ def repair_and_extend(item, is_incomplete, is_incorrect, is_complete):
 
 Threads = []
 
-def find_fixes(inputval, boundary, is_incomplete, is_incomplete, is_complete):
+def find_fixes(inputval, boundary, is_incomplete, is_incorrect, is_complete):
     global Threads
     # First start with zero edit distance
     # priority, item where item is an array of elements 
