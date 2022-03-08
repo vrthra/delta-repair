@@ -358,6 +358,7 @@ in terms of the set of repairs offered.
 \maketitle
 
 \section{Introduction}
+\label{sec:intro}
 
 Data, especially from external, often human sources need to be collected and
 aggregated before information processing algorithms can be run on it to extract
@@ -565,10 +566,10 @@ pass the parser.
 
 This paper makes the following technical contributions:
 \begin{itemize}
-	\item \textbf{}
-	\item \textbf{}
-	\item \textbf{}
-	\item \textbf{}	
+	\item \textbf{Repairing Rich Input Structures:} \todo{add bug fixes here too . reference to \autoref{sec:rich-input-structures}.} \recheck{We identify one of the major limitations to \ddmax -- the limitation due to rich structure, which can be fixed only by requiring additional constraints, and We identify one of the major limitations to \ddmax -- the limitation due to rich structure, which can be fixed only by requiring additional constraints.}
+	\item \textbf{Input Synthesis:} \todo{discuss the repair to subset vs. insertion, refer to \autoref{sec:input-synthesis}}. 
+	\item \textbf{Lightweight Failure Feedback:} We propose \brepair which does not have these limitations. \todo{refer to \autoref{sec:brepair}}
+%	\item \textbf{}	
 %  \item We identify one of the major limitations to \ddmax -- the limitation due to rich struture, which can be fixed only by requiring additional constraints.
 %  \item We provide two bug fixes to \ddmax.
 %  \item We propose \brepair which does not have these limitations.
@@ -577,9 +578,10 @@ This paper makes the following technical contributions:
 The rest of this paper is sturctured as follows:\todo{describe sections/order}
 
 
-\section{Motivation} %Limitations of \ddmax}
-\label{motivation}
+\section{Rich Input Structures} %Limitations of \ddmax}
+\label{sec:rich-input-structures}
 
+\todo{discuss first (two) examples}
 
 \begin{figure*}[t]
 \begin{boxedminipage}{\textwidth}
@@ -729,6 +731,16 @@ effectively.
 \caption{Failing input repaired with DDMax}
 \label{fig:bad-json-input-ddmax}
 \end{figure}
+
+
+\subsection{Other Issues with \ddmax}
+\todo{discuss the bug fixes, base case and additional constraints here }
+
+
+\section{Input Synthesis}
+\label{sec:input-synthesis}
+
+\todo{discuss importance of insertions and limitations of repair to subsets}
 
 \subsection{Limited Options for Repair}
 The second major limitation of
@@ -889,7 +901,8 @@ as the solution.
 % \label{fig:bad-json-input-repaired-asterisks}
 % \end{figure}
 
-\section{Overview}
+\section{\approach}
+\label{sec:brepair}
 The \brepair algorithm works as follows.
 We start with the assumption that the parser correctly signals
 \emph{incomplete} for incomplete inputs, \emph{incorrect} for other invalid
@@ -950,7 +963,7 @@ required, the process can be restarted with the threads in the next rank.
 \end{itemize}
 
 
-\section{Approach}
+%\section{Approach}
 
 %
 %\hline
@@ -1214,6 +1227,7 @@ In this work, we compare the performance of our approach to the state-of-the-art
 \end{table}
 
 \section{Experimental Results}
+\label{sec:results}
 
 In this section, we 
 discuss the %findings %
@@ -1690,9 +1704,10 @@ are in \textbf{bold}, second-best time performance is in \textit{italics}}
 
 
 
-\section{Discussion}
+%\section{Discussion}
 
 \section{Threats to Validity}
+\label{sec:threats}
 
 \todo{discuss threats to validity .... discuss issues like input synthesis (insertion), requires rich feedback: incorrect and incomplete input fragment}
 Our approach (\approach) and empirical evaluations may be limited by the following validity threats:
@@ -1765,6 +1780,8 @@ In contrast to \bfr, these approaches aim to guard data from new errors by detec
 %\end{description}
 
 \section{Conclusion}
+\label{sec:conclusion}
+
 \todo{discuss potential future works}
 
 \revise{We provide our tool, data and experimental results for easy replication, scrutiny and reuse:
