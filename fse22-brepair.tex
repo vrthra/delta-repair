@@ -1088,14 +1088,14 @@ any index.
 def apply_delete(item):
     inp = item.inputstr[:item.boundary] +
           item.inputstr[item.boundary + 1:]
-    return Repair(inp, item.boundary)
+    return (inp, item.boundary)
 
 def apply_insert(item):
     new_items = []
     for i in string.printable:
         v = item.inputstr[:item.boundary] +
             i + item.inputstr[item.boundary:]
-        new_items.append(Repair(v, item.boundary))
+        new_items.append((v, item.boundary))
     return new_items
 
 def apply_modify(item):
@@ -1103,7 +1103,7 @@ def apply_modify(item):
     for i in string.printable:
         v = item.inputstr[:item.boundary] +
             i + item.inputstr[item.boundary + 1:]
-        new_items.append(Repair(v, item.boundary))
+        new_items.append((v, item.boundary))
     return new_items
 \end{lstlisting}
 
@@ -1112,7 +1112,7 @@ def apply_modify(item):
 \begin{lstlisting}[caption=\brepair initial search,label={lst:brepair}]
 def repair(inp):
     boundary = binary_search(inp)
-    threads = {0: [Repair(inp, boundary)]}
+    threads = {0: [(inp, boundary)]}
     return find_fixes(threads)
 \end{lstlisting}
 This function does a binary search (\Cref{lst:bsearch}) on the
@@ -1123,7 +1123,7 @@ def binary_search(array):
     left, right = 0, len(array) - 1
     while left + 1 < right:
         middle = (left + right) // 2
-        if Repair(array, middle).is_incomplete():
+        if is_incomplete((array, middle)):
             left = middle
         else:
             right = middle
@@ -1142,7 +1142,7 @@ def find_fixes(threads):
         for item in sample(cur_items):
             for i in repair_and_extend(item):
                 threads[edit_dist + 1].append(i)
-                if i.is_complete(): comp.append(i)
+                if is_complete(i): comp.append(i)
         if comp: return comp
         edit_dist += 1
 \end{lstlisting}
@@ -1166,15 +1166,15 @@ def extend_item(item):
     nv = 0
     while True:
         if (item.boundary + nv) > len(item.inputstr):
-            return Repair(item.inputstr, boundary + nv - 1)
-        s = Repair(item.inputstr, item.boundary + nv)
-        if s.is_incomplete():
+            return (item.inputstr, boundary + nv - 1)
+        s = (item.inputstr, item.boundary + nv)
+        if is_incomplete(s):
             nv += 1
             continue
-        if s.is_incorrect():
-            return Repair(item.inputstr, boundary + nv - 1)
-        if s.is_complete():
-            return Repair(item.inputstr, boundary + nv)
+        if is_incorrect(s):
+            return (item.inputstr, boundary + nv - 1)
+        if is_complete(s):
+            return (item.inputstr, boundary + nv)
 \end{lstlisting}
 If this succeds, the parse boundary after the repair
 would be larger than the old parse boundar. Hence, if the parse boundary has
