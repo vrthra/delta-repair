@@ -5,6 +5,7 @@ import sys
 import string
 import random
 import enum
+from pathlib import Path
 
 CLEAR_QUEUE_AFTER_EVERY_LOCATION: bool = False
 """If True, clear the priority queue after every repaired fault location"""
@@ -17,11 +18,11 @@ USE_CHARACTER_LIST: bool = False
 
 if USE_CHARACTER_LIST:
     CHARACTERS: list[str] = [
-    '0',  # Digits
-    '=', '\\', '/', '\t', ';', ':', '.', ',', '^', '~', '`', '\'', '"', ')', '(', '[', ']', '{', '}', '\n', ' ',  # Special characters
-    'A',  # Upper-Case characters
-    'a',  # Lowercase characters. Add all remaining lowercase characters here to test the whole character class
-    'n', 'u', 'l', 't', 'r', 'e', 'f', 'a', 's',  # JSON keyword characters (null, true, false
+        '0',  # Digits
+        '=', '\\', '/', '\t', ';', ':', '.', ',', '^', '~', '`', '\'', '"', ')', '(', '[', ']', '{', '}', '\n', ' ',  # Special characters
+        'A',  # Upper-Case characters
+        'a',  # Lowercase characters. Add all remaining lowercase characters here to test the whole character class
+        'n', 'u', 'l', 't', 'r', 'e', 'f', 'a', 's',  # JSON keyword characters (null, true, false
     ]
 else:
     CHARACTERS = string.printable
@@ -101,7 +102,7 @@ class Repair:
         new_items = []
         for i in CHARACTERS:
             if SKIP_CONSECUTIVE_WHITESPACES:
-                if i.isspace() :
+                if i.isspace():
                     if self.boundary > 0 and self.inputstr[self.boundary - 1].isspace():
                         continue  # Skip consecutive whitespace
             v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary:]
@@ -252,7 +253,7 @@ def repair(inputval):
     # not a requirement. Extend item will do as well.
     boundary = binary_search(inputval)
     assert Repair(inputval, boundary).is_incomplete()
-    #assert Repair(inputval, boundary + 1).is_incorrect()
+    # assert Repair(inputval, boundary + 1).is_incorrect()
     return find_fixes(inputval, boundary)
 
 
@@ -294,7 +295,7 @@ def _validate_json(input_str):
                 logit('X', repr(input_str))
                 remaining = input_str[n:]
                 if remaining in ['t', 'tr', 'tru', 'f', 'fa', 'fal', 'fals',
-                        'n', 'nu', 'nul']:
+                                 'n', 'nu', 'nul']:
                     return Status.Incomplete, n, input_str[n]
                 return Status.Incorrect, n, input_str[n]
         elif msg.startswith('Unterminated'):
@@ -337,4 +338,12 @@ def main(inputval):
 # '[**1]'
 # '[*1*]'
 # '{ "name": "Dave" "age": 42 }'
-main(sys.argv[1])
+try:
+    f = Path(sys.argv[1])
+    if not f.is_file():
+        raise Exception()
+    with f.open("r") as ff:
+        inp: str = ff.read()
+except:
+    inp: str = sys.argv[1]
+main(inp)
