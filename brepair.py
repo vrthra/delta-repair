@@ -6,8 +6,14 @@ import string
 import random
 import enum
 
-CLEAR_QUEUE_AFTER_EVERY_LOCATION: bool = True
+CLEAR_QUEUE_AFTER_EVERY_LOCATION: bool = False
 """If True, clear the priority queue after every repaired fault location"""
+
+SKIP_CONSECUTIVE_WHITESPACES: bool = False
+"""If True, allow inserting multiple consecutive whitespaces"""
+
+USE_CHARACTER_LIST: bool = False
+"""If true, only attempt insertions from the given character list"""
 
 CHARACTERS: list[str] = [
     '0',  # Digits
@@ -19,12 +25,6 @@ CHARACTERS: list[str] = [
 """Characters to be inserted in insertion operations.
 For bRepair, those classes are defined in https://projects.cispa.saarland/lukas.kirschner/bfuzzerrepairer/-/blob/main/project/src/main/java/bfuzzerrepairer/program/repairer/brepair/CharacterClass.java
 """
-
-USE_CHARACTER_LIST: bool = True
-"""If true, only attempt insertions from the given character list"""
-
-ALLOW_MULTIPLE_CONSECUTIVE_WHITESPACES: bool = False
-"""If True, allow inserting multiple consecutive whitespaces"""
 
 
 class Status(enum.Enum):
@@ -92,13 +92,14 @@ class Repair:
     def apply_insert(self):
         new_items = []
         if USE_CHARACTER_LIST:
-            possible_chars = string.printable
-        else:
             possible_chars = CHARACTERS
+        else:
+            possible_chars = string.printable
         for i in possible_chars:
-            if i.isspace() and not ALLOW_MULTIPLE_CONSECUTIVE_WHITESPACES:
-                if self.boundary > 0 and self.inputstr[self.boundary - 1].isspace():
-                    continue  # Skip consecutive whitespace
+            if SKIP_CONSECUTIVE_WHITESPACES:
+                if i.isspace() :
+                    if self.boundary > 0 and self.inputstr[self.boundary - 1].isspace():
+                        continue  # Skip consecutive whitespace
             v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary:]
             new_items.append(Repair(v, self.boundary,
                                     mask='_I%d' % self.boundary
