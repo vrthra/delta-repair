@@ -93,7 +93,8 @@ class Repair:
                         continue  # Skip consecutive whitespace
             v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary:]
             new_items.append(Repair(v, self.boundary,
-                                    mask='_I%d%s' % (self.boundary, i)
+                                    # mask='_I%d%s' % (self.boundary, i)
+                                    mask='_I%d' % self.boundary
                                     ))
         return new_items
 
