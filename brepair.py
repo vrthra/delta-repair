@@ -239,7 +239,7 @@ def repair(inputval):
     # not a requirement. Extend item will do as well.
     boundary = binary_search(inputval)
     assert Repair(inputval, boundary).is_incomplete()
-    # assert Repair(inputval, boundary + 1).is_incorrect()
+    assert boundary + 1 >= len(inputval) or Repair(inputval, boundary + 1).is_incorrect()
     return find_fixes(inputval, boundary)
 
 
