@@ -26,6 +26,10 @@ CHARACTERS: list[str] = [
 For bRepair, those classes are defined in https://projects.cispa.saarland/lukas.kirschner/bfuzzerrepairer/-/blob/main/project/src/main/java/bfuzzerrepairer/program/repairer/brepair/CharacterClass.java
 """
 
+# the incomplete substring is one behind boundary. i.e inputval[:boundary] 
+
+MAX_NUM_PER_MASK = 1000
+
 
 class Status(enum.Enum):
     Complete = 0
@@ -180,10 +184,6 @@ def binary_search(array):
 
 
 # at the boundary, it is always wrong.
-# the incomplete substring is one behind boundary. i.e inputval[:boundary] 
-
-MAX_NUM_PER_MASK = 1000
-
 
 # We need to sample from inserts and modifiers to prevent them growing
 # out of bounds. The idea is to collect all delete,insert,modification indexes
