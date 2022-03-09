@@ -98,15 +98,6 @@ class Repair:
                                     ))
         return new_items
 
-    def apply_modify(self):
-        new_items = []
-        for i in string.printable:
-            v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary + 1:]
-            new_items.append(Repair(v, self.boundary,
-                                    mask='%s_M%d' % (self.mask, self.boundary)
-                                    ))
-        return new_items
-
     def extend_item(self):
         assert self._status is None
         assert not self.extended
@@ -142,12 +133,8 @@ class Repair:
         e_arr.append(ie)
         # return e_arr
 
-        # for insert and modify, only apepnd if it resulted in a boundary
-        # increase
-        items_i = self.apply_insert()
-        items_m = [] #self.apply_modify()
-
-        new_items = items_i + items_m
+        # for insert only apepnd if it resulted in a boundary increase
+        new_items = self.apply_insert()
         # now extend these.
         for i in new_items:
             old_boundary = i.boundary
