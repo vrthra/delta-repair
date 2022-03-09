@@ -1083,19 +1083,21 @@ to more effective repairs.
 The main strength of \brepair is its repertoire of repairs (\Cref{lst:repairs}).
 The input string can be modified by \emph{deleting} any character,
 \emph{inserting} a character at any index, or \emph{modifying} a character at
-any index.
+any index. Note that in the below listings, \<Repair> is an tuple that allows
+accessing its first argument with \<inputstr> and its second argument with
+\<boundary>
 \begin{lstlisting}[caption=\brepair repairs,label={lst:repairs}]
 def apply_delete(item):
     inp = item.inputstr[:item.boundary] +
           item.inputstr[item.boundary + 1:]
-    return (inp, item.boundary)
+    return Repair(inp, item.boundary)
 
 def apply_insert(item):
     new_items = []
     for i in string.printable:
         v = item.inputstr[:item.boundary] +
             i + item.inputstr[item.boundary:]
-        new_items.append((v, item.boundary))
+        new_items.append(Repair(v, item.boundary))
     return new_items
 
 def apply_modify(item):
@@ -1103,7 +1105,7 @@ def apply_modify(item):
     for i in string.printable:
         v = item.inputstr[:item.boundary] +
             i + item.inputstr[item.boundary + 1:]
-        new_items.append((v, item.boundary))
+        new_items.append(Repair(v, item.boundary))
     return new_items
 \end{lstlisting}
 
@@ -1112,7 +1114,7 @@ def apply_modify(item):
 \begin{lstlisting}[caption=\brepair initial search,label={lst:brepair}]
 def repair(inp):
     boundary = binary_search(inp)
-    threads = {0: [(inp, boundary)]}
+    threads = {0: [Repair(inp, boundary)]}
     return find_fixes(threads)
 \end{lstlisting}
 This function does a binary search (\Cref{lst:bsearch}) on the
@@ -1123,7 +1125,7 @@ def binary_search(array):
     left, right = 0, len(array) - 1
     while left + 1 < right:
         middle = (left + right) // 2
-        if is_incomplete((array, middle)):
+        if is_incomplete(Repair(array, middle)):
             left = middle
         else:
             right = middle
@@ -1166,15 +1168,15 @@ def extend_item(item):
     nv = 0
     while True:
         if (item.boundary + nv) > len(item.inputstr):
-            return (item.inputstr, boundary + nv - 1)
-        s = (item.inputstr, item.boundary + nv)
+            return Repair(item.inputstr, boundary + nv - 1)
+        s = Repair(item.inputstr, item.boundary + nv)
         if is_incomplete(s):
             nv += 1
             continue
         if is_incorrect(s):
-            return (item.inputstr, boundary + nv - 1)
+            return Repair(item.inputstr, boundary + nv - 1)
         if is_complete(s):
-            return (item.inputstr, boundary + nv)
+            return Repair(item.inputstr, boundary + nv)
 \end{lstlisting}
 If this succeds, the parse boundary after the repair
 would be larger than the old parse boundar. Hence, if the parse boundary has
@@ -1182,16 +1184,8 @@ increased (\Cref{lst:repairandextend}). If the boundary has increased, the
 repair is saved. If not, the repair is discarded.
 \begin{lstlisting}[caption=Repair and extend,label={lst:repairandextend}]
 def repair_and_extend(item):
-    e_arr = []
-    item_d = apply_delete(item)
-    ie = extend_item(item_d)
-    e_arr.append(ie)
-    
-    items_i = apply_insert(item)
-    items_m = apply_modify(item)
-    
-    new_items = items_i + items_m
-    for i in new_items:
+    e_arr = [extend_item(apply_delete(item))]
+    for i in apply_insert(item) + apply_modify(item):
         old_boundary = i.boundary
         ie = extend_item(i)
         if ie.boundary > old_boundary:
