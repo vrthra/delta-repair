@@ -1129,7 +1129,6 @@ def binary_search(array):
             right = middle
     return right - 1
 \end{lstlisting}
-
 The \<boundary> value is then used to start the first repair
 thread, which starts at edit distance \<0>. The edit distance specifies the
 amount of corrections that were applied on a thread. This thread is then passed
@@ -1149,7 +1148,7 @@ def find_fixes(threads):
 \end{lstlisting}
 The function \<find\_fixes()> takes in a set of threads, 
 extracts threads corresponding to the least edit distance, and applies a set of
-repairs on it which are defined in \Cref{lst:repair}. If the repair succeeds,
+repairs on it which are defined in \Cref{lst:repairs}. If the repair succeeds,
 the string can use more characters from the pending suffix resulting in a
 larger valid prefix string, but with a larger edit distance. This procedure is
 repeated until the prefix string is marked \emph{complete} by the input
@@ -1197,6 +1196,9 @@ def repair_and_extend(item):
     	e_arr.append(ie)
     return e_arr
 \end{lstlisting}
+The output frm \<find\_fixes()> (\Cref{lst:findfixes}) is a set of repairs with
+the least edit distance from the passed input string.
+
 \begin{comment}
 The \brepair algorithm works as follows.
 We start with the assumption that the parser correctly signals
