@@ -144,7 +144,7 @@ class Repair:
         # for insert and modify, only apepnd if it resulted in a boundary
         # increase
         items_i = self.apply_insert()
-        items_m = self.apply_modify()
+        items_m = [] #self.apply_modify()
 
         new_items = items_i + items_m
         # now extend these.
@@ -259,6 +259,21 @@ def validate_json(input_str):
     TESTED[input_str] = _validate_json(input_str)
     return TESTED[input_str]
 
+# check if jstr fits in this context.
+def it_fits(input_str):
+    try:
+        json.loads(input_str)
+        logit('*', repr(input_str))
+        return True
+    except Exception as e:
+        msg = str(e)
+        if msg.startswith('Expecting'):
+            # Expecting value: line 1 column 4 (char 3)
+            n = int(msg.rstrip(')').split()[-1])
+            if n >= len(input_str):
+                logit('+', repr(input_str))
+                return True
+        return False
 
 def _validate_json(input_str):
     try:
@@ -280,9 +295,19 @@ def _validate_json(input_str):
             else:
                 logit('X', repr(input_str))
                 remaining = input_str[n:]
-                if remaining in ['t', 'tr', 'tru', 'f', 'fa', 'fal', 'fals',
-                                 'n', 'nu', 'nul']:
-                    return Status.Incomplete, n, input_str[n]
+                if remaining in ['t', 'tr', 'tru']:
+                    # check if it fits first.
+                    if it_fits(input_str[:n] + 'true'):
+                        return Status.Incomplete, n, input_str[n]
+                    return Status.Incorrect, n, input_str[n]
+                if remaining in ['f', 'fa', 'fal', 'fals']:
+                    if it_fits(input_str[:n] + 'false'):
+                        return Status.Incomplete, n, input_str[n]
+                    return Status.Incorrect, n, input_str[n]
+                if remaining in ['n', 'nu', 'nul']:
+                    if it_fits(input_str[:n] + 'null'):
+                        return Status.Incomplete, n, input_str[n]
+                    return Status.Incorrect, n, input_str[n]
                 return Status.Incorrect, n, input_str[n]
         elif msg.startswith('Unterminated'):
             # Unterminated string starting at: line 1 column 1 (char 0)
@@ -312,7 +337,9 @@ def _validate_json(input_str):
             raise e
 
 
-def main(inputval):
+def main(inputf):
+    with open(inputf) as f:
+        inputval = f.read()
     fixes = repair(inputval)
     for fix in fixes:
         print('FIXED', repr(str(fix)))
