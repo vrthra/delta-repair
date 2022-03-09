@@ -165,6 +165,8 @@ class Repair:
 
 
 def binary_search(array):
+    if Repair(array, len(array)).is_incomplete():
+        return len(array)
     left, right = 0, len(array) - 1
     # Main loop which narrows our search range.
     while left + 1 < right:
@@ -244,12 +246,12 @@ def find_fixes(inputval, boundary):
 
 def repair(inputval):
     assert Repair(inputval, 0).is_incomplete()
-    assert Repair(inputval, len(inputval)).is_incorrect()
+    assert Repair(inputval, len(inputval)).status() in [Status.Incomplete, Status.Incorrect]
     # first do binary search to find the boundary
     # not a requirement. Extend item will do as well.
     boundary = binary_search(inputval)
     assert Repair(inputval, boundary).is_incomplete()
-    assert Repair(inputval, boundary + 1).is_incorrect()
+    #assert Repair(inputval, boundary + 1).is_incorrect()
     return find_fixes(inputval, boundary)
 
 
@@ -289,6 +291,10 @@ def _validate_json(input_str):
                 return Status.Incomplete, n, ''
             else:
                 logit('X', repr(input_str))
+                remaining = input_str[n:]
+                if remaining in ['t', 'tr', 'tru', 'f', 'fa', 'fal', 'fals',
+                        'n', 'nu', 'nul']:
+                    return Status.Incomplete, n, input_str[n]
                 return Status.Incorrect, n, input_str[n]
         elif msg.startswith('Unterminated'):
             # Unterminated string starting at: line 1 column 1 (char 0)
