@@ -15,13 +15,17 @@ SKIP_CONSECUTIVE_WHITESPACES: bool = False
 USE_CHARACTER_LIST: bool = False
 """If true, only attempt insertions from the given character list"""
 
-CHARACTERS: list[str] = [
+if USE_CHARACTER_LIST:
+    CHARACTERS: list[str] = [
     '0',  # Digits
     '=', '\\', '/', '\t', ';', ':', '.', ',', '^', '~', '`', '\'', '"', ')', '(', '[', ']', '{', '}', '\n', ' ',  # Special characters
     'A',  # Upper-Case characters
     'a',  # Lowercase characters. Add all remaining lowercase characters here to test the whole character class
     'n', 'u', 'l', 't', 'r', 'e', 'f', 'a', 's',  # JSON keyword characters (null, true, false
-]
+    ]
+else:
+    CHARACTERS = string.printable
+
 """Characters to be inserted in insertion operations.
 For bRepair, those classes are defined in https://projects.cispa.saarland/lukas.kirschner/bfuzzerrepairer/-/blob/main/project/src/main/java/bfuzzerrepairer/program/repairer/brepair/CharacterClass.java
 """
@@ -95,11 +99,7 @@ class Repair:
 
     def apply_insert(self):
         new_items = []
-        if USE_CHARACTER_LIST:
-            possible_chars = CHARACTERS
-        else:
-            possible_chars = string.printable
-        for i in possible_chars:
+        for i in CHARACTERS:
             if SKIP_CONSECUTIVE_WHITESPACES:
                 if i.isspace() :
                     if self.boundary > 0 and self.inputstr[self.boundary - 1].isspace():
