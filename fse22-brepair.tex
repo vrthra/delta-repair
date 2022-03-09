@@ -1081,9 +1081,9 @@ to more effective repairs.
 \section{\approach}
 \label{sec:brepair}
 The main strength of \brepair is its repertoire of repairs (\Cref{lst:repairs}).
-The input string can be modified by \emph{deleting} any character,
-\emph{inserting} a character at any index, or \emph{modifying} a character at
-any index. Note that in the below listings, \<Repair> is an tuple that allows
+The input string can be modified by \emph{deleting} any character, or
+\emph{inserting} a character at any index.
+Note that in the below listings, \<Repair> is an tuple that allows
 accessing its first argument with \<inputstr> and its second argument with
 \<boundary>
 \begin{lstlisting}[caption=\brepair repairs,label={lst:repairs}]
@@ -1097,14 +1097,6 @@ def apply_insert(item):
     for i in string.printable:
         v = item.inputstr[:item.boundary] +
             i + item.inputstr[item.boundary:]
-        new_items.append(Repair(v, item.boundary))
-    return new_items
-
-def apply_modify(item):
-    new_items = []
-    for i in string.printable:
-        v = item.inputstr[:item.boundary] +
-            i + item.inputstr[item.boundary + 1:]
         new_items.append(Repair(v, item.boundary))
     return new_items
 \end{lstlisting}
@@ -1218,7 +1210,7 @@ repair is saved. If not, the repair is discarded.
 \begin{lstlisting}[caption=Repair and extend,label={lst:repairandextend}]
 def repair_and_extend(item):
     e_arr = [extend_item(apply_delete(item))]
-    for i in apply_insert(item) + apply_modify(item):
+    for i in apply_insert(item):
         old_boundary = i.boundary
         ie = extend_item(i)
         if ie.boundary > old_boundary:
@@ -1243,9 +1235,7 @@ deletion, and checks whether the deletion changes the valid substring.
 \item \emph{Insertion.} At the same point, \brepair also tries to insert a single character and
 checks whether the insertion changes the valid substring.
 
-\item \emph{Insertion.} At the same point, \brepair also tries to modify a single character and
-checks whether the modification changes the valid substring.
-\item Single character deletion, insertion as well as modification is an edit distance of one.
+\item Single character deletion, as well as insertion is an edit distance of one.
 
 \item If the update results in a change of size of the valid
 substring, the particular changes are stored in a priority queue.
@@ -1268,8 +1258,7 @@ edit, then choose all one edit items). We call each such item a thread.
 \item If the priority queue did not contain any items, we increase the current
 edit distance by one. That is, we delete one character more and see if that
 advances the valid substring. Similarly, we append one more character to any
-thread that already contains one character appended, or modify a character in
-place.
+thread that already contains one character appended.
 
 \item Given that there are 128 printable ASCII characters, each insertion can increase
 the thread count by a multiple of 128. Hence, we limit the insertion thread
