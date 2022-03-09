@@ -1161,10 +1161,17 @@ processor.
 
 The sampling procedure tries discard redundant repairs so that the number of
 simultanious threads we have to maintain does not grow unbounded. While doing
-that, it tries to ensure that no non-redundant repairs are discarded. For
+that, it tries to ensure that no unique repairs are discarded. For
 example, given a JSON fragment \<[1,2> a repair of \<[1,23>, \<[1,24>
-and \<[1,25> are redunant but \<[1,2,> is not because the last repair
-represents a change in semantics for the parser.
+and \<[1,25> are redunant but \<[1,2,> is unique because the last repair
+represents a change in semantics for the parser. The key insight here is to
+look at the \emph{extension} of a given string to classify whether it is unique
+or not. That is, given a string \<[1,2"x"]>, after repair of \<[1,23>, the next
+extension of the string is likely to be a comma or a digit insertin. However,
+after \<[1,2,> the pending suffix can be used to extend the string resulting in
+\<[1,2,"x"]>. Hence, we use the repairs conducted on a string, the
+length of the extended string, as well as the last character added as the
+uniqueness indicator.
 
 \begin{lstlisting}[caption=Sampling,label={lst:sampling}]
 def sample(items):
