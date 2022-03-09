@@ -82,7 +82,7 @@ class Repair:
     def apply_delete(self):
         return Repair(self.inputstr[:self.boundary] +
                       self.inputstr[self.boundary + 1:], self.boundary,
-                      mask='_D%d' % self.boundary)
+                      mask='%s_D%d' % (self.mask, self.boundary))
 
     def apply_insert(self):
         new_items = []
@@ -94,7 +94,7 @@ class Repair:
             v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary:]
             new_items.append(Repair(v, self.boundary,
                                     # mask='_I%d%s' % (self.boundary, i)
-                                    mask='_I%d' % self.boundary
+                                    mask='%s_I%d' % (self.mask, self.boundary)
                                     ))
         return new_items
 
@@ -103,7 +103,7 @@ class Repair:
         for i in string.printable:
             v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary + 1:]
             new_items.append(Repair(v, self.boundary,
-                                    mask='_M%d' % self.boundary
+                                    mask='%s_M%d' % (self.mask, self.boundary)
                                     ))
         return new_items
 
