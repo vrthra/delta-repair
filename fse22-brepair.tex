@@ -12,7 +12,8 @@ Failure Feedback}
 \usepackage{listings}
 \lstset{ % General setup for the package
     language=Python,
-    basicstyle=\small\sffamily,
+    %basicstyle=\small\sffamily,
+    basicstyle=\footnotesize,
     numbers=left,
     numberstyle=\tiny,
     frame=none,
@@ -1079,84 +1080,96 @@ to more effective repairs.
 
 \section{\approach}
 \label{sec:brepair}
-\begin{lstlisting}
+\Cref{lst:brepair} shows how \brepair is invoked. The input string is passed to
+\<repair()>. This function does a binary search on the argument string looking
+for the parse boundary where the return value chages from \emph{incomplete} to
+\emph{incorrect}. The \<boundary> value is then used to start the first repair
+thread, which starts at edit distance \<0>. The edit distance spacifies the
+amount of corrections that were applied on a thread.
+\begin{lstlisting}[caption=\brepair initial search,label={lst:brepair}]
 def repair(inp):
     boundary = binary_search(inp)
-    thread = {0: [Repair(inp, boundary)]}
-    return find_fixes(thread)
+    threads = {0: [Repair(inp, boundary)]}
+    return find_fixes(threads)
 
-def find_fixes(thread):
+def find_fixes(threads):
     edit_dist = 0
     while True:
-        cur_items = thread[edit_dist]
+        cur_items = threads[edit_dist]
         comp = []
         for item in sample_items_by_mask(cur_items):
-            for i in item.repair_and_extend():
-                thread[edit_dist + 1].append(i)
+            for i in repair_and_extend(item):
+                threads[edit_dist + 1].append(i)
                 if i.is_complete(): comp.append(i)
         if comp: return comp
         edit_dist += 1
 \end{lstlisting}
-\begin{lstlisting}
-class Repair:
-    slots: inputstr, boundary:
-    def apply_delete(self):
-        return Repair(self.inputstr[:self.boundary] +
-                      self.inputstr[self.boundary + 1:],
-		      self.boundary)
+The function \<find\_fixes()> takes in a set of threads, 
+extracts threads corresponding to the least edit distance, and applies a set of
+repairs on it which are defined in \Cref{lst:repair}.
+\begin{lstlisting}[caption=\brepair repairs,label={lst:repair}]
+def apply_delete(item):
+    return Repair(item.inputstr[:item.boundary] +
+                  item.inputstr[item.boundary + 1:],
+    	      item.boundary)
 
-    def apply_insert(self):
-        new_items = []
-        for i in string.printable:
-            v = self.inputstr[:self.boundary] +
-	    i + self.inputstr[self.boundary:]
-            new_items.append(Repair(v, self.boundary))
-        return new_items
+def apply_insert(item):
+    new_items = []
+    for i in string.printable:
+        v = item.inputstr[:item.boundary] +
+        i + item.inputstr[item.boundary:]
+        new_items.append(Repair(v, item.boundary))
+    return new_items
 
-    def apply_modify(self):
-        new_items = []
-        for i in string.printable:
-            v = self.inputstr[:self.boundary] +
-	    i + self.inputstr[self.boundary + 1:]
-            new_items.append(Repair(v, self.boundary))
-        return new_items
+def apply_modify(item):
+    new_items = []
+    for i in string.printable:
+        v = item.inputstr[:item.boundary] +
+        i + item.inputstr[item.boundary + 1:]
+        new_items.append(Repair(v, item.boundary))
+    return new_items
 \end{lstlisting}
-
-\begin{lstlisting}
-class Repair:
-    def extend_item(self):
-        nv = 0
-        while True:
-            if (self.boundary + nv) > len(self.inputstr):
-                self.boundary = self.boundary + nv - 1
-                return self
-            s = Repair(self.inputstr, self.boundary + nv)
-            if s.is_incomplete():
-                nv += 1
-                continue
-            if s.is_incorrect():
-                self.boundary = self.boundary + nv - 1
-                return self
-            if s.is_complete():
-                self.boundary = self.boundary + nv
-                return self
-
-    def repair_and_extend(self):
-        e_arr = []
-        item_d = self.apply_delete()
-        ie = item_d.extend_item()
-        e_arr.append(ie)
-
-        items_i = self.apply_insert()
-        items_m = self.apply_modify()
-
-        new_items = items_i + items_m
-        for i in new_items:
-            old_boundary = i.boundary
-            ie = i.extend_item()
-            if ie.boundary > old_boundary:
-                e_arr.append(ie)
-        return e_arr
+After each repair, the new string is checked (\Cref{lst:extenditem}) to see if
+the string results in \emph{incomplete} rather than \emph{incorrect}. If the
+string results in \emph{incomplete}, a new parse boundary is found by
+repeatedly extending the string with a pending character from the remaining
+suffix in the input string.
+\begin{lstlisting}[caption=Extend the boundary,label={lst:extenditem}]
+def extend_item(item):
+    nv = 0
+    while True:
+        if (item.boundary + nv) > len(item.inputstr):
+            return Repair(item.inputstr, boundary + nv - 1)
+        s = Repair(item.inputstr, item.boundary + nv)
+        if s.is_incomplete():
+            nv += 1
+            continue
+        if s.is_incorrect():
+            return Repair(item.inputstr, boundary + nv - 1)
+        if s.is_complete():
+            return Repair(item.inputstr, boundary + nv)
+\end{lstlisting}
+If this succeds, the parse boundary after the repair
+would be larger than the old parse boundar. Hence, if the parse boundary has
+increased (\Cref{lst:repairandextend}). If the boundary has increased, the
+repair is saved. If not, the repair is discarded.
+\begin{lstlisting}[caption=Repair and extend,label={lst:repairandextend}]
+def repair_and_extend(item):
+    e_arr = []
+    item_d = apply_delete(item)
+    ie = extend_item(item_d)
+    e_arr.append(ie)
+    
+    items_i = apply_insert(item)
+    items_m = apply_modify(item)
+    
+    new_items = items_i + items_m
+    for i in new_items:
+        old_boundary = i.boundary
+        ie = extend_item(i)
+        if ie.boundary > old_boundary:
+    	e_arr.append(ie)
+    return e_arr
 \end{lstlisting}
 
 The \brepair algorithm works as follows.
