@@ -337,9 +337,7 @@ def _validate_json(input_str):
             raise e
 
 
-def main(inputf):
-    with open(inputf) as f:
-        inputval = f.read()
+def main(inputval):
     fixes = repair(inputval)
     for fix in fixes:
         print('FIXED', repr(str(fix)))
