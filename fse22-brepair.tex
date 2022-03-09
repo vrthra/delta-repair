@@ -623,7 +623,7 @@ This paper makes the following technical contributions:
 \brepair technique can handle inputs with rich structure well.
 \item \textbf{Input Synthesis.} \ddmax is limited to \emph{deletion} of input
 fragments, which makes it unsuitable for repairing errors due to omission and
-corruption. Our \brepair technique expands the repertoir to \emph{deletion},
+corruption. Our \brepair technique expands the repertoire to \emph{deletion},
 \emph{insertion}, and \emph{modification}.
 %\todo{discuss the repair to subset vs. insertion, refer to \autoref{sec:input-synthesis}}. 
 \item \textbf{Lightweight Failure Feedback.} \brepair is the first technique
@@ -1080,18 +1080,61 @@ to more effective repairs.
 
 \section{\approach}
 \label{sec:brepair}
+The main strength of \brepair is its repertoire of repairs (\Cref{lst:repairs}).
+The input string can be modified by \emph{deleting} any character,
+\emph{inserting} a character at any index, or \emph{modifying} a character at
+any index.
+\begin{lstlisting}[caption=\brepair repairs,label={lst:repairs}]
+def apply_delete(item):
+    inp = item.inputstr[:item.boundary] +
+          item.inputstr[item.boundary + 1:]
+    return Repair(inp, item.boundary)
+
+def apply_insert(item):
+    new_items = []
+    for i in string.printable:
+        v = item.inputstr[:item.boundary] +
+            i + item.inputstr[item.boundary:]
+        new_items.append(Repair(v, item.boundary))
+    return new_items
+
+def apply_modify(item):
+    new_items = []
+    for i in string.printable:
+        v = item.inputstr[:item.boundary] +
+            i + item.inputstr[item.boundary + 1:]
+        new_items.append(Repair(v, item.boundary))
+    return new_items
+\end{lstlisting}
+
 \Cref{lst:brepair} shows how \brepair is invoked. The input string is passed to
-\<repair()>. This function does a binary search on the argument string looking
-for the parse boundary where the return value chages from \emph{incomplete} to
-\emph{incorrect}. The \<boundary> value is then used to start the first repair
-thread, which starts at edit distance \<0>. The edit distance spacifies the
-amount of corrections that were applied on a thread.
+\<repair()>.
 \begin{lstlisting}[caption=\brepair initial search,label={lst:brepair}]
 def repair(inp):
     boundary = binary_search(inp)
     threads = {0: [Repair(inp, boundary)]}
     return find_fixes(threads)
+\end{lstlisting}
+This function does a binary search (\Cref{lst:bsearch}) on the
+argument string looking for the parse boundary where the return value changes
+from \emph{incomplete} to \emph{incorrect}.
+\begin{lstlisting}[caption=binary search,label={lst:bsearch}]
+def binary_search(array):
+    left, right = 0, len(array) - 1
+    while left + 1 < right:
+        middle = (left + right) // 2
+        if Repair(array, middle).is_incomplete():
+            left = middle
+        else:
+            right = middle
+    return right - 1
+\end{lstlisting}
 
+The \<boundary> value is then used to start the first repair
+thread, which starts at edit distance \<0>. The edit distance specifies the
+amount of corrections that were applied on a thread. This thread is then passed
+to \<find\_fixes()> (\Cref{lst:findfixes}).
+\begin{lstlisting}[caption=find fixes,label={lst:findfixes}]
 def find_fixes(threads):
     edit_dist = 0
     while True:
@@ -1106,29 +1149,12 @@ def find_fixes(threads):
 \end{lstlisting}
 The function \<find\_fixes()> takes in a set of threads, 
 extracts threads corresponding to the least edit distance, and applies a set of
-repairs on it which are defined in \Cref{lst:repair}.
-\begin{lstlisting}[caption=\brepair repairs,label={lst:repair}]
-def apply_delete(item):
-    return Repair(item.inputstr[:item.boundary] +
-                  item.inputstr[item.boundary + 1:],
-    	      item.boundary)
+repairs on it which are defined in \Cref{lst:repair}. If the repair succeeds,
+the string can use more characters from the pending suffix resulting in a
+larger valid prefix string, but with a larger edit distance. This procedure is
+repeated until the prefix string is marked \emph{complete} by the input
+processor.
 
-def apply_insert(item):
-    new_items = []
-    for i in string.printable:
-        v = item.inputstr[:item.boundary] +
-        i + item.inputstr[item.boundary:]
-        new_items.append(Repair(v, item.boundary))
-    return new_items
-
-def apply_modify(item):
-    new_items = []
-    for i in string.printable:
-        v = item.inputstr[:item.boundary] +
-        i + item.inputstr[item.boundary + 1:]
-        new_items.append(Repair(v, item.boundary))
-    return new_items
-\end{lstlisting}
 After each repair, the new string is checked (\Cref{lst:extenditem}) to see if
 the string results in \emph{incomplete} rather than \emph{incorrect}. If the
 string results in \emph{incomplete}, a new parse boundary is found by
