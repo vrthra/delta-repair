@@ -1139,16 +1139,18 @@ def find_fixes(threads):
     while True:
         cur_items = threads[edit_dist]
         comp = []
-        for item in sample_items_by_mask(cur_items):
+        for item in sample(cur_items):
             for i in repair_and_extend(item):
                 threads[edit_dist + 1].append(i)
                 if i.is_complete(): comp.append(i)
         if comp: return comp
         edit_dist += 1
 \end{lstlisting}
-The function \<find\_fixes()> takes in a set of threads, 
-extracts threads corresponding to the least edit distance, and applies a set of
-repairs on it which are defined in \Cref{lst:repairs}. If the repair succeeds,
+The function \<find\_fixes()> takes in a set of threads. It then extracts
+threads corresponding to the least edit distance. If the number of such threads
+exeed a user-configured value, a constant number of threads are sampled for
+continuation. Then, each thread is processed individually. On each thread,
+a set of repairs (\Cref{lst:repairs}) are applied. If the repair succeeds,
 the string can use more characters from the pending suffix resulting in a
 larger valid prefix string, but with a larger edit distance. This procedure is
 repeated until the prefix string is marked \emph{complete} by the input
