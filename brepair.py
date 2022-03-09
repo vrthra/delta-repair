@@ -185,8 +185,8 @@ def sample_items_by_mask(items):
     # sample here. We only want a fixed number of items per mask.
     masks = {}
     for i in items:
-        if i.mask not in masks: masks[i.mask] = []
-        masks[i.mask].append(i)
+        if i.mask not in masks: masks[(i.mask, i.boundary, i.inputstr[i.boundary-1])] = []
+        masks[(i.mask, i.boundary, i.inputstr[i.boundary-1])].append(i)
 
     sampled = []
     for key in masks:
