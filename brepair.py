@@ -13,22 +13,8 @@ CLEAR_QUEUE_AFTER_EVERY_LOCATION: bool = False
 SKIP_CONSECUTIVE_WHITESPACES: bool = False
 """If True, allow inserting multiple consecutive whitespaces"""
 
-USE_CHARACTER_LIST: bool = False
-"""If true, only attempt insertions from the given character list"""
-
-if USE_CHARACTER_LIST:
-    CHARACTERS: list[str] = [
-        '0',  # Digits
-        '=', '\\', '/', '\t', ';', ':', '.', ',', '^', '~', '`', '\'', '"', ')', '(', '[', ']', '{', '}', '\n', ' ',  # Special characters
-        'A',  # Upper-Case characters
-        'a',  # Lowercase characters. Add all remaining lowercase characters here to test the whole character class
-        'n', 'u', 'l', 't', 'r', 'e', 'f', 'a', 's',  # JSON keyword characters (null, true, false
-    ]
-else:
-    CHARACTERS = string.printable
-
+CHARACTERS = string.printable
 """Characters to be inserted in insertion operations.
-For bRepair, those classes are defined in https://projects.cispa.saarland/lukas.kirschner/bfuzzerrepairer/-/blob/main/project/src/main/java/bfuzzerrepairer/program/repairer/brepair/CharacterClass.java
 """
 
 # the incomplete substring is one behind boundary. i.e inputval[:boundary] 
