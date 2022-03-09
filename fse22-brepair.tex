@@ -4,7 +4,7 @@
 \documentclass[sigconf,anonymous]{acmart}
 }
 
-\newcommand{\mytitle}{Input Debugging via Rich %and Fast 
+\newcommand{\mytitle}{Input Debugging via Rich %and Fast
 Failure Feedback}
 \renewcommand{\mytitle}{Repairing Inputs}
 
@@ -259,62 +259,62 @@ semantics of the input data. We propose an approach called \brepair that leverag
 Given a conforming program\todo{it is not clear, what is a conforming program, a parser or any program conforming to the input format??}, and any invalid input, \brepair provides a set
 of repairs prioritized by the distance of the repair from the original input.
 
-We evaluate \brepair on \recheck{806} (real-world) invalid inputs using four well-known input formats, namely INI, TinyC, SExp, and cJSON. In our evaluation, we found that it is highly effective and efficient in input repair. It repairs \recheck{81}\% of invalid inputs and recovers \recheck{88\%} of input data, within two minutes. It is up to \recheck{18\%} more effective than \ddmax -- the previously best known approach. 
-Overall, our approach addresses several 
-limitations of 
-\ddmax, 
+We evaluate \brepair on \recheck{806} (real-world) invalid inputs using four well-known input formats, namely INI, TinyC, SExp, and cJSON. In our evaluation, we found that it is highly effective and efficient in input repair. It repairs \recheck{81}\% of invalid inputs and recovers \recheck{88\%} of input data, within two minutes. It is up to \recheck{18\%} more effective than \ddmax -- the previously best known approach.
+Overall, our approach addresses several
+limitations of
+\ddmax,
 both in terms of what it can repair, as well as
-in terms of the set of repairs offered. 
+in terms of the set of repairs offered.
 \end{abstract}
 
 % \begin{abstract}
 % %Problem/
-% %\textbf{Context:} 
+% %\textbf{Context:}
 % %\revise{
-% Program failures are sometimes induced by %when 
-% \textit{faulty inputs}, rather than \textit{buggy programs}, % are fed to \textit{valid} programs, 
-% e.g., 
-% %This can be 
-% due to incomplete or corrupted data. When an input \textit{solely} %is responsible for the program 
-% induces a failure in a valid program, the developer is saddled with the task of 
+% Program failures are sometimes induced by %when
+% \textit{faulty inputs}, rather than \textit{buggy programs}, % are fed to \textit{valid} programs,
+% e.g.,
+% %This can be
+% due to incomplete or corrupted data. When an input \textit{solely} %is responsible for the program
+% induces a failure in a valid program, the developer is saddled with the task of
 % \textit{input debugging}.  %}
-% %\textbf{Objective:}  
+% %\textbf{Objective:}
 % %\revise{
 % Debugging \textit{failure-inducing inputs} involves identifying the  \textit{root cause} of the failure (e.g., the faulty input fragment)
-% % causing the failure), 
-% and \textit{repairing the input} such that it can be processed by the program. This is particularly difficult for structured inputs with complex input specifications (e.g., JSON).  
-% %} 
-% %\textbf{Methodology:} 
+% % causing the failure),
+% and \textit{repairing the input} such that it can be processed by the program. This is particularly difficult for structured inputs with complex input specifications (e.g., JSON).
+% %}
+% %\textbf{Methodology:}
 % %\revise{
-% In this work, we present a \textit{language-agnostic, black-box} testing approach (called \approach) that leverages 
-% %ich and fast 
-% \textit{failure feedback} %from the program 
-% to automatically debug faulty inputs. The key insight of our approach %(called \approach) 
-% is to \textit{semantically} repair faulty inputs 
-% %to debug inputs via %by employing %a 
-% %combination of 
-% %\textit{test experimentation} that leverages 
-% using %leverage 
-% the richness of %and speed of 
-% \textit{failure feedback}, %to \textit{semantically}, 
-% such as 
-% %Specifically, \approach uses program feedback to 
-% %%. \approach employs  to identify %ing input properties such as the 
-% %identify 
-% the \textit{validity, incompleteness and incorrectness} checks of input fragments. 
-% Given a failure-inducing input and a valid program,  
-% \approach performs %conducts %test experiments 
-% semantic checks of input subsets to identify %ies 
-% faulty input fragments. 
-% %by conducting semantic checks of input fragments (e.g., (in)completeness) using test experiments. 
-% It then repairs the faulty input by removing or \textit{synthesizing} candidate input elements. % for repair.  
-% \revise{In our evaluation, \todo{\approach repaired ... recovered  ...} 
-% In addition, \approach overcomes the span length issue of (lexical) DDmax and outperforms DDMax by X\%, %despite %   %} In addition, \approach addresses several limitations of the state of the art, e.g., it overcomes the span length issue of (lexicial) DDmax and it does 
+% In this work, we present a \textit{language-agnostic, black-box} testing approach (called \approach) that leverages
+% %ich and fast
+% \textit{failure feedback} %from the program
+% to automatically debug faulty inputs. The key insight of our approach %(called \approach)
+% is to \textit{semantically} repair faulty inputs
+% %to debug inputs via %by employing %a
+% %combination of
+% %\textit{test experimentation} that leverages
+% using %leverage
+% the richness of %and speed of
+% \textit{failure feedback}, %to \textit{semantically},
+% such as
+% %Specifically, \approach uses program feedback to
+% %%. \approach employs  to identify %ing input properties such as the
+% %identify
+% the \textit{validity, incompleteness and incorrectness} checks of input fragments.
+% Given a failure-inducing input and a valid program,
+% \approach performs %conducts %test experiments
+% semantic checks of input subsets to identify %ies
+% faulty input fragments.
+% %by conducting semantic checks of input fragments (e.g., (in)completeness) using test experiments.
+% It then repairs the faulty input by removing or \textit{synthesizing} candidate input elements. % for repair.
+% \revise{In our evaluation, \todo{\approach repaired ... recovered  ...}
+% In addition, \approach overcomes the span length issue of (lexical) DDmax and outperforms DDMax by X\%, %despite %   %} In addition, \approach addresses several limitations of the state of the art, e.g., it overcomes the span length issue of (lexicial) DDmax and it does
 % without access to an input grammar (syntactic DDmax). }
-% 
+%
 % %\textbf{Conclusion:}
-% 
-% 
+%
+%
 % \end{abstract}
 
 %%
@@ -378,18 +378,18 @@ in terms of the set of repairs offered.
 
 Data, especially from external, often human sources need to be collected and
 aggregated before information processing algorithms can be run on it to extract
-insights. Unfortunately, data sources may disagree on the format specification, %e.g., 
-\recheck{consequently leading to different %variances in the 
+insights. Unfortunately, data sources may disagree on the format specification, %e.g.,
+\recheck{consequently leading to different %variances in the
 implementations of the specification}.
 For example, (1)~JSON libraries implement slightly different
 definitions of the JSON format~\cite{harrand2021behavioral,seriot2016parsing},
-(2)~different database systems support %, each supporting a 
+(2)~different database systems support %, each supporting a
 slightly different SQL format~\cite{arvin2018comparison}, (3)~there are a variety of markdown
 syntaxes with subtle differences~\cite{visnoviz2019comparison}, and (4)~various
-\<C> compilers %each supporting a 
+\<C> compilers %each supporting a
 provide slightly different interpretation of the \<C> language.
 Hence, it is often impossible to process an input artifact that was generated for
-a different implementation. % in mind. 
+a different implementation. % in mind.
 Another issue is that many such artifacts
 are created by hand, and the process of manual generation can be error-prone.
 
@@ -406,11 +406,11 @@ any mutation of the base grammar. Any parse of the input string that employs a
 mutation is penalized, and the parse with minimal mutation is chosen as the
 best parse, and the corresponding mutation the best repair. The limitation of
 this approach is that it assumes the existence of a formal grammar in the first
-place, which completely captures the intended structure. 
+place, which completely captures the intended structure.
 %However, %\recheck{
 %formats such as markdown~\cite{gruber2004markdown} does not have
-%an official formal grammar; 
-%%}\todo{how do you mean? this is not true, there are markdown grammars, ANTLR also has one, Nikolas used some in his Tribble eval too.}; 
+%an official formal grammar;
+%%}\todo{how do you mean? this is not true, there are markdown grammars, ANTLR also has one, Nikolas used some in his Tribble eval too.};
 %documents in languages such as \<C> can contain semantic
 However, formats such as markdown~\cite{gruber2004markdown} does not have
 an official formal grammar specification.
@@ -435,9 +435,9 @@ delta-debugging~\cite{zeller2002simplifying}, but in reverse. The idea
 is that given a corrupt input which induces a parse error, and a way to
 decompose the input into independent fragments (called deltas), one can
 successively minimize the parse-error inducing part of the input resulting in a
-maximal parsing input. 
+maximal parsing input.
 More importantly, \citet{kirschner2020debugging} demonstrates the prevalence of invalid inputs and the importance of input repair without input grammars and program analysis.
-%using \ddmax. %}. 
+%using \ddmax. %}.
 
 
 \begin{table*}\centering
@@ -450,9 +450,9 @@ Example & \ddmax repair & \brepair repair & \ddmax limitation \\
 \letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\}} & \letterboxed{\ \ \ \
 3.45\ } & \letterboxed{\{\ "item":\ "Apple",\ "price":\ 3.45\}} & Rich structure
 (spans) \\
-\letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}} & 
-\letterboxed{123456} & 
-\letterboxed{\{"ABCD":["1,2,3,4,5,6"]\}} & 
+\letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}} &
+\letterboxed{123456} &
+\letterboxed{\{"ABCD":["1,2,3,4,5,6"]\}} &
 Rich Structure (multiple-faults) \\
 \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}} &
 %\letterboxed{\{\ "name":\ "Daveage":\ 42\ \}} &
@@ -466,35 +466,35 @@ Limited repair options (deletion) \\
 \end{table*}
 
 
-Although \ddmax works very well for most inputs, %, it could repair 69\% of input files and recovered about 78\% of input data. 
-%However, 
-we observe it %that \ddmax 
-has certain limitations which inhibit it from completely repairing any invalid inputs. % in practice. 
-\Cref{tab:ddmaxlimitations} and \autoref{sec:rich-input-structures} illustrate %some of 
-these limitations with simplified invalid inputs. % as examples. 
-Notably, two major \ddmax limitations include its (1) \textit{limited repair operation} (only deletion), (2) inability to completely repair rich input structures (e.g., invalid inputs containing multiple faults) due to inherent assumptions. % (e.g., its search span)..  
+Although \ddmax works very well for most inputs, %, it could repair 69\% of input files and recovered about 78\% of input data.
+%However,
+we observe it %that \ddmax
+has certain limitations which inhibit it from completely repairing any invalid inputs. % in practice.
+\Cref{tab:ddmaxlimitations} and \autoref{sec:rich-input-structures} illustrate %some of
+these limitations with simplified invalid inputs. % as examples.
+Notably, two major \ddmax limitations include its (1) \textit{limited repair operation} (only deletion), (2) inability to completely repair rich input structures (e.g., invalid inputs containing multiple faults) due to inherent assumptions. % (e.g., its search span)..
 %\textit{multiple faults in input data}, and (3)
 %\textit{inherent assumptions about the richness of input structures} (e.g., its search span).
 
-%Specifically, \ddmax is limited 
-%the following  
-%() \textit{\ddmax} 
+%Specifically, \ddmax is limited
+%the following
+%() \textit{\ddmax}
 %
-%() \textit{\ddmax repairs are limited to input subsets}, thus it can not complete repairs that require inserting new input structure (see example \recheck{X in Table X}), 
-%() \textit{\ddmax may not completely repair invalid input containing multiple faults}  (e.g., example \recheck{X in Table X}), 
+%() \textit{\ddmax repairs are limited to input subsets}, thus it can not complete repairs that require inserting new input structure (see example \recheck{X in Table X}),
+%() \textit{\ddmax may not completely repair invalid input containing multiple faults}  (e.g., example \recheck{X in Table X}),
 %
 %
-%() \textit{•}  (e.g., example \recheck{X in Table X}), 
+%() \textit{•}  (e.g., example \recheck{X in Table X}),
 %
-%() \textit{•}  (e.g., example \recheck{X in Table X}), 
+%() \textit{•}  (e.g., example \recheck{X in Table X}),
 %
-%() \textit{•}  (e.g., example \recheck{X in Table X}), 
+%() \textit{•}  (e.g., example \recheck{X in Table X}),
 
 %\recheck{
-%In this work, we address these limitations ... 
+%In this work, we address these limitations ...
 %}
 
-%\Cref{motivation} further illustrates each of these limitations, and how \brepair addresses them. 
+%\Cref{motivation} further illustrates each of these limitations, and how \brepair addresses them.
 
 %(1)~Limitations due to rich input structure,
 %(2)~limited repair options available.
@@ -518,8 +518,8 @@ Notably, two major \ddmax limitations include its (1) \textit{limited repair ope
 Firstly, \ddmax's repair is restricted to deletion, which makes it sub-optimal for repairing some invalid inputs. The problem is that in many circumstances such as
 disk corruption, some input characters are more likely to be changed or deleted
 rather than inserted. Hence by handling only spurious insertions, \ddmax misses
-an important repair requirement. Secondly, 
-%As example, 
+an important repair requirement. Secondly,
+%As example,
 a major limitation is that \ddmax is modeled after \ddmin, where one of
 the unstated assumptions is that the $\delta$ fragments that are non
 contributing to the failure observed can be independently removed without
@@ -532,11 +532,11 @@ the unstated assumption is that each non-failure-inducing fragment
 can be added to the passing subset without inducing a failure. When this
 assumption is not met -- as in the case of inputs with a rich structure such as
 conforming to a grammar -- the repairs produced can be suboptimal as the
-examples show. 
+examples show.
 \recheck{
 %As an example, c
 Consider the following sample input ...\todo{we need to decide the most important limitation to buttress with an example here ... I think one that requires insertion and incompleteness error-feedback is the most important differentiator, or a hybrid example that also contains multiple faults ... } \todo{it should also be the same example to motivate and illustrate the way \brepair works (after the par. )}
-% we address these limitations ... 
+% we address these limitations ...
 }
 
 
@@ -544,7 +544,7 @@ Consider the following sample input ...\todo{we need to decide the most importan
 %However, the existence of \ddmax suggests that repairing inputs without a formal
 %grammar at hand is an important task. Unfortunately, most documents in the real
 %world have some syntactic or semantic constraints that makes satisfying the
-%implied assumption of \ddmax (independence of fragments) unsatisfiable.  
+%implied assumption of \ddmax (independence of fragments) unsatisfiable.
 %The second limitation of \ddmax -- the repair is restricted to deletion -- makes it
 %even more suboptimal to use. The problem is that in many circumstances such as
 %disk corruption, some input characters are more likely to be changed or deleted
@@ -561,7 +561,7 @@ That is, as with \ddmax, we require the input processor to indicate if the input
 is valid.  However, when given an invalid input, we require the input processor
 to indicate whether the input is merely \emph{incomplete} -- that is, the input
 is a prefix of a valid input -- or is \emph{incorrect} -- that is, no suffix to
-this input will result in a valid input. 
+this input will result in a valid input.
 
 This requirement is not hard to accomplish. In most cases, parsers already
 provide precise information as to the point at which the parse failed, which
@@ -607,7 +607,7 @@ data engineers.
 In our evaluation, we show that given input processors that can accurately
 signal \emph{incomplete} or \emph{incorrect} when given invalid inputs,
 \brepair can provide repairs that are more maximal than \ddmax, and correctly
-pass the parser. 
+pass the parser.
 %Further, the list of repairs it suggests will include the
 %original string before corruption.
 \\
@@ -625,7 +625,7 @@ This paper makes the following technical contributions:
 fragments, which makes it unsuitable for repairing errors due to omission and
 corruption. Our \brepair technique expands the repertoire to \emph{deletion},
 \emph{insertion}, and \emph{modification}.
-%\todo{discuss the repair to subset vs. insertion, refer to \autoref{sec:input-synthesis}}. 
+%\todo{discuss the repair to subset vs. insertion, refer to \autoref{sec:input-synthesis}}.
 \item \textbf{Lightweight Failure Feedback.} \brepair is the first technique
 tha shows how to use lightweight parser-error-feedback for input repair.
 %We propose \brepair which does not have these limitations. \todo{refer to \autoref{sec:brepair}}
@@ -697,9 +697,9 @@ $\test(\dpass) = \pass \land n \leq |\Delta|$.\\
 % %\vspace{-0.6\baselineskip}
 %   \caption{\ddmax repairs this JSON to \mbox{``\<\ \ \ \ 3.45>''}}
 %    %\Cref{fig:bad-json-input-asterisks}. This is very
-% %similar to Kirchner et al.~\cite[Figure 1]{kirschner2020debugging} 
+% %similar to Kirchner et al.~\cite[Figure 1]{kirschner2020debugging}
 % \label{fig:bad-json-input-asterisks}
-% 
+%
 % \end{figure}
 
 A major limitation of \ddmax is that it is ineffective when the input needs to
@@ -852,7 +852,7 @@ constraint in practice.
 % \caption{\ddmax repairs this JSON to ``\<123456>''}
 % \label{fig:bad-json-input2}
 % \end{figure}
-% 
+%
 % \begin{figure}
 % \begin{center}
 % \letterboxed{\{\ "name":\ "Daveage"\ \}}
@@ -964,8 +964,8 @@ missed.
 % The \emph{bFuzzer} algorithm~\cite{gopinath2020fuzzing} is an input generator that determines valid continuations for input prefixes by making use of rich failure feedback.
 % The subject program does not only give feedback whether an input is accepted or not, but also whether the input is incorrect or incomplete.
 % Based on this input generation algorithm, \bfr makes use of this rich failure feedback to allow both insertions and deletions at the fault location.
-% 
-% 
+%
+%
 % %TODO ...
 % Another problem occurring with DDMax is that it works very inefficient on inputs where the failure-inducing characters span a certain range in the file.% TODO which range?
 % Consider the file shown in \Cref{fig:bad-json-input-asterisks} -- a JSON object where the number \letterboxed{3.45} is preceded by three asterisks, rendering the file corrupted.
@@ -974,22 +974,22 @@ missed.
 % % { "item": "Apple", "price": ***3.45 }
 % %                   ->
 % %          ->       ->       ->
-% %     ->  ->  ->  ->  ->  ->  ->  ->   
+% %     ->  ->  ->  ->  ->  ->  ->  ->
 % When repairing this file, DDMax would first split the file in half, then in quarters and in eigths, finally trying to remove \letterboxed{***3} and \letterboxed{.45 \}}.
 % Those attempts do not succeed, so it tries to remove \letterboxed{**} and \letterboxed{*3} which also fails.
 % %TODO elaborate/rewrite?
-% 
+%
 % With \bfr, repairing the file results in the file seen in \Cref{fig:bad-json-input-repaired-asterisks} -- \bfr first detects the fauklt to be at the leftmost asterisk.
 % It then tries to insert characters (a \letterboxed{"} and a \letterboxed{ } which are both valid continuations of the prefix) and delete one asterisk.
 % In the alternative where the \letterboxed{"} was inserted, \letterboxed{***3.45\ } can successfully be inserted from the original file.
 % Then, \bfr tries both inserting the \letterboxed{\}} from the original file and another \letterboxed{"} which succeeds and results in the repaired file.
-% 
+%
 
 %This is, of course, not an ideal state of affairs. Unfortunately, \ddmax is
 %likely the best one can do unless one is willing to test all possible
 %subsequences of the input, which leads to combinatorial explosion. The main
 %issue here is that unlike with delta-debugging~\cite{zeller2002simplifying},
-%there is no real definition of progress. We do not know if 
+%there is no real definition of progress. We do not know if
 %\letterboxed{\{\ "A":\ *3\}} is better than
 %\letterboxed{\{\ "A":\ **3\}} or
 %\letterboxed{\{\ A":\ **3\}} because all three returns the same
@@ -1048,7 +1048,7 @@ to more effective repairs.
 % generating a larger prefix. Proceeding in this fashion, the algorithm generates
 % a set of plausible repairs ordered by their edit distance that can be used by
 % the developer for fixing the input corruption.
-% 
+%
 % In the example seen in \Cref{fig:bad-json-input-repaired}, \brepair first determines a valid (incomplete) prefix of the input file, i.e., \texttt{\{ "name": "Dave"}.
 % It then tries to append characters such that the prefix stays valid - in this example, \letterboxed{\}} and \letterboxed{,} are tried to be inserted.
 % Then, as much of the original file is appended to the prefix, until it becomes valid (and the rest of the original file is either appended, or deleted successively).
@@ -1150,13 +1150,39 @@ def find_fixes(threads):
 \end{lstlisting}
 The function \<find\_fixes()> takes in a set of threads. It then extracts
 threads corresponding to the least edit distance. If the number of such threads
-exeed a user-configured value, a constant number of threads are sampled for
-continuation. Then, each thread is processed individually. On each thread,
-a set of repairs (\Cref{lst:repairs}) are applied. If the repair succeeds,
+exeed a user-configured value, a constant number of threads are sampled
+(\Cref{lst:sampling}) for continuation.
+Then, each thread is processed individually. On each thread, a set of repairs
+(\Cref{lst:repairs}) are applied. If the repair succeeds,
 the string can use more characters from the pending suffix resulting in a
 larger valid prefix string, but with a larger edit distance. This procedure is
 repeated until the prefix string is marked \emph{complete} by the input
 processor.
+
+The sampling procedure tries discard redundant repairs so that the number of
+simultanious threads we have to maintain does not grow unbounded. While doing
+that, it tries to ensure that no non-redundant repairs are discarded. For
+example, given a JSON fragment \<[1,2> a repair of \<[1,23>, \<[1,24>
+and \<[1,25> are redunant but \<[1,2,> is not because the last repair
+represents a change in semantics for the parser.
+
+\begin{lstlisting}[caption=Sampling,label={lst:sampling}]
+def sample(items):
+    masks = {}
+    for i in items:
+        key = (i.mask, i.boundary, i.inputstr[i.boundary-1])
+        if i.mask not in masks: masks[key] = []
+        masks[key].append(i)
+
+    sampled = []
+    for key in masks:
+        if len(masks[key]) < MAX_NUM_PER_MASK:
+            res = masks[key]
+        else:
+            res = random.sample(masks[key], MAX_NUM_PER_MASK)
+        sampled.extend(res)
+    return sampled
+\end{lstlisting}
 
 After each repair, the new string is checked (\Cref{lst:extenditem}) to see if
 the string results in \emph{incomplete} rather than \emph{incorrect}. If the
@@ -1262,9 +1288,9 @@ required, the process can be restarted with the threads in the next rank.
 %\letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\}} & \letterboxed{\ \ \ \
 %3.45} & \letterboxed{\{\ "item":\ "Apple",\ "price":\ 3.45\}} & Rich structure
 %(spans) \\
-%\letterboxed{\{\"ABCD":[*"1,2,3,4,5,6"]*\}} & 
-%\letterboxed{123456} & 
-%\letterboxed{\{\"ABCD":["1,2,3,4,5,6"]\}} & 
+%\letterboxed{\{\"ABCD":[*"1,2,3,4,5,6"]*\}} &
+%\letterboxed{123456} &
+%\letterboxed{\{\"ABCD":["1,2,3,4,5,6"]\}} &
 %Rich Structure (multiple-faults) \\
 %\letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}} &
 %\letterboxed{\{\ "name":\ "Daveage":\ 42\ \}} &
@@ -1276,14 +1302,14 @@ required, the process can be restarted with the threads in the next rank.
 \begin{tabular}{|l | c | r | r | r | r |}
 \hline
 \textbf{Challenges} & \textbf{Sample Input}  &  \textbf{\ddmax Repair} & \textbf{\approach Repair} & \textbf{\approach Strength}  \\
-\hline 
-\textbf{Search Span} %(Rich Structure)} 
-&  \{\ "item":\ "Apple",\ "price":\ ***3.45\} & & & \\ 
-\textbf{Multiple faults} & \{\ "ABCD":[*"1,2,3,4,5,6"]*\} & & & \\ 
-\textbf{Repair to subsets} & \{\ "name":\ "Dave",\ "age":\ 42\ \} & & & \\ 
-\textbf{Rich Structure} & & & & \\ 
-\textbf{Limited Repair} & & & & \\ 
-\textbf{Failure Feedback} & & & & \\ 
+\hline
+\textbf{Search Span} %(Rich Structure)}
+&  \{\ "item":\ "Apple",\ "price":\ ***3.45\} & & & \\
+\textbf{Multiple faults} & \{\ "ABCD":[*"1,2,3,4,5,6"]*\} & & & \\
+\textbf{Repair to subsets} & \{\ "name":\ "Dave",\ "age":\ 42\ \} & & & \\
+\textbf{Rich Structure} & & & & \\
+\textbf{Limited Repair} & & & & \\
+\textbf{Failure Feedback} & & & & \\
 \hline
 \end{tabular}
 \label{tab:challenges-inp-debug}
@@ -1349,7 +1375,7 @@ required, the process can be restarted with the threads in the next rank.
 \newcommand{\refnumber}[1]{\hyperref[fig:ddmax_flowchart]{Step~#1}}
 
 
-This section describes the experimental setup of this work. 
+This section describes the experimental setup of this work.
 
 \subsubsection*{\bf Workflow}
 \Cref{fig:ddmax_flowchart} shows the workflow of \brepair.
@@ -1386,78 +1412,78 @@ All subject programs are written in the C programming language and needed to be 
 We proceed to run the repair algorithms on each invalid or mutated input file.
 In particular, we are interested in determining the following:
 %\begin{enumerate}
-%\item[a] 
+%\item[a]
 (1.) \textit{\textbf{Baseline:}} the number of invalid input files which are accepted by a subject program as \textit{valid inputs} (i.e. non-failure-inducing inputs processed by the program without leading to a crash), in order to measure the \textit{effectiveness} of the built-in \textit{error recovery} feature of the program;  and
-%\item[b]  
+%\item[b]
 (2.) \textit{\textbf{ANTLR:}} the number of invalid inputs which are repaired by ANTLR inbuilt \textit{error recovery strategy};
-%\item[c]  
+%\item[c]
 (3) \textit{\textbf{bRepair:}} the number of invalid inputs which are repaired by \brepair.
 
-We conducted the experiments on a Dell Precision 7510 
-with four physical CPU cores %(8~virtual cores) 
+We conducted the experiments on a Dell Precision 7510
+with four physical CPU cores %(8~virtual cores)
 and 32GB of RAM, specifically an Intel(R) Core i7 6820hq @ 2.70GHz, 8~virtual cores, running 64-bit Arch Linux.
 %All our prototypes are single-threaded.
 
 
 \smallskip\noindent
-\textbf{Research Questions: } 
+\textbf{Research Questions: }
 In this paper, %addresses the following
 we investigate the effectiveness, data recovery, diagnostic quality and efficiency of our approach via several experiments. For each experiment, %as well as,
-%and 
-we also examine how \approach compares to the state-of-the-art techniques, namely \textit{baseline} (built-in repair of subject programs), \textit{ANTLR}'s error recovery strategy, lexical ddmax and syntactic ddmax.  
-%Particularly, 
+%and
+we also examine how \approach compares to the state-of-the-art techniques, namely \textit{baseline} (built-in repair of subject programs), \textit{ANTLR}'s error recovery strategy, lexical ddmax and syntactic ddmax.
+%Particularly,
 To this end, we pose the following \textit{research questions} (RQ):
 % concerning the performance of \approach:
 
 \noindent
-\textbf{RQ1 Effectiveness:}  %\& Efficiency:} 
-How effective is our approach (\approach) in repairing invalid %failure-inducing 
-inputs, and how does it compare to the state-of-the-art methods? 
+\textbf{RQ1 Effectiveness:}  %\& Efficiency:}
+How effective is our approach (\approach) in repairing invalid %failure-inducing
+inputs, and how does it compare to the state-of-the-art methods?
 %How effective is our approach, i.e., what is the time performance of \approach ?
 
 \noindent
-\textbf{RQ2 Data Recovery and Data Loss:} 
+\textbf{RQ2 Data Recovery and Data Loss:}
 %\revise{
-How much input data is recovered by \approach, and how much input data loss is incurred?  Does it recover as much data as the 
-%the data recovery of \approach compare to 
+How much input data is recovered by \approach, and how much input data loss is incurred?  Does it recover as much data as the
+%the data recovery of \approach compare to
 the state-of-the-art methods?
 %}
 
 %\noindent
-%\textbf{RQ3 Efficiency:} 
+%\textbf{RQ3 Efficiency:}
 %%\revise{
 %How effective is our approach, i.e., what is the time performance of \approach ?
 %%}
 
 \noindent
-\textbf{RQ3 Diagnostic Quality:} 
+\textbf{RQ3 Diagnostic Quality:}
 %\revise{
 How effective is our approach in identifying the \textit{root cause} of invalid inputs, especially in comparison to the state-of-the-art methods (DDmin and DDmax)?
 %}
 %
 %\noindent
-%\textbf{RQ4 Comparison to the state-of-the-art:} 
+%\textbf{RQ4 Comparison to the state-of-the-art:}
 %%\revise{
 %How does \approach compare to the state-of-the-art input debugging techniques, in terms of effectiveness, efficiency, data recovery and diagnosis?
 %%i.e., (DDMax \recheck{and Ddmin})?}
 %\\
 
 \noindent
-\textbf{RQ4 Efficiency:} %ectiveness:} 
+\textbf{RQ4 Efficiency:} %ectiveness:}
 %\revise{
-What is the efficiency (time performance) of 
-%How does 
-\approach? Is it as effective as the 
-%especially in comparison %compare 
-%to 
-the state-of-the-art %input debugging 
+What is the efficiency (time performance) of
+%How does
+\approach? Is it as effective as the
+%especially in comparison %compare
+%to
+the state-of-the-art %input debugging
 techniques?
 %, in terms of effectiveness, efficiency, data recovery and diagnosis?
 %i.e., (DDMax \recheck{and Ddmin})?}
 
 
 \noindent
-\textbf{State-of-the-art:} 
+\textbf{State-of-the-art:}
 In this work, we compare the performance of our approach to the state-of-the-art techniques. Specifically, we compare to (a) the built-in error-recovery technique of the subject programs (\textit{baseline}), (b) the inbuilt error recovery strategy of the ANTLR parser generator (\textit{ANTLR})~\cite{}, (c) the minimizing variant of delta debugging (DDMin)~\cite{} and (d) three variants of the maximizing variant of delta debugging (DDMax)~\cite{kirschner2020debugging}.
 
 \todo{cite and create command shortcuts for the state-of-the-art}
@@ -1484,7 +1510,7 @@ In this work, we compare the performance of our approach to the state-of-the-art
 \textbf{Implementation Details and Platform:}
 
 \noindent
-\textbf{Research Protocol:} 
+\textbf{Research Protocol:}
 
 
 \begin{table}[!tbp]\centering
@@ -1508,7 +1534,7 @@ In this work, we compare the performance of our approach to the state-of-the-art
 
 \begin{table}[!tbp]\centering
 \caption{Effectiveness of \approach vs. the state-of-the-art}
-%\vspace{-0.5cm} 
+%\vspace{-0.5cm}
 \begin{tabular}{|l | c | r  r  r  r |}
 \hline
 &  \multicolumn{5}{c|}{\textbf{Number of Repaired Inputs}}  \\
@@ -1519,10 +1545,10 @@ In this work, we compare the performance of our approach to the state-of-the-art
 \textbf{ANTLR} & 344 (43\%) & 133 & 69 & 96 &  46   \\
 \textbf{Lex. ddmax} & 553 (69\%) & \textbf{201}  & 122  & 124 & 106    \\ 			
 \textbf{Syn. ddmax} & \textbf{608} (\textbf{75\%}) & \textbf{201}  & \textbf{140}  & \textbf{148}  & \textbf{119}  \\ 	
-\hline 
+\hline
 \textbf{\approach}  & \textit{ \textbf{650}} (\textbf{81\%}) & \textit{ \textbf{201}} & \textit{ \textbf{173}}  & 122  & \textit{ \textbf{154}} \\
 \hline
-\textbf{Improv. vs. Lex.} &  \textbf{18\%}  & 0\% & \textbf{42\%} & -2\% & \textbf{45\%} \\ 
+\textbf{Improv. vs. Lex.} &  \textbf{18\%}  & 0\% & \textbf{42\%} & -2\% & \textbf{45\%} \\
 \textbf{Improv. vs. Syn.} &  \textbf{7\%}  & 0\% & \textbf{24\%} & -18\% & \textbf{29\%} \\
 \hline
 %\textbf{Total \#Repairs} & 763  & 510  & 490  & 425 &  2188 \\ 			
@@ -1535,59 +1561,59 @@ In this work, we compare the performance of our approach to the state-of-the-art
 \section{Experimental Results}
 \label{sec:results}
 
-In this section, we 
+In this section, we
 discuss the %findings %
-results 
-of our empirical evaluations. 
-% for each of the posed research questions. 
+results
+of our empirical evaluations.
+% for each of the posed research questions.
 
 %\todo{RQ1: we need to discuss the number of repair attempts or input fragments tested for feedback for \approach versus ddmax}
 
 \noindent
-\textbf{RQ1 Effectiveness:} 
-We evaluate the effectiveness of our approach using 806 invalid input files belonging to four different input formats, namely INI, cJSON, SExp, and TinyC.  \autoref{tab:input-details} provides details of the %number of 
-%real-world and mutated 
-invalid inputs used for each input format. 
-We also examine the contribution of the insertion  of input elements (i.e., input synthesis) to the effectiveness of our approach. 
-In this experiment, 
-%and efficiency of our approach 
-%Specifically, 
-we measure the total number of files repaired by our approach, in comparison to 
-%the number of repairs achieved % compare to %as well as 
-four state-of-the-art techniques,  
-%for all four input formats. We also compare the effectiveness of \approach to that of \recheck{four} state-of-the-art techniques, 
-namely the built-in error-recovery of the subject program (called \textit{baseline}) and \textit{ANTLR}, and % as well as 
-the two maximizing variants of delta debugging, i.e., \textit{lexical ddmax} and \textit{syntactic ddmax}.   \autoref{tab:effectiveness} and \autoref{fig:effectiveness} highlight the (overall) effectiveness of each approach %, as well as their effectiveness 
-for each input format. 
+\textbf{RQ1 Effectiveness:}
+We evaluate the effectiveness of our approach using 806 invalid input files belonging to four different input formats, namely INI, cJSON, SExp, and TinyC.  \autoref{tab:input-details} provides details of the %number of
+%real-world and mutated
+invalid inputs used for each input format.
+We also examine the contribution of the insertion  of input elements (i.e., input synthesis) to the effectiveness of our approach.
+In this experiment,
+%and efficiency of our approach
+%Specifically,
+we measure the total number of files repaired by our approach, in comparison to
+%the number of repairs achieved % compare to %as well as
+four state-of-the-art techniques,
+%for all four input formats. We also compare the effectiveness of \approach to that of \recheck{four} state-of-the-art techniques,
+namely the built-in error-recovery of the subject program (called \textit{baseline}) and \textit{ANTLR}, and % as well as
+the two maximizing variants of delta debugging, i.e., \textit{lexical ddmax} and \textit{syntactic ddmax}.   \autoref{tab:effectiveness} and \autoref{fig:effectiveness} highlight the (overall) effectiveness of each approach %, as well as their effectiveness
+for each input format.
 
-% to determine the strengths %and complementarity 
-%of our approach. 
-% and the time taken to achieve this repair. 
+% to determine the strengths %and complementarity
+%of our approach.
+% and the time taken to achieve this repair.
 
-%\noindent \textit{Effectiveness:} 
+%\noindent \textit{Effectiveness:}
 %\todo{tables and figures}
 
-\noindent \textbf{\textit{Repair Effectiveness:}} In our evaluation, %we found that 
-\textit{our approach (\approach) is highly effective in repairing invalid input files, it repaired about four out of every five invalid input}. \approach repaired about \recheck{81\% (650 out of 806)} of invalid inputs, and it is \textit{up to 20 times more effective than %outperformed all four 
-the state-of-the art-techniques}. 
-\autoref{tab:effectiveness} 
-%illustrates these results. 
-shows that for most (three out of four) input formats, our approach performed best (except for SExp).  \approach is up to 45\% and 29\% more effective than lexical and syntactic ddmax %for two input formats 
-%(CJSON and TinyC), 
-respectively.  
-% and shows that for 
-On one hand, \approach is about 20x as effective as the error recovery of the subject programs (33 repairs), and almost twice as (or 43\% more) effective than ANTLR's inbuilt error-recovery strategy (344 repairs). On the other hand, our approach outperformed the second most effective technique (\textit{ddmax}) by up to \recheck{18\%}. \approach is 18\% and seven percent more effective than lexical ddmax (69\%) and syntactic ddmax (75\%), respectively. 
-In summary, these results suggest that %(a) \approach is highly effective in repairing invalid input files, (b) our approach more effective than the baselines, and (c) 
-the \textit{combination of rich failure feedback and input synthesis} is important for the effective repair of invalid input files, this is evident by the effectiveness of \approach in comparison to the baselines.  
+\noindent \textbf{\textit{Repair Effectiveness:}} In our evaluation, %we found that
+\textit{our approach (\approach) is highly effective in repairing invalid input files, it repaired about four out of every five invalid input}. \approach repaired about \recheck{81\% (650 out of 806)} of invalid inputs, and it is \textit{up to 20 times more effective than %outperformed all four
+the state-of-the art-techniques}.
+\autoref{tab:effectiveness}
+%illustrates these results.
+shows that for most (three out of four) input formats, our approach performed best (except for SExp).  \approach is up to 45\% and 29\% more effective than lexical and syntactic ddmax %for two input formats
+%(CJSON and TinyC),
+respectively.
+% and shows that for
+On one hand, \approach is about 20x as effective as the error recovery of the subject programs (33 repairs), and almost twice as (or 43\% more) effective than ANTLR's inbuilt error-recovery strategy (344 repairs). On the other hand, our approach outperformed the second most effective technique (\textit{ddmax}) by up to \recheck{18\%}. \approach is 18\% and seven percent more effective than lexical ddmax (69\%) and syntactic ddmax (75\%), respectively.
+In summary, these results suggest that %(a) \approach is highly effective in repairing invalid input files, (b) our approach more effective than the baselines, and (c)
+the \textit{combination of rich failure feedback and input synthesis} is important for the effective repair of invalid input files, this is evident by the effectiveness of \approach in comparison to the baselines.
 
 \begin{result}
-\approach is highly effective in repairing invalid input files: %, and more effective than the state-of-the-art. 
-It repaired four out of five (81\%) invalid inputs and it is up to 18\% more effective than the best baseline. 
+\approach is highly effective in repairing invalid input files: %, and more effective than the state-of-the-art.
+It repaired four out of five (81\%) invalid inputs and it is up to 18\% more effective than the best baseline.
 \end{result}
 
 
 \begin{table}[!tbp]\centering
-\caption{Details of Repaired Invalid %Failure-inducing 
+\caption{Details of Repaired Invalid %Failure-inducing
 Inputs}
 \begin{tabular}{|l | l | r | r | r | r | r | l |}
 \hline
@@ -1603,7 +1629,7 @@ Inputs}
 \textbf{Syn. $\cap$ Appr.} & 0 & 41 & 1 & 7 & 49  (6.7\%) \\
 \hline
 \textbf{All 3 techs.}
-%Lex. $\cap$ Syn. $\cap$ Appr.} 
+%Lex. $\cap$ Syn. $\cap$ Appr.}
 & 201 & 79 & 121 & 81 & 482  (65.8\%)\\
 %\textbf{Both} &  201 & 105 & 121 & 84 & 511 (74\%) \\
 %\textbf{Ddmax Only} & 0 & 17 & 3 & 22 & 42 (6\%) \\
@@ -1708,32 +1734,32 @@ BRepair    201    173      122          154
 %\end{figure}
 
 \noindent
-\textbf{\textit{Contribution of %\approach's 
-Input Synthesis:}} We further examine the contribution of input synthesis, i.e., the insertion of input elements to the effectiveness of our approach. This is particularly important since in comparison to ddmax, \approach not only removes invalid input fragments, it also synthesis input elements during repair. 
-%To achieve this, 
-Using the 321 inputs repaired by all approaches with edit distance data, 
-we examine the number of deletion and insertions performed by \approach, this is reported in \autoref{tab:brepair-insertions}. 
-% reports the number of deletions and insertions performed by \approach. 
+\textbf{\textit{Contribution of %\approach's
+Input Synthesis:}} We further examine the contribution of input synthesis, i.e., the insertion of input elements to the effectiveness of our approach. This is particularly important since in comparison to ddmax, \approach not only removes invalid input fragments, it also synthesis input elements during repair.
+%To achieve this,
+Using the 321 inputs repaired by all approaches with edit distance data,
+we examine the number of deletion and insertions performed by \approach, this is reported in \autoref{tab:brepair-insertions}.
+% reports the number of deletions and insertions performed by \approach.
 
-In this experiment, we found that \textit{input synthesis accounts for almost half (49\%) of the repair operations of \approach}. Indeed, \approach performed more insertion operations than deletion operations for two input formats (CJSON and SExp). This result demonstrates the importance of \textit{input synthesis} in comparison to \textit{repairing to subsets}. This demonstrates the advantage of input synthesis via rich failure feedback, and implies that insertion operations are equally as important as deletion operations for effective input repair. 
+In this experiment, we found that \textit{input synthesis accounts for almost half (49\%) of the repair operations of \approach}. Indeed, \approach performed more insertion operations than deletion operations for two input formats (CJSON and SExp). This result demonstrates the importance of \textit{input synthesis} in comparison to \textit{repairing to subsets}. This demonstrates the advantage of input synthesis via rich failure feedback, and implies that insertion operations are equally as important as deletion operations for effective input repair.
 
 \begin{result}
-Input synthesis is vital to the effectiveness of \approach: Almost half (49\%) of \approach's repair operations are %due to input syntehesis, i.e. 
-insertion operations. % of input elements. 
+Input synthesis is vital to the effectiveness of \approach: Almost half (49\%) of \approach's repair operations are %due to input syntehesis, i.e.
+insertion operations. % of input elements.
 \end{result}
 
 
 \begin{table}[!tbp]\centering
 \caption{Number of edit operations (insertion/deletions) performed by \approach, higher number operations are in \textbf{bold}}
-%\vspace{-0.5cm} 
+%\vspace{-0.5cm}
 \small
 \begin{tabular}{|l | c | r  r  r  r |}
 \hline
 &  \multicolumn{5}{c|}{\textbf{Number of  Operations}}  \\
 \textbf{Ops.} & \textbf{ALL (\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
 \hline
-\textbf{Insert} & 751 (49\%) & 83 (38\%) &	\textbf{318 (51\%)} &	\textbf{126 (53\%)} &	224 (48\%) \\ 
-\textbf{Delete}  & \textbf{794 (51\%)} & \textbf{135 (62\%)} &	308 (49\%) &	110 (52\%) &	\textbf{241 (51\%)} \\ 
+\textbf{Insert} & 751 (49\%) & 83 (38\%) &	\textbf{318 (51\%)} &	\textbf{126 (53\%)} &	224 (48\%) \\
+\textbf{Delete}  & \textbf{794 (51\%)} & \textbf{135 (62\%)} &	308 (49\%) &	110 (52\%) &	\textbf{241 (51\%)} \\
 \hline
 \end{tabular}
 \label{tab:brepair-insertions}
@@ -1742,52 +1768,52 @@ insertion operations. % of input elements.
 
 
 
-\noindent \textbf{\textit{Complementarity to Ddmax:}} We further inspect the unique repairs achieved by each approach, in order to understand the complementarity of our approach to the state-of-the-art methods. In this experiment, we inspect the number of unique repairs achieved \textit{solely} by a single approach (e.g., \textit{only} \approach), or two or more approaches (e.g., all approaches).  The goal is to determine if there are unique sets of inputs that are solely repaired by a single approach, and not by other approaches. \autoref{fig:repair-complementarity} and \autoref{tab:repair-complementarity} highlight our findings on the complementarity of \approach to ddmax. 
+\noindent \textbf{\textit{Complementarity to Ddmax:}} We further inspect the unique repairs achieved by each approach, in order to understand the complementarity of our approach to the state-of-the-art methods. In this experiment, we inspect the number of unique repairs achieved \textit{solely} by a single approach (e.g., \textit{only} \approach), or two or more approaches (e.g., all approaches).  The goal is to determine if there are unique sets of inputs that are solely repaired by a single approach, and not by other approaches. \autoref{fig:repair-complementarity} and \autoref{tab:repair-complementarity} highlight our findings on the complementarity of \approach to ddmax.
 %to the state-of-the-art.
-%demonstrate that our approach complements 
-%the complementarity of our approach to 
-%DDmax. 
+%demonstrate that our approach complements
+%the complementarity of our approach to
+%DDmax.
 
-In our evaluation, we found that about 12\% of all repairs could only be completed by \approach, which is is up to 15 times as many as DDmax repairs (\textit{see} \autoref{fig:repair-complementarity}). 
-%our 
-\approach \textit{solely} repaired more than 
-%for %repairs 
-\textit{one in every eight} invalid inputs (12\% of repairs), %\approach is the solely repaired them, 
-%i.e., 
-all of which ddmax could not repair. % these inputs. %. In addition, \approach \textit{solely} repairs 
-%which 
+In our evaluation, we found that about 12\% of all repairs could only be completed by \approach, which is is up to 15 times as many as DDmax repairs (\textit{see} \autoref{fig:repair-complementarity}).
+%our
+\approach \textit{solely} repaired more than
+%for %repairs
+\textit{one in every eight} invalid inputs (12\% of repairs), %\approach is the solely repaired them,
+%i.e.,
+all of which ddmax could not repair. % these inputs. %. In addition, \approach \textit{solely} repairs
+%which
 %This is up to 15 times as many as DDmax repairs.
-\autoref{tab:repair-complementarity} shows that for lexical ddmax, our approach \textit{solely} repaired 15x as many invalid files as lexical ddmax (90 versus six), while it repairs more than twice as many files as syntactic ddmax (90 versus 41). 
-% \textit{one in five (20\% of) invalid inputs could be repaired solely by \approach}. \autoref{tab:repair-complementarity} and \autoref{fig:repair-complementarity} highlight the complementarity of \approach to ddmax. 
-These findings show that our approach not only outperforms ddmax, but it is also complementary to ddmax: It solely repairs 90 (11\% of all) invalid inputs, all of which ddmax could not repair. %This is evident since it solely completes (12\% of) repairs that could not be completed by the state-of-the-art (ddmax). 
-Further 
-%experiment 
-inspection suggests that this unique repairs achieved by \approach are due to the \textit{rich failure feedback} and \textit{repair via insertion} synergy of \approach. 
-%insertion and 
+\autoref{tab:repair-complementarity} shows that for lexical ddmax, our approach \textit{solely} repaired 15x as many invalid files as lexical ddmax (90 versus six), while it repairs more than twice as many files as syntactic ddmax (90 versus 41).
+% \textit{one in five (20\% of) invalid inputs could be repaired solely by \approach}. \autoref{tab:repair-complementarity} and \autoref{fig:repair-complementarity} highlight the complementarity of \approach to ddmax.
+These findings show that our approach not only outperforms ddmax, but it is also complementary to ddmax: It solely repairs 90 (11\% of all) invalid inputs, all of which ddmax could not repair. %This is evident since it solely completes (12\% of) repairs that could not be completed by the state-of-the-art (ddmax).
+Further
+%experiment
+inspection suggests that this unique repairs achieved by \approach are due to the \textit{rich failure feedback} and \textit{repair via insertion} synergy of \approach.
+%insertion and
 
-% performance   
+% performance
 
 
 \begin{result}
-%Our input repair 
-\approach 
-%not only outperforms the baseline, but 
+%Our input repair
+\approach
+%not only outperforms the baseline, but
 outperforms and complements the best state-of-the-art method (ddmax).
-%\approach 
-It is the only technique that can solely complete 12\% of all repairs, which is up to 15 times as many as ddmax. 
+%\approach
+It is the only technique that can solely complete 12\% of all repairs, which is up to 15 times as many as ddmax.
 \end{result}
 
 \noindent
-\textbf{RQ2 Data Recovery and Data Loss:}\todo{fix discussion of \autoref{tab:data-recovery} } In this experiment, we investigate the amount of data recovered (and lost) by our approach (\approach). To this end, we compute the file sizes of repaired inputs, and the edit distance between the repaired input and the original input using Levenshtein distance. In addition, we compare the data loss and recovery achieved by our approach to that of the state of the art, i.e. ddmax. 
-%For this experiment, we computed the (difference in) files sizes and the Levenshtein distance between the original input and the repaired inputs. 
-For a fair evaluation of data recovery, we used 475 inputs that were completely repaired by all three approaches (lexical ddmax, syntactic ddmax and \approach). 
-% before a timeout to evaluate data recovery in terms of file sizes.  % and which were completely repaired by all three approaches before a timeout. 
-%This resulted in a set of set of (321) inputs for the evaluation of data loss. 
+\textbf{RQ2 Data Recovery and Data Loss:}\todo{fix discussion of \autoref{tab:data-recovery} } In this experiment, we investigate the amount of data recovered (and lost) by our approach (\approach). To this end, we compute the file sizes of repaired inputs, and the edit distance between the repaired input and the original input using Levenshtein distance. In addition, we compare the data loss and recovery achieved by our approach to that of the state of the art, i.e. ddmax.
+%For this experiment, we computed the (difference in) files sizes and the Levenshtein distance between the original input and the repaired inputs.
+For a fair evaluation of data recovery, we used 475 inputs that were completely repaired by all three approaches (lexical ddmax, syntactic ddmax and \approach).
+% before a timeout to evaluate data recovery in terms of file sizes.  % and which were completely repaired by all three approaches before a timeout.
+%This resulted in a set of set of (321) inputs for the evaluation of data loss.
 
 
 \begin{table}[!tbp]\centering
 \caption{Data Recovery of \approach vs. the state-of-the-art}
-%\vspace{-0.5cm} 
+%\vspace{-0.5cm}
 \begin{tabular}{|l | c | r  r  r  r |}
 \hline
 &  \multicolumn{5}{c|}{\textbf{\% Data Recovered by Approach}}  \\
@@ -1798,7 +1824,7 @@ For a fair evaluation of data recovery, we used 475 inputs that were completely 
 %\textbf{ANTLR} & (\%) & &  & 	& \\
 \textbf{Lex. ddmax} & 87\% & \textbf{86.6\%} & 87.1\%	 & 98.5\%	& 70.0\% \\			
 \textbf{Syn. ddmax} & 70\% & 68.5\% & 83.8\%  & 96.9\%	& 70.6\% \\	
-\hline 
+\hline
 \textbf{\approach} & \textbf{ 88\%} & \textbf{86.6\%} & \textbf{96.0\%} & \textbf{100.0\%}	& \textbf{97.6\%} \\
 \hline
 \textbf{Impr. vs. Lex.} & \textbf{1\%} & 0.1\%	& \textbf{10.2\%}	& 1.5\%	& \textbf{39.4\%} \\
@@ -1813,30 +1839,30 @@ For a fair evaluation of data recovery, we used 475 inputs that were completely 
 
 \noindent
 \textbf{\textit{Data Recovery:}} \autoref{tab:data-recovery} %and \recheck{Figure X
-highlight the data %loss and data 
+highlight the data %loss and data
 recovery achieved by each approach. %Our evaluation r
 Results show that \textit{\approach recovered up to 88\% of input data and which is up to 25\% more than the most effective baseline (syntactic ddmax).} %Notably, f
-For all four input formats, \approach recovered more data than the both variants of ddmax. As an example, for TinyC, \approach recovered about 39\% more input data than the state-of-the-art. 
-Overall, this result suggests that \approach is more effective in recovering valid input data than ddmax. 
+For all four input formats, \approach recovered more data than the both variants of ddmax. As an example, for TinyC, \approach recovered about 39\% more input data than the state-of-the-art.
+Overall, this result suggests that \approach is more effective in recovering valid input data than ddmax.
 
 \noindent
-\textbf{\textit{Data Loss:}} To measure data loss, we compute the Levenshtein distance between repaired and invalid files using %Meanwhile, %For a balanced and tractable evaluation of data loss, 
-%we employed the 
-a set of 321 completely repaired inputs %by all three approaches which %(321) inputs that 
-%which the Levenshtein distance implementation could compute %their edit distance 
-where edit distance could be computed within a threshold of 750 edit distances (about 30 seconds). 
+\textbf{\textit{Data Loss:}} To measure data loss, we compute the Levenshtein distance between repaired and invalid files using %Meanwhile, %For a balanced and tractable evaluation of data loss,
+%we employed the
+a set of 321 completely repaired inputs %by all three approaches which %(321) inputs that
+%which the Levenshtein distance implementation could compute %their edit distance
+where edit distance could be computed within a threshold of 750 edit distances (about 30 seconds).
 
-We found that \textit{\approach achieves a low data loss of about 13 edit distances,on avarage},  which is \textit{up to 23 times lower than (lexical) ddmax}. \autoref{tab:data-loss} shows this result of this experiment. For almost all input formats, \approach achieved a lower data loss than syntactic and lexical ddmaz (except for INI and SExp). This performance is attributed to the rich fasilure feedback of \approach, which allows it to distinguish between incomplete and incorrect input fragments. 
+We found that \textit{\approach achieves a low data loss of about 13 edit distances,on avarage},  which is \textit{up to 23 times lower than (lexical) ddmax}. \autoref{tab:data-loss} shows this result of this experiment. For almost all input formats, \approach achieved a lower data loss than syntactic and lexical ddmaz (except for INI and SExp). This performance is attributed to the rich fasilure feedback of \approach, which allows it to distinguish between incomplete and incorrect input fragments.
 
 \begin{result}
-\approach has a high data recovery rate (88\%, on average) and its data %The data recovery and 
-loss is up to 23 times lower than that of ddmax (e.g., INI).     
+\approach has a high data recovery rate (88\%, on average) and its data %The data recovery and
+loss is up to 23 times lower than that of ddmax (e.g., INI).
 \end{result}
 
 
 \begin{table}[!tbp]\centering
 \caption{Data Loss (Levenshtein distance) of \approach vs. the state-of-the-art (ddmax), minimum data loss and significant \% reduction in data loss are in \textbf{bold}}
-%\vspace{-0.5cm} 
+%\vspace{-0.5cm}
 \begin{tabular}{|l | c | r  r  r  r |}
 \hline
 &  \multicolumn{5}{c|}{\textbf{Average Data Loss }}  \\
@@ -1856,10 +1882,10 @@ loss is up to 23 times lower than that of ddmax (e.g., INI).
 
 
 \noindent
-\textbf{RQ3 Diagnostic Quality:} 
-In this experiment, we evaluate the diagnostic quality of \approach in comparison to the state-of-the-art techniques. In particular, we compare the size of the diagnoses, i.e., the isolated failure cause reported by each approach, as well as the intersection of the diagnoses reported by these approaches. We compare \approach to three main methods, namely \approach, lexical ddmax, syntactic ddmax and ddmin.  \recheck{Table x and figure X} show the diagnostic quality of our approach, in comparison to the state of the art techniques. 
+\textbf{RQ3 Diagnostic Quality:}
+In this experiment, we evaluate the diagnostic quality of \approach in comparison to the state-of-the-art techniques. In particular, we compare the size of the diagnoses, i.e., the isolated failure cause reported by each approach, as well as the intersection of the diagnoses reported by these approaches. We compare \approach to three main methods, namely \approach, lexical ddmax, syntactic ddmax and ddmin.  \recheck{Table x and figure X} show the diagnostic quality of our approach, in comparison to the state of the art techniques.
 
-We found that 
+We found that
 
 \begin{result}
 XXXX
@@ -1873,103 +1899,103 @@ XXXX
 \noindent
 \textbf{RQ4 Efficiency:}
 %\todo{mention that run-time is the execution time of the algorithm, without accounting for the time for experimental pre/post processings }
-Let us evaluate the performance of our approach. 
-%, i.e., %we investigate 
-%how long it takes \approach to repair an invalid input, in comparison to the state-of-the-art (ddmax). 
+Let us evaluate the performance of our approach.
+%, i.e., %we investigate
+%how long it takes \approach to repair an invalid input, in comparison to the state-of-the-art (ddmax).
 %In addition, w
-%We also evaluate the number %of repair attempts, i.e., number of 
-%program runs %test experiments with input fragments, 
-%performed by each approach. 
-To this end, we measure the time performance (i.e., execution time) and the number of program runs performed 
-%  of input repairs that were completed 
-by \approach, in comparison to lexical ddmax and syntactic ddmax. For a balanced evaluation, we 
-%performed an experiment analysing % where we consider %for 
-analyse a set of 483 invalid inputs % files 
-that where completely repaired by all three approaches within %, in less than 
-two minutes, %. % (120,000ms). 
+%We also evaluate the number %of repair attempts, i.e., number of
+%program runs %test experiments with input fragments,
+%performed by each approach.
+To this end, we measure the time performance (i.e., execution time) and the number of program runs performed
+%  of input repairs that were completed
+by \approach, in comparison to lexical ddmax and syntactic ddmax. For a balanced evaluation, we
+%performed an experiment analysing % where we consider %for
+analyse a set of 483 invalid inputs % files
+that where completely repaired by all three approaches within %, in less than
+two minutes, %. % (120,000ms).
 %Specifically
-%To be fair, we report the execution time of each algorithm, 
-without %accounting for 
-%the time for 
-data collection and % or experimental 
-analysis time. 
+%To be fair, we report the execution time of each algorithm,
+without %accounting for
+%the time for
+data collection and % or experimental
+analysis time.
 %For program runs, w
-%We also compute the number of program runs, i.e., %repair attempts, 
-%the number of program execution during the test experiments of each approach.  
+%We also compute the number of program runs, i.e., %repair attempts,
+%the number of program execution during the test experiments of each approach.
 %\recheck{
-\autoref{tab:efficiency} %and figure X} 
-illustrates the efficiency of our approach compared to ddmax. %the state-of-the-art methods. 
+\autoref{tab:efficiency} %and figure X}
+illustrates the efficiency of our approach compared to ddmax. %the state-of-the-art methods.
 
-%For runtime, 
+%For runtime,
 
-In this evaluation, we found that \textit{\approach is efficient in input repair: It is reasonably fast, it takes about \recheck{1.7} seconds to repair an invalid input file, on average}. 
-\approach is 50\% more efficient than lexical ddmax (\recheck{1.7s versus 2.5s}), and syntactic ddmax is about three times as efficient as \approach (\recheck{0.6s versus 1.7s}). 
-%The time performance of 
-%This implies that \approach is twice as fast as %er than 
-%lexical ddmax, but twice slower than syntactic ddmax. 
-This result is %ese findings are 
-due to the %can be explained 
-% is expected since the execution time of %repair attempts (i.e., 
-%by the 
-number of program runs required by each approach. 
-%, which is  %) 
-%the main time-consuming component of \approach, as well as ddmax. 
+In this evaluation, we found that \textit{\approach is efficient in input repair: It is reasonably fast, it takes about \recheck{1.7} seconds to repair an invalid input file, on average}.
+\approach is 50\% more efficient than lexical ddmax (\recheck{1.7s versus 2.5s}), and syntactic ddmax is about three times as efficient as \approach (\recheck{0.6s versus 1.7s}).
+%The time performance of
+%This implies that \approach is twice as fast as %er than
+%lexical ddmax, but twice slower than syntactic ddmax.
+This result is %ese findings are
+due to the %can be explained
+% is expected since the execution time of %repair attempts (i.e.,
+%by the
+number of program runs required by each approach.
+%, which is  %)
+%the main time-consuming component of \approach, as well as ddmax.
 %However,
 %\recheck{
-\autoref{tab:efficiency} %} %  and Table/Figure X show} 
-shows %the %Inspecting 
-the number of %repair attempts (aka 
+\autoref{tab:efficiency} %} %  and Table/Figure X show}
+shows %the %Inspecting
+the number of %repair attempts (aka
 program runs performed by each approach. %for all approaches.
-For instance, the execution time 
-%performance cost is much lower for 
-of \approach %syntactic ddmax 
-is much higher %lower 
-than that of syntactic ddmax 
-%and \approach, since 
-because \approach requires about three times as many program runs as syntactic ddmax (\recheck{505 vs. 1,586} program runs). 
-%these approaches is the number of repair attempts and both lexical ddmax and \approach perform more test experiments than syntactic ddmax, 
-The lower program runs required by syntactic ddmax is because %since 
-it leverages the input grammar to reduce the number of test experiments. 
-%, i.e. test experiments with input fragments. 
-% %) 
-%It shows that \approach performed \recheck{X} less repair attempts than lexical ddmax (\recheck{X vs. X} runs), and 
-%\recheck{X} as many repair attempts as lexical ddmax (\recheck{X vs. X} runs). 
-%We observe that 
-Overall, %these results suggest that 
-\approach is reasonably efficient, and %it is 
+For instance, the execution time
+%performance cost is much lower for
+of \approach %syntactic ddmax
+is much higher %lower
+than that of syntactic ddmax
+%and \approach, since
+because \approach requires about three times as many program runs as syntactic ddmax (\recheck{505 vs. 1,586} program runs).
+%these approaches is the number of repair attempts and both lexical ddmax and \approach perform more test experiments than syntactic ddmax,
+The lower program runs required by syntactic ddmax is because %since
+it leverages the input grammar to reduce the number of test experiments.
+%, i.e. test experiments with input fragments.
+% %)
+%It shows that \approach performed \recheck{X} less repair attempts than lexical ddmax (\recheck{X vs. X} runs), and
+%\recheck{X} as many repair attempts as lexical ddmax (\recheck{X vs. X} runs).
+%We observe that
+Overall, %these results suggest that
+\approach is reasonably efficient, and %it is
 more efficient than lexical ddmax. %In addition, w
-We observe that the number of program runs is the main performance bottleneck of all three approaches. % to the 
-%These results suggest that \approach is %not very time-consuming or 
-%inexpensive, it as a reasonable number of repair attempts and time performance, especially in  comparison to lexical ddmax. 
+We observe that the number of program runs is the main performance bottleneck of all three approaches. % to the
+%These results suggest that \approach is %not very time-consuming or
+%inexpensive, it as a reasonable number of repair attempts and time performance, especially in  comparison to lexical ddmax.
 
 \begin{result}
-%Our 
-\approach %is %reasonably fast, 
-%it 
-repairs an invalid input in less than \recheck{two} (1.7) seconds, on average. %\approach 
-It is 50\% more effective than lexical ddmax, but 2x slower than syntactic ddmax. 
-% is three times as %effective as %only half as 
-%fast 
-%syntactic ddmax. 
+%Our
+\approach %is %reasonably fast,
+%it
+repairs an invalid input in less than \recheck{two} (1.7) seconds, on average. %\approach
+It is 50\% more effective than lexical ddmax, but 2x slower than syntactic ddmax.
+% is three times as %effective as %only half as
+%fast
+%syntactic ddmax.
 \end{result}
 
 \begin{table}[!tbp]\centering
-\caption{Efficiency of \approach vs. the state-of-the-art (ddmax), lower runtime, smaller number of program runs %and significant \% improvement in efficiency 
+\caption{Efficiency of \approach vs. the state-of-the-art (ddmax), lower runtime, smaller number of program runs %and significant \% improvement in efficiency
 are in \textbf{bold}, second-best time performance is in \textit{italics}}
-%\vspace{-0.5cm} 
+%\vspace{-0.5cm}
 \begin{tabular}{|l |  r  r | r  r |}
 \hline
-%& \textbf{\#Repaired} 
+%& \textbf{\#Repaired}
 &  \multicolumn{2}{c|}{\textbf{Runtime (s)}} & \multicolumn{2}{c|}{\textbf{\#Prog. Runs}}  \\
-\textbf{Techniques} %& \textbf{Inputs} 
+\textbf{Techniques} %& \textbf{Inputs}
 &  \textbf{Avg.}  & \textbf{Total} & \textbf{Avg.}  & \textbf{Total} \\
 \hline
-\textbf{Lex. ddmax} & %483 & 
+\textbf{Lex. ddmax} & %483 &
 2.5 & 1188 & 2084 & 1006682 \\
-\textbf{Syn. ddmax} & %483 & 
+\textbf{Syn. ddmax} & %483 &
 \textbf{0.6} & \textbf{280}  & \textbf{505}  & \textbf{244022}  \\
 \hline
-\textbf{\approach} &  %483 & 
+\textbf{\approach} &  %483 &
 \textit{1.7} & \textit{845}  & \textit{1586} & \textit{765987}  \\
 \hline
 %\textbf{\approach vs. Lex.} &  & & & \\
@@ -1984,7 +2010,7 @@ are in \textbf{bold}, second-best time performance is in \textit{italics}}
 
 
 %\noindent
-%\textbf{RQ4 Comparison to the state-of-the-art:} 
+%\textbf{RQ4 Comparison to the state-of-the-art:}
 %
 %
 %\noindent \textit{ Effectiveness \& Efficiency:}
@@ -2098,7 +2124,7 @@ In contrast to \bfr, these approaches aim to guard data from new errors by detec
  \vspace{-0.2mm}
      \textbf{\url{https://github.com/XXX}}
  \end{center}
- 
+
 % \begin{acks}
 % % To Robert, for the bagels and explaining CMYK and color spaces.
 % \end{acks}
