@@ -19,7 +19,7 @@ CHARACTERS = string.printable
 
 # the incomplete substring is one behind boundary. i.e inputval[:boundary] 
 
-MAX_NUM_PER_MASK = 1000
+MAX_NUM_PER_MASK = 1
 
 
 class Status(enum.Enum):
@@ -93,7 +93,7 @@ class Repair:
                         continue  # Skip consecutive whitespace
             v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary:]
             new_items.append(Repair(v, self.boundary,
-                                    mask='_I%d' % self.boundary
+                                    mask='_I%d%s' % (self.boundary, i)
                                     ))
         return new_items
 
