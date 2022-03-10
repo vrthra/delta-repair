@@ -139,13 +139,14 @@ def binary_search(array):
         return len(array)
     left, right = 0, len(array) - 1
     # Main loop which narrows our search range.
-    while left + 1 < right:
+    while right - left > 1:
         middle = (left + right) // 2
         if Repair(array, middle).is_incomplete():
             left = middle
         else:
             right = middle
-    return right - 1
+    assert right - left == 1
+    return left
 
 
 # at the boundary, it is always wrong.
@@ -163,8 +164,8 @@ def sample_items_by_mask(items):
     # sample here. We only want a fixed number of items per mask.
     masks = {}
     for i in items:
-        if i.mask not in masks: masks[(i.mask, i.boundary, i.inputstr[i.boundary-1])] = []
-        masks[(i.mask, i.boundary, i.inputstr[i.boundary-1])].append(i)
+        if i.mask not in masks: masks[(i.mask, i.boundary, i.inputstr[i.boundary - 1])] = []
+        masks[(i.mask, i.boundary, i.inputstr[i.boundary - 1])].append(i)
 
     sampled = []
     for key in masks:
@@ -233,6 +234,7 @@ def validate_json(input_str):
     TESTED[input_str] = _validate_json(input_str)
     return TESTED[input_str]
 
+
 # check if jstr fits in this context.
 def it_fits(input_str):
     try:
@@ -248,6 +250,7 @@ def it_fits(input_str):
                 logit('+', repr(input_str))
                 return True
         return False
+
 
 def _validate_json(input_str):
     try:
@@ -329,6 +332,8 @@ try:
         raise Exception()
     with f.open("r") as ff:
         inp: str = ff.read()
-except:
+except UnicodeDecodeError as e:
+    raise e  # We do not want to repair the file name itself
+except Exception:
     inp: str = sys.argv[1]
 main(inp)
