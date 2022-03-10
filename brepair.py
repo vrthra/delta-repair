@@ -7,12 +7,6 @@ import random
 import enum
 from pathlib import Path
 
-CLEAR_QUEUE_AFTER_EVERY_LOCATION: bool = False
-"""If True, clear the priority queue after every repaired fault location"""
-
-SKIP_CONSECUTIVE_WHITESPACES: bool = False
-"""If True, allow inserting multiple consecutive whitespaces"""
-
 CHARACTERS = string.printable
 """Characters to be inserted in insertion operations.
 """
@@ -87,10 +81,6 @@ class Repair:
     def apply_insert(self):
         new_items = []
         for i in CHARACTERS:
-            if SKIP_CONSECUTIVE_WHITESPACES:
-                if i.isspace():
-                    if self.boundary > 0 and self.inputstr[self.boundary - 1].isspace():
-                        continue  # Skip consecutive whitespace
             v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary:]
             new_items.append(Repair(v, self.boundary,
                                     # mask='_I%d%s' % (self.boundary, i)
@@ -133,7 +123,7 @@ class Repair:
         e_arr.append(ie)
         # return e_arr
 
-        # for insert only apepnd if it resulted in a boundary increase
+        # for insert only append if it resulted in a boundary increase
         new_items = self.apply_insert()
         # now extend these.
         for i in new_items:
@@ -210,10 +200,6 @@ def find_fixes(inputval, boundary):
                 ThreadHash[edit_dist + 1].append(i)
                 if i.is_complete():
                     completed.append(i)
-                    if CLEAR_QUEUE_AFTER_EVERY_LOCATION:
-                        new_boundary = binary_search(i.full_input())
-                        ThreadHash = {edit_dist + 1: [i, new_boundary]}
-                        break  # inner loop
         if completed:
             return completed
         edit_dist += 1
