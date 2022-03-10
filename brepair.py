@@ -258,8 +258,8 @@ if TEST:
     '{ "name": "Dave" "age": 42 }': '"',
     '{ "ABCD":[*"1,2,3,4,5,6"]*}': '*',
             }
-    for k in bsearch_tests:
+    for k, t in bsearch_tests.items():
         bs = binary_search(k, check=check_is_incomplete)
-        assert k[bs] == bsearch_tests[k]
+        assert k[bs] == t, f"Test '{k}' failed - Reported {k[bs]} ({bs}), but expected {t}"
 
 main(inp)
