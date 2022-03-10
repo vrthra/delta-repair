@@ -2,6 +2,8 @@ import json
 TESTED = {}
 FLAG = ''
 
+num_runs = 0
+
 import enum
 
 class Status(enum.Enum):

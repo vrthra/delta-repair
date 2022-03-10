@@ -211,9 +211,6 @@ def repair(inputval):
 
 TESTED = {}
 
-num_runs: int = 0
-
-
 def validate_json(input_str):
     global num_runs
     if input_str in TESTED: return TESTED[input_str]
@@ -222,14 +219,13 @@ def validate_json(input_str):
     return TESTED[input_str]
 
 def main(inputval):
-    global num_runs
     fixes = []
     for fix in repair(inputval):
         fixes.append(fix)
         break  # Return only the first fix
     for fix in fixes:
         print('FIXED', repr(str(fix)))
-    print(f"Number of oracle runs required for fixing this input: {num_runs}")
+    print(f"Number of oracle runs required for fixing this input: {conformingjson.num_runs}")
 
 
 # '{ "ABCD":[*"1,2,3,4,5,6"]*}'
