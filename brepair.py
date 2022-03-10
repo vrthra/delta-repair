@@ -6,6 +6,8 @@ import string
 import random
 import enum
 from pathlib import Path
+import conformingjson
+from conformingjson import Status
 
 CHARACTERS = string.printable
 """Characters to be inserted in insertion operations.
@@ -15,16 +17,9 @@ CHARACTERS = string.printable
 
 MAX_NUM_PER_MASK = 1
 
-
-class Status(enum.Enum):
-    Complete = 0
-    Incomplete = 1
-    Incorrect = -1
-
-
 class Repair:
     def __repr__(self):
-        return repr((self.inputstr, self.boundary))
+        return repr((self.inputstr, self.boundary, repr(str(self))))
 
     def __str__(self):
         return self.inputstr[:self.boundary]
@@ -93,6 +88,7 @@ class Repair:
         assert not self.extended
 
         #bs = binary_search(self.inputstr, left=self.boundary-1, check=check_is_incomplete)
+        #e = self.inputstr[bs] # error causing char.
         #self.boundary = bs
         #return self
 
@@ -191,13 +187,13 @@ Threads = []
 
 
 def find_fixes(inputval, boundary):
-    global Threads, EDIT_DIST
+    global Threads
     # First start with zero edit distance
     # priority, item where item is an array of elements 
     ThreadHash = {0: [Repair(inputval, boundary, extended=True)]}
     edit_dist = 0
     while True:
-        EDIT_DIST = edit_dist
+        conformingjson.FLAG = edit_dist
         # fetch the first rank groups.
         current_items = ThreadHash[edit_dist]
         chosen_items = sample_items_by_mask(current_items)
@@ -235,14 +231,6 @@ def repair(inputval):
     return find_fixes(inputval, boundary)
 
 
-EDIT_DIST = 0
-
-
-def logit(*v):
-    print(EDIT_DIST, *v)
-    return
-
-
 TESTED = {}
 
 num_runs: int = 0
@@ -250,90 +238,8 @@ num_runs: int = 0
 
 def validate_json(input_str):
     if input_str in TESTED: return TESTED[input_str]
-    TESTED[input_str] = _validate_json(input_str)
+    TESTED[input_str] = conformingjson.validate_json(input_str)
     return TESTED[input_str]
-
-
-# check if jstr fits in this context.
-def it_fits(input_str):
-    try:
-        json.loads(input_str)
-        logit('*', repr(input_str))
-        return True
-    except Exception as e:
-        msg = str(e)
-        if msg.startswith('Expecting'):
-            # Expecting value: line 1 column 4 (char 3)
-            n = int(msg.rstrip(')').split()[-1])
-            if n >= len(input_str):
-                logit('+', repr(input_str))
-                return True
-        return False
-
-
-def _validate_json(input_str):
-    global num_runs
-    num_runs += 1
-    try:
-        json.loads(input_str)
-        logit('*', repr(input_str))
-        return Status.Complete, -1, ''
-    except Exception as e:
-        msg = str(e)
-        if msg.startswith('Expecting'):
-            # Expecting value: line 1 column 4 (char 3)
-            n = int(msg.rstrip(')').split()[-1])
-            # If the error is 'outside' the string, it can still be valid
-            if n >= len(input_str):
-                logit('+', repr(input_str))
-                return Status.Incomplete, n, ''
-            elif len(input_str) > 1 and input_str[-1] == '.' and input_str[-2].isdigit():
-                # JSON returns incorrect for [3. rather than incomplete.
-                return Status.Incomplete, n, ''
-            else:
-                logit('X', repr(input_str))
-                remaining = input_str[n:]
-                if remaining in ['t', 'tr', 'tru']:
-                    # check if it fits first.
-                    if it_fits(input_str[:n] + 'true'):
-                        return Status.Incomplete, n, input_str[n]
-                    return Status.Incorrect, n, input_str[n]
-                if remaining in ['f', 'fa', 'fal', 'fals']:
-                    if it_fits(input_str[:n] + 'false'):
-                        return Status.Incomplete, n, input_str[n]
-                    return Status.Incorrect, n, input_str[n]
-                if remaining in ['n', 'nu', 'nul']:
-                    if it_fits(input_str[:n] + 'null'):
-                        return Status.Incomplete, n, input_str[n]
-                    return Status.Incorrect, n, input_str[n]
-                return Status.Incorrect, n, input_str[n]
-        elif msg.startswith('Unterminated'):
-            # Unterminated string starting at: line 1 column 1 (char 0)
-            n = int(msg.rstrip(')').split()[-1])
-            if n >= len(input_str):
-                logit('+', repr(input_str))
-                return Status.Incomplete, n, ''
-            else:
-                logit('+', repr(input_str))
-                return Status.Incomplete, n, input_str[n]
-        elif msg.startswith('Extra data'):
-            n = int(msg.rstrip(')').split()[-1])
-            if n >= len(input_str):
-                logit('X', repr(input_str))
-                return Status.Incorrect, n, ''
-            else:
-                logit('X', repr(input_str))
-                return Status.Incorrect, n, input_str[n]
-        elif msg.startswith('Invalid '):
-            idx = msg.find('(char ')
-            eidx = msg.find(')')
-            s = msg[idx + 6:eidx]
-            n = int(s)
-            logit('X', repr(input_str))
-            return Status.Incorrect, n, input_str[n]
-        else:
-            raise e
-
 
 def main(inputval):
     global num_runs
