@@ -86,8 +86,6 @@ class Repair:
     def extend_item(self):
         assert self._status is None
         assert not self.extended
-        # if self.inputstr == '{ "ABCD":["1,2,3,4,5,6"]*}' :
-        #     import pudb; pudb.set_trace()
         bs = binary_search(self.inputstr, left=self.boundary-1, check=check_is_incomplete)
         if bs >= len(self.inputstr):
             self.boundary = bs
@@ -96,31 +94,6 @@ class Repair:
         e = self.inputstr[bs] # error causing char.
         self.boundary = bs
         return self
-
-        # need to be done on the item becauese of invariant.
-        new_val = 0
-        while True:
-            # assert boundary+new_val <= len(inputstr) <- inserts can overshoot
-            if (self.boundary + new_val) > len(self.inputstr):
-                assert len(self.inputstr) == (self.boundary + new_val - 1)
-                self.boundary = self.boundary + new_val - 1
-                self.extended = True
-                return self
-            s = Repair(self.inputstr, self.boundary + new_val)
-            if s.is_incomplete():
-                new_val += 1
-                continue
-            if s.is_incorrect():
-                # the current new_val is bad, so go back to previous
-                self.boundary = self.boundary + new_val - 1
-                self.extended = True
-                return self
-            if s.is_complete():
-                self.boundary = self.boundary + new_val
-                self.extended = True
-                return self
-            assert False
-        assert False
 
     def repair_and_extend(self):
         e_arr = []
@@ -271,7 +244,7 @@ except UnicodeDecodeError as e:
 except Exception:
     inp: str = sys.argv[1]
 
-TEST = True
+TEST = False
 if TEST:
     bsearch_tests = {
     '{"_":a{}}': 'a',
