@@ -265,4 +265,23 @@ except UnicodeDecodeError as e:
     raise e  # We do not want to repair the file name itself
 except Exception:
     inp: str = sys.argv[1]
+
+TEST = True
+if TEST:
+    bsearch_tests = {
+    '{"_":a{}}': 'a',
+    '{ "ABCD":[*"1,2,3,4,5,6"]*}': '*',
+    '{ "item": "Apple", "price": ***3.45 }': '*',
+    '{ "item": "Apple", "price": **3.45 }': '*',
+    '[*1, *2]': '*',
+	'[**]': '*',
+	'[**1]': '*',
+	'[*1*]': '*',
+    '{ "name": "Dave" "age": 42 }': '"',
+    '{ "ABCD":[*"1,2,3,4,5,6"]*}': '*',
+            }
+    for k in bsearch_tests:
+        bs = binary_search(k, check=check_is_incomplete)
+        assert k[bs] == bsearch_tests[k]
+
 main(inp)
