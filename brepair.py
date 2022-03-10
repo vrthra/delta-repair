@@ -86,11 +86,16 @@ class Repair:
     def extend_item(self):
         assert self._status is None
         assert not self.extended
-
-        #bs = binary_search(self.inputstr, left=self.boundary-1, check=check_is_incomplete)
-        #e = self.inputstr[bs] # error causing char.
-        #self.boundary = bs
-        #return self
+        # if self.inputstr == '{ "ABCD":["1,2,3,4,5,6"]*}' :
+        #     import pudb; pudb.set_trace()
+        bs = binary_search(self.inputstr, left=self.boundary-1, check=check_is_incomplete)
+        if bs >= len(self.inputstr):
+            self.boundary = bs
+            self.extended = True
+            return self
+        e = self.inputstr[bs] # error causing char.
+        self.boundary = bs
+        return self
 
         # need to be done on the item becauese of invariant.
         new_val = 0
@@ -152,7 +157,7 @@ def binary_search(array, left = 0, right = None, check=None):
             left = middle
         else:
             right = middle
-    return right
+    return left
 
 
 # at the boundary, it is always wrong.
@@ -224,7 +229,7 @@ def repair(inputval):
     assert not check_is_incomplete(inputval, len(inputval))
     # first do binary search to find the boundary
     # not a requirement. Extend item will do as well.
-    boundary = binary_search(inputval, check=check_is_incomplete) -1
+    boundary = binary_search(inputval, check=check_is_incomplete)
     c = inputval[boundary] # this should be the error causing char.
     assert check_is_incomplete(inputval, boundary)
     assert not check_is_incomplete(inputval, boundary+1)
@@ -281,7 +286,7 @@ if TEST:
     '{ "ABCD":[*"1,2,3,4,5,6"]*}': '*',
             }
     for k in bsearch_tests:
-        bs = binary_search(k, check=check_is_incomplete) - 1
+        bs = binary_search(k, check=check_is_incomplete)
         assert k[bs] == bsearch_tests[k]
 
 main(inp)
