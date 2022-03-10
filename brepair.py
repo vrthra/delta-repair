@@ -134,9 +134,9 @@ class Repair:
         return e_arr
 
 
-def binary_search(array, left = 0, right = None):
+def binary_search(array, left=0, right=None):
     if Repair(array, len(array)).is_incomplete():
-        return len(array) -1
+        return len(array) - 1
     left, right = 0, len(array) - 1
     # Main loop which narrows our search range.
     while right - left > 1:
@@ -201,8 +201,9 @@ def find_fixes(inputval, boundary):
                 ThreadHash[edit_dist + 1].append(i)
                 if i.is_complete():
                     completed.append(i)
+                    yield i
         if completed:
-            return completed
+            break
         edit_dist += 1
     assert False
 
@@ -227,6 +228,8 @@ def logit(*v):
 
 
 TESTED = {}
+
+num_runs: int = 0
 
 
 def validate_json(input_str):
@@ -253,6 +256,8 @@ def it_fits(input_str):
 
 
 def _validate_json(input_str):
+    global num_runs
+    num_runs += 1
     try:
         json.loads(input_str)
         logit('*', repr(input_str))
@@ -315,9 +320,11 @@ def _validate_json(input_str):
 
 
 def main(inputval):
-    fixes = repair(inputval)
-    for fix in fixes:
+    global num_runs
+    for fix in repair(inputval):
         print('FIXED', repr(str(fix)))
+        break # Return only the first fix
+    print(f"Number of oracle runs required for fixing this input: {num_runs}")
 
 
 # '{ "ABCD":[*"1,2,3,4,5,6"]*}'
