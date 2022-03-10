@@ -83,7 +83,37 @@ class Repair:
                                     ))
         return new_items
 
-    def extend_item(self):
+    # there are many more invalid inserts than valid inserts. So searching the
+    # whole file again is not useful.
+    def extend_inserted_item(self):
+        assert self._status is None
+        assert not self.extended
+        # need to be done on the item becauese of invariant.
+        new_val = 0
+        while True:
+            # assert boundary+new_val <= len(inputstr) <- inserts can overshoot
+            if (self.boundary + new_val) > len(self.inputstr):
+                assert len(self.inputstr) == (self.boundary + new_val - 1)
+                self.boundary = self.boundary + new_val - 1
+                self.extended = True
+                return self
+            s = Repair(self.inputstr, self.boundary + new_val)
+            if s.is_incomplete():
+                new_val += 1
+                continue
+            if s.is_incorrect():
+                # the current new_val is bad, so go back to previous
+                self.boundary = self.boundary + new_val - 1
+                self.extended = True
+                return self
+            if s.is_complete():
+                self.boundary = self.boundary + new_val
+                self.extended = True
+                return self
+            assert False
+        assert False
+
+    def extend_deleted_item(self):
         assert self._status is None
         assert not self.extended
         bs = binary_search(self.inputstr, left=self.boundary-1, check=check_is_incomplete)
@@ -98,7 +128,7 @@ class Repair:
     def repair_and_extend(self):
         e_arr = []
         item_d = self.apply_delete()
-        ie = item_d.extend_item()
+        ie = item_d.extend_deleted_item()
         e_arr.append(ie)
         # return e_arr
 
@@ -107,7 +137,8 @@ class Repair:
         # now extend these.
         for i in new_items:
             old_boundary = i.boundary
-            ie = i.extend_item()
+            ie = i.extend_inserted_item()
+
             if ie.boundary > old_boundary:
                 e_arr.append(ie)
         return e_arr
