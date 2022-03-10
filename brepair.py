@@ -126,12 +126,14 @@ class Repair:
     def extend_deleted_item(self):
         assert self._status is None
         assert not self.extended
-        return self.bsearch_extend_item() #(nxt=0)
+        return self.bsearch_extend_item()
+        #return self.lsearch_extend_item(nxt=0)
 
     def extend_inserted_item(self):
         assert self._status is None
         assert not self.extended
         return self.lsearch_extend_item(nxt=1)
+        #return self.bsearch_extend_item()
 
     def repair_and_extend(self):
         e_arr = []
