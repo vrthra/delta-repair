@@ -134,9 +134,9 @@ class Repair:
         return e_arr
 
 
-def binary_search(array):
+def binary_search(array, left = 0, right = None):
     if Repair(array, len(array)).is_incomplete():
-        return len(array)
+        return len(array) -1
     left, right = 0, len(array) - 1
     # Main loop which narrows our search range.
     while right - left > 1:
