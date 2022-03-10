@@ -85,39 +85,7 @@ class Repair:
                                     ))
         return new_items
 
-    # there are many more invalid inserts than valid inserts. So searching the
-    # whole file again is not useful.
-    def extend_inserted_item(self):
-        assert self._status is None
-        assert not self.extended
-        # need to be done on the item becauese of invariant.
-        new_val = 0
-        while True:
-            # assert boundary+new_val <= len(inputstr) <- inserts can overshoot
-            if (self.boundary + new_val) > len(self.inputstr):
-                assert len(self.inputstr) == (self.boundary + new_val - 1)
-                self.boundary = self.boundary + new_val - 1
-                self.extended = True
-                return self
-            s = Repair(self.inputstr, self.boundary + new_val)
-            if s.is_incomplete():
-                new_val += 1
-                continue
-            if s.is_incorrect():
-                # the current new_val is bad, so go back to previous
-                self.boundary = self.boundary + new_val - 1
-                self.extended = True
-                return self
-            if s.is_complete():
-                self.boundary = self.boundary + new_val
-                self.extended = True
-                return self
-            assert False
-        assert False
-
-    def extend_deleted_item(self):
-        assert self._status is None
-        assert not self.extended
+    def bsearch_extend_item(self):
         bs = binary_search(self.inputstr, left=self.boundary-1, check=check_is_incomplete)
         if bs >= len(self.inputstr):
             self.boundary = bs
@@ -126,6 +94,44 @@ class Repair:
         e = self.inputstr[bs] # error causing char.
         self.boundary = bs
         return self
+
+    # there are many more invalid inserts than valid inserts. So searching the
+    # whole file again is not useful.
+    def lsearch_extend_item(self, nxt=1):
+        # need to be done on the item becauese of invariant.
+        while True:
+            # assert boundary+nxt <= len(inputstr) <- inserts can overshoot
+            if (self.boundary + nxt) > len(self.inputstr):
+                assert len(self.inputstr) == (self.boundary + nxt - 1)
+                self.boundary = self.boundary + nxt - 1
+                self.extended = True
+                return self
+            s = Repair(self.inputstr, self.boundary + nxt)
+            if s.is_incomplete():
+                #return self.extend_deleted_item()
+                nxt += 1
+                continue
+            if s.is_incorrect():
+                # the current nxt is bad, so go back to previous
+                self.boundary = self.boundary + nxt - 1
+                self.extended = True
+                return self
+            if s.is_complete():
+                self.boundary = self.boundary + nxt
+                self.extended = True
+                return self
+            assert False
+        assert False
+
+    def extend_deleted_item(self):
+        assert self._status is None
+        assert not self.extended
+        return self.bsearch_extend_item() #(nxt=0)
+
+    def extend_inserted_item(self):
+        assert self._status is None
+        assert not self.extended
+        return self.lsearch_extend_item(nxt=1)
 
     def repair_and_extend(self):
         e_arr = []
