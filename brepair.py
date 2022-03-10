@@ -218,9 +218,12 @@ def validate_json(input_str):
 
 def main(inputval):
     global num_runs
+    fixes = []
     for fix in repair(inputval):
+        fixes.append(fix)
+        break  # Return only the first fix
+    for fix in fixes:
         print('FIXED', repr(str(fix)))
-        break # Return only the first fix
     print(f"Number of oracle runs required for fixing this input: {num_runs}")
 
 
