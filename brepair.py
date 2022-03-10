@@ -133,20 +133,25 @@ class Repair:
                 e_arr.append(ie)
         return e_arr
 
-
-def binary_search(array, left = 0, right = None):
-    if Repair(array, len(array)).is_incomplete():
-        return len(array) -1
+# https://blog.tylerhou.io/posts/binary-search-with-confidence/
+# check == is_green
+def binary_search(array, left = 0, right = None, check=None):
     left, right = 0, len(array) - 1
+
+    #if not check(array, left):
+    #    return left
+    assert check(array, left)
+
+    if check(array, right):
+        return len(array)
     # Main loop which narrows our search range.
     while right - left > 1:
         middle = (left + right) // 2
-        if Repair(array, middle).is_incomplete():
+        if check(array, middle):
             left = middle
         else:
             right = middle
-    assert right - left == 1
-    return left
+    return right
 
 
 # at the boundary, it is always wrong.
@@ -207,14 +212,18 @@ def find_fixes(inputval, boundary):
     assert False
 
 
+def check_is_incomplete(s, i):
+    s = Repair(s, i)
+    return s.is_incomplete()
+
 def repair(inputval):
-    assert Repair(inputval, 0).is_incomplete()
-    assert Repair(inputval, len(inputval)).status() in [Status.Incomplete, Status.Incorrect]
+    assert check_is_incomplete(inputval, 0) # 1
+    assert not check_is_incomplete(inputval, len(inputval))
     # first do binary search to find the boundary
     # not a requirement. Extend item will do as well.
-    boundary = binary_search(inputval)
-    assert Repair(inputval, boundary).is_incomplete()
-    assert boundary + 1 >= len(inputval) or Repair(inputval, boundary + 1).is_incorrect()
+    boundary = binary_search(inputval, check=check_is_incomplete)
+    assert check_is_incomplete(inputval, boundary-1)
+    assert not check_is_incomplete(inputval, boundary)
     return find_fixes(inputval, boundary)
 
 
