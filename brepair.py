@@ -281,7 +281,7 @@ if TEST:
     '{ "ABCD":[*"1,2,3,4,5,6"]*}': '*',
             }
     for k in bsearch_tests:
-        bs = binary_search(k, check=check_is_incomplete)
+        bs = binary_search(k, check=check_is_incomplete) - 1
         assert k[bs] == bsearch_tests[k]
 
 main(inp)
