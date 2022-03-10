@@ -91,6 +91,11 @@ class Repair:
     def extend_item(self):
         assert self._status is None
         assert not self.extended
+
+        #bs = binary_search(self.inputstr, left=self.boundary-1, check=check_is_incomplete)
+        #self.boundary = bs
+        #return self
+
         # need to be done on the item becauese of invariant.
         new_val = 0
         while True:
@@ -214,17 +219,19 @@ def find_fixes(inputval, boundary):
 
 
 def check_is_incomplete(s, i):
-    s = Repair(s, i)
-    return s.is_incomplete()
+    s_ = Repair(s, i)
+    s = str(s_)
+    return s_.is_incomplete()
 
 def repair(inputval):
     assert check_is_incomplete(inputval, 0) # 1
     assert not check_is_incomplete(inputval, len(inputval))
     # first do binary search to find the boundary
     # not a requirement. Extend item will do as well.
-    boundary = binary_search(inputval, check=check_is_incomplete)
-    assert check_is_incomplete(inputval, boundary-1)
-    assert not check_is_incomplete(inputval, boundary)
+    boundary = binary_search(inputval, check=check_is_incomplete) -1
+    c = inputval[boundary] # this should be the error causing char.
+    assert check_is_incomplete(inputval, boundary)
+    assert not check_is_incomplete(inputval, boundary+1)
     return find_fixes(inputval, boundary)
 
 

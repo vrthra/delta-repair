@@ -19,6 +19,7 @@ push:
 	git push origin main
 
 testbrepair:
+	python3 brepair.py '{"_":a{}}'  | grep FIX
 	python3 brepair.py '{ "ABCD":[*"1,2,3,4,5,6"]*}'  | grep FIX
 	python3 brepair.py '{ "item": "Apple", "price": ***3.45 }'  | grep FIX
 	python3 brepair.py '{ "item": "Apple", "price": **3.45 }'  | grep FIX
