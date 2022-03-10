@@ -145,7 +145,7 @@ def binary_search(array, left = 0, right = None, check=None):
     if check(array, right):
         return len(array)
     # Main loop which narrows our search range.
-    while right - left > 1:
+    while left + 1 < right:
         middle = (left + right) // 2
         if check(array, middle):
             left = middle
