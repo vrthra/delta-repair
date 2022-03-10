@@ -214,8 +214,8 @@ def find_fixes(inputval, boundary):
     assert False
 
 
-def check_is_incomplete(s, i):
-    s_ = Repair(s, i)
+def check_is_incomplete(sval, i):
+    s_ = Repair(sval, i)
     s = str(s_)
     return s_.is_incomplete()
 
