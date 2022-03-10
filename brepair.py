@@ -215,7 +215,9 @@ num_runs: int = 0
 
 
 def validate_json(input_str):
+    global num_runs
     if input_str in TESTED: return TESTED[input_str]
+    num_runs += 1
     TESTED[input_str] = conformingjson.validate_json(input_str)
     return TESTED[input_str]
 
