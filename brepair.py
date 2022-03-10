@@ -232,16 +232,17 @@ def main(inputval):
 # '[**1]'
 # '[*1*]'
 # '{ "name": "Dave" "age": 42 }'
+INPUT = None
 try:
     f = Path(sys.argv[1])
     if not f.is_file():
         raise Exception()
     with f.open("r") as ff:
-        inp: str = ff.read()
+        INPUT: str = ff.read()
 except UnicodeDecodeError as e:
     raise e  # We do not want to repair the file name itself
 except Exception:
-    inp: str = sys.argv[1]
+    INPUT: str = sys.argv[1]
 
 TEST = False
 if TEST:
@@ -261,4 +262,4 @@ if TEST:
         bs = binary_search(k, check=check_is_incomplete)
         assert k[bs] == t, f"Test '{k}' failed - Reported {k[bs]} ({bs}), but expected {t}"
 
-main(inp)
+main(INPUT)
