@@ -19,7 +19,9 @@ MAX_NUM_PER_MASK = 1
 
 class Repair:
     def __repr__(self):
-        return repr((self.inputstr, self.boundary, repr(str(self))))
+        s = repr(str(self))
+        v = (self.inputstr, self.boundary, s)
+        return repr(v)
 
     def __str__(self):
         return self.inputstr[:self.boundary]
