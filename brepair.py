@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 import json
 import heapq
 import sys
@@ -6,6 +7,8 @@ import string
 import random
 import enum
 from pathlib import Path
+from typing import Iterable
+
 import conformingjson
 from conformingjson import Status
 
@@ -16,6 +19,7 @@ CHARACTERS = string.printable
 # the incomplete substring is one behind boundary. i.e inputval[:boundary] 
 
 MAX_NUM_PER_MASK = 1
+
 
 class Repair:
     def __repr__(self):
@@ -68,30 +72,30 @@ class Repair:
     def is_complete(self):
         return self.status() == Status.Complete
 
-    def apply_delete(self):
+    def apply_delete(self) -> Repair:
         return Repair(self.inputstr[:self.boundary] +
                       self.inputstr[self.boundary + 1:], self.boundary,
                       mask='%s_D%d' % (self.mask, self.boundary))
 
-    def apply_insert(self):
+    def apply_insert(self) -> list[Repair]:
         new_items = []
         for i in CHARACTERS:
             v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary:]
-            new_items.append(Repair(v, self.boundary,
+            new_items.append(Repair(v, self.boundary + 1,
                                     # mask='_I%d%s' % (self.boundary, i)
                                     mask='%s_I%d' % (self.mask, self.boundary)
                                     ))
         return new_items
 
-    def extend_item(self):
+    def extend_item(self) -> Repair:
         assert self._status is None
         assert not self.extended
-        bs = binary_search(self.inputstr, left=self.boundary-1, check=check_is_incomplete)
+        bs = binary_search(self.inputstr, left=self.boundary - 1, check=check_is_incomplete)
         if bs >= len(self.inputstr):
             self.boundary = bs
             self.extended = True
             return self
-        e = self.inputstr[bs] # error causing char.
+        e = self.inputstr[bs]  # error causing char.
         self.boundary = bs
         return self
 
@@ -104,20 +108,18 @@ class Repair:
 
         # for insert only append if it resulted in a boundary increase
         new_items = self.apply_insert()
-        # now extend these.
         for i in new_items:
-            old_boundary = i.boundary
-            ie = i.extend_item()
-            if ie.boundary > old_boundary:
-                e_arr.append(ie)
+            if i.status() != Status.Incorrect:
+                e_arr.append(i)  # Inserting the char did not cause the Repair to become invalid
         return e_arr
+
 
 # https://blog.tylerhou.io/posts/binary-search-with-confidence/
 # check == is_green
-def binary_search(array, left = 0, right = None, check=None):
+def binary_search(array, left=0, right=None, check=None):
     left, right = 0, len(array) - 1
 
-    #if not check(array, left):
+    # if not check(array, left):
     #    return left
     assert check(array, left)
 
@@ -197,15 +199,16 @@ def check_is_incomplete(sval, i):
     s = str(s_)
     return s_.is_incomplete()
 
-def repair(inputval):
-    assert check_is_incomplete(inputval, 0) # 1
+
+def repair(inputval) -> Iterable[str]:
+    assert check_is_incomplete(inputval, 0)  # 1
     assert not check_is_incomplete(inputval, len(inputval))
     # first do binary search to find the boundary
     # not a requirement. Extend item will do as well.
     boundary = binary_search(inputval, check=check_is_incomplete)
-    c = inputval[boundary] # this should be the error causing char.
+    c = inputval[boundary]  # this should be the error causing char.
     assert check_is_incomplete(inputval, boundary)
-    assert not check_is_incomplete(inputval, boundary+1)
+    assert not check_is_incomplete(inputval, boundary + 1)
     return find_fixes(inputval, boundary)
 
 
@@ -219,11 +222,15 @@ def validate_json(input_str):
     TESTED[input_str] = conformingjson.validate_json(input_str)
     return TESTED[input_str]
 
+
 def main(inputval):
     global num_runs
+    fixes = []
     for fix in repair(inputval):
+        fixes.append(fix)
+        break  # Return only the first fix
+    for fix in fixes:
         print('FIXED', repr(str(fix)))
-        break # Return only the first fix
     print(f"Number of oracle runs required for fixing this input: {num_runs}")
 
 
@@ -247,19 +254,19 @@ except Exception:
 TEST = False
 if TEST:
     bsearch_tests = {
-    '{"_":a{}}': 'a',
-    '{ "ABCD":[*"1,2,3,4,5,6"]*}': '*',
-    '{ "item": "Apple", "price": ***3.45 }': '*',
-    '{ "item": "Apple", "price": **3.45 }': '*',
-    '[*1, *2]': '*',
-	'[**]': '*',
-	'[**1]': '*',
-	'[*1*]': '*',
-    '{ "name": "Dave" "age": 42 }': '"',
-    '{ "ABCD":[*"1,2,3,4,5,6"]*}': '*',
-            }
-    for k in bsearch_tests:
+        '{"_":a{}}': 'a',
+        '{ "ABCD":[*"1,2,3,4,5,6"]*}': '*',
+        '{ "item": "Apple", "price": ***3.45 }': '*',
+        '{ "item": "Apple", "price": **3.45 }': '*',
+        '[*1, *2]': '*',
+        '[**]': '*',
+        '[**1]': '*',
+        '[*1*]': '*',
+        '{ "name": "Dave" "age": 42 }': '"',
+        '{ "ABCD":[*"1,2,3,4,5,6"]*}': '*',
+    }
+    for k, t in bsearch_tests.items():
         bs = binary_search(k, check=check_is_incomplete)
-        assert k[bs] == bsearch_tests[k]
+        assert k[bs] == t, f"Test '{k}' failed - Reported {k[bs]} ({bs}), but expected {t}"
 
 main(inp)
