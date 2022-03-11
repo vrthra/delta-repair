@@ -9,6 +9,8 @@ from pathlib import Path
 import conformingjson
 from conformingjson import Status
 
+MAX_SIMULTANIOUS_CORRECTIONS = -1 # set it to a positive number to restrict the queue.
+
 CHARACTERS = string.printable
 """Characters to be inserted in insertion operations.
 """
@@ -201,6 +203,10 @@ def sample_items_by_mask(items):
         sampled.extend(res)
     return sampled
 
+def filter_best(items):
+    if MAX_SIMULTANIOUS_CORRECTIONS < 0: return items
+    boundaries = sorted({i.boundary for i in items}, reverse=True)
+    return [i for i in items if i.boundary in  boundaries[:MAX_SIMULTANIOUS_CORRECTIONS]]
 
 Threads = []
 
@@ -216,7 +222,7 @@ def find_fixes(inputval, boundary):
         # fetch the first rank groups.
         current_items = next_items
         next_items = []
-        chosen_items = sample_items_by_mask(current_items)
+        chosen_items = filter_best(sample_items_by_mask(current_items))
         completed = []
         for item in chosen_items:
             # try repair and extending each item until we get incorrect.
