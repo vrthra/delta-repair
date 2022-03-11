@@ -163,7 +163,7 @@ def binary_search(array, left = 0, right = None, check=None):
     assert check(array, left)
 
     if check(array, right):
-        return len(array)
+        return len(array)-1
     # Main loop which narrows our search range.
     while left + 1 < right:
         middle = (left + right) // 2
