@@ -208,13 +208,14 @@ Threads = []
 def find_fixes(inputval, boundary):
     global Threads
     # First start with zero edit distance
-    # priority, item where item is an array of elements 
-    ThreadHash = {0: [Repair(inputval, boundary, extended=True)]}
+    # priority, item where item is an array of elements
+    next_items = [Repair(inputval, boundary, extended=True)]
     edit_dist = 0
     while True:
         conformingjson.FLAG = edit_dist
         # fetch the first rank groups.
-        current_items = ThreadHash[edit_dist]
+        current_items = next_items
+        next_items = []
         chosen_items = sample_items_by_mask(current_items)
         completed = []
         for item in chosen_items:
@@ -222,8 +223,7 @@ def find_fixes(inputval, boundary):
             new_items = item.repair_and_extend()
 
             for i in new_items:
-                if (edit_dist + 1) not in ThreadHash: ThreadHash[edit_dist + 1] = []
-                ThreadHash[edit_dist + 1].append(i)
+                next_items.append(i)
                 if i.is_complete():
                     completed.append(i)
                     yield i
