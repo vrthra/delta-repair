@@ -21,6 +21,7 @@ push:
 PATTERN="Number"
 
 testbrepair:
+	python3 brepair.py 'truestory"'  | grep $(PATTERN)
 	python3 brepair.py '{"_":a{}}'  | grep $(PATTERN)
 	python3 brepair.py '{ "ABCD":[*"1,2,3,4,5,6"]*}'  | grep $(PATTERN)
 	python3 brepair.py '{ "item": "Apple", "price": ***3.45 }'  | grep $(PATTERN)

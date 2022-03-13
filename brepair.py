@@ -27,10 +27,15 @@ class Repair:
         v = (self.inputstr, self.boundary, s)
         return repr(v)
 
+    def set_boundary(self, b):
+        assert b >= 0
+        self.boundary = b
+
     def __str__(self):
         return self.inputstr[:self.boundary]
 
     def __init__(self, inputstr, boundary, mask='', extended=False):
+        assert boundary >= 0
         self.inputstr, self.boundary = inputstr, boundary
         self.extended = extended
         self.mask = mask
@@ -116,13 +121,14 @@ class Repair:
         return new_items
 
     def bsearch_extend_item(self):
-        bs = binary_search(self.inputstr, left=self.boundary-1, check=check_is_incomplete)
+        bs = binary_search(self.inputstr, left=self.boundary, check=check_is_incomplete)
+        assert bs >= 0
         if bs >= len(self.inputstr):
-            self.boundary = bs
+            self.set_boundary(bs)
             self.extended = True
             return self
-        e = self.inputstr[bs] # error causing char.
-        self.boundary = bs
+        # e = self.inputstr[bs] # error causing char.
+        self.set_boundary(bs)
         return self
 
     # there are many more invalid inserts than valid inserts. So searching the
@@ -133,7 +139,7 @@ class Repair:
             # assert boundary+nxt <= len(inputstr) <- inserts can overshoot
             if (self.boundary + nxt) > len(self.inputstr):
                 assert len(self.inputstr) == (self.boundary + nxt - 1)
-                self.boundary = self.boundary + nxt - 1
+                self.set_boundary (self.boundary + nxt - 1)
                 self.extended = True
                 return self
             s = Repair(self.inputstr, self.boundary + nxt)
@@ -143,11 +149,11 @@ class Repair:
                 continue
             if s.is_incorrect():
                 # the current nxt is bad, so go back to previous
-                self.boundary = self.boundary + nxt - 1
+                self.set_boundary(self.boundary + nxt - 1)
                 self.extended = True
                 return self
             if s.is_complete():
-                self.boundary = self.boundary + nxt
+                self.set_boundary(self.boundary + nxt)
                 self.extended = True
                 return self
             assert False
@@ -180,6 +186,7 @@ class Repair:
 # https://blog.tylerhou.io/posts/binary-search-with-confidence/
 # check == is_green
 def binary_search(array, left = 0, right = None, check=None):
+    if not array: return left
     left, right = 0, len(array) - 1
 
     #if not check(array, left):
@@ -213,8 +220,9 @@ def sample_items_by_mask(items):
     # sample here. We only want a fixed number of items per mask.
     masks = {}
     for i in items:
-        if i.mask not in masks: masks[(i.mask, i.boundary, i.inputstr[i.boundary - 1])] = []
-        masks[(i.mask, i.boundary, i.inputstr[i.boundary - 1])].append(i)
+        key = (i.mask, i.boundary, i.inputstr[i.boundary-1:i.boundary])
+        if i.mask not in masks: masks[key] = []
+        masks[key].append(i)
 
     sampled = []
     for key in masks:
