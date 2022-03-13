@@ -1113,15 +1113,21 @@ This function does a binary search (\Cref{lst:bsearch}) on the
 argument string looking for the parse boundary where the return value changes
 from \emph{incomplete} to \emph{incorrect}.
 \begin{lstlisting}[caption=binary search,label={lst:bsearch}]
-def binary_search(array):
+
+def check_is_incomplete(sval, i):
+    return is_incomplete(Repair(sval, i))
+
+def binary_search(array, left = 0, right = None):
     left, right = 0, len(array) - 1
+    if is_incomplete(Repair(array, right)):
+        return len(array)-1
     while left + 1 < right:
         middle = (left + right) // 2
         if is_incomplete(Repair(array, middle)):
             left = middle
         else:
             right = middle
-    return right - 1
+    return left
 \end{lstlisting}
 The \<boundary> value is then used to start the first repair
 thread, which starts at edit distance \<0>. The edit distance specifies the
@@ -1188,20 +1194,34 @@ the string results in \emph{incomplete} rather than \emph{incorrect}. If the
 string results in \emph{incomplete}, a new parse boundary is found by
 repeatedly extending the string with a pending character from the remaining
 suffix in the input string.
+
 \begin{lstlisting}[caption=Extend the boundary,label={lst:extenditem}]
-def extend_item(item):
-    nv = 0
+def extend_deleted_item(item):
+    return bsearch_extend_item(item)
+
+def extend_inserted_item(item):
+    return lsearch_extend_item(item, nxt=1)
+
+def bsearch_extend_item(item):
+    bs = binary_search(item.inputstr, left=item.boundary-1)
+    if bs >= len(item.inputstr):
+        item.boundary = bs
+        return item
+    item.boundary = bs
+    return item
+
+def lsearch_extend_item(item, nxt=1):
     while True:
-        if (item.boundary + nv) > len(item.inputstr):
-            return Repair(item.inputstr, boundary + nv - 1)
-        s = Repair(item.inputstr, item.boundary + nv)
+        if (item.boundary + nxt) > len(item.inputstr):
+            item.boundary = item.boundary + nxt - 1
+            return item
+        s = Repair(item.inputstr, item.boundary + nxt)
         if is_incomplete(s):
-            nv += 1
+            nxt += 1
             continue
         if is_incorrect(s):
-            return Repair(item.inputstr, boundary + nv - 1)
-        if is_complete(s):
-            return Repair(item.inputstr, boundary + nv)
+            item.boundary = item.boundary + nxt - 1
+            return item
 \end{lstlisting}
 If this succeds, the parse boundary after the repair
 would be larger than the old parse boundar. Hence, if the parse boundary has
@@ -1209,10 +1229,10 @@ increased (\Cref{lst:repairandextend}). If the boundary has increased, the
 repair is saved. If not, the repair is discarded.
 \begin{lstlisting}[caption=Repair and extend,label={lst:repairandextend}]
 def repair_and_extend(item):
-    e_arr = [extend_item(apply_delete(item))]
+    e_arr = [extend_deleted_item(apply_delete(item))]
     for i in apply_insert(item):
         old_boundary = i.boundary
-        ie = extend_item(i)
+        ie = extend_inserted_item(i)
         if ie.boundary > old_boundary:
     	e_arr.append(ie)
     return e_arr
