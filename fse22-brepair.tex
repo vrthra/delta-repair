@@ -1236,6 +1236,15 @@ def repair_and_extend(item):
         if ie.boundary > old_boundary:
     	e_arr.append(ie)
     return e_arr
+
+def repair_and_extend(item):
+    e_arr = [extend_deleted_item(apply_delete(item))]
+    e_arr = [extend_deleted_item(apply_insert(item))]
+
+    # for insert only append if it resulted in a boundary increase
+    new_items = self.apply_insert()
+    e_arr.extend(new_items)
+    return e_arr
 \end{lstlisting}
 The output frm \<find\_fixes()> (\Cref{lst:findfixes}) is a set of repairs with
 the least edit distance from the passed input string.

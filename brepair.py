@@ -82,7 +82,7 @@ class Repair:
     def apply_delete(self):
         return Repair(self.inputstr[:self.boundary] +
                       self.inputstr[self.boundary + 1:], self.boundary,
-                      mask='%s_D%d' % (self.mask, self.boundary))
+                      mask='%s_D%d' % (self.mask, self.boundary)).extend_deleted_item()
 
     # one of the problems with deletion is that we do not know exactly where the
     # character was deleted from, eventhough the parser can be conforming. For
@@ -174,9 +174,7 @@ class Repair:
     def repair_and_extend(self):
         e_arr = []
         item_d = self.apply_delete()
-        ie = item_d.extend_deleted_item()
-        e_arr.append(ie)
-        # return e_arr
+        e_arr.append(item_d)
 
         # for insert only append if it resulted in a boundary increase
         new_items = self.apply_insert()
