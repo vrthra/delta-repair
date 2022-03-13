@@ -81,10 +81,11 @@ class Repair:
         new_items = []
         for i in CHARACTERS:
             v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary:]
-            new_items.append(Repair(v, self.boundary,
-                                    # mask='_I%d%s' % (self.boundary, i)
-                                    mask='%s_I%d' % (self.mask, self.boundary)
-                                    ))
+            new_item = Repair(v, self.boundary, mask='%s_I%d' % (self.mask, self.boundary))
+            old_boundary = new_item.boundary
+            ie = new_item.extend_inserted_item()
+            if ie.boundary > old_boundary:
+                new_items.append(ie)
         return new_items
 
     def bsearch_extend_item(self):
@@ -146,13 +147,7 @@ class Repair:
 
         # for insert only append if it resulted in a boundary increase
         new_items = self.apply_insert()
-        # now extend these.
-        for i in new_items:
-            old_boundary = i.boundary
-            ie = i.extend_inserted_item()
-
-            if ie.boundary > old_boundary:
-                e_arr.append(ie)
+        e_arr.extend(new_items)
         return e_arr
 
 # https://blog.tylerhou.io/posts/binary-search-with-confidence/
