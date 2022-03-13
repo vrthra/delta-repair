@@ -1090,14 +1090,33 @@ accessing its first argument with \<inputstr> and its second argument with
 def apply_delete(item):
     inp = item.inputstr[:item.boundary] +
           item.inputstr[item.boundary + 1:]
-    return Repair(inp, item.boundary)
+    return extend_deleted_item(Repair(inp, item.boundary))
+
+def insert_char(item, i):
+    suffix = item.inputstr[item.boundary:]
+    return_lst = []
+    if LAST_INSERT_ONLY:
+        v = item.inputstr[:item.boundary] + i + suffix
+        new_item = Repair(v, item.boundary, mask='%s_I%d' % (item.mask, item.boundary))
+        old_boundary = new_item.boundary
+        ie = extend_inserted_item(new_item)
+        if ie.boundary > old_boundary:
+            return_lst.append(ie)
+    else:
+        for k in range(item.boundary):
+            v = item.inputstr[:k] + i + item.inputstr[k:item.boundary] + suffix
+            new_item = Repair(v, k, mask='%s_I%d' % (item.mask, k))
+            ie = extend_inserted_item(new_item)
+            if ie.boundary > k:
+               return_lst.append(ie)
+    return return_lst
 
 def apply_insert(item):
     new_items = []
-    for i in string.printable:
-        v = item.inputstr[:item.boundary] +
-            i + item.inputstr[item.boundary:]
-        new_items.append(Repair(v, item.boundary))
+    for i in CHARACTERS:
+        items = item.insert_char(i)
+        if items:
+            new_items.extend(items)
     return new_items
 \end{lstlisting}
 
@@ -1113,10 +1132,6 @@ This function does a binary search (\Cref{lst:bsearch}) on the
 argument string looking for the parse boundary where the return value changes
 from \emph{incomplete} to \emph{incorrect}.
 \begin{lstlisting}[caption=binary search,label={lst:bsearch}]
-
-def check_is_incomplete(sval, i):
-    return is_incomplete(Repair(sval, i))
-
 def binary_search(array, left = 0, right = None):
     left, right = 0, len(array) - 1
     if is_incomplete(Repair(array, right)):
@@ -1229,22 +1244,7 @@ increased (\Cref{lst:repairandextend}). If the boundary has increased, the
 repair is saved. If not, the repair is discarded.
 \begin{lstlisting}[caption=Repair and extend,label={lst:repairandextend}]
 def repair_and_extend(item):
-    e_arr = [extend_deleted_item(apply_delete(item))]
-    for i in apply_insert(item):
-        old_boundary = i.boundary
-        ie = extend_inserted_item(i)
-        if ie.boundary > old_boundary:
-    	e_arr.append(ie)
-    return e_arr
-
-def repair_and_extend(item):
-    e_arr = [extend_deleted_item(apply_delete(item))]
-    e_arr = [extend_deleted_item(apply_insert(item))]
-
-    # for insert only append if it resulted in a boundary increase
-    new_items = self.apply_insert()
-    e_arr.extend(new_items)
-    return e_arr
+    return [apply_delete(item)] + apply_insert(item)
 \end{lstlisting}
 The output frm \<find\_fixes()> (\Cref{lst:findfixes}) is a set of repairs with
 the least edit distance from the passed input string.
