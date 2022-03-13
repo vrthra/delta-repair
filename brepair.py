@@ -9,7 +9,9 @@ from pathlib import Path
 import conformingjson
 from conformingjson import Status
 
-MAX_SIMULTANIOUS_CORRECTIONS = -1 # set it to a positive number to restrict the queue.
+MAX_SIMULTANIOUS_CORRECTIONS = 5 # set it to a positive number to restrict the queue.
+
+LAST_INSERT_ONLY = True
 
 CHARACTERS = string.printable
 """Characters to be inserted in insertion operations.
@@ -77,15 +79,40 @@ class Repair:
                       self.inputstr[self.boundary + 1:], self.boundary,
                       mask='%s_D%d' % (self.mask, self.boundary))
 
-    def apply_insert(self):
-        new_items = []
-        for i in CHARACTERS:
-            v = self.inputstr[:self.boundary] + i + self.inputstr[self.boundary:]
+    # one of the problems with deletion is that we do not know exactly where the
+    # character was deleted from, eventhough the parser can be conforming. For
+    # example, given an original string "[1,2,3]", where the corruption happened
+    # at the first character, we will only get the failure at the last
+    # character. Hence to be accurate, what we shouuld do is to try insert all
+    # characters everywhere, and see if it helps. This is ofcourse not a very
+    # easy task. So we control this behavior with a switch.
+    def insert_char(self, i):
+        suffix = self.inputstr[self.boundary:]
+        return_lst = []
+        if LAST_INSERT_ONLY:
+            v = self.inputstr[:self.boundary] + i + suffix
             new_item = Repair(v, self.boundary, mask='%s_I%d' % (self.mask, self.boundary))
             old_boundary = new_item.boundary
             ie = new_item.extend_inserted_item()
             if ie.boundary > old_boundary:
-                new_items.append(ie)
+                return_lst.append(ie)
+        else:
+            # the repair could be any where from 0 to self.boundary (inclusive).
+            # So we try all
+            for k in range(self.boundary):
+                v = self.inputstr[:k] + i + self.inputstr[k:self.boundary] + suffix
+                new_item = Repair(v, k, mask='%s_I%d' % (self.mask, k))
+                ie = new_item.extend_inserted_item()
+                if ie.boundary > k:
+                   return_lst.append(ie)
+        return return_lst
+
+    def apply_insert(self):
+        new_items = []
+        for i in CHARACTERS:
+            items = self.insert_char(i)
+            if items:
+                new_items.extend(items)
         return new_items
 
     def bsearch_extend_item(self):
