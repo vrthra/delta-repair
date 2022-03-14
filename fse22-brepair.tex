@@ -1322,7 +1322,7 @@ the least edit distance from the passed input string.
 The \brepair algorithm works as follows.
 We start with the assumption that the parser correctly signals
 \emph{incomplete} for incomplete inputs, \emph{incorrect} for other invalid
-inputs, and \emph{complete} if the input was valid.
+inputs, and \emph{complete} if the input was valid.\todo{we need to sync these steps with the workflow diagram (\autoref{fig:brepair_flowchart}), and also name/number steps 1,2, ...}
 \begin{itemize}
 \item \emph{Binary search.} Given any corrupt input, \brepair starts by a
 binary search of the input to determine the substring at which \emph{incomplete}
@@ -1373,6 +1373,8 @@ suggestions at the lowest edit distance possible. If more suggestions are
 required, the process can be restarted with the threads in the next rank.
 \end{itemize}
 
+\noindent
+\textbf{Complexity:}\todo{what is the space/time complexity of the \approach, and how does this compare to that of \ddmax. }
 
 %\section{Approach}
 
@@ -1464,82 +1466,51 @@ required, the process can be restarted with the threads in the next rank.
     %TODO
 \end{tikzpicture}
 % \vspace*{-0.1in}
-    \caption{Work flow of \brepair}\label{fig:ddmax_flowchart}
+    \caption{Work flow of \brepair}
+    \label{fig:brepair_flowchart}
     % \vspace*{-0.1in}
 \end{figure}
-\newcommand{\refnumber}[1]{\hyperref[fig:ddmax_flowchart]{Step~#1}}
+\newcommand{\refnumber}[1]{\hyperref[fig:brepair_flowchart]{Step~#1}}
 
 
-This section describes the experimental setup of this work.
+This section describes the experimental setup of this work. In particular, we discuss %specify %especially 
+the research questions, objects (subject programs and invalid inputs), research protocol, metrics/measures and implementation details of our experiments. % work.  
 
-\subsubsection*{\bf Workflow}
-\Cref{fig:ddmax_flowchart} shows the workflow of \brepair.
-When running \brepair, it first performs a binary search on the input file in order to find the longest possible prefix that is flagged as \emph{incomplete} by the subject program (\refnumber{1}).
-This longest found prefix is then pushed onto a priority queue (\emph{PQ}) that sorts its elements based on their editing distance to the original input, prioritizing elements with a lower editing distance.
-In the next step, \brepair pops the element with the lowest editing distance from PQ and checks if the input consisting of the prefix and the remaining parts of the original input is flagged as \emph{correct}, in which case the repair is complete and the repaired input is returned (\refnumber{2}).\par
-Then, three operations are performed on the prefix that was popped from the queue:
-First, \brepair tries to append the first character of the remaining original input to the prefix (\refnumber{3}).
-If this results in an incomplete (or correct) input, this means that \brepair repaired one faulty location in the original input, since the prefix was determined as the longest possible prefix that is incomplete (\refnumber{1}).
-Threrfore, in this case, \brepair searches for a new longest incomplete prefix.
-If the operation did not succeed, \brepair pushes a new prefix onto the priority queue where the first character of the remaining original input is deleted (increasing the editing distance by 1) (\refnumber{4}).
-Finally, before popping the next prefix from the queue, \brepair tries to append all characters to the prefix that do not cause the prefix to become \emph{incorrect}, also increasing the editing distance by 1 (\refnumber{5}).
+%\subsubsection*{\bf Workflow}
+%\Cref{fig:ddmax_flowchart} shows the workflow of \brepair.
+%When running \brepair, it first performs a binary search on the input file in order to find the longest possible prefix that is flagged as \emph{incomplete} by the subject program (\refnumber{1}).
+%This longest found prefix is then pushed onto a priority queue (\emph{PQ}) that sorts its elements based on their editing distance to the original input, prioritizing elements with a lower editing distance.
+%In the next step, \brepair pops the element with the lowest editing distance from PQ and checks if the input consisting of the prefix and the remaining parts of the original input is flagged as \emph{correct}, in which case the repair is complete and the repaired input is returned (\refnumber{2}).\par
+%Then, three operations are performed on the prefix that was popped from the queue:
+%First, \brepair tries to append the first character of the remaining original input to the prefix (\refnumber{3}).
+%If this results in an incomplete (or correct) input, this means that \brepair repaired one faulty location in the original input, since the prefix was determined as the longest possible prefix that is incomplete (\refnumber{1}).
+%Threrfore, in this case, \brepair searches for a new longest incomplete prefix.
+%If the operation did not succeed, \brepair pushes a new prefix onto the priority queue where the first character of the remaining original input is deleted (increasing the editing distance by 1) (\refnumber{4}).
+%Finally, before popping the next prefix from the queue, \brepair tries to append all characters to the prefix that do not cause the prefix to become \emph{incorrect}, also increasing the editing distance by 1 (\refnumber{5}).
 
-\subsubsection*{\bf Test inputs}
-As test inputs, we crawled a large corpus of valid and invalid real-world files from GitHub using the GitHub crawling API~\cite{githubapi}.
-%TODO add table with number of files?
-For each format, we introduced a set of 100 artificially mutated (invalid) files that we mutated from 50 randomly selected valid real-world files.
-Half of those mutated files contain a single mutated byte and the other half contains multiple (up to 16) mutated bytes.
-Each mutation can either be a byte-flip, an insertion or a deletion, which we believe to resemble real-world corruptions as close as possible (e.g. bit rot on hard disks or transmission errors in network protocols).
+\subsubsection*{\bf Research Questions: }
+In this paper, we investigate the \textit{effectiveness} (RQ1), \textit{data recovery} (RQ2), \textit{diagnostic quality} (RQ3) and \textit{efficiency} (RQ4) of our approach using several well-designed experiments. For each experiment, we also examine how \approach compares to the state-of-the-art techniques, namely the \textit{baseline} (built-in repair of subject programs), \textit{ANTLR}'s error recovery strategy, lexical \ddmax and syntactic \ddmax.
 
-\subsubsection*{\bf Metrics and Measures}
-To evaluate the repair quality of a repaired file, we measure:
-\begin{enumerate}
-    \item \textbf{File Size Difference: } We evaluate the difference in \textit{file size} of the \emph{recovered inputs} of the different repair algorithms and the original \textit{valid input}.
-    We use these measurements to account for the amount of data recovered as well as the amount of data loss incurred.
-\item \textbf{Levenshtein Distance: } Additionally, we measure the data loss between \textit{valid input} and \textit{repaired file} using the Levenshtein distance~\cite{levDistance}.
-\end{enumerate}
-
-\subsubsection*{\bf Research Protocol}
-For each input format, we collect real-world invalid input files.
-We also collect 50 valid real-world inputs and mutate those into a set with single and up to 16 multiple mutations.
-Then, we execute all files on the subject programs shown in \Cref{tab:subject-programs}, in order to determine the number of input files which fail for each subject program.
-All subject programs are written in the C programming language and needed to be modified slightly to provide the rich failure feedback required for \approach.
-We proceed to run the repair algorithms on each invalid or mutated input file.
-In particular, we are interested in determining the following:
-%\begin{enumerate}
-%\item[a]
-(1.) \textit{\textbf{Baseline:}} the number of invalid input files which are accepted by a subject program as \textit{valid inputs} (i.e. non-failure-inducing inputs processed by the program without leading to a crash), in order to measure the \textit{effectiveness} of the built-in \textit{error recovery} feature of the program;  and
-%\item[b]
-(2.) \textit{\textbf{ANTLR:}} the number of invalid inputs which are repaired by ANTLR inbuilt \textit{error recovery strategy};
-%\item[c]
-(3) \textit{\textbf{bRepair:}} the number of invalid inputs which are repaired by \brepair.
-
-We conducted the experiments on a Dell Precision 7510
-with four physical CPU cores %(8~virtual cores)
-and 32GB of RAM, specifically an Intel(R) Core i7 6820hq @ 2.70GHz, 8~virtual cores, running 64-bit Arch Linux.
-%All our prototypes are single-threaded.
-
-
-\smallskip\noindent
-\textbf{Research Questions: }
-In this paper, %addresses the following
-we investigate the effectiveness, data recovery, diagnostic quality and efficiency of our approach via several experiments. For each experiment, %as well as,
-%and
-we also examine how \approach compares to the state-of-the-art techniques, namely \textit{baseline} (built-in repair of subject programs), \textit{ANTLR}'s error recovery strategy, lexical ddmax and syntactic ddmax.
-%Particularly,
-To this end, we pose the following \textit{research questions} (RQ):
+Particularly,
+%To this end, 
+we pose the following \textit{research questions} (RQ):
 % concerning the performance of \approach:
 
 \noindent
 \textbf{RQ1 Effectiveness:}  %\& Efficiency:}
 How effective is our approach (\approach) in repairing invalid %failure-inducing
-inputs, and how does it compare to the state-of-the-art methods?
+inputs? What is the contribution of \approach 's components (i.e., \textit{input synthesis} and \textit{failure feedback}) to its effectiveness? 
+Is \approach %How 
+%does \approach 's effectiveness compares 
+as effective as %the 
+% is \approach, in comparison to 
+the state-of-the-art methods? 
 %How effective is our approach, i.e., what is the time performance of \approach ?
 
 \noindent
 \textbf{RQ2 Data Recovery and Data Loss:}
 %\revise{
-How much input data is recovered by \approach, and how much input data loss is incurred?  Does it recover as much data as the
+How much input data is recovered by \approach, and how much data loss is incurred?  Does \approach recover as much data as %the
 %the data recovery of \approach compare to
 the state-of-the-art methods?
 %}
@@ -1553,7 +1524,7 @@ the state-of-the-art methods?
 \noindent
 \textbf{RQ3 Diagnostic Quality:}
 %\revise{
-How effective is our approach in identifying the \textit{root cause} of invalid inputs, especially in comparison to the state-of-the-art methods (DDmin and DDmax)?
+How effective is our approach in identifying the \textit{root cause} of invalid inputs, especially in comparison to the state-of-the-art methods (\ddmin and \ddmax)?
 %}
 %
 %\noindent
@@ -1566,9 +1537,9 @@ How effective is our approach in identifying the \textit{root cause} of invalid 
 \noindent
 \textbf{RQ4 Efficiency:} %ectiveness:}
 %\revise{
-What is the efficiency (time performance) of
+What is the efficiency (i.e., time performance) of
 %How does
-\approach? Is it as effective as the
+\approach? Is it as efficient as %the
 %especially in comparison %compare
 %to
 the state-of-the-art %input debugging
@@ -1577,35 +1548,103 @@ techniques?
 %i.e., (DDMax \recheck{and Ddmin})?}
 
 
-\noindent
-\textbf{State-of-the-art:}
-In this work, we compare the performance of our approach to the state-of-the-art techniques. Specifically, we compare to (a) the built-in error-recovery technique of the subject programs (\textit{baseline}), (b) the inbuilt error recovery strategy of the ANTLR parser generator (\textit{ANTLR})~\cite{}, (c) the minimizing variant of delta debugging (DDMin)~\cite{} and (d) three variants of the maximizing variant of delta debugging (DDMax)~\cite{kirschner2020debugging}.
+\subsubsection*{\bf State-of-the-art:}
+In this work, we compare the performance of \approach to the following state-of-the-art techniques: %. Specifically, we compare to the following:
 
-\todo{cite and create command shortcuts for the state-of-the-art}
+\begin{enumerate}[wide, labelwidth=!, labelindent=0pt]
+\item[a.] \textbf{Baseline:} this refers to  the built-in error-recovery technique of the subject programs. In this work,  \recheck{we compare the effectiveness of the subject program to that of \approach (\textit{see} RQ1)}. Specifically, we measure the effectiveness of the built-in error recovery feature of the program by measuring the number of invalid input files that could be processed as valid inputs by a subject program without inducing a program failure, crash or timeout. In our evaluation, we compare the number of such repairs to that of \approach. 
 
-\noindent \textit{Baseline:}
-
-\noindent \textit{ANTLR:}
-
-\noindent \textit{DDMin:}
-
-\noindent \textit{DDMax:}
+\item[b.] \textbf{ANTLR:} This is the inbuilt error recovery strategy of the ANTLR parser generator when equipped with an input grammar specifying the allowed input structure \recheck{cite and discuss ... }. In this work, we compare the number of invalid inputs that could be processed by \textbf{ANTLR} to the number of repairs performed by \approach (\textit{see} RQ1).
+ 
+\item[c.] \textbf{\ddmax:} Kirschner et al.~\cite{kirschner2020debugging} proposed %This refers to the 
+two variants of the maximizing variant of the delta debugging algorithm (called \ddmax), %proposed by , 
+namely \textit{lexical \ddmax} and \textit{syntactic \ddmax}. For all research questions in this work, we compare the performance of \approach to both \textit{lexical} and \textit{syntactic} \ddmax, since \ddmax is the current best performing state-of-the-art input repair method.
 
 
+\item[d.] \textbf{\ddmin:} Zeller and Hildebrandt proposed 
+% \citet This is 
+a delta debugging (DD) algorithm designed to diagnose the root cause of a program failure %, \ddmin isolates a failure cause 
+by %by isolating and 
+minimizing a failure-inducing input to the minimal input subset that reproduces 
+%a specific 
+the observed program failure. In our evaluation of the diagnostic quality of \approach (\textit{see} RQ3), we compare the performance of \approach to \ddmin. 
+
+\end{enumerate} 
+
+%(a)  (\textit{baseline}), (b) the inbuilt error recovery strategy of the ANTLR parser generator (\textit{ANTLR})~\cite{}, (c) the minimizing variant of delta debugging (DDMin)~\cite{} and (d) three variants of the maximizing variant of delta debugging (DDMax)~\cite{kirschner2020debugging}.
+%%\todo{cite and create command shortcuts for the state-of-the-art}
+%
+%\noindent \textit{Baseline:}
+%
+%\noindent \textit{ANTLR:}
+%
+%\noindent \textit{DDMin:}
+%
+%\noindent \textit{DDMax:}
 
 
-\noindent
-\textbf{Subject Programs and Commits:}
 
 
-\noindent
-\textbf{Metrics and Measure}
+\subsubsection*{\bf Subject Programs:} \Cref{tab:subject-programs} provides the details of the subject programs employed in our experiments. We used four programs belonging to four input formats, namely INI, cJSON, SExpParser and TinyC in our experiments. All of these programs are written in hundreds of (375 to 3075) LOC of C programming language, and they are between 6 to 21 years old.
 
-\noindent
-\textbf{Implementation Details and Platform:}
+\subsubsection*{\bf Test inputs}\todo{refactor this} 
+As test inputs, we crawled a large corpus of valid and invalid real-world files from GitHub using the GitHub crawling API~\cite{githubapi}.
+%TODO add table with number of files?
+For each format, we introduced a set of 100 artificially mutated (invalid) files that we mutated from 50 randomly selected valid real-world files.
+Half of those mutated files contain a single mutated byte and the other half contains multiple (up to 16) mutated bytes.
+Each mutation can either be a byte-flip, an insertion or a deletion, which we believe to resemble real-world corruptions as close as possible (e.g. bit rot on hard disks or transmission errors in network protocols).
 
-\noindent
-\textbf{Research Protocol:}
+
+\subsubsection*{\bf Metrics and Measures}
+To evaluate the repair quality of a repaired file, we measure:
+\begin{enumerate}
+	\item \textbf{Number of Repaired Inputs:} \todo{discuss} 
+    \item \textbf{File Size Difference: } We evaluate the difference in \textit{file size} of the \emph{recovered inputs} of the different repair algorithms and the original \textit{valid input}.
+    We use these measurements to account for the amount of data recovered as well as the amount of data loss incurred.
+\item \textbf{Levenshtein Distance: } Additionally, we measure the data loss between \textit{valid input} and \textit{repaired file} using the Levenshtein distance~\cite{levDistance}.
+
+\item \textbf{Runtime: } \todo{discuss} 
+
+\item \textbf{Number of Program Runs: } \todo{discuss} 
+
+\end{enumerate}
+
+\subsubsection*{\bf Implementation Details:}
+
+\subsubsection*{\bf Platform:} All experiments were conducted 
+%the experiments 
+on a Dell Precision 7510 with four physical CPU cores %(8~virtual cores)
+and 32GB of RAM, specifically an Intel(R) Core i7 6820hq @ 2.70GHz, 8~virtual cores, running 64-bit Arch Linux.
+
+%\noindent
+%\textbf{
+
+\subsubsection*{\bf Research Protocol:}
+
+
+
+
+
+
+%\subsubsection*{\bf Research Protocol}
+%For each input format, we collect real-world invalid input files.
+%We also collect 50 valid real-world inputs and mutate those into a set with single and up to 16 multiple mutations.
+%Then, we execute all files on the subject programs shown in \Cref{tab:subject-programs}, in order to determine the number of input files which fail for each subject program.
+%All subject programs are written in the C programming language and needed to be modified slightly to provide the rich failure feedback required for \approach.
+%We proceed to run the repair algorithms on each invalid or mutated input file.
+%In particular, we are interested in determining the following:
+%%\begin{enumerate}
+%%\item[a]
+%(1.) \textit{\textbf{Baseline:}} the number of invalid input files which are accepted by a subject program as \textit{valid inputs} (i.e. non-failure-inducing inputs processed by the program without leading to a crash), in order to measure the \textit{effectiveness} of the built-in \textit{error recovery} feature of the program;  and
+%%\item[b]
+%(2.) \textit{\textbf{ANTLR:}} the number of invalid inputs which are repaired by ANTLR inbuilt \textit{error recovery strategy};
+%%\item[c]
+%(3) \textit{\textbf{bRepair:}} the number of invalid inputs which are repaired by \brepair.
+
+
+%All our prototypes are single-threaded.
+
+
 
 
 \begin{table}[!tbp]\centering
@@ -1844,6 +1883,18 @@ insertion operations. % of input elements.
 \end{result}
 
 
+
+\noindent
+\textbf{\textit{Contribution of Failure Feedback:}}
+\todo{discuss the contribution of the incomplete oracle ... }
+
+
+\begin{result}
+XXXX
+\end{result}
+
+
+
 \begin{table}[!tbp]\centering
 \caption{Number of edit operations (insertion/deletions) performed by \approach, higher number operations are in \textbf{bold}}
 %\vspace{-0.5cm}
@@ -1863,7 +1914,7 @@ insertion operations. % of input elements.
 
 
 
-\noindent \textbf{\textit{Complementarity to Ddmax:}} We further inspect the unique repairs achieved by each approach, in order to understand the complementarity of our approach to the state-of-the-art methods. In this experiment, we inspect the number of unique repairs achieved \textit{solely} by a single approach (e.g., \textit{only} \approach), or two or more approaches (e.g., all approaches).  The goal is to determine if there are unique sets of inputs that are solely repaired by a single approach, and not by other approaches. \Cref{fig:repair-complementarity} and \Cref{tab:repair-complementarity} highlight our findings on the complementarity of \approach to ddmax.
+\noindent \textbf{\textit{Complementarity to \ddmax:}} We further inspect the unique repairs achieved by each approach, in order to understand the complementarity of our approach to the state-of-the-art methods. In this experiment, we inspect the number of unique repairs achieved \textit{solely} by a single approach (e.g., \textit{only} \approach), or two or more approaches (e.g., all approaches).  The goal is to determine if there are unique sets of inputs that are solely repaired by a single approach, and not by other approaches. \Cref{fig:repair-complementarity} and \Cref{tab:repair-complementarity} highlight our findings on the complementarity of \approach to ddmax.
 %to the state-of-the-art.
 %demonstrate that our approach complements
 %the complementarity of our approach to
