@@ -376,6 +376,7 @@ in terms of the set of repairs offered.
 \section{Introduction}
 \label{sec:intro}
 
+\todo{remember to say the meaning or derivation of the name \approach} 
 Data, especially from external, often human sources need to be collected and
 aggregated before information processing algorithms can be run on it to extract
 insights. \todo{add concrete example use case} Unfortunately, data sources may disagree on the format specification, %e.g.,
@@ -524,7 +525,7 @@ Notably, two major \ddmax limitations include its (1) \textit{limited repair ope
 Firstly, \ddmax's repair is restricted to deletion, which makes it sub-optimal for repairing some invalid inputs. The problem is that in many circumstances such as
 disk corruption, some input characters are more likely to be changed or deleted
 rather than inserted. Hence by handling only spurious insertions, \ddmax misses
-an important repair requirement. Consider the sample invalid input in \textit{row one} of \Cref{tab:ddmaxlimitations} (i.e., \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}) which is invalid because of a \textit{missing comma separator} between the two values in the JSON object. Due to the limited repair options of \ddmax (i.e., only deletion), its resulting repair (i.e., \letterboxed{\ \ \ \ 42\ }) is incomplete and leads to a huge (75\%) data loss (21 out of 28 bytes). %, % $\approx$ . 
+an important repair requirement. Consider the sample invalid input in \textit{row one} of \Cref{tab:ddmaxlimitations} (i.e., \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}) which is invalid because of a \textit{missing comma separator} between the two values in the JSON object. Due to the limited repair options of \ddmax (i.e., only deletion), its resulting repair (i.e., \letterboxed{\ \ \ \ 42\ }) is \textit{sub-optimal} leading to a huge (75\%) data loss (21 out of 28 bytes). %, % $\approx$ . 
 %  data loss).
 % , only seven out of 28 bytes recovered).
 
@@ -545,7 +546,7 @@ assumption is not met -- as in the case of inputs with a rich structure such as
 conforming to a grammar -- the repairs produced can be suboptimal as the
 examples show.
 %\recheck{
-As an example, consider the invalid input in \textit{row three} of \Cref{tab:ddmaxlimitations} (i.e.,  \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}}). Due to the multiple faults in this input, the resulting \ddmax repair (i.e., \letterboxed{123456}) is \textit{again} \textit{incomplete} and leads to a huge (77\%) data loss.
+As an example, consider the invalid input in \textit{row three} of \Cref{tab:ddmaxlimitations} (i.e.,  \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}}). Due to the multiple faults in this input, the resulting \ddmax repair (i.e., \letterboxed{123456}) is \textit{sub-optimal} causing a 77\% data loss (20 out of 26 bytes).
 %&
 % &
 %\letterboxed{\{"ABCD":["1,2,3,4,5,6"]\}} &
@@ -621,10 +622,10 @@ Next, \brepair applies \textit{deletion}, or \textit{insertion} of characters
 in order.
 In this case, the \letterboxed{"} is deleted first, but the
 resulting input %\\
-\letterboxed{\{\ "name":\ "Dave"\ age":\ 42 \}} is 
+\letterboxed{\{\ "name":\ "Dave"\ age":\ 42 \}} %is 
 %checked to
 %see if it resulted in increasing the size of the 
-does not increase 
+does not increase the 
 maximum parsable prefix. %Here, we see that the maximal parse boundary remains the same. 
 Hence \brepair next
 attempts to insert a character, 
@@ -633,7 +634,7 @@ attempts to insert a character,
 eventually determining that 
 only space characters and 
 comma (\letterboxed{,}) can be inserted here,
-resulting in an increase of maximal parse prefix. Out of these two insertion candidates, inserting comma results in the maximum advancement of the parse boundary, resulting in the
+resulting in an increase of the maximal parse prefix. Out of these two insertion candidates, inserting comma results in the maximum advancement of the parse boundary, resulting in the
 valid repair: %newly constructed string: %\\
 \letterboxed{\{\ "name":\ "Dave"\ ,"age":\ 42\ \}}. %, 
 %which is accepted as a valid repair.
@@ -655,26 +656,30 @@ to indicate whether the input is merely \emph{incomplete} -- that is, the input
 is a prefix of a valid input -- or is \emph{incorrect} -- that is, no suffix to
 this input will result in a valid input.\footnote{This requirement is 
 %not hard to accomplish. In most cases, 
-provided by most parsers ,
+provided by most parsers. %,
 %already
 %provide precise information as to the point at which the parse failed,
-which
-can be used directly in our algorithm. In the cases where parers do not provide
+%which
+%can be used directly in our algorithm. 
+In the cases where parers do not provide
 this information, obtaining this information by external instrumentation is
-possible as demonstrated by Bj\"orn et al.~\cite{mathis2019parser}. If
-the program is hard to instrument, adding failure feedback that we require is trivial. 
+possible as demonstrated by Bj\"orn et al.~\cite{mathis2019parser}, or 
+% If
+%the program is hard to instrument, 
+adding such failure feedback to the parser % that we require 
+is trivial. 
 %not difficult. 
 }
 %In our evaluation, u
 Using \recheck{806} (real-world) invalid inputs from four input formats, we show that %given input processors that can accurately
 %signal \emph{incompleteness} or \emph{incorrectness} and % when given 
 %invalid inputs, 
-\brepair is \recheck{X\%} more effective and \recheck{X\%} \recheck{efficient} %can provide repairs that are more maximal 
+\brepair is \recheck{X\%} more effective and \recheck{X\% more efficient} %can provide repairs that are more maximal 
 than \ddmax. 
 %, and correctly
 %pass the parser.
 Overall, this paper makes the following %technical 
-contributions:
+contributions\todo{we need to stress some results here}:
 \begin{itemize}
 \item \textbf{Repairing Rich Input Structures.} One of the major limitations of
 \ddmax is its inability to handle inputs with rich structure. We show that our
@@ -682,7 +687,7 @@ contributions:
 \item \textbf{Input Synthesis.} \ddmax is limited to \emph{deletion} of input
 fragments, which makes it unsuitable for repairing errors due to omission and
 corruption. Our \brepair technique expands the repertoire to \emph{deletion},
-\emph{insertion}, and \emph{modification}.
+\emph{insertion}, and \emph{modification}. 
 %\todo{discuss the repair to subset vs. insertion, refer to \Cref{sec:input-synthesis}}.
 \item \textbf{Lightweight Failure Feedback.} \brepair is the first technique
 tha shows how to use lightweight parser-error-feedback for input repair.
@@ -692,7 +697,7 @@ tha shows how to use lightweight parser-error-feedback for input repair.
  %  \item We provide two bug fixes to \ddmax.
 \end{itemize}
 
-The rest of this paper is structured as follows: \Cref{sec:rich-input-structures} highlights the limitations of the state-of-the-art input repair method (\ddmax) and illustrates how \brepair overcomes these limitations. In \Cref{sec:input-synthesis} we discuss how \brepair performs input synthesis, and \Cref{sec:brepair}  describes the \brepair algorithm. We describe our experimental setup and findings in \Cref{sec:experimental-setup} and \Cref{sec:results}. We address the limitations and threats to the validity of this work in \Cref{sec:threats}
+The rest of this paper is structured as follows: \Cref{sec:rich-input-structures} highlights the limitations of the state-of-the-art input repair method (\ddmax) and illustrates how \brepair overcomes these limitations. In \Cref{sec:input-synthesis} we describe how \brepair conducts input synthesis, and \Cref{sec:brepair}  describes the \brepair algorithm. We describe our expecrimental setup and findings in \Cref{sec:experimental-setup} and \Cref{sec:results}. We address the limitations and threats to the validity of this work in \Cref{sec:threats}
 . Finally, we conclude this paper with the discussion of related works and conclusions in \Cref{sec:related_work} and \Cref{sec:conclusion}, respectively. 
 
 
@@ -738,7 +743,7 @@ $\test(\dpass) = \pass \land n \leq |\Delta|$.\\
 \end{minipage}
 \end{boxedminipage}
 %\vspace{-0.5\baselineskip}
-\caption{Maximizing Lexical Delta Debugging algorithm}
+\caption{Modified Maximizing Lexical Delta Debugging algorithm, extended from Kirschner et al.~\cite{kirschner2020debugging}}
 %\vspace{-0.5\baselineskip}
 \label{fig:ddmax}
 \end{figure*}
@@ -748,7 +753,7 @@ $\test(\dpass) = \pass \land n \leq |\Delta|$.\\
 \section{Rich Input Structures} %Limitations of \ddmax}
 \label{sec:rich-input-structures}
 \todo{we should provide an anonymous notebook that allows to test the examples (in Table 1), it will be interesting}
-\todo{discuss first (two) examples}
+%\todo{discuss first (two) examples}
 %---
 % Example for Span Problem
 %---
@@ -763,10 +768,11 @@ $\test(\dpass) = \pass \land n \leq |\Delta|$.\\
 % \label{fig:bad-json-input-asterisks}
 %
 % \end{figure}
-
-A major limitation of \ddmax is that it is ineffective when the input needs to
-conform to specifications such as context-free grammars. We discuss two
-specific instances when \ddmax can repair an input suboptimally.
+Let us illustrate the limitations of the state-of-the-art input repair method (\ddmax) and how our approach (\brepair) addresses these limitations. 
+\Cref{fig:ddmax} provides a modified version of the lexical \ddmax algorithm presented in Kirschner et al.~\cite{kirschner2020debugging}. A major limitation of lexical \ddmax is that it results in sub-optimal repairs when the invalid input contains \textit{rich structures} or \textit{multiple faults}. 
+%needs to conform to specifications such as context-free grammars. 
+In the following, we discuss these limitations. 
+% specific instances when \ddmax can repair an input suboptimally.
 
 \subsection{Limitations due to multiple faults}
 A pattern of failure of \ddmax occurs when \ddmax is given an input with
@@ -802,24 +808,24 @@ $\cfail \cup \Delta_1$=\letterboxed{+} \fail \\
 \end{enumerate}
 
 That is, \ddmax is unable to optimally repair inputs of this kind which
-contains multiple errors. While in this eaxmple, the data loss that occurred
+contains multiple errors. While in this example, the data loss that occurred
 may seem somewhat limited, this need not be the case always. A similar example
 is given in \Cref{tab:ddmaxlimitations}.
-Here, \letterboxed{\{\"ABCD":[*"1,2,3,4,5,6"]*\}} contains two distinct
+Here, \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}} contains two distinct
 corruptions.
 As in the previous case, \ddmax attempts to fix this input by dividing it into
 smaller and smaller fragments, none of which isolates an error that when
-removed, results in the solution \letterboxed{123456}, which clearly has
-suffered significant data loss including the loss of structure and change in
+removed, results in the solution \letterboxed{123456} with %which clearly has suffered 
+significant data loss, including the loss of structure and change in
 input fragment type from string to number.
-Hence, \ddmax can't repair inputs with multiple faults effectively.
+Hence, \ddmax can not effectively repair inputs containing multiple faults.
 
 \subsection{Effect of input decomposition}
 Unfortunately \ddmax can produce non-optimal results even when the errors are
 contiguous, and hence considered \emph{single} by \ddmax. The problem happens
 when the corruption in the input interacts with the fragment decomposition
 algorithm of \ddmax.
-As an example, consider a variant of the previos input: \letterboxed{[*+]}.
+As an example, consider a variant of the previous input: \letterboxed{[*+]}.
 The JSON string is invalid here because it contains two invalid characters
 which are contiguous.
 The operation of \ddmax (\Cref{fig:ddmax}) is as follows:
@@ -851,14 +857,14 @@ $\cfail \cup \Delta_1$=\letterboxed{]} \fail \\
 \item The solution is $\emptyset$.
 \end{enumerate}
 
-That is, this particular invalid JSON string also can't be repaired by \ddmax.
+That is, this particular invalid JSON string also can not be repaired by \ddmax.
 As in the previous case, the data loss can be severe.
 Consider
 \letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\ \}} in
 \Cref{tab:ddmaxlimitations} which is similar to
 Kirchner et al.~\cite[Figure 1]{kirschner2020debugging} but with an extra
 \letterboxed{*}. \ddmax repairs this input to \letterboxed{\ \ \ \ 3.45},
-resulting loss of information.
+resulting in data loss. % of information.
 
 The problem here is that the successive partitions attempted by \ddmax fails to
 isolate the failure causing fragment even though the fragment is contiguous.
@@ -885,11 +891,11 @@ larger passing input. If after dividing the input into \<n> chunks, none of the
 chunks could produce a passing input, it tries again by dividing the
 input into \<2n> chunks.
 
-As in the case of \ddmin, the unstated assumption here is that if a chunk was
+As in the case of \ddmin, the \textit{unstated assumption} here is that if a chunk was
 not responsible for the observed failure, it can be extracted independently of
 other chunks and added to the passing input fragment without changing the
-semantics. This particular assumption need not hold when we are dealing with
-inputs that have a rich structure. That is, \letterboxed{"1,2,3,4,5"} is very
+semantics. This particular \textit{assumption need not hold when we are dealing with
+inputs that have a rich structure}. That is, \letterboxed{"1,2,3,4,5"} is very
 different from \letterboxed{12345} even though a significant portion of the raw
 characters from first is preservd in the second. Further, once such a
 semantically changed fragment forms the seed of the passing fragment, due to
@@ -897,9 +903,8 @@ the constraints in the input structure, the remaining fragments from the
 original will likely not combine with the seed fragment, resulting in further
 data loss.
 
-Of course, if  the input processor conforms to this constraint, \ddmax will
-have no problems maximizing any inputs. However, this can be a rather strong
-constraint in practice.
+Although \ddmax will have no problems maximizing any inputs \textit{if  the input processor conforms to this constraint}, we note that this can be a rather \textit{strong
+constraint in practice}.
 
 
 %One of the ambiguities here is that it is not immediately
@@ -942,32 +947,30 @@ rich structure. Consider the input to the JSON processor: \letterboxed{\{\"ABCD"
 operation used.) Here, the procedure is as follows:
 
 \begin{enumerate}
-\item \brepair starts by executing a binary search for the boudary where the
+\item \brepair starts by executing a binary search for the boundary where the
 input prefix changes from \emph{incomplete} to \emph{incorrect}. This is
 obtained at index 10, providing the incomplete substring
-\letterboxed{\{\"ABCD":[}. %*"1,2,3,4,5,6"]*\}}.
+\letterboxed{\{"ABCD":[}. %*"1,2,3,4,5,6"]*\}}.
 \item \brepair then appends the next character \letterboxed{*} to the input,
-resulting in \letterboxed{\{\"ABCD":[*} %"1,2,3,4,5,6"]*\}}.
+resulting in \letterboxed{\{"ABCD":[*} %"1,2,3,4,5,6"]*\}}.
 and observes the result. In this case, the JSON processor returns
 \emph{incorrect}.
 \item Hence, the newly added character is discarded, and the character at the
-next index is appeneded, resulting in
-\letterboxed{\{\"ABCD":["}. %1,2,3,4,5,6"]*\}}.
+next index is appended, resulting in
+\letterboxed{\{"ABCD":["}. %1,2,3,4,5,6"]*\}}.
 This results in JSON processor responding \emph{incomplete}.
 \item \brepair now appends the character in the next index, resulting in
-\letterboxed{\{\"ABCD":[1"} which again results in \emph{incomplete} from JSON
+\letterboxed{\{"ABCD":[1"} which again results in \emph{incomplete} from JSON
 processor.
 \item Proceeding in this fashion the input reaches \\
-\letterboxed{\{\"ABCD":["1,2,3,4,5,6"]*} %\}}.
+\letterboxed{\{"ABCD":["1,2,3,4,5,6"]*} %\}}.
 at which point, we again have the response \emph{incorrect} from the JSON
 processor. Hence, we discard this character, and try the next character,
 resulting in
-\letterboxed{\{\"ABCD":["1,2,3,4,5,6"]\}}.
+\letterboxed{\{"ABCD":["1,2,3,4,5,6"]\}}.
 \item The JSON processor responds with \emph{complete}.
 \end{enumerate}
-This completes the repair of the given input.
-
-That is, \brepair has no problem with rich inputs containing multiple errors.
+This completes the repair of the given input. This demonstrates that \brepair has no problem repairing rich inputs containing multiple errors.
 
 \section{Input Synthesis}
 \label{sec:input-synthesis}
@@ -988,7 +991,7 @@ That is, \brepair has no problem with rich inputs containing multiple errors.
 %\label{fig:bad-json-input-ddmax1}
 %\end{figure}
 
-\todo{discuss importance of insertions and limitations of repair to subsets}
+%\todo{discuss importance of insertions and limitations of repair to subsets}
 The second major limitation of
 \ddmax is that the only operation in its toolbox is \emph{deletion} of input
 fragments. Consider\\
@@ -1062,7 +1065,7 @@ The \brepair algorithm on the other hand, follows in this fashion.
 \item \brepair algorithm starts with the corrupted input and quickly finds the
 maximal parsable prefix using a binary search: \\
 \letterboxed{\{\ "name":\ "Dave"\ }.
-\item At this point, \brepair applies \emph{deletion}, \emph{insertin}, or
+\item At this point, \brepair applies \emph{deletion}, \emph{insertion}, or
 \emph{modification} of characters in order.
 In this case, the \letterboxed{"} is deleted first, resulting in: \\
 \letterboxed{\{\ "name":\ "Dave"\ age":\ 42 \}}.
@@ -1145,9 +1148,10 @@ to more effective repairs.
 The main strength of \brepair is its repertoire of repairs (\Cref{lst:repairs}).
 The input string can be modified by \emph{deleting} any character, or
 \emph{inserting} a character at any index.
-Note that in the below listings, \<Repair> is an tuple that allows
+Note that in the below listings, \<Repair> is a tuple that allows
 accessing its first argument with \<inputstr> and its second argument with
-\<boundary>
+\<boundary>.
+
 \begin{lstlisting}[caption=\brepair repairs,label={lst:repairs}]
 def apply_delete(item):
     inp = item.inputstr[:item.boundary] +
@@ -1159,7 +1163,8 @@ def insert_char(item, i):
     return_lst = []
     if LAST_INSERT_ONLY:
         v = item.inputstr[:item.boundary] + i + suffix
-        new_item = Repair(v, item.boundary, mask='%s_I%d' % (item.mask, item.boundary))
+        new_item = Repair(v, item.boundary, mask= \ 
+            '%s_I%d' % (item.mask, item.boundary))
         old_boundary = new_item.boundary
         ie = extend_inserted_item(new_item)
         if ie.boundary > old_boundary:
@@ -1234,9 +1239,10 @@ larger valid prefix string, but with a larger edit distance. This procedure is
 repeated until the prefix string is marked \emph{complete} by the input
 processor.
 
-The sampling procedure tries discard redundant repairs so that the number of
+The sampling procedure attempts to discard redundant repairs so that the number of
 simultanious threads we have to maintain does not grow unbounded. While doing
-that, it tries to ensure that no unique repairs are discarded. For
+that, it %tries to 
+ensures that no unique repairs are discarded. For
 example, given a JSON fragment \<[1,2> a repair of \<[1,23>, \<[1,24>
 and \<[1,25> are redunant but \<[1,2,> is unique because the last repair
 represents a change in semantics for the parser. The key insight here is to
@@ -1244,9 +1250,9 @@ look at the \emph{extension} of a given string to classify whether it is unique
 or not. That is, given a string \<[1,2"x"]>, after repair of \<[1,23>, the next
 extension of the string is likely to be a comma or a digit insertin. However,
 after \<[1,2,> the pending suffix can be used to extend the string resulting in
-\<[1,2,"x"]>. Hence, we use the repairs conducted on a string, the
+\<[1,2,"x"]>. \recheck{Hence, we use the repairs conducted on a string, the
 length of the extended string, as well as the last character added as the
-uniqueness indicator.
+uniqueness indicator.}\todo{@Lukas: does the new implementation contain this check? I cant remember this check in the old implementation of \approach?}
 
 \begin{lstlisting}[caption=Sampling,label={lst:sampling}]
 def sample(items):
@@ -1300,15 +1306,17 @@ def lsearch_extend_item(item, nxt=1):
             item.boundary = item.boundary + nxt - 1
             return item
 \end{lstlisting}
-If this succeds, the parse boundary after the repair
+If this succeeds, the parse boundary after the repair
 would be larger than the old parse boundar. Hence, if the parse boundary has
-increased (\Cref{lst:repairandextend}). If the boundary has increased, the
+increased (\Cref{lst:repairandextend}), then 
+%. If the boundary has increased, 
+the
 repair is saved. If not, the repair is discarded.
 \begin{lstlisting}[caption=Repair and extend,label={lst:repairandextend}]
 def repair_and_extend(item):
     return [apply_delete(item)] + apply_insert(item)
 \end{lstlisting}
-The output frm \<find\_fixes()> (\Cref{lst:findfixes}) is a set of repairs with
+The output from \<find\_fixes()> (\Cref{lst:findfixes}) is a set of repairs with
 the least edit distance from the passed input string.
 
 The \brepair algorithm works as follows.
@@ -1340,7 +1348,7 @@ inserted, the priority is two.
 %the priority. When two insertions are available, one is chosen randomly.
 
 \item If the priority queue contains any items, we choose all items with the
-highest ranking (e.g. If there are items with two edits and items with one
+highest ranking (e.g. if there are items with two edits and items with one
 edit, then choose all one edit items). We call each such item a thread.
 
 \item We continue each thread until the parser output changes from
@@ -1353,7 +1361,7 @@ thread that already contains one character appended.
 
 \item Given that there are 128 printable ASCII characters, each insertion can increase
 the thread count by a multiple of 128. Hence, we limit the insertion thread
-count of a particular edit distance to a configurable \<N> value. If the number
+count of a particular edit distance to a configurable \<N> value\todo{what is the value of N used in the eval. and how was this determined?}. If the number of
 insertion threads at any edit distance exceeds this value, we sample \<N>
 insertion threads from this group.
 
@@ -1383,25 +1391,25 @@ required, the process can be restarted with the threads in the next rank.
 %\letterboxed{\{\ "name":\ "Daveage":\ 42\ \}} &
 %\letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}} &
 
-
-\begin{table*}[!tbp]\centering
-\caption{Debugging Richly Structured Inputs: \approach versus \ddmax}
-\begin{tabular}{|l | c | r | r | r | r |}
-\hline
-\textbf{Challenges} & \textbf{Sample Input}  &  \textbf{\ddmax Repair} & \textbf{\approach Repair} & \textbf{\approach Strength}  \\
-\hline
-\textbf{Search Span} %(Rich Structure)}
-&  \{\ "item":\ "Apple",\ "price":\ ***3.45\} & & & \\
-\textbf{Multiple faults} & \{\ "ABCD":[*"1,2,3,4,5,6"]*\} & & & \\
-\textbf{Repair to subsets} & \{\ "name":\ "Dave",\ "age":\ 42\ \} & & & \\
-\textbf{Rich Structure} & & & & \\
-\textbf{Limited Repair} & & & & \\
-\textbf{Failure Feedback} & & & & \\
-\hline
-\end{tabular}
-\label{tab:challenges-inp-debug}
-%\vspace{-0.5cm}
-\end{table*}
+%
+%\begin{table*}[!tbp]\centering
+%\caption{Debugging Richly Structured Inputs: \approach versus \ddmax}
+%\begin{tabular}{|l | c | r | r | r | r |}
+%\hline
+%\textbf{Challenges} & \textbf{Sample Input}  &  \textbf{\ddmax Repair} & \textbf{\approach Repair} & \textbf{\approach Strength}  \\
+%\hline
+%\textbf{Search Span} %(Rich Structure)}
+%&  \{\ "item":\ "Apple",\ "price":\ ***3.45\} & & & \\
+%\textbf{Multiple faults} & \{\ "ABCD":[*"1,2,3,4,5,6"]*\} & & & \\
+%\textbf{Repair to subsets} & \{\ "name":\ "Dave",\ "age":\ 42\ \} & & & \\
+%\textbf{Rich Structure} & & & & \\
+%\textbf{Limited Repair} & & & & \\
+%\textbf{Failure Feedback} & & & & \\
+%\hline
+%\end{tabular}
+%\label{tab:challenges-inp-debug}
+%%\vspace{-0.5cm}
+%\end{table*}
 
 
 \begin{table}[!tbp]\centering
