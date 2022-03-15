@@ -1295,10 +1295,11 @@ def sample_items_by_mask(items):
         sampled.extend(res)
     return filter_best(sampled)
 
-def filter_best(items):                                                          
-    if MAX_SIMULTANIOUS_CORRECTIONS < 0: return items                            
-    boundaries = sorted({i.boundary for i in items}, reverse=True)               
-    return [i for i in items if i.boundary in  boundaries[:MAX_SIMULTANIOUS_CORRECTIONS]]
+def filter_best(items):
+    if MAX_SIMULTANIOUS_CORRECTIONS < 0: return items
+    boundaries = unique_sorted_boundaries(items)
+    return [i for i in items if i.boundary in
+            boundaries[:MAX_SIMULTANIOUS_CORRECTIONS]]
 \end{lstlisting}
 
 After each repair, the new string is checked (\Cref{lst:extenditem}) to see if
