@@ -1227,8 +1227,7 @@ def apply_insert(item):
 \begin{lstlisting}[caption=\brepair initial search,label={lst:brepair}]
 def repair(inp):
     boundary = binary_search(inp)
-    threads = {0: [Repair(inp, boundary)]}
-    return find_fixes(threads)
+    return find_fixes(inp, boundary)
 \end{lstlisting}
 This function does a binary search (\Cref{lst:bsearch}) on the
 argument string looking for the parse boundary where the return value changes
