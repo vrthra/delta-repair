@@ -87,13 +87,13 @@ Failure Feedback}
 
 %--
 
-\newcommand{\approach}{\textsc{BRepair}\xspace}
+\newcommand{\approach}{\textsc{FSynth}\xspace}
 \def\bfr{bFuzzerRepairer\xspace}
 \def\ddmin{DDMin\xspace}
 \newcommand{\ddmax}{\textit{DDMax}\xspace}
 \newcommand{\ddmaxg}{\textit{DDmaxG}\xspace}
 \newcommand{\bsimple}{\textit{bsimple}\xspace}
-\newcommand{\brepair}{\textit{BRepair}\xspace}
+\newcommand{\brepair}{\textsc{FSynth}\xspace}
 
 \tikzset{inlinenode/.style={draw=white,text=black,fill=light-gray,inner sep=.1em,outer sep=0em}}
 \newcommand{\inlinenode}[1]{\text{\hspace{.1em}\tikz[baseline=(n.base)]{\node[inlinenode] (n) {\strut \hspace*{.3em}#1\hspace*{.3em}};}\hspace{.1em}}}
@@ -1803,12 +1803,11 @@ is highly effective in repairing invalid inputs, it repaired almost four out of 
 about \recheck{77\% (624 out of 806)} of invalid inputs. In comparison to language-agnostic approaches, %our 
 \approach is \textit{up to 18 times more effective than the built-in error recovery strategy of the subject programs (33 vs. 624 repairs)}, and % \approach is 
 up to 35\% more effective than the best performing language-agnostic approach for certain input formats (CJSON and TinyC). Overall, 
-\Cref{tab:effectiveness-no-grammar} shows that \approach is eight percent more effective than the best language-agnostic repair technique (i.e., lexical \ddmax).
-
+\Cref{tab:effectiveness-no-grammar} shows that \approach is eight percent more effective than the best language-agnostic repair technique (i.e., lexical \ddmax). 
 %Without the knowledge of the input grammar, 
 %IN comparison to grammar-based input repair techniques, 
 %In our evaluation, w
-Results show that %e found that 
+Additionally, results show that %e found that 
 \approach outperforms the %best performing 
 grammar-based input repair approaches by up to 28\%. 
 % for %. %, for two out of four input formats (
@@ -1837,10 +1836,7 @@ The effectiveness of syntactic \ddmax is due to its knowledge of the input gramm
 %(CJSON and TinyC),
 %respectively.
 % and shows that for
-
 %about 20x as effective as the error recovery of the subject programs (33 repairs), and almost twice as (or 43\% more) effective than ANTLR's inbuilt error-recovery strategy (344 repairs). On the other hand, our approach outperformed the second most effective technique (\textit{ddmax}) by up to \recheck{18\%}. \approach is 18\% and seven percent more effective than lexical ddmax (69\%) and syntactic ddmax (75\%), respectively.
-
-
 %In summary, t
 These results suggest that %(a) \approach is highly effective in repairing invalid input files, (b) our approach more effective than the baselines, and (c)
 the \textit{combination of failure feedback and input synthesis} is vital for the effective repair of invalid inputs. 
@@ -2036,14 +2032,23 @@ We attribute the unique repair achieved by \approach to the synergistic combinat
 
 \begin{result}
 \approach %outperforms and 
-is complementary to the best state-of-the-art method (syntactic \ddmax). 
-It is the only technique that can solely complete 9\% of all repairs, which is up to five times as much as \ddmax.
+is complementary to the best state-of-the-art methods (lexical and syntactic \ddmax). 
+It %is the only technique that can 
+solely completes 9\% of all repairs, which is 
+up to five times 
+%5x 
+as much as \ddmax.
 \end{result}
 
 \noindent
-\textbf{RQ2 Data Recovery and Data Loss:}\todo{fix discussion of \Cref{tab:data-recovery} } In this experiment, we investigate the amount of data recovered (and lost) by our approach (\approach). To this end, we compute the file sizes of repaired inputs, and the edit distance between the repaired input and the original input using Levenshtein distance. In addition, we compare the data loss and recovery achieved by our approach to that of the state of the art, i.e. ddmax.
+\textbf{RQ2 Data Recovery and Data Loss:} 
+%\todo{fix discussion of \Cref{tab:data-recovery} } 
+%In this experiment, w
+We investigate the amount of data recovered and the data loss incurred by our approach (\approach). 
+%To this end, we compute the file sizes of repaired inputs, and the edit distance between the repaired input and the original input using Levenshtein distance\todo{cite}. 
+%In addition, w
+We also compare the data loss and data recovery of our approach to that of the best-performing state-of-the-art method (\ddmax). 
 %For this experiment, we computed the (difference in) files sizes and the Levenshtein distance between the original input and the repaired inputs.
-For a fair evaluation of data recovery, we used 475 inputs that were completely repaired by all three approaches (lexical ddmax, syntactic ddmax and \approach).
 % before a timeout to evaluate data recovery in terms of file sizes.  % and which were completely repaired by all three approaches before a timeout.
 %This resulted in a set of set of (321) inputs for the evaluation of data loss.
 
@@ -2075,10 +2080,12 @@ For a fair evaluation of data recovery, we used 475 inputs that were completely 
 \end{table}
 
 \noindent
-\textbf{\textit{Data Recovery:}} \Cref{tab:data-recovery} %and \recheck{Figure X
-highlight the data %loss and data
+\textbf{\textit{Data Recovery:}} 
+For a fair evaluation, % of data recovery, 
+we used 482 inputs that were completely repaired by all three approaches, i.e., lexical \ddmax, syntactic \ddmax and \approach. \Cref{tab:data-recovery} %and \recheck{Figure X
+highlights the data %loss and data
 recovery achieved by each approach. %Our evaluation r
-Results show that \textit{\approach recovered up to 88\% of input data and which is up to 25\% more than the most effective baseline (syntactic ddmax).} %Notably, f
+Results show that \textit{\approach recovered up to 84\% of input data and which is up to 25\% more than the most effective baseline (syntactic ddmax).} %Notably, f
 For all four input formats, \approach recovered more data than the both variants of ddmax. As an example, for TinyC, \approach recovered about 39\% more input data than the state-of-the-art.
 Overall, this result suggests that \approach is more effective in recovering valid input data than ddmax.
 
