@@ -1621,28 +1621,25 @@ differs between the \emph{corrupt input} and the \emph{repaired input}.
 parser can provide a useful metric for evaluation. Hence, we track this also.
 \end{description}
 
-\subsubsection*{\bf State-of-the-art:}
-In this work, we compare the performance of \approach to the following state-of-the-art techniques: %. Specifically, we compare to the following:
+%\subsubsection*{\bf State-of-the-art:}
+In this work, we compare the performance of \approach to the following
+techniques:
+\begin{description}[wide, labelwidth=!, labelindent=0pt]
+\item[Baseline:]
+  this refers to  the built-in error-recovery technique of the subject programs. In this work,  \recheck{we compare the effectiveness of the subject program to that of \approach (\textit{see} RQ1)}. Specifically, we measure the effectiveness of the built-in error recovery feature of the program by measuring the number of invalid input files that could be processed as valid inputs by a subject program without inducing a program failure, crash or timeout. In our evaluation, we compare the number of such repairs to that of \approach.
 
-\begin{enumerate}[wide, labelwidth=!, labelindent=0pt]
-\item[a.] \textbf{Baseline:} this refers to  the built-in error-recovery technique of the subject programs. In this work,  \recheck{we compare the effectiveness of the subject program to that of \approach (\textit{see} RQ1)}. Specifically, we measure the effectiveness of the built-in error recovery feature of the program by measuring the number of invalid input files that could be processed as valid inputs by a subject program without inducing a program failure, crash or timeout. In our evaluation, we compare the number of such repairs to that of \approach.
+\item[ANTLR:] This is the inbuilt error recovery strategy of the ANTLR parser generator when equipped with an input grammar specifying the allowed input structure \recheck{cite and discuss ... }. In this work, we compare the number of invalid inputs that could be processed by \textbf{ANTLR} to the number of repairs performed by \approach (\textit{see} RQ1).
 
-\item[b.] \textbf{ANTLR:} This is the inbuilt error recovery strategy of the ANTLR parser generator when equipped with an input grammar specifying the allowed input structure \recheck{cite and discuss ... }. In this work, we compare the number of invalid inputs that could be processed by \textbf{ANTLR} to the number of repairs performed by \approach (\textit{see} RQ1).
-
-\item[c.] \textbf{\ddmax:} Kirschner et al.~\cite{kirschner2020debugging} proposed %This refers to the
+\item[\ddmax:] Kirschner et al.~\cite{kirschner2020debugging} proposed %This refers to the
 two variants of the maximizing variant of the delta debugging algorithm (called \ddmax), %proposed by ,
 namely \textit{lexical \ddmax} and \textit{syntactic \ddmax}. For all research questions in this work, we compare the performance of \approach to both \textit{lexical} and \textit{syntactic} \ddmax, since \ddmax is the current best performing state-of-the-art input repair method.
 
-
-\item[d.] \textbf{\ddmin:} Zeller and Hildebrandt proposed
-% \citet This is
+\item[\ddmin:] Zeller and Hildebrandt proposed
 a delta debugging (DD) algorithm designed to diagnose the root cause of a program failure %, \ddmin isolates a failure cause
-by %by isolating and
+by 
 minimizing a failure-inducing input to the minimal input subset that reproduces
-%a specific
 the observed program failure. In our evaluation of the diagnostic quality of \approach (\textit{see} RQ3), we compare the performance of \approach to \ddmin.
-
-\end{enumerate}
+\end{description}
 
 %(a)  (\textit{baseline}), (b) the inbuilt error recovery strategy of the ANTLR parser generator (\textit{ANTLR})~\cite{}, (c) the minimizing variant of delta debugging (DDMin)~\cite{} and (d) three variants of the maximizing variant of delta debugging (DDMax)~\cite{kirschner2020debugging}.
 %%\todo{cite and create command shortcuts for the state-of-the-art}
