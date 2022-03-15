@@ -1316,6 +1316,45 @@ def filter_best(items):
             boundaries[:MAX_SIMULTANIOUS_CORRECTIONS]]
 \end{lstlisting}
 
+\begin{figure}
+\newlength\nodedst\setlength\nodedst{.5cm}
+\newlength\ndist\setlength\ndist{.1\nodedst}
+\def\arrowsep{0.20cm}
+\begin{tikzpicture}[node distance=\nodedst]
+    \node[blockdiagramblock,font=\normalfont\scriptsize] (search) {Search longest incomplete prefix};
+    \node[blockdiagramblock,below=of search] (pop) {Pop element from PQ};
+    \draw[blockdiagramarrow] (search) -- (pop) node[simpletext,pos=.5,right,font=\scriptsize] {Push PQ};
+    \node[blockdiagramblock,below=of pop] (correct) {Input is correct?};
+    \draw[blockdiagramarrow] (pop) -- (correct);
+    \node[simpletext,below=.3 of correct] (return) {Return input};
+    \node[blockdiagramblock,right=1 of correct] (tryOrigInsert) {Insert from orig. input};
+    \node[blockdiagramblock,above=of tryOrigInsert] (tryDelete) {Delete from orig. input};
+    \node[blockdiagramblock,above=of tryDelete] (tryNewInsert) {Insert Character};
+    \draw[blockdiagramarrow] (correct) -- (return) node[simpletext,pos=.6,right] {\pass};
+    \draw[blockdiagramarrow] (correct) -- (tryOrigInsert) node[simpletext,pos=.4,above] {\fail};
+    \draw[blockdiagramarrow] ([xshift=-2 * \arrowsep]tryOrigInsert.south) to[out=270,in=315,looseness=0.6] node[simpletext,pos=.5,below,sloped,inner sep=1pt] {Incomplete?} ($(correct.south west) - (.3,.5)$) to[out=135,in=180,looseness=.6] (search);
+    \draw[blockdiagramarrow] (tryOrigInsert) -- (tryDelete);
+    \draw[blockdiagramarrow] (tryDelete) -- (tryNewInsert);
+    \node[simpletext,right=.3 of tryDelete.east,inner sep=1pt] (pqins1) {push PQ};
+    \draw[blockdiagramarrow,dashed] (tryDelete) -- (pqins1);
+    \node[simpletext,right=.3 of tryNewInsert.east,inner sep=1pt] (pqins2) {push PQ};
+    \draw[blockdiagramarrow,dashed] (tryNewInsert) -- (pqins2);
+    \draw[blockdiagramarrow] (tryNewInsert) to[out=180,in=0] (pop);
+    \pic[] at (search.south east) {numbering=1};
+    \pic[] at ([yshift=-3mm]correct.south east) {numbering=2};
+    \pic[] at (tryOrigInsert.south east) {numbering=3};
+    \pic[] at (tryDelete.south east) {numbering=4};
+    \pic[] at (tryNewInsert.south east) {numbering=5};
+    %TODO
+\end{tikzpicture}
+% \vspace*{-0.1in}
+    \caption{Work flow of \brepair}
+    \label{fig:brepair_flowchart}
+    % \vspace*{-0.1in}
+\end{figure}
+\newcommand{\refnumber}[1]{\hyperref[fig:brepair_flowchart]{Step~#1}}
+
+
 After each repair, the new string is checked  to see if
 the string results in \emph{incomplete} rather than \emph{incorrect}. If the
 string results in \emph{incomplete}, a new parse boundary is found by
@@ -1459,43 +1498,6 @@ least number of repairs required to fix the input.
 \label{sec:experimental-setup}
 
 %TODO This is copied from ddmax, change?
-\begin{figure}
-\newlength\nodedst\setlength\nodedst{.5cm}
-\newlength\ndist\setlength\ndist{.1\nodedst}
-\def\arrowsep{0.20cm}
-\begin{tikzpicture}[node distance=\nodedst]
-    \node[blockdiagramblock,font=\normalfont\scriptsize] (search) {Search longest incomplete prefix};
-    \node[blockdiagramblock,below=of search] (pop) {Pop element from PQ};
-    \draw[blockdiagramarrow] (search) -- (pop) node[simpletext,pos=.5,right,font=\scriptsize] {Push PQ};
-    \node[blockdiagramblock,below=of pop] (correct) {Input is correct?};
-    \draw[blockdiagramarrow] (pop) -- (correct);
-    \node[simpletext,below=.3 of correct] (return) {Return input};
-    \node[blockdiagramblock,right=1 of correct] (tryOrigInsert) {Insert from orig. input};
-    \node[blockdiagramblock,above=of tryOrigInsert] (tryDelete) {Delete from orig. input};
-    \node[blockdiagramblock,above=of tryDelete] (tryNewInsert) {Insert Character};
-    \draw[blockdiagramarrow] (correct) -- (return) node[simpletext,pos=.6,right] {\pass};
-    \draw[blockdiagramarrow] (correct) -- (tryOrigInsert) node[simpletext,pos=.4,above] {\fail};
-    \draw[blockdiagramarrow] ([xshift=-2 * \arrowsep]tryOrigInsert.south) to[out=270,in=315,looseness=0.6] node[simpletext,pos=.5,below,sloped,inner sep=1pt] {Incomplete?} ($(correct.south west) - (.3,.5)$) to[out=135,in=180,looseness=.6] (search);
-    \draw[blockdiagramarrow] (tryOrigInsert) -- (tryDelete);
-    \draw[blockdiagramarrow] (tryDelete) -- (tryNewInsert);
-    \node[simpletext,right=.3 of tryDelete.east,inner sep=1pt] (pqins1) {push PQ};
-    \draw[blockdiagramarrow,dashed] (tryDelete) -- (pqins1);
-    \node[simpletext,right=.3 of tryNewInsert.east,inner sep=1pt] (pqins2) {push PQ};
-    \draw[blockdiagramarrow,dashed] (tryNewInsert) -- (pqins2);
-    \draw[blockdiagramarrow] (tryNewInsert) to[out=180,in=0] (pop);
-    \pic[] at (search.south east) {numbering=1};
-    \pic[] at ([yshift=-3mm]correct.south east) {numbering=2};
-    \pic[] at (tryOrigInsert.south east) {numbering=3};
-    \pic[] at (tryDelete.south east) {numbering=4};
-    \pic[] at (tryNewInsert.south east) {numbering=5};
-    %TODO
-\end{tikzpicture}
-% \vspace*{-0.1in}
-    \caption{Work flow of \brepair}
-    \label{fig:brepair_flowchart}
-    % \vspace*{-0.1in}
-\end{figure}
-\newcommand{\refnumber}[1]{\hyperref[fig:brepair_flowchart]{Step~#1}}
 
 
 This section describes the experimental setup of this work.
@@ -1580,6 +1582,24 @@ techniques?
 %i.e., (DDMax \recheck{and Ddmin})?}
 \end{description}
 
+\begin{table}[!tbp]\centering
+\caption{Details of Failure-inducing Inputs}
+\begin{tabular}{|l | r | r | r | r |}
+\hline
+&  \multicolumn{4}{c|}{\textbf{Number of Invalid Inputs}}  \\
+\textbf{Type of Invalid Inputs} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+\textbf{Real-World Inputs} & 101 & 107 & 50 & 148 \\
+\textbf{Single Mutation} & 50 & 50 & 50 & 50 \\
+\textbf{Multiple Mutations} & 50 & 50 & 50 & 50 \\
+\hline
+\textbf{Total } (806) & 201 & 207 & 150 & 248 \\
+\hline
+\end{tabular}
+\label{tab:input-details}
+%\vspace{-0.5cm}
+\end{table}
+
 As subjects we used four input formats and corresponding programs.
 % our focus is on formats. So listing them first
 These are INI (INI), JSON (cJSON), S-Expressions (SExpParser) and TinyC (TinyC).
@@ -1654,23 +1674,6 @@ namely \textit{lexical \ddmax} and \textit{syntactic \ddmax}.
 %\noindent \textit{DDMax:}
 
 
-\begin{table}[!tbp]\centering
-\caption{Details of Failure-inducing Inputs}
-\begin{tabular}{|l | r | r | r | r |}
-\hline
-&  \multicolumn{4}{c|}{\textbf{Number of Invalid Inputs}}  \\
-\textbf{Type of Invalid Inputs} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-\hline
-\textbf{Real-World Inputs} & 101 & 107 & 50 & 148 \\
-\textbf{Single Mutation} & 50 & 50 & 50 & 50 \\
-\textbf{Multiple Mutations} & 50 & 50 & 50 & 50 \\
-\hline
-\textbf{Total } (806) & 201 & 207 & 150 & 248 \\
-\hline
-\end{tabular}
-\label{tab:input-details}
-%\vspace{-0.5cm}
-\end{table}
 \subsubsection*{\bf Implementation Details:}
 
 \subsubsection*{\bf Platform:} All experiments were conducted
@@ -1706,14 +1709,8 @@ and 32GB of RAM, specifically an AMD Ryzen 5600X @ 3.70GHz, 12~virtual cores, ru
 
 %All our prototypes are single-threaded.
 
-
-
-
-
-
-
 \begin{table}[!tbp]\centering
-\caption{Effectiveness of \approach vs. Language-agnostic state-of-the-art, i.e., lexical \ddmax and  baseline.  The most effective performance for are in bold, as well as significant percentage improvement (Improv.) of \approach over the best baseline greater than five percent (>5\%). }
+\caption{Number of Repaired Inputs within a four minute timeout for \approach vs. Language-agnostic state-of-the-art, i.e., lexical \ddmax and  baseline. The highest number of repaired inputs are in bold, as well as significant percentage improvement (Improv.) of \approach over the best baseline greater than five percent (>5\%). }
 %\vspace{-0.5cm}
 \begin{tabular}{|l | c | r  r  r  r |}
 \hline
@@ -1741,7 +1738,7 @@ and 32GB of RAM, specifically an AMD Ryzen 5600X @ 3.70GHz, 12~virtual cores, ru
 
 
 \begin{table}[!tbp]\centering
-\caption{Effectiveness of \approach vs. Grammar-based input repair approaches, i.e.,  ANTLR and Syntactic \ddmax. The most effective performance are in bold, as well as significant percentage improvement (Improv.) of \approach over the best baseline greater than five percent (>5\%). }
+\caption{Number of Repaired Invalid Inputs within a four minute timeout for \approach vs. Grammar-based input repair approaches, i.e.,  ANTLR and Syntactic \ddmax. The highest number of repaired inputs are in bold, as well as significant percentage improvement (Improv.) of \approach over the best baseline greater than five percent (>5\%). }
 %\vspace{-0.5cm}
 \begin{tabular}{|l | c | r  r  r  r |}
 \hline
@@ -2063,7 +2060,6 @@ the best-performing state-of-the-art method (\ddmax).
 % before a timeout to evaluate data recovery in terms of file sizes.  % and which were completely repaired by all three approaches before a timeout.
 %This resulted in a set of set of (321) inputs for the evaluation of data loss.
 
-
 \begin{table}[!tbp]\centering
 \caption{Data Recovery of \approach vs. %the best-performing state-of-the-art methods, i.e. 
 lexical (Lex.) \ddmax and syntactic (Syn.) \ddmax. 
@@ -2078,10 +2074,10 @@ The highest data recovery performance are in bold, significant percentage improv
 \hline
 %\textbf{Baseline}   & (\%) & &  & 	& \\
 %\textbf{ANTLR} & (\%) & &  & 	& \\
-\textbf{Lex. ddmax} & \textbf{86\%} & 85.8\% & 82.2\%	 & \textbf{99.2\%}	& 47.7\% \\			
+\textbf{Lex. ddmax} & 86\% & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% \\			
 \textbf{Syn. ddmax} & 72\% & 70.6\% & 81.5\%  & 97.0\%	& 47.0\% \\	
 \hline
-\textbf{\approach} & 87\% & \textbf{85.9\%} & \textbf{98.5\%} & 100.6\%	& \textbf{82.1\%} \\
+\textbf{\approach} & \textbf{87\%} & \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100.6\%} & \textbf{82.1\%} \\
 \hline
 \textbf{Impr. vs. Lex.} & 1\% & 0.1\%	& \textbf{19.8\%}	& 1.4\%	& \textbf{72.1\%} \\
 \textbf{Impr. vs. Syn.} & \textbf{21\%} & \textbf{21.6\%} 	& \textbf{20.8\%}	& 3.7\%	& \textbf{74.7\% }\\
@@ -2094,9 +2090,9 @@ The highest data recovery performance are in bold, significant percentage improv
 \end{table}
 
 \noindent
-\textbf{\textit{Data Recovery:}} %\todo{fix to new evaluation results}
+\textbf{\textit{Data Recovery:}} \todo{fix to new evaluation results} \todo{``100.6'' in \autoref{tab:data-recovery} is hard to justify, we need to remove insertions when computing this}	
 %For a fair evaluation, % of data recovery, 
-We examine 482 inputs that were completely repaired by %all three approaches, i.e., 
+We examine 474 inputs that were completely repaired by %all three approaches, i.e., 
 lexical \ddmax, syntactic \ddmax and \approach. \Cref{tab:data-recovery} %and \recheck{Figure X
 highlights the amount of data %loss and data
 recovered % achieved 
