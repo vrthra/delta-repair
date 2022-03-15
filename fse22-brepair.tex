@@ -1638,11 +1638,14 @@ the observed program failure. In our evaluation of the diagnostic quality of \ap
 \subsubsection*{\bf Subject Programs:} \Cref{tab:subject-programs} provides the details of the subject programs employed in our experiments. We used four programs belonging to four input formats, namely INI, cJSON, SExpParser and TinyC in our experiments. All of these programs are written in hundreds of (375 to 3075) LOC of C programming language, and they are between 6 to 21 years old.
 
 \subsubsection*{\bf Test inputs}\todo{refactor this}
+\Cref{tab:input-details} provides details of the number of
+real-world invalid inputs and mutated invalid inputs employed in our experiment, for each input format. We evaluate our approach using 806 invalid input files belonging to four different input formats, namely INI, cJSON, SExp, and TinyC. 
+\recheck{
 As test inputs, we crawled a large corpus of valid and invalid real-world files from GitHub using the GitHub crawling API~\cite{githubapi}.
 %TODO add table with number of files?
 For each format, we introduced a set of 100 artificially mutated (invalid) files that we mutated from 50 randomly selected valid real-world files.
 Half of those mutated files contain a single mutated byte and the other half contains multiple (up to 16) mutated bytes.
-Each mutation can either be a byte-flip, an insertion or a deletion, which we believe to resemble real-world corruptions as close as possible (e.g. bit rot on hard disks or transmission errors in network protocols).
+Each mutation can either be a byte-flip, an insertion or a deletion, which we believe to resemble real-world corruptions as close as possible (e.g. bit rot on hard disks or transmission errors in network protocols).}
 
 
 \subsubsection*{\bf Metrics and Measures}
@@ -1762,21 +1765,29 @@ of our empirical evaluations.
 %\todo{RQ1: we need to discuss the number of repair attempts or input fragments tested for feedback for \approach versus ddmax}
 
 \noindent
-\textbf{RQ1 Effectiveness:}
-We evaluate the effectiveness of our approach using 806 invalid input files belonging to four different input formats, namely INI, cJSON, SExp, and TinyC.  \Cref{tab:input-details} provides details of the %number of
-%real-world and mutated
-invalid inputs used for each input format.
+\textbf{RQ1 Effectiveness:} 
+%\Cref{tab:input-details} provides details of the %number of
+%%real-world and mutated
+%invalid inputs used for each input format.
 %We also examine the contribution of the insertion  of input elements (i.e., input synthesis) to the effectiveness of our approach.
 In this experiment,
 %and efficiency of our approach
 %Specifically,
-we measure the total number of files repaired by our approach, in comparison to
+we measure the total number of files repaired by our approach. In addition, we compare 
+the performance of \approach to 
+%that of %in comparison to
 %the number of repairs achieved % compare to %as well as
-four state-of-the-art techniques,
+\textit{language-agnostic input repair} approaches and grammar-based input repair techniques. 
+\textit{Language-agnostic input repair} approaches  include the built-in error-recovery of the subject program (called \textit{baseline}) and the maximizing variants of delta debugging, i.e., \textit{lexical ddmax} (\textit{see}  \Cref{tab:effectiveness-no-grammar}). 
+In our comparison to grammar-based input repair techniques, we employ the built-in error-recovery strategy of the \textit{ANTLR} parser generator, and \textit{syntactic ddmax}  (\textit{see}  \Cref{tab:effectiveness-grammar}). 
+%four state-of-the-art techniques,
 %for all four input formats. We also compare the effectiveness of \approach to that of \recheck{four} state-of-the-art techniques,
-namely the built-in error-recovery of the subject program (called \textit{baseline}) and \textit{ANTLR}, and % as well as
-the two maximizing variants of delta debugging, i.e., \textit{lexical ddmax} and \textit{syntactic ddmax}.   \Cref{tab:effectiveness} and \Cref{fig:effectiveness} highlight the (overall) effectiveness of each approach %, as well as their effectiveness
-for each input format.
+Overall, we compare \approach to four state-of-the-art methods. 
+%, namely the built-in error-recovery of the subject program (called \textit{baseline}) and \textit{ANTLR}, and % as well as
+%the two maximizing variants of delta debugging, i.e., \textit{lexical ddmax} and \textit{syntactic ddmax}.   
+\Cref{tab:effectiveness-no-grammar},  \Cref{tab:effectiveness-grammar} and \Cref{fig:effectiveness} highlight the (overall) effectiveness of \approach in contrast to the state-of-the-art methods. 
+%each approach %, as well as their effectiveness
+%for each input format.
 
 % to determine the strengths %and complementarity
 %of our approach.
