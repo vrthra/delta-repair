@@ -2065,7 +2065,10 @@ We also compare the data loss and data recovery of our approach to that of the b
 
 
 \begin{table}[!tbp]\centering
-\caption{Data Recovery of \approach vs. the state-of-the-art}
+\caption{Data Recovery of \approach vs. %the best-performing state-of-the-art methods, i.e. 
+lexical (Lex.) \ddmax and syntactic (Syn.) \ddmax. 
+The highest data recovery performance are in bold, significant percentage improvement (Impr.) of \approach over the best baseline that is greater than five percent (>5\%) are also in bold.
+}
 %\vspace{-0.5cm}
 \begin{tabular}{|l | c | r  r  r  r |}
 \hline
@@ -2075,13 +2078,13 @@ We also compare the data loss and data recovery of our approach to that of the b
 \hline
 %\textbf{Baseline}   & (\%) & &  & 	& \\
 %\textbf{ANTLR} & (\%) & &  & 	& \\
-\textbf{Lex. ddmax} & 86\% & \textbf{85.8\%} & 80.0\%	 & 98.3\%	& 47.7\% \\			
+\textbf{Lex. ddmax} & \textbf{86\%} & 85.8\% & 80.0\%	 & \textbf{98.3\%}	& 47.7\% \\			
 \textbf{Syn. ddmax} & 73\% & 70.6\% & 80.3\%  & 96.6\%	& 47.0\% \\	
 \hline
-\textbf{\approach} & \textbf{ 84\%} & \textbf{85.9\%} & \textbf{96.5\%} & \textbf{52.6\%}	& \textbf{82.1\%} \\
+\textbf{\approach} & 84\% & \textbf{85.9\%} & \textbf{96.5\%} & 52.6\%	& \textbf{82.1\%} \\
 \hline
-\textbf{Impr. vs. Lex.} & \textbf{12\%} & 0.1\%	& \textbf{20.6\%}	& -46.5\%	& \textbf{72.1\%} \\
-\textbf{Impr. vs. Syn.} & \textbf{18\%} & \textbf{21.6\%} 	& \textbf{20.1\%}	& -45.5\%	& \textbf{74.7\% }\\
+\textbf{Impr. vs. Lex.} & -2\% & 0.1\%	& \textbf{20.6\%}	& -46.5\%	& \textbf{72.1\%} \\
+\textbf{Impr. vs. Syn.} & \textbf{16\%} & \textbf{21.6\%} 	& \textbf{20.1\%}	& -45.5\%	& \textbf{74.7\% }\\
 \hline
 %\textbf{Total \#Repairs} & (\%) & &  & 	& \\		
 %\hline
@@ -2091,7 +2094,7 @@ We also compare the data loss and data recovery of our approach to that of the b
 \end{table}
 
 \noindent
-\textbf{\textit{Data Recovery:}} 
+\textbf{\textit{Data Recovery:}} \todo{fix to new evaluation results}
 For a fair evaluation, % of data recovery, 
 we used 482 inputs that were completely repaired by all three approaches, i.e., lexical \ddmax, syntactic \ddmax and \approach. \Cref{tab:data-recovery} %and \recheck{Figure X
 highlights the data %loss and data
@@ -2103,7 +2106,7 @@ Overall, this result suggests that \approach is more effective in recovering val
 \noindent
 \textbf{\textit{Data Loss:}} To measure data loss, we compute the Levenshtein distance between repaired and invalid files using %Meanwhile, %For a balanced and tractable evaluation of data loss,
 %we employed the
-a set of 321 completely repaired inputs %by all three approaches which %(321) inputs that
+a set of 327 completely repaired inputs %by all three approaches which %(321) inputs that
 %which the Levenshtein distance implementation could compute %their edit distance
 where edit distance could be computed within a threshold of 750 edit distances (about 30 seconds).
 
@@ -2137,7 +2140,7 @@ loss is up to 23 times lower than that of ddmax (e.g., INI).
 
 
 \noindent
-\textbf{RQ3 Diagnostic Quality:}
+\textbf{RQ3 Diagnostic Quality:} \todo{fix to new evaluation results}
 In this experiment, we evaluate the diagnostic quality of \approach in comparison to the state-of-the-art techniques. In particular, we compare the size of the diagnoses, i.e., the isolated failure cause reported by each approach, as well as the intersection of the diagnoses reported by these approaches. We compare \approach to three main methods, namely \approach, lexical ddmax, syntactic ddmax and ddmin.  \recheck{Table x and figure X} show the diagnostic quality of our approach, in comparison to the state of the art techniques.
 
 We found that
@@ -2152,7 +2155,7 @@ XXXX
 
 
 \noindent
-\textbf{RQ4 Efficiency:}
+\textbf{RQ4 Efficiency:} \todo{fix to new evaluation results}
 %\todo{mention that run-time is the execution time of the algorithm, without accounting for the time for experimental pre/post processings }
 Let us evaluate the performance of our approach.
 %, i.e., %we investigate
