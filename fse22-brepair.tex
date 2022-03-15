@@ -1145,37 +1145,57 @@ to more effective repairs.
 
 \section{\approach}
 \label{sec:brepair}
-The main strength of \brepair is its repertoire of repairs (\Cref{lst:repairs}).
-The input string can be modified by \emph{deleting} any character, or
-\emph{inserting} a character at any index.
-Note that in the below listings, \<Repair> is a tuple that allows
+The main strength of \brepair is its repertoire of repairs.
+The input string can be modified by \emph{deleting} any character
+(\Cref{lst:repairsdelete}), or
+\emph{inserting} a character at any index (\Cref{lst:repairsdelete}).
+In the listings below, \<Repair> is a tuple that allows
 accessing its first argument with \<inputstr> and its second argument with
 \<boundary>.
 
-\begin{lstlisting}[caption=\brepair repairs,label={lst:repairs}]
+The deletion algorithm is simple. When a parse error is observed,
+the character that caused the error is present at the \<boundary> value.
+That is, we know that \<inputstr[:boundary]> parses correctly. Hence, for
+deletion, we produce a string without the character at the \<boundary>.
+\begin{lstlisting}[caption=\brepair repairs,label={lst:repairsdelete}]
 def apply_delete(item):
     inp = item.inputstr[:item.boundary] +
           item.inputstr[item.boundary + 1:]
     return extend_deleted_item(Repair(inp, item.boundary))
+\end{lstlisting}
+
+For insertion, the algorithm is more involved. The problem is that we need to
+handle corruption in inputs such as \<"12345mystring"> which is used as input
+to a JSON parser. Consider what happens when the first quote is deleted. In this
+case, we will get the first parse error at \<m>. But plainly, the best repair
+is before the first parse error. The problem is that insertions at random
+points in the prefix is very costly, resulting in $|\alpha| \times |S|$
+modifications where $|\alpha|$ is the number of alphabets (characters) the
+language has, and $|S|$ is the length of the prefix.
+Hence, we allow the user to choose to toggle this option with
+\<LAST\_INSERT\_ONLY>. If the option is false, we will attempt repairs at any
+point in the prefix. If it is false, we will only attempt insertions at the end
+of the prefix.
+\begin{lstlisting}[caption=\brepair repairs,label={lst:repairs}]
+def insert_at(item, k, suffix)
+    v = (item.inputstr[:k] + i +
+        item.inputstr[k:item.boundary] + suffix)
+    new_item = Repair(v, k, mask='%s_I%d' % (item.mask, k))
+    ie = extend_inserted_item(new_item)
+    if ie.boundary > k:
+       return ie
+    return None
 
 def insert_char(item, i):
     suffix = item.inputstr[item.boundary:]
     return_lst = []
     if LAST_INSERT_ONLY:
-        v = item.inputstr[:item.boundary] + i + suffix
-        new_item = Repair(v, item.boundary, mask= \ 
-            '%s_I%d' % (item.mask, item.boundary))
-        old_boundary = new_item.boundary
-        ie = extend_inserted_item(new_item)
-        if ie.boundary > old_boundary:
-            return_lst.append(ie)
+        v = insert_at(item, item.boundary, suffix)
+        if v: return_lst.append(ie)
     else:
         for k in range(item.boundary):
-            v = item.inputstr[:k] + i + item.inputstr[k:item.boundary] + suffix
-            new_item = Repair(v, k, mask='%s_I%d' % (item.mask, k))
-            ie = extend_inserted_item(new_item)
-            if ie.boundary > k:
-               return_lst.append(ie)
+            v = insert_at(item, k, suffix)
+            if v: return_lst.append(ie)
     return return_lst
 
 def apply_insert(item):
