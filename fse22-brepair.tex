@@ -1316,7 +1316,7 @@ def extend_inserted_item(item):
     return lsearch_extend_item(item, nxt=1)
 
 def bsearch_extend_item(item):
-    bs = binary_search(item.inputstr, left=item.boundary-1)
+    bs = binary_search(item.inputstr, left=item.boundary)
     if bs >= len(item.inputstr):
         item.boundary = bs
         return item
