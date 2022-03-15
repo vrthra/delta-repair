@@ -1515,7 +1515,9 @@ This section describes the experimental setup of this work.
 %Finally, before popping the next prefix from the queue, \brepair tries to append all characters to the prefix that do not cause the prefix to become \emph{incorrect}, also increasing the editing distance by 1 (\refnumber{5}).
 %
 %In this paper,
-We investigate the \textit{effectiveness} (RQ1), \textit{data recovery} (RQ2), \textit{diagnostic quality} (RQ3) and \textit{efficiency} (RQ4) of our approach using several well-designed experiments. For each experiment, we also examine how \approach compares to the state-of-the-art techniques, namely the \textit{baseline} (built-in repair of subject programs), \textit{ANTLR}'s error recovery strategy, lexical \ddmax and syntactic \ddmax.
+We investigate the \textit{effectiveness} (RQ1), \textit{data recovery} (RQ2), 
+%\textit{diagnostic quality} (RQ3) 
+and \textit{efficiency} (RQ3) of our approach using several well-designed experiments. For each experiment, we also examine how \approach compares to the state-of-the-art techniques, namely the \textit{baseline} (built-in repair of subject programs), \textit{ANTLR}'s error recovery strategy, lexical \ddmax and syntactic \ddmax.
 
 %Particularly,
 %To this end,
@@ -1553,11 +1555,11 @@ the state-of-the-art methods?
 %How effective is our approach, i.e., what is the time performance of \approach ?
 %%}
 
-\item[RQ3.] \emph{Diagnostic Quality:}
-%\revise{
-How effective is our approach in identifying the \textit{root cause} of invalid inputs, especially in comparison to the state-of-the-art methods (\ddmin and \ddmax)?
-%}
-%
+%\item[RQ3.] \emph{Diagnostic Quality:}
+%%\revise{
+%How effective is our approach in identifying the \textit{root cause} of invalid inputs, especially in comparison to the state-of-the-art methods (\ddmin and \ddmax)?
+%%}
+%%
 %\noindent
 %\textbf{RQ4 Comparison to the state-of-the-art:}
 %%\revise{
@@ -1565,7 +1567,7 @@ How effective is our approach in identifying the \textit{root cause} of invalid 
 %%i.e., (DDMax \recheck{and Ddmin})?}
 %\\
 
-\item[RQ4.] \emph{Efficiency:} %ectiveness:}
+\item[RQ3.] \emph{Efficiency:} %ectiveness:}
 %\revise{
 What is the efficiency (i.e., time performance) of
 %How does
@@ -2051,10 +2053,12 @@ as much as \ddmax.
 \textbf{RQ2 Data Recovery and Data Loss:} 
 %\todo{fix discussion of \Cref{tab:data-recovery} } 
 %In this experiment, w
-We investigate the amount of data recovered and the data loss incurred by our approach (\approach). 
+We investigate the amount of data recovered and lost %the data loss incurred 
+by our approach (\approach), in comparison to
 %To this end, we compute the file sizes of repaired inputs, and the edit distance between the repaired input and the original input using Levenshtein distance\todo{cite}. 
 %In addition, w
-We also compare the data loss and data recovery of our approach to that of the best-performing state-of-the-art method (\ddmax). 
+%We also compare the data loss and data recovery of our approach to that of 
+the best-performing state-of-the-art method (\ddmax). 
 %For this experiment, we computed the (difference in) files sizes and the Levenshtein distance between the original input and the repaired inputs.
 % before a timeout to evaluate data recovery in terms of file sizes.  % and which were completely repaired by all three approaches before a timeout.
 %This resulted in a set of set of (321) inputs for the evaluation of data loss.
@@ -2090,14 +2094,23 @@ The highest data recovery performance are in bold, significant percentage improv
 \end{table}
 
 \noindent
-\textbf{\textit{Data Recovery:}} \todo{fix to new evaluation results}
-For a fair evaluation, % of data recovery, 
-we used 482 inputs that were completely repaired by all three approaches, i.e., lexical \ddmax, syntactic \ddmax and \approach. \Cref{tab:data-recovery} %and \recheck{Figure X
-highlights the data %loss and data
-recovery achieved by each approach. %Our evaluation r
-Results show that \textit{\approach recovered up to 84\% of input data and which is up to 25\% more than the most effective baseline (syntactic ddmax).} %Notably, f
-For all four input formats, \approach recovered more data than the both variants of ddmax. As an example, for TinyC, \approach recovered about 39\% more input data than the state-of-the-art.
-Overall, this result suggests that \approach is more effective in recovering valid input data than ddmax.
+\textbf{\textit{Data Recovery:}} %\todo{fix to new evaluation results}
+%For a fair evaluation, % of data recovery, 
+We examine 482 inputs that were completely repaired by %all three approaches, i.e., 
+lexical \ddmax, syntactic \ddmax and \approach. \Cref{tab:data-recovery} %and \recheck{Figure X
+highlights the amount of data %loss and data
+recovered % achieved 
+by each approach. %Our evaluation r
+
+Our evaluation results show that \textit{\approach recovered up to 84\% of input data and which is 16\% more than the most effective baseline (syntactic \ddmax). } %Notably, f
+For most (three out of four) input formats, \approach recovered up to (74\%) more data than both variants of \ddmax. 
+%As an example, for 
+Consider TinyC, where \approach recovered over 72 to 75\% more input data than %both variants of 
+\ddmax. 
+%the state-of-the-art.
+However, \approach is slightly (2\%) worse than lexical \ddmax, especially for the SExp input format where is it up to 47\% worse than lexical \ddmax. \recheck{This result is because ...} \todo{what is the explanation for the bad results for SExp?} 
+Overall, these results suggest that \approach recovers more input data %more effective in recovering valid input data 
+than \ddmax.
 
 \noindent
 \textbf{\textit{Data Loss:}} To measure data loss, we compute the Levenshtein distance between repaired and invalid files using %Meanwhile, %For a balanced and tractable evaluation of data loss,
@@ -2106,16 +2119,18 @@ a set of 327 completely repaired inputs %by all three approaches which %(321) in
 %which the Levenshtein distance implementation could compute %their edit distance
 where edit distance could be computed within a threshold of 750 edit distances (about 30 seconds).
 
-We found that \textit{\approach achieves a low data loss of about 13 edit distances,on avarage},  which is \textit{up to 23 times lower than (lexical) ddmax}. \Cref{tab:data-loss} shows this result of this experiment. For almost all input formats, \approach achieved a lower data loss than syntactic and lexical ddmaz (except for INI and SExp). This performance is attributed to the rich fasilure feedback of \approach, which allows it to distinguish between incomplete and incorrect input fragments.
+We found that \textit{\approach achieves a low data loss of about 11 edit distances,on avarage},  which is \textit{up to 10 times lower than (syntactic) \ddmax}. \Cref{tab:data-loss} shows that 
+%this result of this experiment. F
+for almost all input formats, \approach achieved a lower data loss than syntactic and lexical \ddmax (except for SExp). This performance is attributed to the lightweight failure feedback of \approach, which allows it to distinguish between incomplete and incorrect input fragments.
 
 \begin{result}
-\approach has a high data recovery rate (88\%, on average) and its data %The data recovery and
-loss is up to 23 times lower than that of ddmax (e.g., INI).
+\approach has a high data recovery rate (84\%, on average) and its data %The data recovery and
+loss is up to 26 times lower than that of ddmax (e.g., INI).
 \end{result}
 
 
 \begin{table}[!tbp]\centering
-\caption{Data Loss (Levenshtein distance) of \approach vs. the state-of-the-art (ddmax), minimum data loss and significant \% reduction in data loss are in \textbf{bold}}
+\caption{Data Loss (Levenshtein distance) of \approach vs. the state-of-the-art (ddmax), minimum data loss and significant percentage reduction (\% Red.) in data loss are in \textbf{bold}}
 %\vspace{-0.5cm}
 \begin{tabular}{|l | c | r  r  r  r |}
 \hline
@@ -2126,8 +2141,8 @@ loss is up to 23 times lower than that of ddmax (e.g., INI).
 \textbf{Syn. ddmax} & 119.6 &  258.1 & 82.7 &	76.6 &	33.3 \\
 \textbf{\approach} & \textbf{10.6}  & 9.5 &	\textbf{28.7} &	7.4 & \textbf{1.6} \\
 \hline
-\textbf{\% Reduc. vs. Lex.} & \textbf{70\%} &  8\% & \textbf{115\%} & -16\% & \textbf{357\%} \\
-\textbf{\% Reduc. vs. Syn.} & \textbf{1030\%} & \textbf{2629\%} &	\textbf{188\%} & \textbf{936\%} &\textbf{ 1930\%} \\
+\textbf{\% Red. vs. Lex.} & \textbf{70\%} &  \textbf{8\%} & \textbf{115\%} & -16\% & \textbf{357\%} \\
+\textbf{\% Red. vs. Syn.} & \textbf{1030\%} & \textbf{2629\%} &	\textbf{188\%} & \textbf{936\%} &\textbf{ 1930\%} \\
 \hline
 \end{tabular}
 \label{tab:data-loss}
@@ -2135,38 +2150,39 @@ loss is up to 23 times lower than that of ddmax (e.g., INI).
 \end{table}
 
 
+%\noindent
+%\textbf{RQ3 Diagnostic Quality:} \todo{fix to new evaluation results}
+%In this experiment, we evaluate the diagnostic quality of \approach in comparison to the state-of-the-art techniques. In particular, we compare the size of the diagnoses, i.e., the isolated failure cause reported by each approach, as well as the intersection of the diagnoses reported by these approaches. We compare \approach to three main methods, namely \approach, lexical ddmax, syntactic ddmax and ddmin.  \recheck{Table x and figure X} show the diagnostic quality of our approach, in comparison to the state of the art techniques.
+%
+%We found that
+%
+%\begin{result}
+%XXXX
+%XXXX
+%\end{result}
+
+
+
+
+
 \noindent
-\textbf{RQ3 Diagnostic Quality:} \todo{fix to new evaluation results}
-In this experiment, we evaluate the diagnostic quality of \approach in comparison to the state-of-the-art techniques. In particular, we compare the size of the diagnoses, i.e., the isolated failure cause reported by each approach, as well as the intersection of the diagnoses reported by these approaches. We compare \approach to three main methods, namely \approach, lexical ddmax, syntactic ddmax and ddmin.  \recheck{Table x and figure X} show the diagnostic quality of our approach, in comparison to the state of the art techniques.
-
-We found that
-
-\begin{result}
-XXXX
-XXXX
-\end{result}
-
-
-
-
-
-\noindent
-\textbf{RQ4 Efficiency:} \todo{fix to new evaluation results}
+\textbf{RQ3 Efficiency:} %\todo{fix to new evaluation results}
 %\todo{mention that run-time is the execution time of the algorithm, without accounting for the time for experimental pre/post processings }
-Let us evaluate the performance of our approach.
+Let us evaluate the time performance of our approach.
 %, i.e., %we investigate
 %how long it takes \approach to repair an invalid input, in comparison to the state-of-the-art (ddmax).
 %In addition, w
 %We also evaluate the number %of repair attempts, i.e., number of
 %program runs %test experiments with input fragments,
 %performed by each approach.
-To this end, we measure the time performance (i.e., execution time) and the number of program runs performed
-%  of input repairs that were completed
-by \approach, in comparison to lexical ddmax and syntactic ddmax. For a balanced evaluation, we
+%To this end, we measure the time performance (i.e., execution time) and the number of program runs performed
+%%  of input repairs that were completed
+%by \approach, in comparison to lexical ddmax and syntactic ddmax. 
+For a balanced evaluation, we
 %performed an experiment analysing % where we consider %for
-analyse a set of 483 invalid inputs % files
-that where completely repaired by all three approaches within %, in less than
-two minutes, %. % (120,000ms).
+analyse a set of 480 invalid inputs % files
+that were completely repaired by all three approaches within %, in less than
+the four minutes timeout, %. % (120,000ms).
 %Specifically
 %To be fair, we report the execution time of each algorithm,
 without %accounting for
@@ -2178,83 +2194,78 @@ analysis time.
 %the number of program execution during the test experiments of each approach.
 %\recheck{
 \Cref{tab:efficiency} %and figure X}
-illustrates the efficiency of our approach compared to ddmax. %the state-of-the-art methods.
+reports the efficiency of all approaches. % approach compared to ddmax. %the state-of-the-art methods.
 
 %For runtime,
 
-In this evaluation, we found that \textit{\approach is efficient in input repair: It is reasonably fast, it takes about \recheck{1.7} seconds to repair an invalid input file, on average}.
-\approach is 50\% more efficient than lexical ddmax (\recheck{1.7s versus 2.5s}), and syntactic ddmax is about three times as efficient as \approach (\recheck{0.6s versus 1.7s}).
+In this evaluation, we found that \textit{\approach is efficient in input repair: It is reasonably fast, it takes about \recheck{10} seconds to repair an invalid input file, on average}. However, it is up to five times slower than \ddmax (two to three seconds on average). 
+%\approach is 50\% more efficient than lexical ddmax (\recheck{1.7s versus 2.5s}), and syntactic ddmax is about three times as efficient as \approach (\recheck{0.6s versus 1.7s}).
 %The time performance of
 %This implies that \approach is twice as fast as %er than
 %lexical ddmax, but twice slower than syntactic ddmax.
-This result is %ese findings are
-due to the %can be explained
-% is expected since the execution time of %repair attempts (i.e.,
-%by the
-number of program runs required by each approach.
 %, which is  %)
 %the main time-consuming component of \approach, as well as ddmax.
 %However,
 %\recheck{
 \Cref{tab:efficiency} %} %  and Table/Figure X show}
 shows %the %Inspecting
-the number of %repair attempts (aka
-program runs performed by each approach. %for all approaches.
-For instance, the execution time
+%the number of %repair attempts (aka
+%program runs performed by each approach. %for all approaches.
+%For instance, 
+that the execution time
 %performance cost is much lower for
 of \approach %syntactic ddmax
 is much higher %lower
-than that of syntactic ddmax
+than that of syntactic and lexical ddmax. 
 %and \approach, since
-because \approach requires about three times as many program runs as syntactic ddmax (\recheck{505 vs. 1,586} program runs).
+%because \approach requires about three times as many program runs as syntactic ddmax (\recheck{505 vs. 1,586} program runs).
 %these approaches is the number of repair attempts and both lexical ddmax and \approach perform more test experiments than syntactic ddmax,
-The lower program runs required by syntactic ddmax is because %since
-it leverages the input grammar to reduce the number of test experiments.
+%The lower program runs required by syntactic ddmax is because %since
+%it leverages the input grammar to reduce the number of test experiments.
+This result is %ese findings are
+due to the %can be explained
+% is expected since the execution time of %repair attempts (i.e.,
+%by the
+number of program runs required by \approach, especially due to its additional repair operation (input synthesis) and its additional oracle checks (incompleteness and parser boundary checks).
 %, i.e. test experiments with input fragments.
 % %)
 %It shows that \approach performed \recheck{X} less repair attempts than lexical ddmax (\recheck{X vs. X} runs), and
 %\recheck{X} as many repair attempts as lexical ddmax (\recheck{X vs. X} runs).
 %We observe that
 Overall, %these results suggest that
-\approach is reasonably efficient, and %it is
-more efficient than lexical ddmax. %In addition, w
-We observe that the number of program runs is the main performance bottleneck of all three approaches. % to the
+\approach is reasonably efficient, and the number of program runs 
+%, and %it is
+%more efficient than lexical ddmax. %In addition, w
+%We observe that the number of program runs is the 
+main performance bottleneck of \approach as well as \ddmax. %all three approaches. % to the
 %These results suggest that \approach is %not very time-consuming or
 %inexpensive, it as a reasonable number of repair attempts and time performance, especially in  comparison to lexical ddmax.
 
 \begin{result}
 %Our
-\approach %is %reasonably fast,
-%it
-repairs an invalid input in less than \recheck{two} (1.7) seconds, on average. %\approach
-It is 50\% more effective than lexical ddmax, but 2x slower than syntactic ddmax.
-% is three times as %effective as %only half as
-%fast
-%syntactic ddmax.
+\approach is reasonably fast (10 seconds).
+%repairs an invalid input in 10 seconds. 
+It is 5x slower than \ddmax because it requires
+more program runs 
+due to input synthesis. 
 \end{result}
 
 \begin{table}[!tbp]\centering
-\caption{Efficiency of \approach vs. the state-of-the-art (ddmax), lower runtime, smaller number of program runs %and significant \% improvement in efficiency
-are in \textbf{bold}, second-best time performance is in \textit{italics}}
+\caption{Efficiency of \approach vs. \ddmax, lowest runtime and smaller number of program runs %and significant \% improvement in efficiency
+are in \textbf{bold}. %, second-best time performance is in \textit{italics}
+}
 %\vspace{-0.5cm}
 \begin{tabular}{|l |  r  r | r  r |}
 \hline
-%& \textbf{\#Repaired}
 &  \multicolumn{2}{c|}{\textbf{Runtime (s)}} & \multicolumn{2}{c|}{\textbf{\#Prog. Runs}}  \\
 \textbf{Techniques} %& \textbf{Inputs}
 &  \textbf{Avg.}  & \textbf{Total} & \textbf{Avg.}  & \textbf{Total} \\
 \hline
-\textbf{Lex. ddmax} & %483 &
-3.4 & 1653 & 4995 & 2437794 \\
-\textbf{Syn. ddmax} & %483 &
-\textbf{2.0} & \textbf{982}  & \textbf{2049}  & \textbf{1000143}  \\
+\textbf{Lex. ddmax} & 3.4 & 1653 & 4995 & 2437794 \\
+\textbf{Syn. ddmax} & \textbf{2.0} & \textbf{982}  & \textbf{2049}  & \textbf{1000143}  \\
 \hline
-\textbf{\approach} &  %483 &
-\textit{10.2} & \textit{4938}  & \textit{16220} & \textit{7915608}  \\
+\textbf{\approach} &  10.2 & 4938  & 16220 & 7915608  \\
 \hline
-%\textbf{\approach vs. Lex.} &  & & & \\
-%\textbf{\approach vs. Syn.} & & & & \\
-%\hline
 \end{tabular}
 \label{tab:efficiency}
 %\vspace{-0.5cm}
@@ -2383,6 +2394,8 @@ In contrast to \bfr, these approaches aim to guard data from new errors by detec
 % % To Robert, for the bagels and explaining CMYK and color spaces.
 % \end{acks}
 
+
+\balance
 %%
 %% The next two lines define the bibliography style to be used, and
 %% the bibliography file.
