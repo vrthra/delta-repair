@@ -1346,62 +1346,52 @@ repair is saved. If not, the repair is discarded.
 def repair_and_extend(item):
     return [apply_delete(item)] + apply_insert(item)
 \end{lstlisting}
-The output from \<find\_fixes()> (\Cref{lst:findfixes}) is a set of repairs with
-the least edit distance from the passed input string.
+The output from \<find\_fixes()> (\Cref{lst:findfixes}) is a set of repair
+threads with the least number of repairs from the passed input string.
+
+\begin{description}
+\item[valid substring.] The \emph{valid substring} of a string is the maximal prefix where the parser returns
+\emph{incomplete}.
+\item[boundary.] The \emph{boundary} or \emph{parse boundary} is the index of
+the first character after the valid substring that results in
+\emph{incorrect} response from the parser, or one past the end if the input is
+\emph{incomplete}.
+\item[repair.] A repair is a single modification (deletion or insertion of a
+single character) made on an input string.
+\item[repair thread.] A \emph{repair thread} is is a set of repairs pade on an
+input string. A repair thread has a single \emph{boundary} and a corresponding
+\emph{valid prefix}.
+\end{description}
+
 
 The \brepair algorithm works as follows.
 We start with the assumption that the parser correctly signals
 \emph{incomplete} for incomplete inputs, \emph{incorrect} for other invalid
 inputs, and \emph{complete} if the input was valid.\todo{we need to sync these steps with the workflow diagram (\autoref{fig:brepair_flowchart}), and also name/number steps 1,2, ...}
-\begin{itemize}
+
+\begin{enumerate}[wide, labelwidth=!, labelindent=0pt]
 \item \emph{Binary search.} Given any corrupt input, \brepair starts by a
-binary search of the input to determine the substring at which \emph{incomplete}
-switches to \emph{incorrect}. The boundary is considered to be the first
-character that results in \emph{incorrect} response from the parser.
-\item \emph{Deletion.} At the point of boundary (the first such character), we set the current
-edit distance to zero. Then, \brepair applies
-deletion, and checks whether the deletion changes the valid substring.
-\item \emph{Insertion.} At the same point, \brepair also tries to insert a single character and
-checks whether the insertion changes the valid substring.
+binary search of the input to determine the parse boundary. This then is used
+to construct the first repair thread, with boundary set to the binary search
+result, and repairs set to empty.
 
-\item Single character deletion, as well as insertion is an edit distance of one.
+\item \emph{Repair.} Starting with any existing repair thread, \brepair applies
+deletion and insertion repairs. A single deletion results in a single repair
+thread which is an extenion of the original repair thread.
+An insertion however, results in multiple repair threads corresponding to the
+number of characters at that index that results in a diffrent parse boundary from
+the old.
 
-\item If the update results in a change of size of the valid
-substring, the particular changes are stored in a priority queue.
-The priority is computed as the number of edits required. That is, if one
-deletion is sufficient to increase the valid substring, then the priority is
-one. Similarly, if one character insertion increased the valid substring, the
-priority is one. If however, one character had to be deleted, and another
-inserted, the priority is two.
-% first, followed by the size of the valid substring.
-%When there is a tie between deletion and insertion, deletion gets
-%the priority. When two insertions are available, one is chosen randomly.
+\item \emph{Selection.} We remove any redundant repair threads, and choose the best threads if a
+selection criterion is supplied.
 
-\item If the priority queue contains any items, we choose all items with the
-highest ranking (e.g. if there are items with two edits and items with one
-edit, then choose all one edit items). We call each such item a thread.
+\item \emph{Final Fix.} We then iteratively choose each thread and continue making repairs
+until the parser output changes from \emph{incomplete} to \emph{incorrect}.
+\end{enumerate}
 
-\item We continue each thread until the parser output changes from
-\emph{incomplete} to \emph{incorrect}, and we repeat the process.
-
-\item If the priority queue did not contain any items, we increase the current
-edit distance by one. That is, we delete one character more and see if that
-advances the valid substring. Similarly, we append one more character to any
-thread that already contains one character appended.
-
-\item Given that there are 128 printable ASCII characters, each insertion can increase
-the thread count by a multiple of 128. Hence, we limit the insertion thread
-count of a particular edit distance to a configurable \<N> value\todo{what is the value of N used in the eval. and how was this determined?}. If the number of
-insertion threads at any edit distance exceeds this value, we sample \<N>
-insertion threads from this group.
-
-\item The process continues until the value is accepted at some edit distance.
-
-\item The priority queue at the end of the process forms the edit
-recommendations from the algorithm. The top most rank forms the first level of
-suggestions at the lowest edit distance possible. If more suggestions are
-required, the process can be restarted with the threads in the next rank.
-\end{itemize}
+The output of the algorithm is a set of repair threads each of which fixes the
+input using a set of repairs. The repair threads are sorted in the order of
+least number of repairs required to fix the input.
 
 \noindent
 \textbf{Complexity:}\todo{what is the space/time complexity of the \approach, and how does this compare to that of \ddmax. }
