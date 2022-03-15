@@ -1161,7 +1161,7 @@ deletion, we produce a string without the character at the \<boundary>.
 def apply_delete(item):
     inp = item.inputstr[:item.boundary] +
           item.inputstr[item.boundary + 1:]
-    return bsearch_extend_item(Repair(inp, item.boundary))
+    return extend_deleted_item(Repair(inp, item.boundary))
 \end{lstlisting}
 
 For insertion, the algorithm is more involved. The problem is that we need to
@@ -1181,7 +1181,7 @@ def insert_at(item, k, suffix)
     v = (item.inputstr[:k] + i +
         item.inputstr[k:item.boundary] + suffix)
     new_item = Repair(v, k, mask='%s_I%d' % (item.mask, k))
-    ie = lsearch_extend_item(new_item, nxt=1)
+    ie = extend_inserted_item(new_item)
     if ie.boundary > k:
        return ie
     return None
@@ -1302,13 +1302,18 @@ def filter_best(items):
             boundaries[:MAX_SIMULTANIOUS_CORRECTIONS]]
 \end{lstlisting}
 
-After each repair, the new string is checked (\Cref{lst:extenditem}) to see if
+After each repair, the new string is checked  to see if
 the string results in \emph{incomplete} rather than \emph{incorrect}. If the
 string results in \emph{incomplete}, a new parse boundary is found by
 repeatedly extending the string with a pending character from the remaining
-suffix in the input string.
-
+suffix in the input string. The small complication here is that different
+search algorithms are more suitable for deletion and insertion. With deletion,
+we have removed the error causing character, so the next parse error may
+be far away. Hence, we use binary search to find the next parse error (\Cref{lst:extenditem}).
 \begin{lstlisting}[caption=Extend the boundary,label={lst:extenditem}]
+def extend_deleted_item(item):
+    return bsearch_extend_item(item)
+
 def bsearch_extend_item(item):
     bs = binary_search(item.inputstr, left=item.boundary)
     if bs >= len(item.inputstr):
@@ -1316,6 +1321,13 @@ def bsearch_extend_item(item):
         return item
     item.boundary = bs
     return item
+\end{lstlisting}
+In the case of insert, however, in most cases, the character being inserted,
+and the character that originally caused a parse error can still cause a parse
+error. Hence, we apply linear search instead (\Cref{lst:extenditeminsert}).
+\begin{lstlisting}[caption=Extend the boundary,label={lst:extenditeminsert}]
+def extend_inserted_item(item):
+    return lsearch_extend_item(item, nxt=1)
 
 def lsearch_extend_item(item, nxt=1):
     while True:
