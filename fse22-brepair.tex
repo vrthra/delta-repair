@@ -1374,7 +1374,7 @@ We start with the assumption that the parser correctly signals
 \emph{incomplete} for incomplete inputs, \emph{incorrect} for other invalid
 inputs, and \emph{complete} if the input was valid.\todo{we need to sync these steps with the workflow diagram (\autoref{fig:brepair_flowchart}), and also name/number steps 1,2, ...}
 
-\begin{enumerate}[wide, labelwidth=!, labelindent=0pt]
+\begin{enumerate}
 \item \emph{Binary search.} Given any corrupt input, \brepair starts by a
 binary search of the input to determine the parse boundary. This then is used
 to construct the first repair thread, with boundary set to the binary search
