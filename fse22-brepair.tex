@@ -1826,7 +1826,11 @@ our approach outperformed the grammar-based input repair approaches: \approach i
 %In addition, 
 %Furthermore, %\approach 
 %it is 
-slightly (2\%) more effective than the best-performing grammar-based approach (i.e., syntactic \ddmax). 
+slightly (2\%) more effective than the best-performing grammar-based approach (i.e., syntactic \ddmax). %We believe tT
+The effectiveness of syntactic \ddmax is due to its knowledge of the input grammar. 
+%, which reduces the number of required test experiments. 
+% its search space for deletion. 
+%additional know
 %best 
 %(except for SExp).  
 %\approach is up to 45\% and 29\% more effective than lexical and syntactic ddmax %for two input formats
@@ -1839,51 +1843,52 @@ slightly (2\%) more effective than the best-performing grammar-based approach (i
 
 %In summary, t
 These results suggest that %(a) \approach is highly effective in repairing invalid input files, (b) our approach more effective than the baselines, and (c)
-the \textit{combination of rich failure feedback and input synthesis} is important for the effective repair of invalid input files, this is evident by the effectiveness of \approach in comparison to the state-of-the-art methods.
+the \textit{combination of failure feedback and input synthesis} is vital for the effective repair of invalid inputs. 
+%, this is evident by the effectiveness of \approach in comparison to the state-of-the-art methods.
 
 \begin{result}
 \approach is highly effective in repairing invalid input files: %, and more effective than the state-of-the-art.
-It repaired four out of five (77\%) of invalid inputs and it is %up to 
+It repaired four out of five (77\% of) invalid inputs and it is %up to 
 8\% more effective than the best language-agnostic method (lexical \ddmax). %baseline.
 \end{result}
 
 
-\begin{table}[!tbp]\centering
-\caption{Details of Repaired Invalid %Failure-inducing
-Inputs}
-\begin{tabular}{|l | l | r | r | r | r | r | l |}
-\hline
-&  \multicolumn{5}{c|}{\textbf{Number of Repaired Inputs}}  \\
-\textbf{Technique(s)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} & \textbf{Total (\%)} \\
-\hline
-\textbf{Lex. ddmax } & 0 & 3 & 0 & 3 & 6  (0.8\%) \\
-\textbf{Syn. ddmax } & 0 & 6 & 23 & 12 & 41  (5.6\%)  \\
-\textbf{\approach } & 0 & 27 & 0 & 63 & 90 (12.3\%)  \\
-\hline
-\textbf{Lex. $\cap$ Syn.} & 0 & 14 & 3 & 19 & 36  (4.9\%) \\
-\textbf{Lex. $\cap$ Appr.} & 0 & 26 & 0 & 3 & 29  (4.0\%) \\
-\textbf{Syn. $\cap$ Appr.} & 0 & 41 & 1 & 7 & 49  (6.7\%) \\
-\hline
-\textbf{All 3 techs.}
-%Lex. $\cap$ Syn. $\cap$ Appr.}
-& 201 & 79 & 121 & 81 & 482  (65.8\%)\\
-%\textbf{Both} &  201 & 105 & 121 & 84 & 511 (74\%) \\
-%\textbf{Ddmax Only} & 0 & 17 & 3 & 22 & 42 (6\%) \\
-%\textbf{\approach Only} & 0 & 68 & 1 & 70 & 139 (20\%) \\
-\hline
-\textbf{All Repairs} & 201 & 196 & 148 & 188 &  733  (N/A)\\
-\hline
-%\textbf{No Repairs} & 0 & 2 & 11 & 60 & 73 \\
+%\begin{table}[!tbp]\centering
+%\caption{Details of Repaired Invalid %Failure-inducing
+%Inputs}
+%\begin{tabular}{|l | l | r | r | r | r | r | l |}
 %\hline
-%\textbf{Total Repaired} & & & & & \\
-%\textbf{Total Repaired} & 201 & 190 &  125 & 176 & 692  \\
+%&  \multicolumn{5}{c|}{\textbf{Number of Repaired Inputs}}  \\
+%\textbf{Technique(s)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} & \textbf{Total (\%)} \\
 %\hline
-%\textbf{Total Unrepaired} &  0 & 17 & 25 & 72 & 114 \\
+%\textbf{Lex. ddmax } & 0 & 3 & 0 & 3 & 6  (0.8\%) \\
+%\textbf{Syn. ddmax } & 0 & 6 & 23 & 12 & 41  (5.6\%)  \\
+%\textbf{\approach } & 0 & 27 & 0 & 63 & 90 (12.3\%)  \\
 %\hline
-\end{tabular}
-\label{tab:repair-complementarity}
-%\vspace{-0.5cm}
-\end{table}
+%\textbf{Lex. $\cap$ Syn.} & 0 & 14 & 3 & 19 & 36  (4.9\%) \\
+%\textbf{Lex. $\cap$ Appr.} & 0 & 26 & 0 & 3 & 29  (4.0\%) \\
+%\textbf{Syn. $\cap$ Appr.} & 0 & 41 & 1 & 7 & 49  (6.7\%) \\
+%\hline
+%\textbf{All 3 techs.}
+%%Lex. $\cap$ Syn. $\cap$ Appr.}
+%& 201 & 79 & 121 & 81 & 482  (65.8\%)\\
+%%\textbf{Both} &  201 & 105 & 121 & 84 & 511 (74\%) \\
+%%\textbf{Ddmax Only} & 0 & 17 & 3 & 22 & 42 (6\%) \\
+%%\textbf{\approach Only} & 0 & 68 & 1 & 70 & 139 (20\%) \\
+%\hline
+%\textbf{All Repairs} & 201 & 196 & 148 & 188 &  733  (N/A)\\
+%\hline
+%%\textbf{No Repairs} & 0 & 2 & 11 & 60 & 73 \\
+%%\hline
+%%\textbf{Total Repaired} & & & & & \\
+%%\textbf{Total Repaired} & 201 & 190 &  125 & 176 & 692  \\
+%%\hline
+%%\textbf{Total Unrepaired} &  0 & 17 & 25 & 72 & 114 \\
+%%\hline
+%\end{tabular}
+%\label{tab:repair-complementarity}
+%%\vspace{-0.5cm}
+%\end{table}
 
 
 
@@ -1997,58 +2002,42 @@ BRepair    191    158      121          154
 
 
 
-\begin{table}[!tbp]\centering
-\caption{Number of edit operations (insertion/deletions) performed by \approach, higher number operations are in \textbf{bold}}
-%\vspace{-0.5cm}
-\small
-\begin{tabular}{|l | c | r  r  r  r |}
-\hline
-&  \multicolumn{5}{c|}{\textbf{Number of  Operations}}  \\
-\textbf{Ops.} & \textbf{ALL (\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-\hline
-\textbf{Insert} & 751 (49\%) & 83 (38\%) &	\textbf{318 (51\%)} &	\textbf{126 (53\%)} &	224 (48\%) \\
-\textbf{Delete}  & \textbf{794 (51\%)} & \textbf{135 (62\%)} &	308 (49\%) &	110 (52\%) &	\textbf{241 (51\%)} \\
-\hline
-\end{tabular}
-\label{tab:brepair-insertions}
-%\vspace{-0.5cm}
-\end{table}
+%\begin{table}[!tbp]\centering
+%\caption{Number of edit operations (insertion/deletions) performed by \approach, higher number operations are in \textbf{bold}}
+%%\vspace{-0.5cm}
+%\small
+%\begin{tabular}{|l | c | r  r  r  r |}
+%\hline
+%&  \multicolumn{5}{c|}{\textbf{Number of  Operations}}  \\
+%\textbf{Ops.} & \textbf{ALL (\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+%\hline
+%\textbf{Insert} & 751 (49\%) & 83 (38\%) &	\textbf{318 (51\%)} &	\textbf{126 (53\%)} &	224 (48\%) \\
+%\textbf{Delete}  & \textbf{794 (51\%)} & \textbf{135 (62\%)} &	308 (49\%) &	110 (52\%) &	\textbf{241 (51\%)} \\
+%\hline
+%\end{tabular}
+%\label{tab:brepair-insertions}
+%%\vspace{-0.5cm}
+%\end{table}
 
 
 
-\noindent \textbf{\textit{Complementarity to \ddmax:}} We further inspect the unique repairs achieved by each approach, in order to understand the complementarity of our approach to the state-of-the-art methods. In this experiment, we inspect the number of unique repairs achieved \textit{solely} by a single approach (e.g., \textit{only} \approach), or two or more approaches (e.g., all approaches).  The goal is to determine if there are unique sets of inputs that are solely repaired by a single approach, and not by other approaches. \Cref{fig:repair-complementarity} and \Cref{tab:repair-complementarity} highlight our findings on the complementarity of \approach to ddmax.
-%to the state-of-the-art.
-%demonstrate that our approach complements
-%the complementarity of our approach to
-%DDmax.
+\noindent \textbf{\textit{Complementarity to \ddmax:}} We further inspect the unique repairs achieved by each approach, in order to understand the complementarity of our approach to the state-of-the-art methods. In this experiment, we inspect the number of unique repairs achieved \textit{solely} by a single approach (e.g., \textit{only} \approach), or two or more approaches (e.g., all approaches). 
+%The goal is to determine if there are unique sets of inputs that are solely repaired by a single approach, and not by other approaches. 
+\Cref{fig:repair-complementarity} highlights our findings. 
 
-In our evaluation, we found that about 12\% of all repairs could only be completed by \approach, which is is up to 15 times as many as DDmax repairs (\textit{see} \Cref{fig:repair-complementarity}).
-%our
-\approach \textit{solely} repaired more than
-%for %repairs
-\textit{one in every eight} invalid inputs (12\% of repairs), %\approach is the solely repaired them,
-%i.e.,
-all of which ddmax could not repair. % these inputs. %. In addition, \approach \textit{solely} repairs
-%which
-%This is up to 15 times as many as DDmax repairs.
-\Cref{tab:repair-complementarity} shows that for lexical ddmax, our approach \textit{solely} repaired 15x as many invalid files as lexical ddmax (90 versus six), while it repairs more than twice as many files as syntactic ddmax (90 versus 41).
-% \textit{one in five (20\% of) invalid inputs could be repaired solely by \approach}. \Cref{tab:repair-complementarity} and \Cref{fig:repair-complementarity} highlight the complementarity of \approach to ddmax.
-These findings show that our approach not only outperforms ddmax, but it is also complementary to ddmax: It solely repairs 90 (11\% of all) invalid inputs, all of which ddmax could not repair. %This is evident since it solely completes (12\% of) repairs that could not be completed by the state-of-the-art (ddmax).
-Further
-%experiment
-inspection suggests that this unique repairs achieved by \approach are due to the \textit{rich failure feedback} and \textit{repair via insertion} synergy of \approach.
-%insertion and
-
-% performance
-
+We found that about \textit{one in ten repairs could be solely completed by \approach}, which is three times and five times as many as lexical and syntactic \ddmax %\textit{only} 
+repairs, respectively (\textit{see} \Cref{fig:repair-complementarity}). \approach \textit{solely} completely 9\% (61/712) of all repaired inputs, all of which ddmax could not repair. For lexical ddmax, our approach \textit{solely} repaired 5x as many invalid files as lexical ddmax (61 vs. 12), while it repairs thrice as many files as syntactic ddmax (61 vs. 23). Overall, we observe that all \textit{\approach complements \ddmax, a combination of these approaches completes 88\% of repairs (712), which is 14\% and 23\% more than the repairs completed by \approach and syntactic \ddmax, respectively}. 
+%These findings 
+%show that our approach is complementary to ddmax. 
+%It solely completed 61 repairs (9\%), all of which ddmax could not repair. 
+%Further inspection 
+%suggest that this 
+We attribute the unique repair achieved by \approach to the synergistic combination of \textit{failure feedback} and \textit{input synthesis}. % in \approach.
 
 \begin{result}
-%Our input repair
-\approach
-%not only outperforms the baseline, but
-outperforms and complements the best state-of-the-art method (ddmax).
-%\approach
-It is the only technique that can solely complete 12\% of all repairs, which is up to 15 times as many as ddmax.
+\approach %outperforms and 
+is complementary to the best state-of-the-art method (syntactic \ddmax). 
+It is the only technique that can solely complete 9\% of all repairs, which is up to five times as much as \ddmax.
 \end{result}
 
 \noindent
