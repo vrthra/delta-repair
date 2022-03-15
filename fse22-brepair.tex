@@ -1153,6 +1153,21 @@ In the listings below, \<Repair> is a tuple that allows
 accessing its first argument with \<inputstr> and its second argument with
 \<boundary>.
 
+We define a few terms before we start:
+\begin{description}
+\item[valid substring.] The \emph{valid substring} of a string is the maximal prefix where the parser returns
+\emph{incomplete}.
+\item[boundary.] The \emph{boundary} or \emph{parse boundary} is the index of
+the first character after the valid substring that results in
+\emph{incorrect} response from the parser, or one past the end if the input is
+\emph{incomplete}.
+\item[repair.] A repair is a single modification (deletion or insertion of a
+single character) made on an input string.
+\item[repair thread.] A \emph{repair thread} is is a set of repairs pade on an
+input string. A repair thread has a single \emph{boundary} and a corresponding
+\emph{valid prefix}.
+\end{description}
+
 The deletion algorithm is simple. When a parse error is observed,
 the character that caused the error is present at the \<boundary> value.
 That is, we know that \<inputstr[:boundary]> parses correctly. Hence, for
@@ -1354,21 +1369,6 @@ def repair_and_extend(item):
 \end{lstlisting}
 The output from \<find\_fixes()> (\Cref{lst:findfixes}) is a set of repair
 threads with the least number of repairs from the passed input string.
-
-\begin{description}
-\item[valid substring.] The \emph{valid substring} of a string is the maximal prefix where the parser returns
-\emph{incomplete}.
-\item[boundary.] The \emph{boundary} or \emph{parse boundary} is the index of
-the first character after the valid substring that results in
-\emph{incorrect} response from the parser, or one past the end if the input is
-\emph{incomplete}.
-\item[repair.] A repair is a single modification (deletion or insertion of a
-single character) made on an input string.
-\item[repair thread.] A \emph{repair thread} is is a set of repairs pade on an
-input string. A repair thread has a single \emph{boundary} and a corresponding
-\emph{valid prefix}.
-\end{description}
-
 
 The \brepair algorithm works as follows.
 We start with the assumption that the parser correctly signals
