@@ -248,7 +248,7 @@ pics/numbering/.style args={#1}{code={
 
 \begin{abstract}
 Data cleansing and data repair are time-intensive tasks for developers, especially in fields that aggregate data from multiple resources (e.g., \recheck{data centers/warehouses}). Often times,
-input data may conform to a given input format, but can not be parsed by a conforming program, for instance, due to human error or data corruption. 
+input data may conform to a given input format, but can not be parsed by a conforming program, for instance, due to human error or data corruption.
 In such cases, a data engineer has to manually repair the corrupt data such that
 it follows a given format, and hence it can be processed by the conforming program.
 Such manual repair can be time consuming, and error-prone.
@@ -376,7 +376,7 @@ in terms of the set of repairs offered.
 \section{Introduction}
 \label{sec:intro}
 
-\todo{remember to say the meaning or derivation of the name \approach} 
+\todo{remember to say the meaning or derivation of the name \approach}
 Data, especially from external, often human sources need to be collected and
 aggregated before information processing algorithms can be run on it to extract
 insights. \todo{add concrete example use case} Unfortunately, data sources may disagree on the format specification, %e.g.,
@@ -414,9 +414,9 @@ place, which completely captures the intended structure.
 %an official formal grammar;
 %%}\todo{how do you mean? this is not true, there are markdown grammars, ANTLR also has one, Nikolas used some in his Tribble eval too.};
 %documents in languages such as \<C> can contain semantic
-However, %the formal grammar 
-\textit{this assumption may not hold in practice} due to several reasons. 
-Firstly, %or stance, 
+However, %the formal grammar
+\textit{this assumption may not hold in practice} due to several reasons.
+Firstly, %or stance,
 certain input formats (e.g., markdown~\cite{gruber2004markdown}) do not have
 an official formal grammar specification.
 %how do you mean? this is not true, there are markdown grammars, ANTLR also has
@@ -525,13 +525,13 @@ Notably, two major \ddmax limitations include its (1) \textit{limited repair ope
 Firstly, \ddmax's repair is restricted to deletion, which makes it sub-optimal for repairing some invalid inputs. The problem is that in many circumstances such as
 disk corruption, some input characters are more likely to be changed or deleted
 rather than inserted. Hence by handling only spurious insertions, \ddmax misses
-an important repair requirement. Consider the sample invalid input in \textit{row one} of \Cref{tab:ddmaxlimitations} (i.e., \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}) which is invalid because of a \textit{missing comma separator} between the two values in the JSON object. Due to the limited repair options of \ddmax (i.e., only deletion), its resulting repair (i.e., \letterboxed{\ \ \ \ 42\ }) is \textit{sub-optimal} leading to a huge (75\%) data loss (21 out of 28 bytes). %, % $\approx$ . 
+an important repair requirement. Consider the sample invalid input in \textit{row one} of \Cref{tab:ddmaxlimitations} (i.e., \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}) which is invalid because of a \textit{missing comma separator} between the two values in the JSON object. Due to the limited repair options of \ddmax (i.e., only deletion), its resulting repair (i.e., \letterboxed{\ \ \ \ 42\ }) is \textit{sub-optimal} leading to a huge (75\%) data loss (21 out of 28 bytes). %, % $\approx$ .
 %  data loss).
 % , only seven out of 28 bytes recovered).
 
 Secondly,
 %As example,
-%a major limitation is that 
+%a major limitation is that
 \ddmax is modeled after \ddmin, where one of
 the unstated assumptions is that the $\delta$ fragments that are non
 contributing to the failure observed can be independently removed without
@@ -567,20 +567,20 @@ As an example, consider the invalid input in \textit{row three} of \Cref{tab:ddm
 %rather than inserted. Hence by handling only spurious insertions, \ddmax misses
 %an important repair requirement.
 
-In this paper, we propose \brepair to address the %provide a solution that addresses these 
+In this paper, we propose \brepair to address the %provide a solution that addresses these
 limitations of \ddmax via \textit{lightweight error-feedback and input synthesis}. The key insight of this approach is to complete \textit{semantic} repair of invalid inputs using lightweight failure feedback such as the \textit{validity, incompleteness and incorrectness} checks of input fragments. Given an invalid input and a conforming program, \approach performs test experiments of input subsets and candidate insertions to provide a set of repairs prioritized by the distance of the repair from the original input.
 Unlike \ddmax, \brepair does not have the implied assumption of independence of
 fragments. Hence, it does not face any limitation when given invalid inputs
-that should conform to a rich structure, and %. It also 
+that should conform to a rich structure, and %. It also
 does not stumble when faced
-with multiple faults. Finally, it %\brepair 
+with multiple faults. Finally, it %\brepair
 provides both deletion and
 synthesis as repair options making it an optimal algorithm in the toolbox of
 data engineers.
 %\todo{what else is the main ingredient or key insight of the approach}
 
 %\todo{to Move/restructure}
-%This paper %We 
+%This paper %We
 %shows that corrupted inputs with rich structure can be repaired adequately if
 %the input processor can provide at least some indication of progress.
 %That is, as with \ddmax, we require the input processor to indicate if the input
@@ -600,43 +600,43 @@ data engineers.
 %bFuzzer is getting submitted at FSE too. -> alright, we can cite it after if accepted}.
 
 %\recheck{
-For instance, consider the invalid input in \textit{row one} of \Cref{tab:ddmaxlimitations} (i.e., \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}) which is invalid because of a \textit{missing comma separator} between the two values in the JSON object. While \ddmax could not completely repair this input, \brepair could complete a repair via input synthesis. % owing to its input synthesis component. 
+For instance, consider the invalid input in \textit{row one} of \Cref{tab:ddmaxlimitations} (i.e., \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}) which is invalid because of a \textit{missing comma separator} between the two values in the JSON object. While \ddmax could not completely repair this input, \brepair could complete a repair via input synthesis. % owing to its input synthesis component.
 %\todo{to Move/restructure}
 %Specifically, o
 \Cref{sec:input-synthesis}
- describes the full steps of \brepair for this input. 
- %Our \brepair algorithm 
-%%starts with the corrupted input and quickly 
+ describes the full steps of \brepair for this input.
+ %Our \brepair algorithm
+%%starts with the corrupted input and quickly
 %finds the
 %maximal parsable prefix using a binary search.
-%For example, in \Cref{fig:bad-json-input}, 
+%For example, in \Cref{fig:bad-json-input},
 Specifically, \brepair first finds the maximal parsable
-prefix to be \letterboxed{\{\ "name":\ "Dave"\ }, and 
-determines that the \textit{parse boundary}, i.e., the 
-shift from \emph{incomplete} to \emph{incorrect} 
+prefix to be \letterboxed{\{\ "name":\ "Dave"\ }, and
+determines that the \textit{parse boundary}, i.e., the
+shift from \emph{incomplete} to \emph{incorrect}
 happens at boundary %as %\\
 \letterboxed{\{\ "name":\ "Dave"\ "}. % where the parser response shifts from
 %\emph{incomplete} to \emph{incorrect}.
-%At this point, 
+%At this point,
 Next, \brepair applies \textit{deletion}, or \textit{insertion} of characters
 in order.
 In this case, the \letterboxed{"} is deleted first, but the
 resulting input %\\
-\letterboxed{\{\ "name":\ "Dave"\ age":\ 42 \}} %is 
+\letterboxed{\{\ "name":\ "Dave"\ age":\ 42 \}} %is
 %checked to
-%see if it resulted in increasing the size of the 
-does not increase the 
-maximum parsable prefix. %Here, we see that the maximal parse boundary remains the same. 
+%see if it resulted in increasing the size of the
+does not increase the
+maximum parsable prefix. %Here, we see that the maximal parse boundary remains the same.
 Hence \brepair next
-attempts to insert a character, 
+attempts to insert a character,
 %. There are 128 printable characters in ASCII,
-%out of which, 
-eventually determining that 
-only space characters and 
+%out of which,
+eventually determining that
+only space characters and
 comma (\letterboxed{,}) can be inserted here,
 resulting in an increase of the maximal parse prefix. Out of these two insertion candidates, inserting comma results in the maximum advancement of the parse boundary, resulting in the
 valid repair: %newly constructed string: %\\
-\letterboxed{\{\ "name":\ "Dave"\ ,"age":\ 42\ \}}. %, 
+\letterboxed{\{\ "name":\ "Dave"\ ,"age":\ 42\ \}}. %,
 %which is accepted as a valid repair.
 
 
@@ -647,38 +647,38 @@ valid repair: %newly constructed string: %\\
 %\\
 %\noindent\textbf{Contributions.}
 \todo{we need to emphasize the main novelty here, i.e, first to do X, to the best of our knowledge }
-In this work, we % paper %We 
+In this work, we % paper %We
 show that invalid inputs with rich structure can be repaired adequately if
 the input processor can provide at least some indication of progress.
 That is, as with \ddmax, we require the input processor to indicate if the input
 is valid.  However, when given an invalid input, we \textit{require} the input processor
 to indicate whether the input is merely \emph{incomplete} -- that is, the input
 is a prefix of a valid input -- or is \emph{incorrect} -- that is, no suffix to
-this input will result in a valid input.\footnote{This requirement is 
-%not hard to accomplish. In most cases, 
+this input will result in a valid input.\footnote{This requirement is
+%not hard to accomplish. In most cases,
 provided by most parsers. %,
 %already
 %provide precise information as to the point at which the parse failed,
 %which
-%can be used directly in our algorithm. 
+%can be used directly in our algorithm.
 In the cases where parers do not provide
 this information, obtaining this information by external instrumentation is
-possible as demonstrated by Bj\"orn et al.~\cite{mathis2019parser}, or 
+possible as demonstrated by Bj\"orn et al.~\cite{mathis2019parser}, or
 % If
-%the program is hard to instrument, 
-adding such failure feedback to the parser % that we require 
-is trivial. 
-%not difficult. 
+%the program is hard to instrument,
+adding such failure feedback to the parser % that we require
+is trivial.
+%not difficult.
 }
 %In our evaluation, u
 Using \recheck{806} (real-world) invalid inputs from four input formats, we show that %given input processors that can accurately
-%signal \emph{incompleteness} or \emph{incorrectness} and % when given 
-%invalid inputs, 
-\brepair is \recheck{X\%} more effective and \recheck{X\% more efficient} %can provide repairs that are more maximal 
-than \ddmax. 
+%signal \emph{incompleteness} or \emph{incorrectness} and % when given
+%invalid inputs,
+\brepair is \recheck{X\%} more effective and \recheck{X\% more efficient} %can provide repairs that are more maximal
+than \ddmax.
 %, and correctly
 %pass the parser.
-Overall, this paper makes the following %technical 
+Overall, this paper makes the following %technical
 contributions\todo{we need to stress some results here}:
 \begin{itemize}
 \item \textbf{Repairing Rich Input Structures.} One of the major limitations of
@@ -687,7 +687,7 @@ contributions\todo{we need to stress some results here}:
 \item \textbf{Input Synthesis.} \ddmax is limited to \emph{deletion} of input
 fragments, which makes it unsuitable for repairing errors due to omission and
 corruption. Our \brepair technique expands the repertoire to \emph{deletion},
-\emph{insertion}, and \emph{modification}. 
+\emph{insertion}, and \emph{modification}.
 %\todo{discuss the repair to subset vs. insertion, refer to \Cref{sec:input-synthesis}}.
 \item \textbf{Lightweight Failure Feedback.} \brepair is the first technique
 tha shows how to use lightweight parser-error-feedback for input repair.
@@ -698,7 +698,7 @@ tha shows how to use lightweight parser-error-feedback for input repair.
 \end{itemize}
 
 The rest of this paper is structured as follows: \Cref{sec:rich-input-structures} highlights the limitations of the state-of-the-art input repair method (\ddmax) and illustrates how \brepair overcomes these limitations. In \Cref{sec:input-synthesis} we describe how \brepair conducts input synthesis, and \Cref{sec:brepair}  describes the \brepair algorithm. We describe our expecrimental setup and findings in \Cref{sec:experimental-setup} and \Cref{sec:results}. We address the limitations and threats to the validity of this work in \Cref{sec:threats}
-. Finally, we conclude this paper with the discussion of related works and conclusions in \Cref{sec:related_work} and \Cref{sec:conclusion}, respectively. 
+. Finally, we conclude this paper with the discussion of related works and conclusions in \Cref{sec:related_work} and \Cref{sec:conclusion}, respectively.
 
 
 %\todo{describe sections/order}
@@ -768,10 +768,10 @@ $\test(\dpass) = \pass \land n \leq |\Delta|$.\\
 % \label{fig:bad-json-input-asterisks}
 %
 % \end{figure}
-Let us illustrate the limitations of the state-of-the-art input repair method (\ddmax) and how our approach (\brepair) addresses these limitations. 
-\Cref{fig:ddmax} provides a modified version of the lexical \ddmax algorithm presented in Kirschner et al.~\cite{kirschner2020debugging}. A major limitation of lexical \ddmax is that it results in sub-optimal repairs when the invalid input contains \textit{rich structures} or \textit{multiple faults}. 
-%needs to conform to specifications such as context-free grammars. 
-In the following, we discuss these limitations. 
+Let us illustrate the limitations of the state-of-the-art input repair method (\ddmax) and how our approach (\brepair) addresses these limitations.
+\Cref{fig:ddmax} provides a modified version of the lexical \ddmax algorithm presented in Kirschner et al.~\cite{kirschner2020debugging}. A major limitation of lexical \ddmax is that it results in sub-optimal repairs when the invalid input contains \textit{rich structures} or \textit{multiple faults}.
+%needs to conform to specifications such as context-free grammars.
+In the following, we discuss these limitations.
 % specific instances when \ddmax can repair an input suboptimally.
 
 \subsection{Limitations due to multiple faults}
@@ -815,7 +815,7 @@ Here, \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}} contains two distinct
 corruptions.
 As in the previous case, \ddmax attempts to fix this input by dividing it into
 smaller and smaller fragments, none of which isolates an error that when
-removed, results in the solution \letterboxed{123456} with %which clearly has suffered 
+removed, results in the solution \letterboxed{123456} with %which clearly has suffered
 significant data loss, including the loss of structure and change in
 input fragment type from string to number.
 Hence, \ddmax can not effectively repair inputs containing multiple faults.
@@ -1217,36 +1217,36 @@ def repair(inp):
 \end{lstlisting}
 This function does a binary search (\Cref{lst:bsearch}) on the
 argument string looking for the parse boundary where the return value changes
-from \emph{incomplete} to \emph{incorrect}.
+from \emph{incomplete} to \emph{incorrect}. That is, if \<binary\_search>
+returns an index \<n>, then \<inputstr[:boundary]> is a valid prefix, and
+\<inputstr[boundary]> is the error causing character if one exists or the
+\<inputstr> is \emph{incomplete}.
 \begin{lstlisting}[caption=binary search,label={lst:bsearch}]
-def binary_search(array, left = 0, right = None):
-    left, right = 0, len(array) - 1
-    if is_incomplete(Repair(array, right)):
-        return len(array)-1
+def binary_search(inputstr, left=0, right=len(inputstr)-1):
+    if not inputstr: return left
+    if is_incomplete(Repair(inputstr, right)):
+        return len(inputstr)-1
     while left + 1 < right:
         middle = (left + right) // 2
-        if is_incomplete(Repair(array, middle)):
+        if is_incomplete(Repair(inputstr, middle)):
             left = middle
         else:
             right = middle
     return left
 \end{lstlisting}
-The \<boundary> value is then used to start the first repair
-thread, which starts at edit distance \<0>. The edit distance specifies the
-amount of corrections that were applied on a thread. This thread is then passed
+The \<boundary> value is then passed
 to \<find\_fixes()> (\Cref{lst:findfixes}).
 \begin{lstlisting}[caption=find fixes,label={lst:findfixes}]
-def find_fixes(threads):
-    edit_dist = 0
+def find_fixes(inputval, boundary):
+    next_items = [Repair(inputval, boundary)]
     while True:
-        cur_items = threads[edit_dist]
-        comp = []
-        for item in sample(cur_items):
-            for i in repair_and_extend(item):
-                threads[edit_dist + 1].append(i)
-                if is_complete(i): comp.append(i)
-        if comp: return comp
-        edit_dist += 1
+        current_items, next_items = next_items, []
+        completed = []
+        for item in sample_items_by_mask(current_items)
+            for i in repair_and_extend(item)
+                next_items.append(i)
+                if i.is_complete(): completed.append(i)
+        if completed: return completed
 \end{lstlisting}
 The function \<find\_fixes()> takes in a set of threads. It then extracts
 threads corresponding to the least edit distance. If the number of such threads
@@ -1261,7 +1261,7 @@ processor.
 
 The sampling procedure attempts to discard redundant repairs so that the number of
 simultanious threads we have to maintain does not grow unbounded. While doing
-that, it %tries to 
+that, it %tries to
 ensures that no unique repairs are discarded. For
 example, given a JSON fragment \<[1,2> a repair of \<[1,23>, \<[1,24>
 and \<[1,25> are redunant but \<[1,2,> is unique because the last repair
@@ -1275,7 +1275,7 @@ length of the extended string, as well as the last character added as the
 uniqueness indicator.}\todo{@Lukas: does the new implementation contain this check? I cant remember this check in the old implementation of \approach?}
 
 \begin{lstlisting}[caption=Sampling,label={lst:sampling}]
-def sample(items):
+def sample_items_by_mask(items):
     masks = {}
     for i in items:
         key = (i.mask, i.boundary, i.inputstr[i.boundary-1])
@@ -1328,8 +1328,8 @@ def lsearch_extend_item(item, nxt=1):
 \end{lstlisting}
 If this succeeds, the parse boundary after the repair
 would be larger than the old parse boundar. Hence, if the parse boundary has
-increased (\Cref{lst:repairandextend}), then 
-%. If the boundary has increased, 
+increased (\Cref{lst:repairandextend}), then
+%. If the boundary has increased,
 the
 repair is saved. If not, the repair is discarded.
 \begin{lstlisting}[caption=Repair and extend,label={lst:repairandextend}]
@@ -1493,8 +1493,8 @@ required, the process can be restarted with the threads in the next rank.
 \newcommand{\refnumber}[1]{\hyperref[fig:brepair_flowchart]{Step~#1}}
 
 
-This section describes the experimental setup of this work. In particular, we discuss %specify %especially 
-the research questions, objects (subject programs and invalid inputs), research protocol, metrics/measures and implementation details of our experiments. % work.  
+This section describes the experimental setup of this work. In particular, we discuss %specify %especially
+the research questions, objects (subject programs and invalid inputs), research protocol, metrics/measures and implementation details of our experiments. % work.
 
 %\subsubsection*{\bf Workflow}
 %\Cref{fig:ddmax_flowchart} shows the workflow of \brepair.
@@ -1512,19 +1512,19 @@ the research questions, objects (subject programs and invalid inputs), research 
 In this paper, we investigate the \textit{effectiveness} (RQ1), \textit{data recovery} (RQ2), \textit{diagnostic quality} (RQ3) and \textit{efficiency} (RQ4) of our approach using several well-designed experiments. For each experiment, we also examine how \approach compares to the state-of-the-art techniques, namely the \textit{baseline} (built-in repair of subject programs), \textit{ANTLR}'s error recovery strategy, lexical \ddmax and syntactic \ddmax.
 
 Particularly,
-%To this end, 
+%To this end,
 we pose the following \textit{research questions} (RQ):
 % concerning the performance of \approach:
 
 \noindent
 \textbf{RQ1 Effectiveness:}  %\& Efficiency:}
 How effective is our approach (\approach) in repairing invalid %failure-inducing
-inputs? What is the contribution of \approach 's components (i.e., \textit{input synthesis} and \textit{failure feedback}) to its effectiveness? 
-Is \approach %How 
-%does \approach 's effectiveness compares 
-as effective as %the 
-% is \approach, in comparison to 
-the state-of-the-art methods? 
+inputs? What is the contribution of \approach 's components (i.e., \textit{input synthesis} and \textit{failure feedback}) to its effectiveness?
+Is \approach %How
+%does \approach 's effectiveness compares
+as effective as %the
+% is \approach, in comparison to
+the state-of-the-art methods?
 %How effective is our approach, i.e., what is the time performance of \approach ?
 
 \noindent
@@ -1572,24 +1572,24 @@ techniques?
 In this work, we compare the performance of \approach to the following state-of-the-art techniques: %. Specifically, we compare to the following:
 
 \begin{enumerate}[wide, labelwidth=!, labelindent=0pt]
-\item[a.] \textbf{Baseline:} this refers to  the built-in error-recovery technique of the subject programs. In this work,  \recheck{we compare the effectiveness of the subject program to that of \approach (\textit{see} RQ1)}. Specifically, we measure the effectiveness of the built-in error recovery feature of the program by measuring the number of invalid input files that could be processed as valid inputs by a subject program without inducing a program failure, crash or timeout. In our evaluation, we compare the number of such repairs to that of \approach. 
+\item[a.] \textbf{Baseline:} this refers to  the built-in error-recovery technique of the subject programs. In this work,  \recheck{we compare the effectiveness of the subject program to that of \approach (\textit{see} RQ1)}. Specifically, we measure the effectiveness of the built-in error recovery feature of the program by measuring the number of invalid input files that could be processed as valid inputs by a subject program without inducing a program failure, crash or timeout. In our evaluation, we compare the number of such repairs to that of \approach.
 
 \item[b.] \textbf{ANTLR:} This is the inbuilt error recovery strategy of the ANTLR parser generator when equipped with an input grammar specifying the allowed input structure \recheck{cite and discuss ... }. In this work, we compare the number of invalid inputs that could be processed by \textbf{ANTLR} to the number of repairs performed by \approach (\textit{see} RQ1).
- 
-\item[c.] \textbf{\ddmax:} Kirschner et al.~\cite{kirschner2020debugging} proposed %This refers to the 
-two variants of the maximizing variant of the delta debugging algorithm (called \ddmax), %proposed by , 
+
+\item[c.] \textbf{\ddmax:} Kirschner et al.~\cite{kirschner2020debugging} proposed %This refers to the
+two variants of the maximizing variant of the delta debugging algorithm (called \ddmax), %proposed by ,
 namely \textit{lexical \ddmax} and \textit{syntactic \ddmax}. For all research questions in this work, we compare the performance of \approach to both \textit{lexical} and \textit{syntactic} \ddmax, since \ddmax is the current best performing state-of-the-art input repair method.
 
 
-\item[d.] \textbf{\ddmin:} Zeller and Hildebrandt proposed 
-% \citet This is 
-a delta debugging (DD) algorithm designed to diagnose the root cause of a program failure %, \ddmin isolates a failure cause 
-by %by isolating and 
-minimizing a failure-inducing input to the minimal input subset that reproduces 
-%a specific 
-the observed program failure. In our evaluation of the diagnostic quality of \approach (\textit{see} RQ3), we compare the performance of \approach to \ddmin. 
+\item[d.] \textbf{\ddmin:} Zeller and Hildebrandt proposed
+% \citet This is
+a delta debugging (DD) algorithm designed to diagnose the root cause of a program failure %, \ddmin isolates a failure cause
+by %by isolating and
+minimizing a failure-inducing input to the minimal input subset that reproduces
+%a specific
+the observed program failure. In our evaluation of the diagnostic quality of \approach (\textit{see} RQ3), we compare the performance of \approach to \ddmin.
 
-\end{enumerate} 
+\end{enumerate}
 
 %(a)  (\textit{baseline}), (b) the inbuilt error recovery strategy of the ANTLR parser generator (\textit{ANTLR})~\cite{}, (c) the minimizing variant of delta debugging (DDMin)~\cite{} and (d) three variants of the maximizing variant of delta debugging (DDMax)~\cite{kirschner2020debugging}.
 %%\todo{cite and create command shortcuts for the state-of-the-art}
@@ -1607,7 +1607,7 @@ the observed program failure. In our evaluation of the diagnostic quality of \ap
 
 \subsubsection*{\bf Subject Programs:} \Cref{tab:subject-programs} provides the details of the subject programs employed in our experiments. We used four programs belonging to four input formats, namely INI, cJSON, SExpParser and TinyC in our experiments. All of these programs are written in hundreds of (375 to 3075) LOC of C programming language, and they are between 6 to 21 years old.
 
-\subsubsection*{\bf Test inputs}\todo{refactor this} 
+\subsubsection*{\bf Test inputs}\todo{refactor this}
 As test inputs, we crawled a large corpus of valid and invalid real-world files from GitHub using the GitHub crawling API~\cite{githubapi}.
 %TODO add table with number of files?
 For each format, we introduced a set of 100 artificially mutated (invalid) files that we mutated from 50 randomly selected valid real-world files.
@@ -1618,21 +1618,21 @@ Each mutation can either be a byte-flip, an insertion or a deletion, which we be
 \subsubsection*{\bf Metrics and Measures}
 To evaluate the repair quality of a repaired file, we measure:
 \begin{enumerate}
-	\item \textbf{Number of Repaired Inputs:} \todo{discuss} 
+	\item \textbf{Number of Repaired Inputs:} \todo{discuss}
     \item \textbf{File Size Difference: } We evaluate the difference in \textit{file size} of the \emph{recovered inputs} of the different repair algorithms and the original \textit{valid input}.
     We use these measurements to account for the amount of data recovered as well as the amount of data loss incurred.
 \item \textbf{Levenshtein Distance: } Additionally, we measure the data loss between \textit{valid input} and \textit{repaired file} using the Levenshtein distance~\cite{levDistance}.
 
-\item \textbf{Runtime: } \todo{discuss} 
+\item \textbf{Runtime: } \todo{discuss}
 
-\item \textbf{Number of Program Runs: } \todo{discuss} 
+\item \textbf{Number of Program Runs: } \todo{discuss}
 
 \end{enumerate}
 
 \subsubsection*{\bf Implementation Details:}
 
-\subsubsection*{\bf Platform:} All experiments were conducted 
-%the experiments 
+\subsubsection*{\bf Platform:} All experiments were conducted
+%the experiments
 on a Dell Precision 7510 with four physical CPU cores %(8~virtual cores)
 and 32GB of RAM, specifically an Intel(R) Core i7 6820hq @ 2.70GHz, 8~virtual cores, running 64-bit Arch Linux.
 
