@@ -1248,21 +1248,20 @@ def find_fixes(inputval, boundary):
                 if i.is_complete(): completed.append(i)
         if completed: return completed
 \end{lstlisting}
-The function \<find\_fixes()> takes in a set of threads. It then extracts
-threads corresponding to the least edit distance. If the number of such threads
-exeed a user-configured value, a constant number of threads are sampled
-(\Cref{lst:sampling}) for continuation.
-Then, each thread is processed individually. On each thread, a set of repairs
-(\Cref{lst:repairs}) are applied. If the repair succeeds,
+The function \<find\_fixes()> takes in the input string and the parse boundary.
+It then generates a set of repair threads, out of which a few are chosen for
+continuation (\Cref{lst:sampling}).
+Then, each repair thread is processed individually.
+On each thread, a set of repairs (\Cref{lst:repairsdelete}, \Cref{lst:repairs})
+are applied. If the repair succeeds,
 the string can use more characters from the pending suffix resulting in a
 larger valid prefix string, but with a larger edit distance. This procedure is
 repeated until the prefix string is marked \emph{complete} by the input
 processor.
 
-The sampling procedure attempts to discard redundant repairs so that the number of
-simultanious threads we have to maintain does not grow unbounded. While doing
-that, it %tries to
-ensures that no unique repairs are discarded. For
+The sampling procedure attempts to discard redundant repairs so that the number
+of simultanious threads we have to maintain does not grow unbounded. While doing
+that, it ensures that no unique repairs are discarded. For
 example, given a JSON fragment \<[1,2> a repair of \<[1,23>, \<[1,24>
 and \<[1,25> are redunant but \<[1,2,> is unique because the last repair
 represents a change in semantics for the parser. The key insight here is to
@@ -1273,6 +1272,11 @@ after \<[1,2,> the pending suffix can be used to extend the string resulting in
 \<[1,2,"x"]>. \recheck{Hence, we use the repairs conducted on a string, the
 length of the extended string, as well as the last character added as the
 uniqueness indicator.}\todo{@Lukas: does the new implementation contain this check? I cant remember this check in the old implementation of \approach?}
+
+Unfortunately, using all repairs even after eliminating all redundant repairs
+can be rather time consuming. If this is the case, one can limit the repair
+threads to the best performing ones in terms of the parse boundary by using
+\<filter\_best()>.
 
 \begin{lstlisting}[caption=Sampling,label={lst:sampling}]
 def sample_items_by_mask(items):
@@ -1289,7 +1293,12 @@ def sample_items_by_mask(items):
         else:
             res = random.sample(masks[key], MAX_NUM_PER_MASK)
         sampled.extend(res)
-    return sampled
+    return filter_best(sampled)
+
+def filter_best(items):                                                          
+    if MAX_SIMULTANIOUS_CORRECTIONS < 0: return items                            
+    boundaries = sorted({i.boundary for i in items}, reverse=True)               
+    return [i for i in items if i.boundary in  boundaries[:MAX_SIMULTANIOUS_CORRECTIONS]]
 \end{lstlisting}
 
 After each repair, the new string is checked (\Cref{lst:extenditem}) to see if
