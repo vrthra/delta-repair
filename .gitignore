@@ -175,4 +175,5 @@ TSWLatexianTemp*
 *.glstex
 
 *.pdf
-/.idea
+/.idea/
+/__pycache__/
