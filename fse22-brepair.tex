@@ -1161,7 +1161,7 @@ deletion, we produce a string without the character at the \<boundary>.
 def apply_delete(item):
     inp = item.inputstr[:item.boundary] +
           item.inputstr[item.boundary + 1:]
-    return extend_deleted_item(Repair(inp, item.boundary))
+    return bsearch_extend_item(Repair(inp, item.boundary))
 \end{lstlisting}
 
 For insertion, the algorithm is more involved. The problem is that we need to
@@ -1181,7 +1181,7 @@ def insert_at(item, k, suffix)
     v = (item.inputstr[:k] + i +
         item.inputstr[k:item.boundary] + suffix)
     new_item = Repair(v, k, mask='%s_I%d' % (item.mask, k))
-    ie = extend_inserted_item(new_item)
+    ie = lsearch_extend_item(new_item, nxt=1)
     if ie.boundary > k:
        return ie
     return None
@@ -1309,12 +1309,6 @@ repeatedly extending the string with a pending character from the remaining
 suffix in the input string.
 
 \begin{lstlisting}[caption=Extend the boundary,label={lst:extenditem}]
-def extend_deleted_item(item):
-    return bsearch_extend_item(item)
-
-def extend_inserted_item(item):
-    return lsearch_extend_item(item, nxt=1)
-
 def bsearch_extend_item(item):
     bs = binary_search(item.inputstr, left=item.boundary)
     if bs >= len(item.inputstr):
