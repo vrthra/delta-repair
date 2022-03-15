@@ -1498,9 +1498,10 @@ least number of repairs required to fix the input.
 \newcommand{\refnumber}[1]{\hyperref[fig:brepair_flowchart]{Step~#1}}
 
 
-This section describes the experimental setup of this work. In particular, we discuss %specify %especially
-the research questions, objects (subject programs and invalid inputs), research protocol, metrics/measures and implementation details of our experiments. % work.
-
+This section describes the experimental setup of this work.
+%In particular, we discuss %specify %especially
+% the research questions, objects (subject programs and invalid inputs), research protocol, metrics/measures and implementation details of our experiments. % work.
+% 
 %\subsubsection*{\bf Workflow}
 %\Cref{fig:ddmax_flowchart} shows the workflow of \brepair.
 %When running \brepair, it first performs a binary search on the input file in order to find the longest possible prefix that is flagged as \emph{incomplete} by the subject program (\refnumber{1}).
@@ -1512,37 +1513,34 @@ the research questions, objects (subject programs and invalid inputs), research 
 %Threrfore, in this case, \brepair searches for a new longest incomplete prefix.
 %If the operation did not succeed, \brepair pushes a new prefix onto the priority queue where the first character of the remaining original input is deleted (increasing the editing distance by 1) (\refnumber{4}).
 %Finally, before popping the next prefix from the queue, \brepair tries to append all characters to the prefix that do not cause the prefix to become \emph{incorrect}, also increasing the editing distance by 1 (\refnumber{5}).
+%
+%In this paper,
+We investigate the \textit{effectiveness} (RQ1), \textit{data recovery} (RQ2), \textit{diagnostic quality} (RQ3) and \textit{efficiency} (RQ4) of our approach using several well-designed experiments. For each experiment, we also examine how \approach compares to the state-of-the-art techniques, namely the \textit{baseline} (built-in repair of subject programs), \textit{ANTLR}'s error recovery strategy, lexical \ddmax and syntactic \ddmax.
 
-\subsubsection*{\bf Research Questions: }
-In this paper, we investigate the \textit{effectiveness} (RQ1), \textit{data recovery} (RQ2), \textit{diagnostic quality} (RQ3) and \textit{efficiency} (RQ4) of our approach using several well-designed experiments. For each experiment, we also examine how \approach compares to the state-of-the-art techniques, namely the \textit{baseline} (built-in repair of subject programs), \textit{ANTLR}'s error recovery strategy, lexical \ddmax and syntactic \ddmax.
-
-Particularly,
+%Particularly,
 %To this end,
-we pose the following \textit{research questions} (RQ):
+%we pose the following \textit{research questions} (RQ):
 % concerning the performance of \approach:
 
-\noindent
-\textbf{RQ1 Effectiveness:}  %\& Efficiency:}
+\noindent\textbf{Research Questions:}
+\begin{description}[wide, labelwidth=!, labelindent=0pt]
+  \item[RQ1.] \emph{Effectiveness:}  %\& Efficiency:}
 How effective is our approach (\approach) in repairing invalid %failure-inducing
-%<<<<<<< HEAD
 inputs? %What is the contribution of \approach 's components (i.e., \textit{input synthesis} and \textit{failure feedback}) to its effectiveness? 
 Is \approach %How 
 %does \approach 's effectiveness compares 
 as effective as %the 
 % is \approach, in comparison to 
 the state-of-the-art methods? 
-%=======
 %inputs? What is the contribution of \approach 's components (i.e., \textit{input synthesis} and \textit{failure feedback}) to its effectiveness?
 %Is \approach %How
 %does \approach 's effectiveness compares
 %as effective as %the
 % is \approach, in comparison to
 %the state-of-the-art methods?
-%>>>>>>> 4cebb1374b40ef684f8c31205851e9e59ed8384a
 %How effective is our approach, i.e., what is the time performance of \approach ?
 
-\noindent
-\textbf{RQ2 Data Recovery and Data Loss:}
+\item[RQ2.] \emph{Data Recovery and Data Loss:}
 %\revise{
 How much input data is recovered by \approach, and how much data loss is incurred?  Does \approach recover as much data as %the
 %the data recovery of \approach compare to
@@ -1555,8 +1553,7 @@ the state-of-the-art methods?
 %How effective is our approach, i.e., what is the time performance of \approach ?
 %%}
 
-\noindent
-\textbf{RQ3 Diagnostic Quality:}
+\item[RQ3.] \emph{Diagnostic Quality:}
 %\revise{
 How effective is our approach in identifying the \textit{root cause} of invalid inputs, especially in comparison to the state-of-the-art methods (\ddmin and \ddmax)?
 %}
@@ -1568,8 +1565,7 @@ How effective is our approach in identifying the \textit{root cause} of invalid 
 %%i.e., (DDMax \recheck{and Ddmin})?}
 %\\
 
-\noindent
-\textbf{RQ4 Efficiency:} %ectiveness:}
+\item[RQ4.] \emph{Efficiency:} %ectiveness:}
 %\revise{
 What is the efficiency (i.e., time performance) of
 %How does
@@ -1580,7 +1576,7 @@ the state-of-the-art %input debugging
 techniques?
 %, in terms of effectiveness, efficiency, data recovery and diagnosis?
 %i.e., (DDMax \recheck{and Ddmin})?}
-
+\end{description}
 
 \subsubsection*{\bf State-of-the-art:}
 In this work, we compare the performance of \approach to the following state-of-the-art techniques: %. Specifically, we compare to the following:
