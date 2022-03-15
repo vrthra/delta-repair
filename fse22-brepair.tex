@@ -1586,6 +1586,25 @@ Each program is moderately large (between 300 LOC to 3,000 LOC), and is written 
 %All of these programs are written in hundreds of (375 to 3075) LOC of C programming language, and they are between 6 to 21 years old.
 The details are provided in \Cref{tab:subject-programs}.
 
+%\subsubsection*{\bf Test inputs}\todo{refactor this}
+\Cref{tab:input-details} provides details of the number of
+real-world invalid inputs and mutated invalid inputs employed in our experiment,
+for each input format. We evaluate our approach using 806 invalid input files.
+%belonging to four different input formats, namely INI, cJSON, SExp, and TinyC. 
+\recheck{
+As test inputs, we crawled a large corpus of valid and invalid real-world files
+from GitHub using the GitHub crawling API~\cite{githubapi}.
+%TODO add table with number of files?
+For each format, we introduced a set of 100 artificially mutated (invalid) files
+that we mutated from 50 randomly selected valid real-world files.
+Half of those mutated files contain a single mutated byte and the other half
+contains multiple (up to 16) mutated bytes.
+Each mutation can either be a byte-flip, an insertion or a deletion, which
+we believe to resemble real-world corruptions as close as possible
+(e.g. bit rot on hard disks or transmission errors in network protocols).}
+
+
+
 %\subsubsection*{\bf Metrics and Measures}
 We use the following measures to track the quality of repair.
 \begin{description}
@@ -1654,17 +1673,6 @@ the observed program failure. In our evaluation of the diagnostic quality of \ap
 \label{tab:input-details}
 %\vspace{-0.5cm}
 \end{table}
-\subsubsection*{\bf Test inputs}\todo{refactor this}
-\Cref{tab:input-details} provides details of the number of
-real-world invalid inputs and mutated invalid inputs employed in our experiment, for each input format. We evaluate our approach using 806 invalid input files belonging to four different input formats, namely INI, cJSON, SExp, and TinyC. 
-\recheck{
-As test inputs, we crawled a large corpus of valid and invalid real-world files from GitHub using the GitHub crawling API~\cite{githubapi}.
-%TODO add table with number of files?
-For each format, we introduced a set of 100 artificially mutated (invalid) files that we mutated from 50 randomly selected valid real-world files.
-Half of those mutated files contain a single mutated byte and the other half contains multiple (up to 16) mutated bytes.
-Each mutation can either be a byte-flip, an insertion or a deletion, which we believe to resemble real-world corruptions as close as possible (e.g. bit rot on hard disks or transmission errors in network protocols).}
-
-
 \subsubsection*{\bf Implementation Details:}
 
 \subsubsection*{\bf Platform:} All experiments were conducted
