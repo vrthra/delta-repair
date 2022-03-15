@@ -1578,6 +1578,30 @@ techniques?
 %i.e., (DDMax \recheck{and Ddmin})?}
 \end{description}
 
+As subjects we used four input formats and corresponding programs.
+% our focus is on formats. So listing them first
+These are INI (INI), JSON (cJSON), S-Expressions (SExpParser) and TinyC (TinyC).
+Each program is moderately large (between 300 LOC to 3,000 LOC), and is written in \<C>.
+%the age is not really relevant.
+%All of these programs are written in hundreds of (375 to 3075) LOC of C programming language, and they are between 6 to 21 years old.
+The details are provided in \Cref{tab:subject-programs}.
+
+%\subsubsection*{\bf Metrics and Measures}
+We use the following measures to track the quality of repair.
+\begin{description}
+\item[Number of Repaired Inputs:] We count how many files were repaired before
+the timeout by each of the tested repair programs.
+\item[File Size Difference:] We evaluate the difference in \emph{file size} of
+the \emph{recovered inputs} of the different repair algorithms and the original
+\emph{valid input}. This measurement tracks the effectiveness of data recovery.
+\item[Edit Distance:] This is measured as the number of characters that
+differs between the \emph{corrupt input} and the \emph{repaired input}.
+%  \cite{levDistance}.
+\item[Runtime:] We keep track of the time taken for the entire repair.
+\item[Number of Program Runs:] The number of times we need to run the
+parser can provide a useful metric for evaluation. Hence, we track this also.
+\end{description}
+
 \subsubsection*{\bf State-of-the-art:}
 In this work, we compare the performance of \approach to the following state-of-the-art techniques: %. Specifically, we compare to the following:
 
@@ -1630,9 +1654,6 @@ the observed program failure. In our evaluation of the diagnostic quality of \ap
 \label{tab:input-details}
 %\vspace{-0.5cm}
 \end{table}
-
-\subsubsection*{\bf Subject Programs:} \Cref{tab:subject-programs} provides the details of the subject programs employed in our experiments. We used four programs belonging to four input formats, namely INI, cJSON, SExpParser and TinyC in our experiments. All of these programs are written in hundreds of (375 to 3075) LOC of C programming language, and they are between 6 to 21 years old.
-
 \subsubsection*{\bf Test inputs}\todo{refactor this}
 \Cref{tab:input-details} provides details of the number of
 real-world invalid inputs and mutated invalid inputs employed in our experiment, for each input format. We evaluate our approach using 806 invalid input files belonging to four different input formats, namely INI, cJSON, SExp, and TinyC. 
@@ -1643,20 +1664,6 @@ For each format, we introduced a set of 100 artificially mutated (invalid) files
 Half of those mutated files contain a single mutated byte and the other half contains multiple (up to 16) mutated bytes.
 Each mutation can either be a byte-flip, an insertion or a deletion, which we believe to resemble real-world corruptions as close as possible (e.g. bit rot on hard disks or transmission errors in network protocols).}
 
-
-\subsubsection*{\bf Metrics and Measures}
-To evaluate the repair quality of a repaired file, we measure:
-\begin{enumerate}
-	\item \textbf{Number of Repaired Inputs:} \todo{discuss}
-    \item \textbf{File Size Difference: } We evaluate the difference in \textit{file size} of the \emph{recovered inputs} of the different repair algorithms and the original \textit{valid input}.
-    We use these measurements to account for the amount of data recovered as well as the amount of data loss incurred.
-\item \textbf{Levenshtein Distance: } Additionally, we measure the data loss between \textit{valid input} and \textit{repaired file} using the Levenshtein distance~\cite{levDistance}.
-
-\item \textbf{Runtime: } \todo{discuss}
-
-\item \textbf{Number of Program Runs: } \todo{discuss}
-
-\end{enumerate}
 
 \subsubsection*{\bf Implementation Details:}
 
