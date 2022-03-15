@@ -1499,7 +1499,7 @@ we pose the following \textit{research questions} (RQ):
 \noindent
 \textbf{RQ1 Effectiveness:}  %\& Efficiency:}
 How effective is our approach (\approach) in repairing invalid %failure-inducing
-inputs? What is the contribution of \approach 's components (i.e., \textit{input synthesis} and \textit{failure feedback}) to its effectiveness? 
+inputs? %What is the contribution of \approach 's components (i.e., \textit{input synthesis} and \textit{failure feedback}) to its effectiveness? 
 Is \approach %How 
 %does \approach 's effectiveness compares 
 as effective as %the 
@@ -1583,7 +1583,23 @@ the observed program failure. In our evaluation of the diagnostic quality of \ap
 %\noindent \textit{DDMax:}
 
 
-
+\begin{table}[!tbp]\centering
+\caption{Details of Failure-inducing Inputs}
+\begin{tabular}{|l | r | r | r | r |}
+\hline
+&  \multicolumn{4}{c|}{\textbf{Number of Invalid Inputs}}  \\
+\textbf{Type of Invalid Inputs} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+\textbf{Real-World Inputs} & 101 & 107 & 50 & 148 \\
+\textbf{Single Mutation} & 50 & 50 & 50 & 50 \\
+\textbf{Multiple Mutations} & 50 & 50 & 50 & 50 \\
+\hline
+\textbf{Total } (806) & 201 & 207 & 150 & 248 \\
+\hline
+\end{tabular}
+\label{tab:input-details}
+%\vspace{-0.5cm}
+\end{table}
 
 \subsubsection*{\bf Subject Programs:} \Cref{tab:subject-programs} provides the details of the subject programs employed in our experiments. We used four programs belonging to four input formats, namely INI, cJSON, SExpParser and TinyC in our experiments. All of these programs are written in hundreds of (375 to 3075) LOC of C programming language, and they are between 6 to 21 years old.
 
@@ -1619,7 +1635,7 @@ and 32GB of RAM, specifically an Intel(R) Core i7 6820hq @ 2.70GHz, 8~virtual co
 %\noindent
 %\textbf{
 
-\subsubsection*{\bf Research Protocol:}
+\subsubsection*{\bf Research Protocol:}\todo{we should mention the four minute timeout here ... }
 
 
 
@@ -1647,27 +1663,11 @@ and 32GB of RAM, specifically an Intel(R) Core i7 6820hq @ 2.70GHz, 8~virtual co
 
 
 
-\begin{table}[!tbp]\centering
-\caption{Details of Failure-inducing Inputs}
-\begin{tabular}{|l | r | r | r | r |}
-\hline
-&  \multicolumn{4}{c|}{\textbf{Number of Invalid Inputs}}  \\
-\textbf{Type of Invalid Inputs} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-\hline
-\textbf{Real-World Inputs} & 101 & 107 & 50 & 148 \\
-\textbf{Single Mutation} & 50 & 50 & 50 & 50 \\
-\textbf{Multiple Mutations} & 50 & 50 & 50 & 50 \\
-\hline
-\textbf{Total } (806) & 201 & 207 & 150 & 248 \\
-\hline
-\end{tabular}
-\label{tab:input-details}
-%\vspace{-0.5cm}
-\end{table}
+
 
 
 \begin{table}[!tbp]\centering
-\caption{Effectiveness of \approach vs. the state-of-the-art}
+\caption{Effectiveness of \approach vs. Language-agnostic state-of-the-art, i.e., lexical \ddmax and  baseline.  The most effective performance for are in bold, as well as significant percentage improvement (Improv.) of \approach over the best baseline greater than five percent (>5\%). }
 %\vspace{-0.5cm}
 \begin{tabular}{|l | c | r  r  r  r |}
 \hline
@@ -1676,21 +1676,45 @@ and 32GB of RAM, specifically an Intel(R) Core i7 6820hq @ 2.70GHz, 8~virtual co
 \textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
 \hline
 \textbf{Baseline}   & 33 (4\%) & 27	 & 6 &	0	& 0\\
-\textbf{ANTLR} & 344 (43\%) & 133 & 69 & 96 &  46   \\
-\textbf{Lex. ddmax} & 553 (69\%) & \textbf{201}  & 122  & 124 & 106    \\ 			
-\textbf{Syn. ddmax} & \textbf{608} (\textbf{75\%}) & \textbf{201}  & \textbf{140}  & \textbf{148}  & \textbf{119}  \\ 	
+%\textbf{ANTLR} & 344 (43\%) & 133 & 69 & 96 &  46   \\
+\textbf{Lex. ddmax} & 578 (72\%) & \textbf{201}  & 132  & \textbf{131} & 114  \\ 		
+\hline	
+%\textbf{Syn. ddmax} & \textbf{614} (\textbf{76\%}) & \textbf{201}  & \textbf{144}  & \textbf{149}  & \textbf{120}  \\ 	
+%\hline
+\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & 121  & \textbf{154} \\
 \hline
-\textbf{\approach}  & \textit{ \textbf{650}} (\textbf{81\%}) & \textit{ \textbf{201}} & \textit{ \textbf{173}}  & 122  & \textit{ \textbf{154}} \\
-\hline
-\textbf{Improv. vs. Lex.} &  \textbf{18\%}  & 0\% & \textbf{42\%} & -2\% & \textbf{45\%} \\
-\textbf{Improv. vs. Syn.} &  \textbf{7\%}  & 0\% & \textbf{24\%} & -18\% & \textbf{29\%} \\
+\textbf{Improv.} &  \textbf{8\%}  & -5\% & \textbf{20\%} & -8\% & \textbf{35\%} \\
+%\textbf{Improv. vs. Syn.} &  \textbf{2\%}  & -5\% & \textbf{10\%} & -19\% & \textbf{28\%} \\
 \hline
 %\textbf{Total \#Repairs} & 763  & 510  & 490  & 425 &  2188 \\ 			
 %\hline
 \end{tabular}
-\label{tab:effectiveness}
+\label{tab:effectiveness-no-grammar}
 %\vspace{-0.5cm}
 \end{table}
+
+
+\begin{table}[!tbp]\centering
+\caption{Effectiveness of \approach vs. Grammar-based input repair approaches, i.e.,  ANTLR and Syntactic \ddmax. The most effective performance are in bold, as well as significant percentage improvement (Improv.) of \approach over the best baseline greater than five percent (>5\%). }
+%\vspace{-0.5cm}
+\begin{tabular}{|l | c | r  r  r  r |}
+\hline
+&  \multicolumn{5}{c|}{\textbf{Number of Repaired Inputs}}  \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
+\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+\textbf{ANTLR} & 344 (43\%) & 133 & 69 & 96 &  46   \\
+\textbf{Syn. ddmax} & 614 (76\%) & \textbf{201}  & 144  & \textbf{149}  & 120  \\ 	
+\hline
+\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & 121  &  \textbf{154} \\
+\hline
+\textbf{Improv.} &  2\%  & -5\% & \textbf{10\%} & -19\% & \textbf{28\%} \\
+\hline
+\end{tabular}
+\label{tab:effectiveness-grammar}
+\end{table}
+
+
 
 \section{Experimental Results}
 \label{sec:results}
@@ -1708,7 +1732,7 @@ of our empirical evaluations.
 We evaluate the effectiveness of our approach using 806 invalid input files belonging to four different input formats, namely INI, cJSON, SExp, and TinyC.  \Cref{tab:input-details} provides details of the %number of
 %real-world and mutated
 invalid inputs used for each input format.
-We also examine the contribution of the insertion  of input elements (i.e., input synthesis) to the effectiveness of our approach.
+%We also examine the contribution of the insertion  of input elements (i.e., input synthesis) to the effectiveness of our approach.
 In this experiment,
 %and efficiency of our approach
 %Specifically,
@@ -1866,32 +1890,32 @@ BRepair    201    173      122          154
 %\label{fig:repair_complementarity}
 %\vspace{-0.6cm}
 %\end{figure}
-
-\noindent
-\textbf{\textit{Contribution of %\approach's
-Input Synthesis:}} We further examine the contribution of input synthesis, i.e., the insertion of input elements to the effectiveness of our approach. This is particularly important since in comparison to ddmax, \approach not only removes invalid input fragments, it also synthesis input elements during repair.
-%To achieve this,
-Using the 321 inputs repaired by all approaches with edit distance data,
-we examine the number of deletion and insertions performed by \approach, this is reported in \Cref{tab:brepair-insertions}.
-% reports the number of deletions and insertions performed by \approach.
-
-In this experiment, we found that \textit{input synthesis accounts for almost half (49\%) of the repair operations of \approach}. Indeed, \approach performed more insertion operations than deletion operations for two input formats (CJSON and SExp). This result demonstrates the importance of \textit{input synthesis} in comparison to \textit{repairing to subsets}. This demonstrates the advantage of input synthesis via rich failure feedback, and implies that insertion operations are equally as important as deletion operations for effective input repair.
-
-\begin{result}
-Input synthesis is vital to the effectiveness of \approach: Almost half (49\%) of \approach's repair operations are %due to input syntehesis, i.e.
-insertion operations. % of input elements.
-\end{result}
-
-
-
-\noindent
-\textbf{\textit{Contribution of Failure Feedback:}}
-\todo{discuss the contribution of the incomplete oracle ... }
-
-
-\begin{result}
-XXXX
-\end{result}
+%
+%\noindent
+%\textbf{\textit{Contribution of %\approach's
+%Input Synthesis:}} We further examine the contribution of input synthesis, i.e., the insertion of input elements to the effectiveness of our approach. This is particularly important since in comparison to ddmax, \approach not only removes invalid input fragments, it also synthesis input elements during repair.
+%%To achieve this,
+%Using the 321 inputs repaired by all approaches with edit distance data,
+%we examine the number of deletion and insertions performed by \approach, this is reported in \Cref{tab:brepair-insertions}.
+%% reports the number of deletions and insertions performed by \approach.
+%
+%In this experiment, we found that \textit{input synthesis accounts for almost half (49\%) of the repair operations of \approach}. Indeed, \approach performed more insertion operations than deletion operations for two input formats (CJSON and SExp). This result demonstrates the importance of \textit{input synthesis} in comparison to \textit{repairing to subsets}. This demonstrates the advantage of input synthesis via rich failure feedback, and implies that insertion operations are equally as important as deletion operations for effective input repair.
+%
+%\begin{result}
+%Input synthesis is vital to the effectiveness of \approach: Almost half (49\%) of \approach's repair operations are %due to input syntehesis, i.e.
+%insertion operations. % of input elements.
+%\end{result}
+%
+%
+%
+%\noindent
+%\textbf{\textit{Contribution of Failure Feedback:}}
+%\todo{discuss the contribution of the incomplete oracle ... }
+%
+%
+%\begin{result}
+%XXXX
+%\end{result}
 
 
 
