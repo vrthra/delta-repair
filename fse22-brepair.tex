@@ -13,12 +13,14 @@ Failure Feedback}
 \lstset{ % General setup for the package
     language=Python,
     %basicstyle=\small\sffamily,
-    basicstyle=\footnotesize,
+    %basicstyle=\footnotesize,  % *Please* use a monospaced font -- AZ
+    basicstyle=\footnotesize\ttfamily,
     numbers=left,
     numberstyle=\tiny,
     frame=none,
     tabsize=4,
-    columns=fixed,
+    columns=flexible,
+    keepspaces=true,
     showstringspaces=false,
     showtabs=false,
     keepspaces,
@@ -813,7 +815,7 @@ $\cfail - \Delta_2$= \letterboxed{[*} \fail \\
 \item Increase to subset:\\
 $\cfail \cup \Delta_1$=\letterboxed{[*} \fail \\
 $\cfail \cup \Delta_2$= \letterboxed{]+} \fail \\
-\item Increase grannularity: $n < |\cfail-\dpass|$ which is $2 < |\cfail-\emptyset|$ \pass \\
+\item Increase granularity: $n < |\cfail-\dpass|$ which is $2 < |\cfail-\emptyset|$ \pass \\
   Hence the next iteration is:
   $\ddmax_2\bigl(\emptyset, 4)\bigr) $
 \item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply.
@@ -827,13 +829,13 @@ $\cfail \cup \Delta_1$=\letterboxed{[} \fail \\
 $\cfail \cup \Delta_1$=\letterboxed{*} \fail \\
 $\cfail \cup \Delta_1$=\letterboxed{]} \fail \\
 $\cfail \cup \Delta_1$=\letterboxed{+} \fail \\
-\item Increase to grannularity: $4 < 4$ \fail\\
+\item Increase granularity: $4 < 4$ \fail\\
 \item The solution is $\emptyset$.
 \end{enumerate}
 
 That is, \ddmax is unable to optimally repair inputs of this kind which
 contains multiple errors. While in this example, the data loss that occurred
-may seem somewhat limited, this need not be the case always. A similar example
+may seem somewhat limited, this need not always be the case. A similar example
 is given in \Cref{tab:ddmaxlimitations}.
 Here, \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}} contains two distinct
 corruptions.
@@ -863,7 +865,7 @@ $\cfail - \Delta_2$= \letterboxed{[*} \fail \\
 \item Increase to subset:\\
 $\cfail \cup \Delta_1$=\letterboxed{[*} \fail \\
 $\cfail \cup \Delta_2$= \letterboxed{+]} \fail \\
-\item Increase grannularity: $n < |\cfail-\dpass|$ which is $2 < |\cfail-\emptyset|$ \pass \\
+\item Increase granularity: $n < |\cfail-\dpass|$ which is $2 < |\cfail-\emptyset|$ \pass \\
   Hence the next iteration is:
   $\ddmax_2\bigl(\emptyset, 4)\bigr) $
 \item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply.
@@ -877,7 +879,7 @@ $\cfail \cup \Delta_1$=\letterboxed{[} \fail \\
 $\cfail \cup \Delta_1$=\letterboxed{*} \fail \\
 $\cfail \cup \Delta_1$=\letterboxed{+} \fail \\
 $\cfail \cup \Delta_1$=\letterboxed{]} \fail \\
-\item Increase to grannularity: $4 < 4$ \fail\\
+\item Increase granularity: $4 < 4$ \fail\\
 \item The solution is $\emptyset$.
 \end{enumerate}
 
@@ -1564,14 +1566,14 @@ lexical and syntactic
 
 \noindent\textbf{Research Questions:} We pose the following research questions:
 \begin{description}[wide, labelwidth=!, labelindent=0pt]
-  \item[RQ1.] \emph{Effectiveness:}  %\& Efficiency:}
+  \item[RQ1: Effectiveness.]  %\& Efficiency:}
 How effective is our approach (\approach) in fixing invalid inputs? Is it as effective as the state-of-the-art methods?
 
-\item[RQ2.] \emph{Data Recovery and Data Loss:}
+\item[RQ2: Data Recovery and Data Loss.]
 How much input data is recovered by \approach, and how much data loss is incurred?  Does \approach recover as much data as 
 the state-of-the-art methods?
 
-\item[RQ3.] \emph{Efficiency:} What is the efficiency (i.e., time performance) of
+\item[RQ3: Efficiency.] What is the efficiency (i.e., time performance) of
 \approach? Is it as efficient as the state-of-the-art techniques?
 \end{description}
 
@@ -1731,7 +1733,7 @@ All experiments were conducted within a timeout of four minutes per repair techn
 %\hline
 \textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & 121  & \textbf{154} \\
 \hline
-\textbf{Improv.} &  \textbf{8\%}  & -5\% & \textbf{20\%} & -8\% & \textbf{35\%} \\
+\textbf{Improv.} &  \textbf{8\%}  & $-$5\% & \textbf{20\%} & $-$8\% & \textbf{35\%} \\
 %\textbf{Improv. vs. Syn.} &  \textbf{2\%}  & -5\% & \textbf{10\%} & -19\% & \textbf{28\%} \\
 \hline
 %\textbf{Total \#Repairs} & 763  & 510  & 490  & 425 &  2188 \\ 			
@@ -1756,7 +1758,7 @@ All experiments were conducted within a timeout of four minutes per repair techn
 \hline
 \textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & 121  &  \textbf{154} \\
 \hline
-\textbf{Improv.} &  2\%  & -5\% & \textbf{10\%} & -19\% & \textbf{28\%} \\
+\textbf{Improv.} &  2\%  & $-$5\% & \textbf{10\%} & $-$19\% & \textbf{28\%} \\
 \hline
 \end{tabular}
 \label{tab:effectiveness-grammar}
@@ -1858,6 +1860,7 @@ the \textit{combination of failure feedback and input synthesis} is vital for th
 It repaired four out of five (77\% of) invalid inputs and it is %up to 
 8\% more effective than the best language-agnostic method (lexical \ddmax). %baseline.
 \end{result}
+\todo{8\% is not much, and only on average, too. This may not be the best opener, although the later results (specifically data loss) are impressive. -- AZ}
 
 
 %\begin{table}[!tbp]\centering
@@ -2032,7 +2035,7 @@ of \approach over the best baseline which are significant (i.e., greater than fi
 \Cref{fig:repair-complementarity} highlights our findings. 
 
 We found that about \textit{one in ten repairs could be solely completed by \approach}, which is three times and five times as many as lexical and syntactic \ddmax %\textit{only} 
-repairs, respectively (\textit{see} \Cref{fig:repair-complementarity}). \approach \textit{solely} completely 9\% (61/712) of all repaired inputs, all of which ddmax could not repair. For lexical ddmax, our approach \textit{solely} repaired 5x as many invalid files as lexical ddmax (61 vs. 12), while it repairs thrice as many files as syntactic ddmax (61 vs. 23). Overall, we observe that all \textit{\approach complements \ddmax, a combination of these approaches completes 88\% of repairs (712), which is 14\% and 23\% more than the repairs completed by \approach and syntactic \ddmax, respectively}. 
+repairs, respectively (\textit{see} \Cref{fig:repair-complementarity}). \approach \textit{solely} completely 9\% (61/712) of all repaired inputs, all of which \ddmax could not repair. For lexical \ddmax, our approach \textit{solely} repaired 5$\times$ as many invalid files as lexical \ddmax (61 vs. 12), while it repairs thrice as many files as syntactic \ddmax (61 vs. 23). Overall, we observe that all \textit{\approach complements \ddmax, a combination of these approaches completes 88\% of repairs (712), which is 14\% and 23\% more than the repairs completed by \approach and syntactic \ddmax, respectively}. 
 %These findings 
 %show that our approach is complementary to ddmax. 
 %It solely completed 61 repairs (9\%), all of which ddmax could not repair. 
@@ -2270,7 +2273,7 @@ is its main performance bottleneck . %of \approach.  % as well as \ddmax. %all t
 %Our
 \approach is reasonably fast (10 seconds), but it 
 %repairs an invalid input in 10 seconds. 
-is 5x slower than \ddmax because it requires
+is 5$\times$ slower than \ddmax because it requires
 additional operations and oracle checks. 
 %program runs 
 %due to input synthesis. 
@@ -2326,7 +2329,7 @@ To mitigate this threat, we have employed four well-known input formats with var
 
 \noindent
 \textbf{Input Constraints and Semantics:} \approach does not address concerns about recovering or preserving the input constraints or intended semantics of the input data. For instance, repairing an invalid checksum or hash requires such information, and \approach will be limited for this use cases. However, it would provide repair candidates that allow end-users to debug such semantic issues. 
-
+\todo{Do you talk about the risk of input synthesis (which may be perceived as greater than the risk of input deletion) somewhere? A small lexical change may have large semantical consequences -- AZ}
 
 \section{Related Work}
 \label{sec:related_work}
@@ -2373,9 +2376,9 @@ Unlike \approach which aims to fix an invalid input, these schemes need an input
 \label{sec:conclusion}
 %\recheck{
 %In this paper, we 
-This paper presents \approach, an input repair approach that employs input synthesis and lightweight failure feedback (i.e., incomplete and (in)correct checks) to repair invalid inputs. Our approach is black-box, does not require program analysis or an input grammar. We evaluate the effectiveness, data recovery and efficiency of our approach, in comparison to the state-of-the-art methods. We show that \approach is highly effective and efficient in input repair -- it completes the repair of four in five invalid inputs (77\%), within a four minute timeout. Furthermore, we demonstrate that our approach is up to 35\% more effective than the best 
+This paper presents \approach, an input repair approach that employs input synthesis and lightweight failure feedback (i.e., incomplete and (in)correct checks) to repair invalid inputs. Our approach is black-box, does not require program analysis or an input grammar. We evaluate the effectiveness, data recovery and efficiency of our approach, in comparison to the state-of-the-art methods. We show that \approach is highly effective and efficient in input repair---it completes the repair of four in five invalid inputs (77\%), within a four minute timeout. Furthermore, we demonstrate that our approach is up to 35\% more effective than the best 
 %In comparison to the 
-best baseline -- (syntactic) \ddmax, without using an input grammar. Overall, this work demonstrates that lightweight failure feedback and input synthesis are important for the effective repair of invalid inputs, especially in the absence of an input specification (e.g., grammar) and white-box program access. In the future, we plan to investigate how to improve the performance of our approach by learning input semantics and constraints, or via program analysis and the knowledge of the input specification. %grammar.
+best baseline---(syntactic) \ddmax, without using an input grammar. Overall, this work demonstrates that lightweight failure feedback and input synthesis are important for the effective repair of invalid inputs, especially in the absence of an input specification (e.g., grammar) and white-box program access. In the future, we plan to investigate how to improve the performance of our approach by learning input semantics and constraints, or via program analysis and the knowledge of the input specification. %grammar.
 %}
 %  more effective thja
 %\todo{discuss potential future works}
