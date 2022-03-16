@@ -307,14 +307,13 @@ def main(inputval):
 INPUT = None
 try:
     f = Path(sys.argv[1])
-    if not f.is_file():
-        raise Exception()
-    with f.open("r") as ff:
-        INPUT: str = ff.read()
+    if f.is_file():
+        with f.open("r") as ff:
+             INPUT = ff.read()
+    else:
+        INPUT = sys.argv[1]
 except UnicodeDecodeError as e:
-    raise e  # We do not want to repair the file name itself
-except Exception:
-    INPUT: str = sys.argv[1]
+    raise e
 
 TEST = False
 if TEST:
