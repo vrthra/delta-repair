@@ -2340,18 +2340,22 @@ To mitigate this threat, we have employed four well-known input formats with var
 \textbf{Input Constraints and Semantics:} \approach does not address concerns about recovering or preserving the input constraints or intended semantics of the input data. For instance, repairing an invalid checksum or hash requires such information, and \approach will be limited for this use cases. However, it would provide repair candidates that allow end-users to debug such semantic issues. 
 
 \noindent
-\textbf{Repair via input Synthesis:} The input synthesis repair operation %(i.e., the insertion operation) 
-of \approach poses the risk of introducing input elements with unintended semantic consequences. 
+\textbf{Repair via Input Synthesis:} The repair via synthesis operation %(i.e., insertion) % operation) 
+of our approach poses the risk of introducing input elements with unintended semantic consequences. 
 %Such operations % into the input, which 
-Specification, insertion operations may lead %cause further 
-data corruption and information distortion. To mitigate this threat, \approach provides several candidate repairs ranked by the edit distance 
-of the each repair candidate from the original input.
+Specifically, insertion operations may lead %cause further 
+to data corruption and information distortion. To mitigate this threat, \approach provides several valid candidate repairs ranked by the edit distance 
+of each repair candidate from the original input. %to %.
 %to the original input. 
-Furthermore, we encourage end-users to employ %\approach  %recommend to 
-the results of %provided by 
-\approach % candidates 
+Hence, we 
+encourage end-users to select the best semantically-fit repair from the 
+%employ %\approach  %recommend to 
+%the results of %provided by 
+% candidates 
 %as potential repairs that allows 
-as potential repair candidates, out of which to select the best semantically fit repair for their use.
+%as
+potential repair candidates provided by \approach. 
+%, out of which to select the best semantically fit repair for their use.
 %understanding %and repairing 
 %the input data. 
 
