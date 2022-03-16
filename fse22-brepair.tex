@@ -7,7 +7,6 @@
 \newcommand{\mytitle}{Input Debugging via Rich %and Fast
 Failure Feedback}
 \renewcommand{\mytitle}{Repairing Inputs}
-% Consider "Repairing Inputs with Input Synthesis" -- AZ
 
 
 \usepackage{listings}
@@ -248,11 +247,12 @@ pics/numbering/.style args={#1}{code={
 \date{February 2022}
 
 \begin{abstract}
+\todo{For the title, I'd definitely include ``synthesis'', as in ``Repairing Inputs with Input Synthesis'' -- AZ}
 Data cleansing and data repair are time-consuming tasks for developers, especially in fields that aggregate data from multiple resources (e.g., data warehousing). Often times,
 input data may ostensibly conform to a given input format, but cannot be parsed by a conforming program, for instance, due to human error or data corruption.
 In such cases, a data engineer has to manually repair the corrupt data such that
-it follows a given format, and hence it can be processed by the conforming program.
-Such manual repair can be time consuming, and
+it follows a given format, and hence can be processed by the conforming program.
+Such manual repair can be time-consuming and
 error-prone.
 
 In this work, we show that incorporating lightweight failure feedback (e.g., input incompleteness) % \todo{what is lightweight error-feedback?} 
@@ -262,7 +262,7 @@ Given a conforming program, %\todo{it is not clear, what is a conforming program
 and any invalid input, \brepair provides a set
 of repairs prioritized by the distance of the repair from the original input.
 
-We evaluate \brepair on 806 (real-world) invalid inputs using four well-known input formats, namely INI, TinyC, SExp, and cJSON. In our evaluation, we found that \approach is highly effective and efficient in input repair. It repairs 77\% of invalid inputs and recovers 91\% of input data, within four minutes. It is up to 35\% more effective than \ddmax -- the previously best known approach.
+We evaluate \brepair on 806 (real-world) invalid inputs using four well-known input formats, namely INI, TinyC, SExp, and cJSON. In our evaluation, we found that \approach is highly effective and efficient in input repair. It repairs 77\% of invalid inputs and recovers 91\% of input data, within four minutes. It is up to 35\% more effective than \ddmax, the previously best known approach.
 Overall, our approach addresses several
 limitations of
 \ddmax,
