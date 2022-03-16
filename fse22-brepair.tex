@@ -1349,26 +1349,26 @@ def filter_best(items):
 \def\arrowsep{0.20cm}
 \begin{tikzpicture}[node distance=\nodedst]
     \node[blockdiagramblock] (search) {Find parse boundary (Search)};
-    \node[blockdiagramblock,below=of search] (pop) {Apply Repairs};
-    \draw[blockdiagramarrow] (search) -- (pop); %node[simpletext,pos=.5,right,font=\scriptsize] {}; % PushPQ
-    \node[blockdiagramblock,below=of pop] (correct) {\mbox{Valid Input?}};
-    \draw[blockdiagramarrow] (pop) -- (correct);
-    \node[simpletext,below=.3 of correct] (return) {\mbox{Return input}};
-    \node[blockdiagramblock,right=of correct] (tryDelete) {\mbox{Extend Threads}};
-    \node[blockdiagramblock,above=of tryDelete] (tryNewInsert) {\mbox{Select Threads}};
-    \draw[blockdiagramarrow] (correct) -- (return) node[simpletext,pos=.6,right] {\pass};
-    \draw[blockdiagramarrow] (correct) -- (tryDelete);
-    \draw[blockdiagramarrow] (tryDelete) -- (tryNewInsert);
-    %\node[simpletext,right=.5 of tryDelete.east,inner sep=1pt] (pqins1) {increase bound,\\push to PQ};
-    %\draw[blockdiagramarrow,dashed] (tryDelete) -- (pqins1) node[pos=.5,above] {\pass};
-    %\node[simpletext,right=.5 of tryNewInsert.east,inner sep=1pt] (pqins2) {increase bound,\\push to PQ};
-    %\draw[blockdiagramarrow,dashed] (tryNewInsert) -- (pqins2) node[pos=.5,above] {\pass};
-    \draw[blockdiagramarrow] (tryNewInsert) to[out=180,in=0] (pop);
+    \node[blockdiagramblock,below=of search] (repair) {Apply Repairs};
+    \draw[blockdiagramarrow] (search) -- (repair); %node[simpletext,pos=.5,right,font=\scriptsize] {}; % PushPQ
+    \node[blockdiagramblock,below=of repair] (extend) {\mbox{Extend Threads}};
+    \draw[blockdiagramarrow] (repair) -- (extend);
+    \node[blockdiagramblock,right=of extend] (isvalid) {\mbox{Valid Input?}};
+    \node[simpletext,below=.3 of isvalid] (return) {\mbox{Return input}};
+    \node[blockdiagramblock,above=of isvalid] (select) {\mbox{Select Threads}};
+    \draw[blockdiagramarrow] (extend) -- (isvalid);
+    \draw[blockdiagramarrow] (isvalid) -- (return) node[simpletext,pos=.6,right] {\pass};
+    \draw[blockdiagramarrow] (isvalid) -- (select);
+    %\node[simpletext,right=.5 of isvalid.east,inner sep=1pt] (pqins1) {increase bound,\\push to PQ};
+    %\draw[blockdiagramarrow,dashed] (isvalid) -- (pqins1) node[pos=.5,above] {\pass};
+    %\node[simpletext,right=.5 of select.east,inner sep=1pt] (pqins2) {increase bound,\\push to PQ};
+    %\draw[blockdiagramarrow,dashed] (select) -- (pqins2) node[pos=.5,above] {\pass};
+    \draw[blockdiagramarrow] (select) to[out=180,in=0] (repair);
     \pic[] at (search.south east) {numbering=1};
-    \pic[] at ([yshift=-3mm]correct.south east) {numbering=5};
-    \pic[] at (tryDelete.south east) {numbering=3};
-    \pic[] at (pop.south east) {numbering=2};
-    \pic[] at (tryNewInsert.south east) {numbering=4};
+    \pic[] at ([yshift=-3mm]isvalid.south east) {numbering=5};
+    \pic[] at (extend.south east) {numbering=3};
+    \pic[] at (repair.south east) {numbering=2};
+    \pic[] at (select.south east) {numbering=4};
     %TODO
 \end{tikzpicture}
 % \vspace*{-0.1in}
