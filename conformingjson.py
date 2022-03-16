@@ -26,7 +26,7 @@ def it_fits(input_str):
         return False
 
 
-def validate_json(input_str):
+def validate(input_str):
     global num_runs
     num_runs += 1
     try:

@@ -6,10 +6,10 @@ import string
 import random
 import enum
 from pathlib import Path
-import conforminglsp as conformingparser
+import conformingjson as conformingparser
 from status import Status
 
-MAX_SIMULTANIOUS_CORRECTIONS = 5 # set it to a positive number to restrict the queue.
+MAX_SIMULTANIOUS_CORRECTIONS = 2 # set it to a positive number to restrict the queue.
 
 LAST_INSERT_ONLY = True
 
@@ -84,6 +84,14 @@ class Repair:
                       self.inputstr[self.boundary + 1:], self.boundary,
                       mask='%s_D%d' % (self.mask, self.boundary)).extend_deleted_item()
 
+    def insert_at(self, k, i, suffix):
+        v = self.inputstr[:k] + i + self.inputstr[k:self.boundary] + suffix
+        new_item = Repair(v, k, mask='%s_I%d' % (self.mask, k))
+        ie = new_item.extend_inserted_item()
+        if ie.boundary > k:
+           return ie
+        return None
+
     # one of the problems with deletion is that we do not know exactly where the
     # character was deleted from, eventhough the parser can be conforming. For
     # example, given an original string "[1,2,3]", where the corruption happened
@@ -95,21 +103,14 @@ class Repair:
         suffix = self.inputstr[self.boundary:]
         return_lst = []
         if LAST_INSERT_ONLY:
-            v = self.inputstr[:self.boundary] + i + suffix
-            new_item = Repair(v, self.boundary, mask='%s_I%d' % (self.mask, self.boundary))
-            old_boundary = new_item.boundary
-            ie = new_item.extend_inserted_item()
-            if ie.boundary > old_boundary:
-                return_lst.append(ie)
+            v = self.insert_at(self.boundary, i, suffix)
+            if v is not None: return_lst.append(v)
         else:
             # the repair could be any where from 0 to self.boundary (inclusive).
             # So we try all
             for k in range(self.boundary):
-                v = self.inputstr[:k] + i + self.inputstr[k:self.boundary] + suffix
-                new_item = Repair(v, k, mask='%s_I%d' % (self.mask, k))
-                ie = new_item.extend_inserted_item()
-                if ie.boundary > k:
-                   return_lst.append(ie)
+                v = self.insert_at(k,i, suffix)
+                if v is not None: return_lst.append(v)
         return return_lst
 
     def apply_insert(self):
