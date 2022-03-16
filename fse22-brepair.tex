@@ -1349,13 +1349,13 @@ def filter_best(items):
 \def\arrowsep{0.20cm}
 \begin{tikzpicture}[node distance=\nodedst]
     \node[blockdiagramblock] (search) {Find parse boundary (Search)};
-    \node[blockdiagramblock,below=of search] (pop) {Select Repair Thread};
-    \draw[blockdiagramarrow] (search) -- (pop) node[simpletext,pos=.5,right,font=\scriptsize] {}; % PushPQ
-    \node[blockdiagramblock,below=of pop] (correct) {Input is correct?};
+    \node[blockdiagramblock,below=of search] (pop) {Apply Repairs};
+    \draw[blockdiagramarrow] (search) -- (pop); %node[simpletext,pos=.5,right,font=\scriptsize] {}; % PushPQ
+    \node[blockdiagramblock,below=of pop] (correct) {\mbox{Valid Input?}};
     \draw[blockdiagramarrow] (pop) -- (correct);
-    \node[simpletext,below=.3 of correct] (return) {Return input};
-    \node[blockdiagramblock,right=of correct] (tryDelete) {Apply Repairs};
-    \node[blockdiagramblock,above=of tryDelete] (tryNewInsert) {Extend Threads};
+    \node[simpletext,below=.3 of correct] (return) {\mbox{Return input}};
+    \node[blockdiagramblock,right=of correct] (tryDelete) {\mbox{Extend Threads}};
+    \node[blockdiagramblock,above=of tryDelete] (tryNewInsert) {\mbox{Select Threads}};
     \draw[blockdiagramarrow] (correct) -- (return) node[simpletext,pos=.6,right] {\pass};
     \draw[blockdiagramarrow] (correct) -- (tryDelete);
     \draw[blockdiagramarrow] (tryDelete) -- (tryNewInsert);
@@ -1366,9 +1366,9 @@ def filter_best(items):
     \draw[blockdiagramarrow] (tryNewInsert) to[out=180,in=0] (pop);
     \pic[] at (search.south east) {numbering=1};
     \pic[] at ([yshift=-3mm]correct.south east) {numbering=5};
-    \pic[] at (tryDelete.south east) {numbering=2};
-    \pic[] at (pop.south east) {numbering=4};
-    \pic[] at (tryNewInsert.south east) {numbering=3};
+    \pic[] at (tryDelete.south east) {numbering=3};
+    \pic[] at (pop.south east) {numbering=2};
+    \pic[] at (tryNewInsert.south east) {numbering=4};
     %TODO
 \end{tikzpicture}
 % \vspace*{-0.1in}
