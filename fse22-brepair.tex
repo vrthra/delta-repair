@@ -1754,55 +1754,6 @@ All experiments were conducted within a timeout of four minutes per repair techn
 
 %All our prototypes are single-threaded.
 
-\begin{table}[!tbp]\centering
-\caption{Number of Repaired Inputs within a four minute timeout for \approach vs. Language-agnostic state-of-the-art, i.e., lexical \ddmax and  baseline. The highest number of repaired inputs are in bold, as well as significant percentage improvement (Improv.) of \approach over the best baseline greater than five percent (>5\%). }
-%\vspace{-0.5cm}
-\begin{tabular}{|l | c | r  r  r  r |}
-\hline
-&  \multicolumn{5}{c|}{\textbf{Number of Repaired Inputs}}  \\
-&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
-\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-\hline
-\textbf{Baseline}   & 33 (4\%) & 27	 & 6 &	0	& 0\\
-%\textbf{ANTLR} & 344 (43\%) & 133 & 69 & 96 &  46   \\
-\textbf{Lex. ddmax} & 578 (72\%) & \textbf{201}  & 132  & \textbf{131} & 114  \\ 		
-\hline	
-%\textbf{Syn. ddmax} & \textbf{614} (\textbf{76\%}) & \textbf{201}  & \textbf{144}  & \textbf{149}  & \textbf{120}  \\ 	
-%\hline
-\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & 121  & \textbf{154} \\
-\hline
-\textbf{Improv.} &  \textbf{8\%}  & $-$5\% & \textbf{20\%} & $-$8\% & \textbf{35\%} \\
-%\textbf{Improv. vs. Syn.} &  \textbf{2\%}  & -5\% & \textbf{10\%} & -19\% & \textbf{28\%} \\
-\hline
-%\textbf{Total \#Repairs} & 763  & 510  & 490  & 425 &  2188 \\ 			
-%\hline
-\end{tabular}
-\label{tab:effectiveness-no-grammar}
-%\vspace{-0.5cm}
-\end{table}
-
-
-\begin{table}[!tbp]\centering
-\caption{Number of Repaired Invalid Inputs within a four minute timeout for \approach vs. Grammar-based input repair approaches, i.e.,  ANTLR and Syntactic \ddmax. The highest number of repaired inputs are in bold, as well as significant percentage improvement (Improv.) of \approach over the best baseline greater than five percent (>5\%). }
-%\vspace{-0.5cm}
-\begin{tabular}{|l | c | r  r  r  r |}
-\hline
-&  \multicolumn{5}{c|}{\textbf{Number of Repaired Inputs}}  \\
-&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
-\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-\hline
-\textbf{ANTLR} & 344 (43\%) & 133 & 69 & 96 &  46   \\
-\textbf{Syn. ddmax} & 614 (76\%) & \textbf{201}  & 144  & \textbf{149}  & 120  \\ 	
-\hline
-\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & 121  &  \textbf{154} \\
-\hline
-\textbf{Improv.} &  2\%  & $-$5\% & \textbf{10\%} & $-$19\% & \textbf{28\%} \\
-\hline
-\end{tabular}
-\label{tab:effectiveness-grammar}
-\end{table}
-
-
 
 \section{Experimental Results}
 \label{sec:results}
@@ -2026,6 +1977,55 @@ It repaired four out of five (77\% of) invalid inputs and it is %up to
 %\end{table}
 
 
+\begin{table}[!tbp]\centering
+\caption{Number of Repaired Inputs within a four minute timeout for \approach vs. Language-agnostic state-of-the-art, i.e., lexical \ddmax and  baseline. The highest number of repaired inputs are in bold, as well as significant percentage improvement (Improv.) of \approach over the best baseline greater than five percent (>5\%). }
+%\vspace{-0.5cm}
+\begin{tabular}{|l | c | r  r  r  r |}
+\hline
+&  \multicolumn{5}{c|}{\textbf{Number of Repaired Inputs}}  \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
+\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+\textbf{Baseline}   & 33 (4\%) & 27	 & 6 &	0	& 0\\
+%\textbf{ANTLR} & 344 (43\%) & 133 & 69 & 96 &  46   \\
+\textbf{Lex. ddmax} & 578 (72\%) & \textbf{201}  & 132  & \textbf{131} & 114  \\ 		
+\hline	
+%\textbf{Syn. ddmax} & \textbf{614} (\textbf{76\%}) & \textbf{201}  & \textbf{144}  & \textbf{149}  & \textbf{120}  \\ 	
+%\hline
+\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & 121  & \textbf{154} \\
+\hline
+\textbf{Improv.} &  \textbf{8\%}  & $-$5\% & \textbf{20\%} & $-$8\% & \textbf{35\%} \\
+%\textbf{Improv. vs. Syn.} &  \textbf{2\%}  & -5\% & \textbf{10\%} & -19\% & \textbf{28\%} \\
+\hline
+%\textbf{Total \#Repairs} & 763  & 510  & 490  & 425 &  2188 \\ 			
+%\hline
+\end{tabular}
+\label{tab:effectiveness-no-grammar}
+%\vspace{-0.5cm}
+\end{table}
+
+
+\begin{table}[!tbp]\centering
+\caption{Number of Repaired Invalid Inputs within a four minute timeout for \approach vs. Grammar-based input repair approaches, i.e.,  ANTLR and Syntactic \ddmax. The highest number of repaired inputs are in bold, as well as significant percentage improvement (Improv.) of \approach over the best baseline greater than five percent (>5\%). }
+%\vspace{-0.5cm}
+\begin{tabular}{|l | c | r  r  r  r |}
+\hline
+&  \multicolumn{5}{c|}{\textbf{Number of Repaired Inputs}}  \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
+\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+\textbf{ANTLR} & 344 (43\%) & 133 & 69 & 96 &  46   \\
+\textbf{Syn. ddmax} & 614 (76\%) & \textbf{201}  & 144  & \textbf{149}  & 120  \\ 	
+\hline
+\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & 121  &  \textbf{154} \\
+\hline
+\textbf{Improv.} &  2\%  & $-$5\% & \textbf{10\%} & $-$19\% & \textbf{28\%} \\
+\hline
+\end{tabular}
+\label{tab:effectiveness-grammar}
+\end{table}
+
+
 
 \begin{figure}[!tbp]
 \vspace{-0.1cm}
@@ -2126,6 +2126,8 @@ BRepair    191    158      121          154
 %\label{tab:brepair-insertions}
 %%\vspace{-0.5cm}
 %\end{table}
+
+
 
 \noindent \textbf{\textit{Complementarity to \ddmax:}} We further inspect the unique repairs achieved by each approach, in order to understand the complementarity of our approach to the state-of-the-art methods. In this experiment, we inspect the number of unique repairs achieved \textit{solely} by a single approach (e.g., \textit{only} \approach), or two or more approaches (e.g., all approaches). 
 %The goal is to determine if there are unique sets of inputs that are solely repaired by a single approach, and not by other approaches. 
@@ -2336,7 +2338,24 @@ To mitigate this threat, we have employed four well-known input formats with var
 
 \noindent
 \textbf{Input Constraints and Semantics:} \approach does not address concerns about recovering or preserving the input constraints or intended semantics of the input data. For instance, repairing an invalid checksum or hash requires such information, and \approach will be limited for this use cases. However, it would provide repair candidates that allow end-users to debug such semantic issues. 
-\todo{Do you talk about the risk of input synthesis (which may be perceived as greater than the risk of input deletion) somewhere? A small lexical change may have large semantical consequences -- AZ}
+
+\noindent
+\textbf{Repair via input Synthesis:} The input synthesis repair operation %(i.e., the insertion operation) 
+of \approach poses the risk of introducing input elements with unintended semantic consequences. 
+%Such operations % into the input, which 
+Specification, insertion operations may lead %cause further 
+data corruption and information distortion. To mitigate this threat, \approach provides several candidate repairs ranked by the edit distance 
+of the each repair candidate from the original input.
+%to the original input. 
+Furthermore, we encourage end-users to employ %\approach  %recommend to 
+the results of %provided by 
+\approach % candidates 
+%as potential repairs that allows 
+as potential repair candidates, out of which to select the best semantically fit repair for their use.
+%understanding %and repairing 
+%the input data. 
+
+\done{Do you talk about the risk of input synthesis (which may be perceived as greater than the risk of input deletion) somewhere? A small lexical change may have large semantical consequences -- AZ}
 
 \section{Related Work}
 \label{sec:related_work}
