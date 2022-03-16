@@ -6,7 +6,8 @@ import string
 import random
 import enum
 from pathlib import Path
-import conformingjson as conformingparser
+import conformingexe as conformingparser
+conformingparser.EXE = './cjson'
 from status import Status
 
 MAX_SIMULTANIOUS_CORRECTIONS = 2 # set it to a positive number to restrict the queue.

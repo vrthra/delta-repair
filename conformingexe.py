@@ -3,6 +3,7 @@ from subprocess import run
 import tempfile
 TESTED = {}
 FLAG = ''
+EXE = './sexp'
 
 num_runs: int = 0
 
@@ -16,7 +17,7 @@ def validate(input_str):
     with tempfile.NamedTemporaryFile(mode='w+t') as temp:
         temp.write(input_str)
         temp.flush()
-        p = run(['./sexp', temp.name])
+        p = run([EXE, temp.name])
         logit('*', repr(input_str))
         if p.returncode == 0:
             return Status.Complete, 0, ''
