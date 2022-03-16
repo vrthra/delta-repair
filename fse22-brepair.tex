@@ -2268,21 +2268,34 @@ are in \textbf{bold}. %, second-best time performance is in \textit{italics}
 \end{table}
 
 
-\section{Threats to Validity}
+\section{Limitations and Threats to Validity}
 \label{sec:threats}
 
-\todo{discuss threats to validity .... discuss issues like input synthesis (insertion), requires rich feedback: incorrect and incomplete input fragment}
-Our approach (\approach) and empirical evaluations may be limited by the following validity threats:
+%\todo{discuss threats to validity .... discuss issues like input synthesis (insertion), requires rich feedback: incorrect and incomplete input fragment}
+
+Our approach (\approach) and empirical evaluations may be limited by the following: % validity threats:
 
 \noindent
-\textbf{External Validity:}
+\textbf{External Validity:} This refers to the \textit{generalizability} of our approach and results, i.e., 
+%We acknowledge 
+the threat that \approach may not generalize to other programs and input formats. 
+%and their corresponging program written in \<C>. 
+%programming languages.
+%other than the ones used in this paper. 
+To mitigate this threat, we have employed four well-known input formats with varying complexity, as well as their corresponding programs with varying sizes (375 to 3062 LOC) and maturity (6 to 21 years old). 
 
 \noindent
-\textbf{Internal Validity:}
+\textbf{Internal Validity:} This concerns the \textit{correctness} of our implementation and evaluation, especially if we have correctly implemented \approach and the baselines. We mitigate this threat by testing our implementation of all approaches on small and simple test inputs to ensure the implementation behaves as described. 
+
+\noindent
+\textbf{Construct Validity:} This concerns the test oracle and failure feedback employed in our evaluation. To ensure all subjects provide the expected \textit{incomplete} and i feedback, we tested the programs on sample invalid inputs and modified the subject program if needed. 
+
+\noindent
+\textbf{Limited to Data Repair:} The repair produced by our approach aim to ensure maximal data recovery, but it does not ensure that the intended user information is preserved. Hence, \approach is limited to repair of the input data, but not the intended information. 
 
 
 \noindent
-\textbf{Construct Validity:}
+\textbf{Input Constraints and Semantics:} \approach does not address concerns about recovering or preserving the input constraints or intended semantics of the input data. For instance, repairing an invalid checksum or hash requires such information, and \approach will be limited for this use cases. However, it would provide repair candidates that allow end-users to debug such semantic issues. 
 
 
 \section{Related Work}
