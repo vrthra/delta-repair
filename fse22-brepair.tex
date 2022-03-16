@@ -1519,14 +1519,20 @@ This section describes the experimental setup of this work.
 %In this paper,
 We investigate the \textit{effectiveness} (RQ1), \textit{data recovery} (RQ2), 
 %\textit{diagnostic quality} (RQ3) 
-and \textit{efficiency} (RQ3) of our approach using several well-designed experiments. For each experiment, we also examine how \approach compares to the state-of-the-art techniques, namely the \textit{baseline} (built-in repair of subject programs), \textit{ANTLR}'s error recovery strategy, lexical \ddmax and syntactic \ddmax.
+and \textit{efficiency} (RQ3) of our approach using several well-designed experiments. %For each experiment, w
+We also examine how \approach compares to four state-of-the-art techniques, 
+namely the built-in repair of the programs (\textit{baseline}), error-recovery of \textit{ANTLR}, as well as 
+%'s error recovery strategy, 
+%lexical \ddmax 
+lexical and syntactic 
+\ddmax.
 
 %Particularly,
 %To this end,
 %we pose the following \textit{research questions} (RQ):
 % concerning the performance of \approach:
 
-\noindent\textbf{Research Questions:}
+\noindent\textbf{Research Questions:} We pose the following research questions:
 \begin{description}[wide, labelwidth=!, labelindent=0pt]
   \item[RQ1.] \emph{Effectiveness:}  %\& Efficiency:}
 How effective is our approach (\approach) in fixing invalid inputs? Is it as effective as the state-of-the-art methods?
@@ -1557,53 +1563,62 @@ the state-of-the-art methods?
 %\vspace{-0.5cm}
 \end{table}
 
-As subjects we used four input formats and their corresponding programs. These are INI (INI), JSON (cJSON), S-Expressions (SExpParser) and TinyC (TinyC). Each program is moderately large (between 300 LOC to 3,000 LOC), relatively mature (6 to 21 years old), and is written in \<C>. The details are provided in \Cref{tab:subject-programs}.
+\noindent\textbf{Subject Programs:} %As subjects w
+We used four input formats and their corresponding programs. These are INI (INI), JSON (cJSON), S-Expressions (SExpParser) and TinyC (TinyC). Each program is moderately large (between 375 LOC to 3062 LOC), relatively mature (6 to 21 years old), and written in \<C>. Further details are provided in \Cref{tab:subject-programs}.
 
 %\subsubsection*{\bf Test inputs}\todo{refactor this}
+\noindent
+\textbf{Test inputs:} 
 \Cref{tab:input-details} provides details of the number of
-real-world invalid inputs and mutated invalid inputs employed in our experiment,
-for each input format. We evaluate our approach using 806 invalid input files.
+real-world invalid inputs and mutated invalid inputs employed in our experiment.
+%,for each input format. 
+We evaluate our approach using 806 invalid input files. %.
 %belonging to four different input formats, namely INI, cJSON, SExp, and TinyC. 
-\recheck{
 As test inputs, we crawled a large corpus of valid and invalid real-world files
-from GitHub using the GitHub crawling API~\cite{githubapi}.
+from GitHub using the GitHub crawling API~\cite{githubapi}. 
 %TODO add table with number of files?
 For each format, we introduced a set of 100 artificially mutated (invalid) files
 that we mutated from 50 randomly selected valid real-world files.
 Half of those mutated files contain a single mutated byte and the other half
-contains multiple (up to 16) mutated bytes.
-Each mutation can either be a byte-flip, an insertion or a deletion, which
-we believe to resemble real-world corruptions as close as possible
-(e.g. bit rot on hard disks or transmission errors in network protocols).}
+contains multiple (two to 16) mutated bytes.
+Each mutation can either be a byte-flip, an insertion or a deletion to 
+%, which we believe to 
+resemble real-world corruptions as close as possible
+(e.g. bit rot on hard disks or transmission errors in network protocols).
 
+\noindent\textbf{Metrics and Measures} used to evaluate repair quality includes: 
 
+\noindent\textit{a.) Number of Repaired Inputs:} We count how many files were repaired before
+a four minute timeout by each input repair approach.
+%\begin{description}[wide, labelwidth=!, labelindent=0pt]
+ %of the tested repair programs.
+ 
+\noindent\textit{b.) File Size Difference:} To determine the amount of data recovered by each approach, 
+we evaluate the difference in \emph{file size} of
+the \emph{recovered inputs} and the original
+\emph{valid input}. %. This measurement tracks the effectiveness of 
 
-%\subsubsection*{\bf Metrics and Measures}
-We use the following measures to track the quality of repair.
-\begin{description}[wide, labelwidth=!, labelindent=0pt]
-\item[Number of Repaired Inputs:] We count how many files were repaired before
-the timeout by each of the tested repair programs.
-\item[File Size Difference:] We evaluate the difference in \emph{file size} of
-the \emph{recovered inputs} of the different repair algorithms and the original
-\emph{valid input}. This measurement tracks the effectiveness of data recovery.
-\item[Edit Distance:] This is measured as the number of characters that
+\noindent\textit{c.) Edit Distance:} This is measured as the number of characters that
 differs between the \emph{corrupt input} and the \emph{repaired input}.
 %  \cite{levDistance}.
-\item[Runtime:] We keep track of the time taken for the entire repair.
-\item[Number of Program Runs:] The number of times we need to run the
-parser can provide a useful metric for evaluation. Hence, we track this also.
-\end{description}
 
-%\subsubsection*{\bf State-of-the-art:}
+\noindent\textit{d.) Runtime:} We keep track of the time taken for the entire repair.
+
+\noindent\textit{e.) Number of Program Runs:} To evaluate efficiency, we track the number of times the parser is executed by each approach. 
+%during test experiments of input fragments. 
+%we need to run the
+%parser can provide a useful metric for evaluation. %Hence, we track this also.
+%\end{description}
+
+\noindent\textbf{State-of-the-art:}
 In this work, we compare the performance of \approach to the following
 techniques:
-\begin{description}[wide]
-\item[Baseline:] The built-in error-recovery technique of the subject programs.
+%\begin{description}[wide]
+\noindent\textbf{(1) Baseline:} The built-in error-recovery technique of the subject programs.
  % In this work,  \recheck{we compare the effectiveness of the subject program to that of \approach (\textit{see} RQ1)}. Specifically, we measure the effectiveness of the built-in error recovery feature of the program by measuring the number of invalid input files that could be processed as valid inputs by a subject program without inducing a program failure, crash or timeout. In our evaluation, we compare the number of such repairs to that of \approach.
-\item[ANTLR:] This is the inbuilt error recovery strategy of the ANTLR parser generator when equipped with an input grammar specifying the allowed input structure~\cite[Automatic Error Recovery Strategy]{parr2013definitive}.
+\noindent\textbf{(2) ANTLR:} This is the inbuilt error recovery strategy of the ANTLR parser generator when equipped with an input grammar specifying the allowed input structure~\cite[Automatic Error Recovery Strategy]{parr2013definitive}.
   %In this work, we compare the number of invalid inputs that could be processed by \textbf{ANTLR} to the number of repairs performed by \approach (\textit{see} RQ1).
-
-\item[\ddmax:] Kirschner et al.~\cite{kirschner2020debugging} proposed %This refers to the
+\noindent\textbf{(3) \ddmax:} Kirschner et al.~\cite{kirschner2020debugging} proposed %This refers to the
 two variants of the maximizing variant of the delta debugging algorithm (called \ddmax), %proposed by ,
 namely \textit{lexical \ddmax} and \textit{syntactic \ddmax}.
     %For all research questions in this work, we compare the performance of \approach to both \textit{lexical} and \textit{syntactic} \ddmax, since \ddmax is the current best performing state-of-the-art input repair method.
@@ -1611,7 +1626,7 @@ namely \textit{lexical \ddmax} and \textit{syntactic \ddmax}.
 %a delta debugging (DD) algorithm designed to diagnose the root cause of a program failure %, \ddmin isolates a failure cause
 %by minimizing a failure-inducing input to the minimal input subset that reproduces
 %the observed program failure. In our evaluation of the diagnostic quality of \approach (\textit{see} RQ3), we compare the performance of \approach to \ddmin.
-\end{description}
+%\end{description}
 
 %(a)  (\textit{baseline}), (b) the inbuilt error recovery strategy of the ANTLR parser generator (\textit{ANTLR})~\cite{}, (c) the minimizing variant of delta debugging (DDMin)~\cite{} and (d) three variants of the maximizing variant of delta debugging (DDMax)~\cite{kirschner2020debugging}.
 %%\todo{cite and create command shortcuts for the state-of-the-art}
@@ -1625,24 +1640,26 @@ namely \textit{lexical \ddmax} and \textit{syntactic \ddmax}.
 %\noindent \textit{DDMax:}
 
 
-\subsubsection*{\bf Implementation Details:}
+\noindent\textbf{Implementation Details:}
 We implemented the test infrastructure in about 12k LOC of Java code, \approach was implemented in 765 lines of Java code.
-All subject programs needed to be modified slightly to provide the required incompleteness feedback (cf. \Cref{tab:subject-programs}).
+We also slightly modify subject programs %ubject programs needed to be modified slightly 
+to provide the required incompleteness feedback (\textit{see} \Cref{tab:subject-programs}).
 
-\subsubsection*{\bf Platform:} All experiments were conducted
-%the experiments
-on an ASRock X470D4U with six physical CPU cores %(8~virtual cores)
-and 32GB of RAM, specifically an AMD Ryzen 5600X @ 3.70GHz, 12~virtual cores, running Debian GNU/Linux.
+\noindent\textbf{Platform:} All experiments were conducted
+on an ASRock X470D4U with six physical CPU cores and 32GB of RAM, on an AMD Ryzen 5600X @ 3.70GHz, 12~virtual cores, running Debian GNU/Linux.
 
 %\noindent
 %\textbf{
 
-\subsubsection*{\bf Research Protocol:}
-We first collect a large corpus of files which we split into a set of 50 correct files and a set of real-world invalid files.
-The correct files are mutated using single and up to 16 multiple mutations (random insertions, deletions and byte-flips), which results in the files shown in \Cref{tab:input-details}.
+\noindent\textbf{Research Protocol:}
+We first collect a large corpus of  real-world files which we split into a set of (50) valid files and invalid files. We create additional mutated invalid files by injecting single and up to 16 multiple mutations (random insertions, deletions and byte-flips) into the valid files  
+% are then mutated using single and up to 16 multiple mutations (random insertions, deletions and byte-flips), which results in the files 
+%shown in 
+(\Cref{tab:input-details}).
 Then, we run each repair technique on each file and collect the required data, i.e. the run time, number of oracle runs, Levenshtein distance and repair status of each file.
-As repair techniques, we report the \emph{Baseline} (the built-in error recovery strategy of the subject program), the error recovery strategy of \emph{ANTLR}, \ddmax and \ddmaxg and \approach.
-All experiments were conducted within a timeout of four minutes per repair technique per file.
+As repair techniques, we employ \emph{Baseline}, %(the built-in error recovery strategy of the subject program), the error recovery strategy of 
+\emph{ANTLR}, lexical \ddmax, syntactic \ddmax and \approach.
+All experiments were conducted within a timeout of four minutes per repair technique per input. % file.
 
 
 
