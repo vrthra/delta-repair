@@ -229,7 +229,7 @@ def sample_items_by_mask(items):
         else:
             res = random.sample(masks[key], MAX_NUM_PER_MASK)
         sampled.extend(res)
-    return sampled
+    return filter_best(sampled)
 
 def filter_best(items):
     if MAX_SIMULTANIOUS_CORRECTIONS < 0: return items
@@ -250,7 +250,7 @@ def find_fixes(inputval, boundary):
         # fetch the first rank groups.
         current_items = next_items
         next_items = []
-        chosen_items = filter_best(sample_items_by_mask(current_items))
+        chosen_items = sample_items_by_mask(current_items)
         completed = []
         for item in chosen_items:
             # try repair and extending each item until we get incorrect.
