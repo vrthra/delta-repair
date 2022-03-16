@@ -689,11 +689,14 @@ by modifying the parser to provide such failure feedback, as demonstrated in thi
 }
 %In our evaluation, u
 
-\recheck{To the best of our knowledge, \approach is the \textit{first} approach to synergistically combine\textit{ lightweight failure feedback and input synthesis to repair invalid inputs}}. We evaluate \brepair using \recheck{806} (real-world) invalid inputs belonging to four well-known input formats (e.g., cJSON). % and TinyC). 
+%\recheck{
+To the best of our knowledge, \approach is the \textit{first} approach to repair invalid inputs without an input specification (e.g., grammar) or program analysis: It repairs invalid inputs %achieves this 
+by synergistically combining \textit{lightweight failure feedback and input synthesis}. 
+We evaluate \brepair using 806 (real-world) invalid inputs belonging to four well-known input formats (e.g., cJSON). % and TinyC). 
 Results show that %given input processors that can accurately
 %signal \emph{incompleteness} or \emph{incorrectness} and % when given
 %invalid inputs,
-\brepair is highly effective (77\% repairs within four minutes), and it is up to \recheck{35\%} more effective than \ddmax.
+\brepair is highly effective (77\% repairs within four minutes), and it is up to 35\% more effective than \ddmax.
 %and \recheck{X\% more efficient} %can provide repairs that are more maximal
 %than \ddmax.
 %, and correctly
