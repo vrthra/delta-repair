@@ -1329,7 +1329,7 @@ def filter_best(items):
 \newlength\ndist\setlength\ndist{.1\nodedst}
 \def\arrowsep{0.20cm}
 \begin{tikzpicture}[node distance=\nodedst]
-    \node[blockdiagramblock,font=\normalfont\scriptsize] (search) {Bin. Search longest incomplete prefix};
+    \node[blockdiagramblock] (search) {Find parse boundary};
     \node[blockdiagramblock,below=of search] (pop) {Sample from PQ};
     \draw[blockdiagramarrow] (search) -- (pop) node[simpletext,pos=.5,right,font=\scriptsize] {Push PQ};
     \node[blockdiagramblock,below=of pop] (correct) {Input is correct?};
