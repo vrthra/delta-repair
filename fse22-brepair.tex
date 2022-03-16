@@ -1192,7 +1192,7 @@ Hence, we allow the user to choose to toggle this option with
 point in the prefix. If it is true, we will only attempt insertions at the end
 of the prefix.
 \begin{lstlisting}[caption=\brepair repairs,label={lst:repairs}]
-def insert_at(item, k, suffix)
+def insert_at(item, k, i, suffix)
     v = (item.inputstr[:k] + i +
         item.inputstr[k:item.boundary] + suffix)
     new_item = Repair(v, k, mask='%s_I%d' % (item.mask, k))
@@ -1205,12 +1205,12 @@ def insert_char(item, i):
     suffix = item.inputstr[item.boundary:]
     return_lst = []
     if LAST_INSERT_ONLY:
-        v = insert_at(item, item.boundary, suffix)
-        if v: return_lst.append(ie)
+        v = insert_at(item, item.boundary, i, suffix)
+        if v is not None: return_lst.append(v)
     else:
         for k in range(item.boundary):
-            v = insert_at(item, k, suffix)
-            if v: return_lst.append(ie)
+            v = insert_at(item, k, i, suffix)
+            if v is not None: return_lst.append(v)
     return return_lst
 
 def apply_insert(item):
