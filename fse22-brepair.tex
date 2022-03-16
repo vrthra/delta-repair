@@ -574,7 +574,10 @@ As an example, consider the invalid input in \textit{row three} of \Cref{tab:ddm
 %rather than inserted. Hence by handling only spurious insertions, \ddmax misses
 %an important repair requirement.
 
-In this paper, we propose \brepair\footnote{\recheck{\brepair denotes "Fixing invalid input via input SYNTHesis".}}
+In this paper, we propose \brepair\footnote{
+\recheck{\brepair denotes "Fixing invalid input via input SYNTHesis".}
+% Feedback driven SYNThesis of repairs
+}
 %\todo{remember to say the meaning or derivation of the name \approach}
 to address the %provide a solution that addresses these
 limitations of \ddmax via \textit{lightweight error-feedback and input synthesis}. The key insight of this approach is to complete \textit{semantic} repair of invalid inputs using lightweight failure feedback such as the \textit{validity, incompleteness and incorrectness} checks of input fragments. Given an invalid input and a conforming program, \approach performs test experiments of input subsets and candidate insertions to provide a set of repairs prioritized by the distance of the repair from the original input.
