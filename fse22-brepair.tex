@@ -2067,34 +2067,89 @@ the best-performing state-of-the-art method (\ddmax).
 % before a timeout to evaluate data recovery in terms of file sizes.  % and which were completely repaired by all three approaches before a timeout.
 %This resulted in a set of set of (321) inputs for the evaluation of data loss.
 
-\begin{table}[!tbp]\centering
-\caption{Data Recovery of \approach vs. %the best-performing state-of-the-art methods, i.e. 
+
+
+
+\begin{table*}[!tbp]\centering
+\caption{Data Recovery (file size difference) and Data Loss  (Levenshtein distance) of \approach vs. %the best-performing state-of-the-art methods, i.e. 
 lexical (Lex.) \ddmax and syntactic (Syn.) \ddmax. 
-The highest data recovery performance are in bold, significant percentage improvement (Impr.) of \approach over the best baseline that is greater than five percent (>5\%) are also in bold.
+The highest data recovery and lowest data loss are in bold, percentage improvement (Impr.) %or reduction (red.) 
+of \approach over the best baseline which are significant (i.e., greater than five percent (>5\%)) are also in bold.
 }
 %\vspace{-0.5cm}
-\begin{tabular}{|l | c | r  r  r  r |}
+\begin{tabular}{|l | c c |  r  r  r  r  | c |  r  r  r  r |}
 \hline
-&  \multicolumn{5}{c|}{\textbf{\% Data Recovered by Approach}}  \\
-&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
-\textbf{Techniques} & \textbf{Total} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+ &  \multicolumn{6}{c|}{\textbf{\% Data Recovered by Approach}} &  \multicolumn{5}{c|}{\textbf{Average Data Loss }}  \\
+&  \multicolumn{2}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format} (\#inputs)}  &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format} (\#inputs)}  \\
+\textbf{Techniques} & \textbf{Average} & \textbf{Total} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
 \hline
-%\textbf{Baseline}   & (\%) & &  & 	& \\
-%\textbf{ANTLR} & (\%) & &  & 	& \\
-\textbf{Lex. ddmax} & 81\% & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% \\			
-\textbf{Syn. ddmax} & 74\% & 70.6\% & 81.5\%  & 97.0\%	& 47.0\% \\	
+\textbf{Lex. ddmax} & 81\% &  & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% & 18.0 & {10.2} &	61.6 &	\textbf{6.2} & 7.5 \\			
+\textbf{Syn. ddmax} & 74\% &  &  70.6\% & 81.5\%  & 97.0\%	& 47.0\% & 119.6 &  258.1 & 82.7 &	76.6 &	33.3 \\	
 \hline
-\textbf{\approach} & \textbf{91\%} & \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100.6\%} & \textbf{82.1\%} \\
+\textbf{\approach} & \textbf{91\%} &  &  \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100.6\%} & \textbf{82.1\%} & \textbf{10.6}  & \textbf{9.5} &	\textbf{28.7} &	7.4 & \textbf{1.6} \\
 \hline
-\textbf{Impr. vs. Lex.} & 12\% & 0.1\%	& \textbf{19.8\%}	& 1.4\%	& \textbf{72.1\%} \\
-\textbf{Impr. vs. Syn.} & \textbf{23\%} & \textbf{21.6\%} 	& \textbf{20.8\%}	& 3.7\%	& \textbf{74.7\% }\\
+\textbf{Impr. vs. Lex.} & 12\% &  &  0.1\%	& \textbf{19.8\%}	& 1.4\%	& \textbf{72.1\%} & \textbf{70\%} &  \textbf{8\%} & \textbf{115\%} & -16\% & \textbf{357\%} \\
+\textbf{Impr. vs. Syn.} & \textbf{23\%}  &  &  \textbf{21.6\%} 	& \textbf{20.8\%}	& 3.7\%	& \textbf{74.7\% }  & \textbf{1030\%} & \textbf{2629\%} &	\textbf{188\%} & \textbf{936\%} &\textbf{ 1930\%} \\
 \hline
 %\textbf{Total \#Repairs} & (\%) & &  & 	& \\		
 %\hline
 \end{tabular}
-\label{tab:data-recovery}
+\label{tab:data-recovery-and-loss}
 %\vspace{-0.5cm}
-\end{table}
+\end{table*}
+
+
+
+%\begin{table}[!tbp]\centering
+%\caption{Data Loss (Levenshtein distance) of \approach vs. the state-of-the-art (ddmax), minimum data loss and significant percentage reduction (\% Red.) in data loss are in \textbf{bold}}
+%%\vspace{-0.5cm}
+%\begin{tabular}{|l | c | r  r  r  r |}
+%\hline
+%&  \multicolumn{5}{c|}{\textbf{Average Data Loss }}  \\
+%\textbf{Techniques} & \textbf{ALL} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+%\hline
+%\textbf{Lex. ddmax} & 18.0 & {10.2} &	61.6 &	\textbf{6.2} &	 7.5 \\	
+%\textbf{Syn. ddmax} & 119.6 &  258.1 & 82.7 &	76.6 &	33.3 \\
+%\textbf{\approach} & \textbf{10.6}  & \textbf{9.5} &	\textbf{28.7} &	7.4 & \textbf{1.6} \\
+%\hline
+%\textbf{\% Red. vs. Lex.} & \textbf{70\%} &  \textbf{8\%} & \textbf{115\%} & -16\% & \textbf{357\%} \\
+%\textbf{\% Red. vs. Syn.} & \textbf{1030\%} & \textbf{2629\%} &	\textbf{188\%} & \textbf{936\%} &\textbf{ 1930\%} \\
+%\hline
+%\end{tabular}
+%\label{tab:data-loss}
+%%\vspace{-0.5cm}
+%\end{table}
+
+
+
+%\begin{table}[!tbp]\centering
+%\caption{Data Recovery (file size difference) of \approach vs. %the best-performing state-of-the-art methods, i.e. 
+%lexical (Lex.) \ddmax and syntactic (Syn.) \ddmax. 
+%The highest data recovery performance are in bold, significant percentage improvement (Impr.) of \approach over the best baseline that is greater than five percent (>5\%) are also in bold.
+%}
+%%\vspace{-0.5cm}
+%\begin{tabular}{|l | c | r  r  r  r |}
+%\hline
+%&  \multicolumn{5}{c|}{\textbf{\% Data Recovered by Approach}}  \\
+%&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
+%\textbf{Techniques} & \textbf{Total} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+%\hline
+%%\textbf{Baseline}   & (\%) & &  & 	& \\
+%%\textbf{ANTLR} & (\%) & &  & 	& \\
+%\textbf{Lex. ddmax} & 81\% & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% \\			
+%\textbf{Syn. ddmax} & 74\% & 70.6\% & 81.5\%  & 97.0\%	& 47.0\% \\	
+%\hline
+%\textbf{\approach} & \textbf{91\%} & \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100.6\%} & \textbf{82.1\%} \\
+%\hline
+%\textbf{Impr. vs. Lex.} & 12\% & 0.1\%	& \textbf{19.8\%}	& 1.4\%	& \textbf{72.1\%} \\
+%\textbf{Impr. vs. Syn.} & \textbf{23\%} & \textbf{21.6\%} 	& \textbf{20.8\%}	& 3.7\%	& \textbf{74.7\% }\\
+%\hline
+%%\textbf{Total \#Repairs} & (\%) & &  & 	& \\		
+%%\hline
+%\end{tabular}
+%\label{tab:data-recovery}
+%%\vspace{-0.5cm}
+%\end{table}
 
 \noindent
 \textbf{\textit{Data Recovery:}} \todo{fix to new evaluation results} \todo{``100.6'' in \autoref{tab:data-recovery} is hard to justify, we need to remove insertions when computing this}	
@@ -2132,25 +2187,7 @@ loss is up to 26 times lower than that of ddmax (e.g., INI).
 \end{result}
 
 
-\begin{table}[!tbp]\centering
-\caption{Data Loss (Levenshtein distance) of \approach vs. the state-of-the-art (ddmax), minimum data loss and significant percentage reduction (\% Red.) in data loss are in \textbf{bold}}
-%\vspace{-0.5cm}
-\begin{tabular}{|l | c | r  r  r  r |}
-\hline
-&  \multicolumn{5}{c|}{\textbf{Average Data Loss }}  \\
-\textbf{Techniques} & \textbf{ALL} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-\hline
-\textbf{Lex. ddmax} & 18.0 & {10.2} &	61.6 &	\textbf{6.2} &	 7.5 \\	
-\textbf{Syn. ddmax} & 119.6 &  258.1 & 82.7 &	76.6 &	33.3 \\
-\textbf{\approach} & \textbf{10.6}  & \textbf{9.5} &	\textbf{28.7} &	7.4 & \textbf{1.6} \\
-\hline
-\textbf{\% Red. vs. Lex.} & \textbf{70\%} &  \textbf{8\%} & \textbf{115\%} & -16\% & \textbf{357\%} \\
-\textbf{\% Red. vs. Syn.} & \textbf{1030\%} & \textbf{2629\%} &	\textbf{188\%} & \textbf{936\%} &\textbf{ 1930\%} \\
-\hline
-\end{tabular}
-\label{tab:data-loss}
-%\vspace{-0.5cm}
-\end{table}
+
 
 
 %\noindent
@@ -2349,14 +2386,14 @@ These techniques employ operations such as insertion, deletion and replacement o
 In this work, we compare \approach to the recovery scheme of the ANTLR parser generator~\cite{parr2011ll} which leverages the input grammar to guide input repair. %Compared to \approach, t
 Unlike \approach which aims to fix an invalid input, these schemes need an input grammar, and aim to ensure the compiler does not halt while parsing. 
 
-\noindent
-\textbf{Data Analysis:} This is the process of analyzing (complex) database systems to remove noisy data, fill in missing data~\cite{xiong2006enhancing, hernandez1995merge}, or identify program errors caused by well-formed but incorrect data~\cite{mucslu2013data}. This challenge is often addressed %manually by allowing developers write and 
-applying logical rules on the database~\cite{pochampally2014fusing, galhardas2000ajax, golab2010data, jeffery2006pipelined, raman2001potter, luebbers2003systematic}. For instance, in continuous data testing (CDT)~\cite{mucslu2015preventing} warn users of test failures likely data errors by executing domain-specific test queries. % to .
-Likewise, \emph{DATAXRAY}~\cite{wang2015error} %also investigates the underlying conditions that cause data bugs, it0
-reveals hidden connections and common properties among data errors. In contrast to \approach which repairs raw user inputs, these approaches aim to %guard data from new errors by 
-detect or repair %ing 
-data errors in database systems. % during modification or repair database systems.
-%
+%\noindent
+%\textbf{Data Analysis:} This is the process of analyzing (complex) database systems to remove noisy data, fill in missing data~\cite{xiong2006enhancing, hernandez1995merge}, or identify program errors caused by well-formed but incorrect data~\cite{mucslu2013data}. This challenge is often addressed %manually by allowing developers write and 
+%applying logical rules on the database~\cite{pochampally2014fusing, galhardas2000ajax, golab2010data, jeffery2006pipelined, raman2001potter, luebbers2003systematic}. For instance, in continuous data testing (CDT)~\cite{mucslu2015preventing} warn users of test failures likely data errors by executing domain-specific test queries. % to .
+%Likewise, \emph{DATAXRAY}~\cite{wang2015error} %also investigates the underlying conditions that cause data bugs, it0
+%reveals hidden connections and common properties among data errors. In contrast to \approach which repairs raw user inputs, these approaches aim to %guard data from new errors by 
+%detect or repair %ing 
+%data errors in database systems. % during modification or repair database systems.
+%%
 %\noindent
 %\textbf{XX}
 %
