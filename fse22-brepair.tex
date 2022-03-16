@@ -1274,18 +1274,22 @@ repeated until the prefix string is marked \emph{complete} by the input
 processor.
 
 The sampling procedure attempts to discard redundant repairs so that the number
-of simultanious threads we have to maintain does not grow unbounded. While doing
+of simultaneous threads we have to maintain does not grow unbounded. While doing
 that, it ensures that no unique repairs are discarded. For
 example, given a JSON fragment \<[1,2> a repair of \<[1,23>, \<[1,24>
 and \<[1,25> are redunant but \<[1,2,> is unique because the last repair
 represents a change in semantics for the parser. The key insight here is to
 look at the \emph{extension} of a given string to classify whether it is unique
 or not. That is, given a string \<[1,2"x"]>, after repair of \<[1,23>, the next
-extension of the string is likely to be a comma or a digit insertin. However,
+extension of the string is likely to be a comma or a digit insertion. However,
 after \<[1,2,> the pending suffix can be used to extend the string resulting in
-\<[1,2,"x"]>. \recheck{Hence, we use the repairs conducted on a string, the
-length of the extended string, as well as the last character added as the
-uniqueness indicator.}\todo{@Lukas: does the new implementation contain this check? I cant remember this check in the old implementation of \approach?}
+\<[1,2,"x"]>.
+%\recheck{
+    Hence, we use the kind of repairs conducted on a string, the
+length of the prefix, as well as the last character added as the
+uniqueness indicator.
+%}
+%\todo{@Lukas: does the new implementation contain this check? I cant remember this check in the old implementation of \approach?} - Yes, it contains those checks: https://projects.cispa.saarland/lukas.kirschner/bfuzzerrepairer/-/blob/main/project/src/main/java/bfuzzerrepairer/program/repairer/brepair/BRepairRepairer.java#L628
 
 Unfortunately, using all repairs even after eliminating all redundant repairs
 can be rather time consuming. If this is the case, one can limit the repair
