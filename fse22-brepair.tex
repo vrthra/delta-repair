@@ -1325,30 +1325,26 @@ def filter_best(items):
 \newlength\ndist\setlength\ndist{.1\nodedst}
 \def\arrowsep{0.20cm}
 \begin{tikzpicture}[node distance=\nodedst]
-    \node[blockdiagramblock,font=\normalfont\scriptsize] (search) {Search longest incomplete prefix};
-    \node[blockdiagramblock,below=of search] (pop) {Pop element from PQ};
+    \node[blockdiagramblock,font=\normalfont\scriptsize] (search) {Bin. Search longest incomplete prefix};
+    \node[blockdiagramblock,below=of search] (pop) {Sample from PQ};
     \draw[blockdiagramarrow] (search) -- (pop) node[simpletext,pos=.5,right,font=\scriptsize] {Push PQ};
     \node[blockdiagramblock,below=of pop] (correct) {Input is correct?};
     \draw[blockdiagramarrow] (pop) -- (correct);
     \node[simpletext,below=.3 of correct] (return) {Return input};
-    \node[blockdiagramblock,right=1 of correct] (tryOrigInsert) {Insert from orig. input};
-    \node[blockdiagramblock,above=of tryOrigInsert] (tryDelete) {Delete from orig. input};
+    \node[blockdiagramblock,right=of correct] (tryDelete) {Delete from orig. input};
     \node[blockdiagramblock,above=of tryDelete] (tryNewInsert) {Insert Character};
     \draw[blockdiagramarrow] (correct) -- (return) node[simpletext,pos=.6,right] {\pass};
-    \draw[blockdiagramarrow] (correct) -- (tryOrigInsert) node[simpletext,pos=.4,above] {\fail};
-    \draw[blockdiagramarrow] ([xshift=-2 * \arrowsep]tryOrigInsert.south) to[out=270,in=315,looseness=0.6] node[simpletext,pos=.5,below,sloped,inner sep=1pt] {Incomplete?} ($(correct.south west) - (.3,.5)$) to[out=135,in=180,looseness=.6] (search);
-    \draw[blockdiagramarrow] (tryOrigInsert) -- (tryDelete);
+    \draw[blockdiagramarrow] (correct) -- (tryDelete);
     \draw[blockdiagramarrow] (tryDelete) -- (tryNewInsert);
-    \node[simpletext,right=.3 of tryDelete.east,inner sep=1pt] (pqins1) {push PQ};
-    \draw[blockdiagramarrow,dashed] (tryDelete) -- (pqins1);
-    \node[simpletext,right=.3 of tryNewInsert.east,inner sep=1pt] (pqins2) {push PQ};
-    \draw[blockdiagramarrow,dashed] (tryNewInsert) -- (pqins2);
+    \node[simpletext,right=.5 of tryDelete.east,inner sep=1pt] (pqins1) {increase bound,\\push to PQ};
+    \draw[blockdiagramarrow,dashed] (tryDelete) -- (pqins1) node[pos=.5,above] {\pass};
+    \node[simpletext,right=.5 of tryNewInsert.east,inner sep=1pt] (pqins2) {increase bound,\\push to PQ};
+    \draw[blockdiagramarrow,dashed] (tryNewInsert) -- (pqins2) node[pos=.5,above] {\pass};
     \draw[blockdiagramarrow] (tryNewInsert) to[out=180,in=0] (pop);
     \pic[] at (search.south east) {numbering=1};
     \pic[] at ([yshift=-3mm]correct.south east) {numbering=2};
-    \pic[] at (tryOrigInsert.south east) {numbering=3};
-    \pic[] at (tryDelete.south east) {numbering=4};
-    \pic[] at (tryNewInsert.south east) {numbering=5};
+    \pic[] at (tryDelete.south east) {numbering=3};
+    \pic[] at (tryNewInsert.south east) {numbering=4};
     %TODO
 \end{tikzpicture}
 % \vspace*{-0.1in}
