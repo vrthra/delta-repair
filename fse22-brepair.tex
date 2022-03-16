@@ -378,10 +378,13 @@ in terms of the set of repairs offered.
 \section{Introduction}
 \label{sec:intro}
 
-\todo{remember to say the meaning or derivation of the name \approach}
+
 Data, especially from external, often human sources need to be collected and
 aggregated before information processing algorithms can be run on it to extract
-insights~\cite{scaffidi2008accommodating}. \todo{add concrete example use case} Unfortunately, data sources may disagree on the format specification, %e.g.,
+insights~\cite{scaffidi2008accommodating}. %\todo{add concrete example use case} 
+For instance, \textit{data warehouses} collect and aggregate data from several %trusted and untrusted 
+sources. 
+Unfortunately, data sources may disagree on the format specification, %e.g.,
 %\recheck{
 consequently leading to different %variances in the
 implementations of the specification. %}.
@@ -571,7 +574,9 @@ As an example, consider the invalid input in \textit{row three} of \Cref{tab:ddm
 %rather than inserted. Hence by handling only spurious insertions, \ddmax misses
 %an important repair requirement.
 
-In this paper, we propose \brepair to address the %provide a solution that addresses these
+In this paper, we propose \brepair\footnote{\recheck{\brepair denotes "Fixing invalid input via input SYNTHesis".}}
+%\todo{remember to say the meaning or derivation of the name \approach}
+to address the %provide a solution that addresses these
 limitations of \ddmax via \textit{lightweight error-feedback and input synthesis}. The key insight of this approach is to complete \textit{semantic} repair of invalid inputs using lightweight failure feedback such as the \textit{validity, incompleteness and incorrectness} checks of input fragments. Given an invalid input and a conforming program, \approach performs test experiments of input subsets and candidate insertions to provide a set of repairs prioritized by the distance of the repair from the original input.
 Unlike \ddmax, \brepair does not have the implied assumption of independence of
 fragments. Hence, it does not face any limitation when given invalid inputs
@@ -650,7 +655,7 @@ valid repair: %newly constructed string: %\\
 %\\
 %\\
 %\noindent\textbf{Contributions.}
-\todo{we need to emphasize the main novelty here, i.e, first to do X, to the best of our knowledge }
+%\todo{we need to emphasize the main novelty here, i.e, first to do X, to the best of our knowledge }
 In this work, we % paper %We
 show that invalid inputs with rich structure can be repaired adequately if
 the input processor can provide at least some indication of progress.
@@ -665,36 +670,44 @@ provided by most parsers. %,
 %provide precise information as to the point at which the parse failed,
 %which
 %can be used directly in our algorithm.
-In the cases where parers do not provide
-this information, obtaining this information by external instrumentation is
-possible as demonstrated by Bj\"orn et al.~\cite{mathis2019parser}, or
+In the cases where parsers do not provide
+this information, it can be obtained
+%obtaining it %this information 
+by external instrumentation 
+%ispossible 
+as demonstrated by Bj\"orn et al.~\cite{mathis2019parser}, or 
 % If
 %the program is hard to instrument,
-adding such failure feedback to the parser % that we require
-is trivial.
+by modifying the parser to provide such failure feedback, as demonstrated in this work. 
+% to the parser. % that we require
+%is trivial.
 %not difficult.
 }
 %In our evaluation, u
-Using \recheck{806} (real-world) invalid inputs from four input formats, we show that %given input processors that can accurately
+
+\recheck{To the best of our knowledge, \approach is the \textit{first} approach to synergistically combine\textit{ lightweight failure feedback and input synthesis to repair invalid inputs}}. We evaluate \brepair using \recheck{806} (real-world) invalid inputs belonging to four well-known input formats (e.g., cJSON). % and TinyC). 
+Results show that %given input processors that can accurately
 %signal \emph{incompleteness} or \emph{incorrectness} and % when given
 %invalid inputs,
-\brepair is \recheck{X\%} more effective and \recheck{X\% more efficient} %can provide repairs that are more maximal
-than \ddmax.
+\brepair is highly effective (77\% repairs within four minutes), and it is up to \recheck{35\%} more effective than \ddmax.
+%and \recheck{X\% more efficient} %can provide repairs that are more maximal
+%than \ddmax.
 %, and correctly
 %pass the parser.
 Overall, this paper makes the following %technical
-contributions\todo{we need to stress some results here}:
+contributions: %\todo{we need to stress some results here}:
 \begin{itemize}
 \item \textbf{Repairing Rich Input Structures.} One of the major limitations of
 \ddmax is its inability to handle inputs with rich structure. We show that our
-\brepair technique can handle inputs with rich structure well.
+\brepair technique can repair inputs with rich structure, including multiple faults.
 \item \textbf{Input Synthesis.} \ddmax is limited to \emph{deletion} of input
 fragments, which makes it unsuitable for repairing errors due to omission and
 corruption. Our \brepair technique expands the repertoire to \emph{deletion},
 \emph{insertion}, and \emph{modification}.
 %\todo{discuss the repair to subset vs. insertion, refer to \Cref{sec:input-synthesis}}.
-\item \textbf{Lightweight Failure Feedback.} \brepair is the first technique
-tha shows how to use lightweight parser-error-feedback for input repair.
+\item \textbf{Lightweight Failure Feedback.} \brepair is the \textit{first} technique
+to demonstrate %hat shows 
+how to use lightweight parser-error-feedback (e.g., \textit{incomplete} checks) for input repair.
 %We propose \brepair which does not have these limitations. \todo{refer to \Cref{sec:brepair}}
  %	\item \textbf{}	
  %  \item We identify one of the major limitations to \ddmax -- the limitation due to rich struture, which can be fixed only by requiring additional constraints.
