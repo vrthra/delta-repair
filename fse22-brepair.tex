@@ -1962,7 +1962,7 @@ BRepair    191    158      121          154
 \caption{Venn Diagram showing the number of invalid inputs repaired (solely) by a (combinations of) technique(s) %, or the combination of approaches
 }
 \label{fig:repair-complementarity}
-\vspace{-0.4cm}
+%\vspace{-0.4cm}
 \end{figure}
 
 %\begin{figure}[!tbp]
@@ -2319,59 +2319,43 @@ Our approach (\approach) and empirical evaluations may be limited by the followi
 
 \section{Related Work}
 \label{sec:related_work}
-%TODO In this chapter, we discuss...
-
-\todo{refactor this section, looks to similar to ddmax, also add Infix paper ... }
-
-%\begin{description}
 
 \noindent
-\textbf{Input Rectification} is the process of transforming misbehaving inputs into inputs that behave predictably in the scope of a certain software system.
-    In \textit{Automatic Input Rectification}~\cite{Long:2012:AIR:2337223.2337233} and \emph{Living in the Comfort Zone}~\cite{Rinard:2007:LCZ:1297027.1297072}, input constraints are learned from valid inputs to solve this problem, which are used to transform malicious inputs into rectified inputs that satisfy learned constraints.
-    We do not employ such constraint learning techniques in \bfr.
-    Instead, we employ the knowledge of a grammar describing the input file format and the feedback of a subject program to transform the input files into an acceptable subset.
-    Instead of transforming inputs to comply to security-critical constraints, our goal is to recover as much of the input file as possible.
+\textbf{Black-box Input Repair:} 
+A few techniques have been proposed to analyze input data without program analysis, albeit with the aim of understanding and localizing faults in the program. The earliest works were either focused on simplifying failure-inducing inputs~\cite{zeller2002simplifying, clause2009penumbra}, or isolating fault-revealing input fragments~\cite{hierarchicalDD, sterling2007automated}. Notably, the minimizing delta debugging algorithm (\ddmin) is focused on reducing failure-inducing inputs in order to diagnose and localize faults in the program. More recently, Kirschner et al.~\cite{kirschner2020debugging} proposed a maximizing variant of the delta debugging algorithm (\ddmax) to repair invalid inputs to subsets via deletion, we compare \approach to \ddmax in this work. In contrast to \ddmax, \approach also synthesizes input elements to complete input repair. 
+
 
 \noindent
-\textbf{File Recovery} aims to recover files that cannot be opened with a subject program due to corruption.
-In \emph{S-DAGs}~\cite{scheffczyk2004s}, semantic consistency constraints are enforced on broken input files in a semi-automatic technique.
-\emph{Docovery}~\cite{docovery:ase14} takes a similar approach using symbolic execution to change broken inputs to take error-free paths in the subject program.
-While this is a whitebox approach that facilitates program analysis, \bfr relies on the feedback of the subject program in a black-box approach that results from executing the broken inputs.
+\textbf{White and Grey-box Input Repair:} Some techniques employ program analysis to fix invalid inputs. As an example, \emph{docovery}~\cite{docovery:ase14} applies symbolic execution to change broken inputs to take error-free paths in the subject program. Similarly, Ammann and Knight~\cite{data_diversity} proposed a method to transform invalid inputs into valid inputs by analyzing the region of the input causing the fault and changing those regions to avoid the fault. Unlike these methods, \approach 
+is black-box, it relies on the failure feedback of the subject program. 
+
 
 \noindent
-\textbf{Input Debugging}, in contrast to program debugging, aims to change inputs to localize faults in subject programs.
-    There is numerous work that focuses on simplifying failure-inducing inputs~\cite{zeller2002simplifying, clause2009penumbra, hierarchicalDD, sterling2007automated}.
-    Closely related to \bfr are particularly \cite{hierarchicalDD} and \cite{sterling2007automated}, which both aim to minimize the input files while still triggering a bug in the subject program, just like \ddmin.
-    In contrast, \bfr tries to maximize the inputs while avoiding to trigger the bug in the subject program.
+\textbf{Input Repair via Constraint Learning:} These approaches automatically learn input constraints then enforce the learned constraints to repair invalid inputs~\cite{hussain2010dynamic, Demsky:2006:IED:1146238.1146266} 
+These constraints are often extracted from valid inputs~\cite{Long:2012:AIR:2337223.2337233, Rinard:2007:LCZ:1297027.1297072}, specified with predicates~\cite{elkarablieh2008juzi}, model-based systems~\cite{Demsky:2003:ADR:949343.949314}, goal-directed reasoning~\cite{1553560}, dynamic symbolic execution~\cite{hussain2010dynamic} or invariants~\cite{Demsky:2006:IED:1146238.1146266}. For instance, \emph{S-DAGs}~\cite{scheffczyk2004s} enforce constraints on invalid inputs in a semi-automatic way. Unlike these approaches, \approach does not learn input constraints, it employs input synthesis and failure feedback to fix invalid inputs. 
 
 \noindent
-\textbf{Data Diversity} \cite{data_diversity} transforms a failure-inducing input into an input that can be processed by a subject program while generating the same output.
-Their approach analyzes which regions of the input cause the fault and changes those regions to avoid the fault.
-An important difference to \bfr is that we do not need any program analysis, but analyze the output of the subject program alone.
+\textbf{Parser-directed Input Repair:}
+This refers to the input repair schemes of parsers, interpreters and compilers~\cite{parr2011ll, diekmann2020dont, aho1972minimum, hammond1984survey, backhouse1979syntax}. 
+%In most of the syntactic recovery approaches, various different 
+These techniques employ operations such as insertion, deletion and replacement of symbols~\cite{anderson1981locally, cerecke2003locally, anderson1983assessment}, extending forward or backwards from a parser error~\cite{burke1982practical, mauney1982forward}, or more general methods of recovery and diagnosis~\cite{krawczyk1980error, aho1972minimum}. 
+In this work, we compare \approach to the recovery scheme of the ANTLR parser generator~\cite{parr2011ll} which leverages the input grammar to guide input repair. %Compared to \approach, t
+Unlike \approach which aims to fix an invalid input, these schemes need an input grammar, and aim to ensure the compiler does not halt while parsing. 
 
 \noindent
-\textbf{Data Structure Repair} iteratively fixes corrupted data structures by enforcing they conform to consistency constraints~\cite{Demsky:2003:ADR:949343.949314, 1553560, hussain2010dynamic, Demsky:2006:IED:1146238.1146266}.
-These constraints can be extracted, specified and enforced with predicates~\cite{elkarablieh2008juzi}, model-based systems~\cite{Demsky:2003:ADR:949343.949314}, goal-directed reasoning~\cite{1553560}, dynamic symbolic execution~\cite{hussain2010dynamic} or invariants~\cite{Demsky:2006:IED:1146238.1146266}.
-Similarly to our approach, one goal in data structure repair is to successfully execute a subject program on broken input files safely and acceptably.
-However, \bfr focuses on repairing inputs while recovering as much data as possible to avoid inducing faults in the subject program.
+\textbf{Data Analysis:} This is the process of analyzing (complex) database systems to remove noisy data, fill in missing data~\cite{xiong2006enhancing, hernandez1995merge}, or identify program errors caused by well-formed but incorrect data~\cite{mucslu2013data}. This challenge is often addressed %manually by allowing developers write and 
+applying logical rules on the database~\cite{pochampally2014fusing, galhardas2000ajax, golab2010data, jeffery2006pipelined, raman2001potter, luebbers2003systematic}. For instance, in continuous data testing (CDT)~\cite{mucslu2015preventing} warn users of test failures likely data errors by executing domain-specific test queries. % to .
+Likewise, \emph{DATAXRAY}~\cite{wang2015error} %also investigates the underlying conditions that cause data bugs, it0
+reveals hidden connections and common properties among data errors. In contrast to \approach which repairs raw user inputs, these approaches aim to %guard data from new errors by 
+detect or repair %ing 
+data errors in database systems. % during modification or repair database systems.
+%
+%\noindent
+%\textbf{XX}
+%
 
-\noindent
-\textbf{Syntactic Error Recovery} is the implementation of error recovery schemes, typically in parsers and compilers~\cite{hammond1984survey, backhouse1979syntax}.
-In most of the syntactic recovery approaches, various different techniques are employed, including insertion, deletion and replacement of symbols~\cite{anderson1981locally, cerecke2003locally, anderson1983assessment}, extending forward or backwards from a parser error~\cite{burke1982practical, mauney1982forward}, or more general methods of recovery and diagnosis~\cite{krawczyk1980error, aho1972minimum}.
-Different to \bfr, these schemes ensure the compiler does not halt while parsing, while our approach aims to fix the input inducing the failure.
 
-\noindent
-\textbf{Data Cleaning and Repair} is typically performed on complex database systems.
-In most approaches, this includes analyzing the database to remove noisy data or fill in missing data~\cite{xiong2006enhancing, hernandez1995merge}.
-In other approaches, developers are allowed to write and apply logical rules on the database~\cite{pochampally2014fusing, galhardas2000ajax, golab2010data, jeffery2006pipelined, raman2001potter, luebbers2003systematic}.
-While all of these approaches repair database systems, \bfr repairs raw user inputs.
 
-\noindent
-\textbf{Data Testing and Debugging} aims to identify program errors caused by well-formed but incorrect data while a user modifies a database~\cite{mucslu2013data}.
-In continuous data testing (CDT)~\cite{mucslu2015preventing}, likely data errors are identified by continuously executing domain-specfic test queries, in order to warn users of test failures.
-\emph{DATAXRAY}~\cite{wang2015error} also investigates the underlying conditions that cause data bugs, it reveals hidden connections and common properties among data errors.
-In contrast to \bfr, these approaches aim to guard data from new errors by detecting data errors in database systems during modification.
-%\end{description}
 
 \section{Conclusion}
 \label{sec:conclusion}
@@ -2391,7 +2375,7 @@ In contrast to \bfr, these approaches aim to guard data from new errors by detec
 % \end{acks}
 
 
-%\balance
+\balance
 %%
 %% The next two lines define the bibliography style to be used, and
 %% the bibliography file.
