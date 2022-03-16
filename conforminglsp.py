@@ -1,3 +1,4 @@
+from status import Status
 from subprocess import run
 import tempfile
 TESTED = {}
