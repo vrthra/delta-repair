@@ -1189,7 +1189,7 @@ modifications where $|\alpha|$ is the number of alphabets (characters) the
 language has, and $|S|$ is the length of the prefix.
 Hence, we allow the user to choose to toggle this option with
 \<LAST\_INSERT\_ONLY>. If the option is false, we will attempt repairs at any
-point in the prefix. If it is false, we will only attempt insertions at the end
+point in the prefix. If it is true, we will only attempt insertions at the end
 of the prefix.
 \begin{lstlisting}[caption=\brepair repairs,label={lst:repairs}]
 def insert_at(item, k, suffix)
@@ -2391,7 +2391,7 @@ In contrast to \bfr, these approaches aim to guard data from new errors by detec
 % \end{acks}
 
 
-\balance
+%\balance
 %%
 %% The next two lines define the bibliography style to be used, and
 %% the bibliography file.
