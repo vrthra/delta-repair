@@ -247,11 +247,12 @@ pics/numbering/.style args={#1}{code={
 \date{February 2022}
 
 \begin{abstract}
-Data cleansing and data repair are time-intensive tasks for developers, especially in fields that aggregate data from multiple resources (e.g., \recheck{data centers/warehouses}). Often times,
-input data may conform to a given input format, but can not be parsed by a conforming program, for instance, due to human error or data corruption.
+Data cleansing and data repair are time-consuming tasks for developers, especially in fields that aggregate data from multiple resources (e.g., \recheck{data centers/warehouses}). Often times,
+input data may ostensibly conform to a given input format, but cannot be parsed by a conforming program, for instance, due to human error or data corruption.
 In such cases, a data engineer has to manually repair the corrupt data such that
 it follows a given format, and hence it can be processed by the conforming program.
-Such manual repair can be time consuming, and error-prone.
+Such manual repair can be time consuming, and
+error-prone~\cite{scaffidi2008topes}.
 
 In this work, we show that incorporating light-weight error-feedback (e.g., input incompleteness)\todo{what is lightweight error-feedback?} to parsers
 is sufficient to repair any corrupt input data with maximal closeness to the
