@@ -6,7 +6,7 @@ import string
 import random
 import enum
 from pathlib import Path
-import conformingjson as conformingparser
+import conforminglsp as conformingparser
 from status import Status
 
 MAX_SIMULTANIOUS_CORRECTIONS = 5 # set it to a positive number to restrict the queue.
@@ -274,13 +274,13 @@ def check_is_incomplete(sval, i):
 
 def repair(inputval):
     assert check_is_incomplete(inputval, 0) # 1
-    assert not check_is_incomplete(inputval, len(inputval))
+    # assert not check_is_incomplete(inputval, len(inputval))
     # first do binary search to find the boundary
     # not a requirement. Extend item will do as well.
     boundary = binary_search(inputval, check=check_is_incomplete)
     c = inputval[boundary] # this should be the error causing char.
     assert check_is_incomplete(inputval, boundary)
-    assert not check_is_incomplete(inputval, boundary+1)
+    # assert not check_is_incomplete(inputval, boundary+1)
     return find_fixes(inputval, boundary)
 
 
