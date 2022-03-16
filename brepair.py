@@ -298,23 +298,6 @@ def main(inputval):
     print(f"Number of oracle runs required for fixing this input: {conformingparser.num_runs}")
 
 
-# '{ "ABCD":[*"1,2,3,4,5,6"]*}'
-# '{ "item": "Apple", "price": ***3.45 }'
-# '[**]'
-# '[**1]'
-# '[*1*]'
-# '{ "name": "Dave" "age": 42 }'
-INPUT = None
-try:
-    f = Path(sys.argv[1])
-    if f.is_file():
-        with f.open("r") as ff:
-             INPUT = ff.read()
-    else:
-        INPUT = sys.argv[1]
-except UnicodeDecodeError as e:
-    raise e
-
 TEST = False
 if TEST:
     bsearch_tests = {
@@ -333,4 +316,15 @@ if TEST:
         bs = binary_search(k, check=check_is_incomplete)
         assert k[bs] == t, f"Test '{k}' failed - Reported {k[bs]} ({bs}), but expected {t}"
 
-main(INPUT)
+INPUT = None
+if __name__ == '__main__':
+    try:
+        f = Path(sys.argv[1])
+        if f.is_file():
+            with f.open("r") as ff:
+                 INPUT = ff.read()
+        else:
+            INPUT = sys.argv[1]
+        main(INPUT)
+    except UnicodeDecodeError as e:
+        raise e
