@@ -6,8 +6,8 @@ import string
 import random
 import enum
 from pathlib import Path
-import conformingjson
-from conformingjson import Status
+import conformingjson as conformingparser
+from status import Status
 
 MAX_SIMULTANIOUS_CORRECTIONS = 5 # set it to a positive number to restrict the queue.
 
@@ -46,7 +46,7 @@ class Repair:
         return self.inputstr
 
     def test(self, mystr):
-        return validate_json(mystr)
+        return validate(mystr)
 
     def status(self):
         if self._status is not None: return self._status
@@ -246,7 +246,7 @@ def find_fixes(inputval, boundary):
     next_items = [Repair(inputval, boundary, extended=True)]
     edit_dist = 0
     while True:
-        conformingjson.FLAG = edit_dist
+        conformingparser.FLAG = edit_dist
         # fetch the first rank groups.
         current_items = next_items
         next_items = []
@@ -286,9 +286,9 @@ def repair(inputval):
 
 TESTED = {}
 
-def validate_json(input_str):
+def validate(input_str):
     if input_str in TESTED: return TESTED[input_str]
-    TESTED[input_str] = conformingjson.validate_json(input_str)
+    TESTED[input_str] = conformingparser.validate(input_str)
     return TESTED[input_str]
 
 def main(inputval):
@@ -298,7 +298,7 @@ def main(inputval):
         break  # Return only the first fix
     for fix in fixes:
         print('FIXED', repr(str(fix)))
-    print(f"Number of oracle runs required for fixing this input: {conformingjson.num_runs}")
+    print(f"Number of oracle runs required for fixing this input: {conformingparser.num_runs}")
 
 
 # '{ "ABCD":[*"1,2,3,4,5,6"]*}'
@@ -327,9 +327,9 @@ if TEST:
     '{ "item": "Apple", "price": ***3.45 }': '*',
     '{ "item": "Apple", "price": **3.45 }': '*',
     '[*1, *2]': '*',
-	'[**]': '*',
-	'[**1]': '*',
-	'[*1*]': '*',
+    '[**]': '*',
+    '[**1]': '*',
+    '[*1*]': '*',
     '{ "name": "Dave" "age": 42 }': '"',
     '{ "ABCD":[*"1,2,3,4,5,6"]*}': '*',
             }
