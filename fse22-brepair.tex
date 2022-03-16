@@ -7,6 +7,8 @@
 \newcommand{\mytitle}{Input Debugging via Rich %and Fast
 Failure Feedback}
 \renewcommand{\mytitle}{Repairing Inputs}
+\renewcommand{\mytitle}{Repairing Inputs with Input Synthesis}
+\renewcommand{\mytitle}{Repairing Inputs via Synthesis}
 
 
 \usepackage{listings}
@@ -249,7 +251,7 @@ pics/numbering/.style args={#1}{code={
 \date{February 2022}
 
 \begin{abstract}
-\todo{For the title, I'd definitely include ``synthesis'', as in ``Repairing Inputs with Input Synthesis'' -- AZ}
+\done{For the title, I'd definitely include ``synthesis'', as in ``Repairing Inputs with Input Synthesis'' -- AZ}
 Data cleansing and data repair are time-consuming tasks for developers, especially in fields that aggregate data from multiple resources (e.g., data warehousing). Often times,
 input data may ostensibly conform to a given input format, but cannot be parsed by a conforming program, for instance, due to human error or data corruption.
 In such cases, a data engineer has to manually repair the corrupt data such that
@@ -578,9 +580,10 @@ As an example, consider the invalid input in \textit{row three} of \Cref{tab:ddm
 %an important repair requirement.
 
 This paper introduces the \brepair approach\footnote{
-\recheck{\brepair denotes "Fixing invalid input via input SYNTHesis".}
+\recheck{\brepair denotes ``\underline{\textsc{F}}eedback-driven nput \underline{\textsc{SYNTH}}esis''}}
+%Fixing invalid input via input SYNTHesis".}
 % Feedback driven SYNThesis of repairs
-}
+%}
 %\todo{remember to say the meaning or derivation of the name \approach}
 to address the %provide a solution that addresses these
 limitations of \ddmax via \textit{lightweight error-feedback and input synthesis}. The key insight of this approach is to complete \textit{semantic} repair of invalid inputs using lightweight failure feedback such as the \textit{validity, incompleteness, and incorrectness} checks of input fragments. Given an invalid input and a conforming program, \approach performs test experiments of input subsets and candidate insertions to provide a set of repairs prioritized by the distance of the repair from the original input.
@@ -1526,6 +1529,9 @@ least number of repairs required to fix the input.
 %\vspace{-0.5cm}
 \end{table}
 
+
+
+
 \section{Experimental Setup}
 \label{sec:experimental-setup}
 
@@ -1549,7 +1555,7 @@ This section describes the experimental setup of this work.
 %Finally, before popping the next prefix from the queue, \brepair tries to append all characters to the prefix that do not cause the prefix to become \emph{incorrect}, also increasing the editing distance by 1 (\refnumber{5}).
 %
 %In this paper,
-We investigate the \textit{effectiveness} (RQ1), \textit{data recovery} (RQ2), 
+We investigate the \textit{data recovery} (RQ1), \textit{effectiveness} (RQ2), 
 %\textit{diagnostic quality} (RQ3) 
 and \textit{efficiency} (RQ3) of our approach using several well-designed experiments. %For each experiment, w
 We also examine how \approach compares to four state-of-the-art techniques, 
@@ -1564,21 +1570,10 @@ lexical and syntactic
 %we pose the following \textit{research questions} (RQ):
 % concerning the performance of \approach:
 
-\noindent\textbf{Research Questions:} We pose the following research questions:
-\begin{description}[wide, labelwidth=!, labelindent=0pt]
-  \item[RQ1: Effectiveness.]  %\& Efficiency:}
-How effective is our approach (\approach) in fixing invalid inputs? Is it as effective as the state-of-the-art methods?
-
-\item[RQ2: Data Recovery and Data Loss.]
-How much input data is recovered by \approach, and how much data loss is incurred?  Does \approach recover as much data as 
-the state-of-the-art methods?
-
-\item[RQ3: Efficiency.] What is the efficiency (i.e., time performance) of
-\approach? Is it as efficient as the state-of-the-art techniques?
-\end{description}
-
 \begin{table}[!tbp]\centering
-\caption{Details of Failure-inducing Inputs}
+\caption{Details of Invalid 
+%Failure-inducing 
+Inputs}
 \begin{tabular}{|l | r | r | r | r |}
 \hline
 &  \multicolumn{4}{c|}{\textbf{Number of Invalid Inputs}}  \\
@@ -1594,6 +1589,49 @@ the state-of-the-art methods?
 \label{tab:input-details}
 %\vspace{-0.5cm}
 \end{table}
+
+\begin{table*}[!tbp]\centering
+\caption{Data Recovery (file size difference) and Data Loss  (Levenshtein distance) of \approach vs. %the best-performing state-of-the-art methods, i.e. 
+lexical (Lex.) \ddmax and syntactic (Syn.) \ddmax. 
+The highest data recovery and lowest data loss are in bold, percentage improvement (Impr.) %or reduction (red.) 
+of \approach over the best baseline which are significant (i.e., greater than five percent (>5\%)) are also in bold.
+}
+%\vspace{-0.5cm}
+\begin{tabular}{|l | c |  r  r  r  r  | c |  r  r  r  r |}
+\hline
+ &  \multicolumn{5}{c|}{\textbf{\% Data Recovered by Approach}} &  \multicolumn{5}{c|}{\textbf{Average Data Loss }}  \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format} (\#inputs)}  &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format} (\#inputs)}  \\
+\textbf{Techniques} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+\textbf{Lex. ddmax} & 81\%  & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% & 18.0 & {10.2} &	61.6 &	\textbf{6.2} & 7.5 \\			
+\textbf{Syn. ddmax} & 74\%  &  70.6\% & 81.5\%  & 97.0\%	& 47.0\% & 119.6 &  258.1 & 82.7 &	76.6 &	33.3 \\	
+\hline
+\textbf{\approach} & \textbf{91\%}  &  \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100.6\%} & \textbf{82.1\%} & \textbf{10.6}  & \textbf{9.5} &	\textbf{28.7} &	7.4 & \textbf{1.6} \\
+\hline
+\textbf{Impr. vs. Lex.} & 12\% &  0.1\%	& \textbf{19.8\%}	& 1.4\%	& \textbf{72.1\%} & \textbf{70\%} &  \textbf{8\%} & \textbf{115\%} & -16\% & \textbf{357\%} \\
+\textbf{Impr. vs. Syn.} & \textbf{23\%}  &  \textbf{21.6\%} 	& \textbf{20.8\%}	& 3.7\%	& \textbf{74.7\% }  & \textbf{1030\%} & \textbf{2629\%} &	\textbf{188\%} & \textbf{936\%} &\textbf{ 1930\%} \\
+\hline
+%\textbf{Total \#Repairs} & (\%) & &  & 	& \\		
+%\hline
+\end{tabular}
+\label{tab:data-recovery-and-loss}
+%\vspace{-0.5cm}
+\end{table*}
+
+\noindent\textbf{Research Questions:} We pose the following research questions:
+\begin{description}[wide, labelwidth=!, labelindent=0pt]
+
+\item[RQ1: Data Recovery and Data Loss.]
+How much input data is recovered by \approach, and how much data loss is incurred?  Does \approach recover as much data as 
+the state-of-the-art methods?
+
+  \item[RQ2: Effectiveness.]  %\& Efficiency:}
+How effective is our approach (\approach) in fixing invalid inputs? Is it as effective as the state-of-the-art methods?
+
+\item[RQ3: Efficiency.] What is the efficiency (i.e., time performance) of
+\approach? Is it as efficient as the state-of-the-art techniques?
+\end{description}
+
 
 \noindent\textbf{Subject Programs:} %As subjects w
 We used four input formats and their corresponding programs. These are INI (INI), JSON (cJSON), S-Expressions (SExpParser) and TinyC (TinyC). Each program is moderately large (between 375 LOC to 3062 LOC), relatively mature (6 to 21 years old), and written in \<C>. Further details are provided in \Cref{tab:subject-programs}.
@@ -1778,7 +1816,94 @@ of our empirical evaluations.
 %\todo{RQ1: we need to discuss the number of repair attempts or input fragments tested for feedback for \approach versus ddmax}
 
 \noindent
-\textbf{RQ1 Effectiveness:} 
+\textbf{RQ1 Data Recovery and Data Loss:} 
+Let us investigate the amount of data recovered and lost by our approach (\approach), in comparison to
+the best-performing state-of-the-art method (\ddmax). 
+
+%\begin{table}[!tbp]\centering
+%\caption{Data Loss (Levenshtein distance) of \approach vs. the state-of-the-art (ddmax), minimum data loss and significant percentage reduction (\% Red.) in data loss are in \textbf{bold}}
+%%\vspace{-0.5cm}
+%\begin{tabular}{|l | c | r  r  r  r |}
+%\hline
+%&  \multicolumn{5}{c|}{\textbf{Average Data Loss }}  \\
+%\textbf{Techniques} & \textbf{ALL} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+%\hline
+%\textbf{Lex. ddmax} & 18.0 & {10.2} &	61.6 &	\textbf{6.2} &	 7.5 \\	
+%\textbf{Syn. ddmax} & 119.6 &  258.1 & 82.7 &	76.6 &	33.3 \\
+%\textbf{\approach} & \textbf{10.6}  & \textbf{9.5} &	\textbf{28.7} &	7.4 & \textbf{1.6} \\
+%\hline
+%\textbf{\% Red. vs. Lex.} & \textbf{70\%} &  \textbf{8\%} & \textbf{115\%} & -16\% & \textbf{357\%} \\
+%\textbf{\% Red. vs. Syn.} & \textbf{1030\%} & \textbf{2629\%} &	\textbf{188\%} & \textbf{936\%} &\textbf{ 1930\%} \\
+%\hline
+%\end{tabular}
+%\label{tab:data-loss}
+%%\vspace{-0.5cm}
+%\end{table}
+
+
+
+%\begin{table}[!tbp]\centering
+%\caption{Data Recovery (file size difference) of \approach vs. %the best-performing state-of-the-art methods, i.e. 
+%lexical (Lex.) \ddmax and syntactic (Syn.) \ddmax. 
+%The highest data recovery performance are in bold, significant percentage improvement (Impr.) of \approach over the best baseline that is greater than five percent (>5\%) are also in bold.
+%}
+%%\vspace{-0.5cm}
+%\begin{tabular}{|l | c | r  r  r  r |}
+%\hline
+%&  \multicolumn{5}{c|}{\textbf{\% Data Recovered by Approach}}  \\
+%&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
+%\textbf{Techniques} & \textbf{Total} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+%\hline
+%%\textbf{Baseline}   & (\%) & &  & 	& \\
+%%\textbf{ANTLR} & (\%) & &  & 	& \\
+%\textbf{Lex. ddmax} & 81\% & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% \\			
+%\textbf{Syn. ddmax} & 74\% & 70.6\% & 81.5\%  & 97.0\%	& 47.0\% \\	
+%\hline
+%\textbf{\approach} & \textbf{91\%} & \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100.6\%} & \textbf{82.1\%} \\
+%\hline
+%\textbf{Impr. vs. Lex.} & 12\% & 0.1\%	& \textbf{19.8\%}	& 1.4\%	& \textbf{72.1\%} \\
+%\textbf{Impr. vs. Syn.} & \textbf{23\%} & \textbf{21.6\%} 	& \textbf{20.8\%}	& 3.7\%	& \textbf{74.7\% }\\
+%\hline
+%%\textbf{Total \#Repairs} & (\%) & &  & 	& \\		
+%%\hline
+%\end{tabular}
+%\label{tab:data-recovery}
+%%\vspace{-0.5cm}
+%\end{table}
+
+\noindent
+\textbf{\textit{Data Recovery:}} 
+%\todo{fix to new evaluation results} \todo{``100.6'' in \autoref{tab:data-recovery} is hard to justify, we need to remove insertions when computing this}	
+%For a fair evaluation, % of data recovery, 
+We examine 474 inputs that were completely repaired by %all three approaches, i.e., 
+lexical \ddmax, syntactic \ddmax and \approach. \Cref{tab:data-recovery-and-loss} %and \recheck{Figure X
+highlights the amount of data %loss and data
+recovered and lost % achieved 
+by each approach. %, as average over each file. %Our evaluation r
+
+Our evaluation results show that \textit{\approach recovered up to 91\% of input data, on average. This is 23\% more than the most effective baseline (syntactic \ddmax).} For all four input formats, \approach recovered up to (75\%) more data than both variants of \ddmax. Consider TinyC, where \approach recovered 72 to 75\% more input data than \ddmax (\textit{see} \Cref{tab:data-recovery-and-loss}). These results suggest that \approach is more effective in recovering valid input data 
+than \ddmax.
+
+\noindent
+\textbf{\textit{Data Loss:}} To measure data loss, we compute the Levenshtein distance between repaired and invalid files using %Meanwhile, %For a balanced and tractable evaluation of data loss,
+%we employed the
+a set of 327 completely repaired inputs %by all three approaches which %(321) inputs that
+%which the Levenshtein distance implementation could compute %their edit distance
+where edit distance could be computed within a threshold of 750 edit distances (about 30 seconds).
+
+We found that \textit{\approach achieves a low data loss of about 11 edit distances,on avarage},  which is \textit{up to 10 times lower than (syntactic) \ddmax}. \Cref{tab:data-recovery-and-loss} shows that 
+%this result of this experiment. F
+for almost all input formats, \approach achieved a lower data loss than syntactic and lexical \ddmax (except for SExp). This better  performance is attributed to the lightweight failure feedback of \approach, which allows it to distinguish between incomplete and incorrect input fragments.
+
+\begin{result}
+\approach has a high data recovery rate (91\%, on average) and its data %The data recovery and
+loss is up to 26 times lower than that of ddmax (e.g., INI).
+\end{result}
+
+
+
+\noindent
+\textbf{RQ2 Effectiveness:} 
 %\Cref{tab:input-details} provides details of the %number of
 %%real-world and mutated
 %invalid inputs used for each input format.
@@ -1860,7 +1985,7 @@ the \textit{combination of failure feedback and input synthesis} is vital for th
 It repaired four out of five (77\% of) invalid inputs and it is %up to 
 8\% more effective than the best language-agnostic method (lexical \ddmax). %baseline.
 \end{result}
-\todo{8\% is not much, and only on average, too. This may not be the best opener, although the later results (specifically data loss) are impressive. -- AZ}
+\done{8\% is not much, and only on average, too. This may not be the best opener, although the later results (specifically data loss) are impressive. -- AZ}
 
 
 %\begin{table}[!tbp]\centering
@@ -2002,34 +2127,6 @@ BRepair    191    158      121          154
 %%\vspace{-0.5cm}
 %\end{table}
 
-\begin{table*}[!tbp]\centering
-\caption{Data Recovery (file size difference) and Data Loss  (Levenshtein distance) of \approach vs. %the best-performing state-of-the-art methods, i.e. 
-lexical (Lex.) \ddmax and syntactic (Syn.) \ddmax. 
-The highest data recovery and lowest data loss are in bold, percentage improvement (Impr.) %or reduction (red.) 
-of \approach over the best baseline which are significant (i.e., greater than five percent (>5\%)) are also in bold.
-}
-%\vspace{-0.5cm}
-\begin{tabular}{|l | c |  r  r  r  r  | c |  r  r  r  r |}
-\hline
- &  \multicolumn{5}{c|}{\textbf{\% Data Recovered by Approach}} &  \multicolumn{5}{c|}{\textbf{Average Data Loss }}  \\
-&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format} (\#inputs)}  &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format} (\#inputs)}  \\
-\textbf{Techniques} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-\hline
-\textbf{Lex. ddmax} & 81\%  & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% & 18.0 & {10.2} &	61.6 &	\textbf{6.2} & 7.5 \\			
-\textbf{Syn. ddmax} & 74\%  &  70.6\% & 81.5\%  & 97.0\%	& 47.0\% & 119.6 &  258.1 & 82.7 &	76.6 &	33.3 \\	
-\hline
-\textbf{\approach} & \textbf{91\%}  &  \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100.6\%} & \textbf{82.1\%} & \textbf{10.6}  & \textbf{9.5} &	\textbf{28.7} &	7.4 & \textbf{1.6} \\
-\hline
-\textbf{Impr. vs. Lex.} & 12\% &  0.1\%	& \textbf{19.8\%}	& 1.4\%	& \textbf{72.1\%} & \textbf{70\%} &  \textbf{8\%} & \textbf{115\%} & -16\% & \textbf{357\%} \\
-\textbf{Impr. vs. Syn.} & \textbf{23\%}  &  \textbf{21.6\%} 	& \textbf{20.8\%}	& 3.7\%	& \textbf{74.7\% }  & \textbf{1030\%} & \textbf{2629\%} &	\textbf{188\%} & \textbf{936\%} &\textbf{ 1930\%} \\
-\hline
-%\textbf{Total \#Repairs} & (\%) & &  & 	& \\		
-%\hline
-\end{tabular}
-\label{tab:data-recovery-and-loss}
-%\vspace{-0.5cm}
-\end{table*}
-
 \noindent \textbf{\textit{Complementarity to \ddmax:}} We further inspect the unique repairs achieved by each approach, in order to understand the complementarity of our approach to the state-of-the-art methods. In this experiment, we inspect the number of unique repairs achieved \textit{solely} by a single approach (e.g., \textit{only} \approach), or two or more approaches (e.g., all approaches). 
 %The goal is to determine if there are unique sets of inputs that are solely repaired by a single approach, and not by other approaches. 
 \Cref{fig:repair-complementarity} highlights our findings. 
@@ -2081,96 +2178,6 @@ up to five times
 as much as \ddmax.
 \end{result}
 
-\noindent
-\textbf{RQ2 Data Recovery and Data Loss:} 
-Let us investigate the amount of data recovered and lost by our approach (\approach), in comparison to
-the best-performing state-of-the-art method (\ddmax). 
-
-
-
-
-
-
-
-%\begin{table}[!tbp]\centering
-%\caption{Data Loss (Levenshtein distance) of \approach vs. the state-of-the-art (ddmax), minimum data loss and significant percentage reduction (\% Red.) in data loss are in \textbf{bold}}
-%%\vspace{-0.5cm}
-%\begin{tabular}{|l | c | r  r  r  r |}
-%\hline
-%&  \multicolumn{5}{c|}{\textbf{Average Data Loss }}  \\
-%\textbf{Techniques} & \textbf{ALL} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-%\hline
-%\textbf{Lex. ddmax} & 18.0 & {10.2} &	61.6 &	\textbf{6.2} &	 7.5 \\	
-%\textbf{Syn. ddmax} & 119.6 &  258.1 & 82.7 &	76.6 &	33.3 \\
-%\textbf{\approach} & \textbf{10.6}  & \textbf{9.5} &	\textbf{28.7} &	7.4 & \textbf{1.6} \\
-%\hline
-%\textbf{\% Red. vs. Lex.} & \textbf{70\%} &  \textbf{8\%} & \textbf{115\%} & -16\% & \textbf{357\%} \\
-%\textbf{\% Red. vs. Syn.} & \textbf{1030\%} & \textbf{2629\%} &	\textbf{188\%} & \textbf{936\%} &\textbf{ 1930\%} \\
-%\hline
-%\end{tabular}
-%\label{tab:data-loss}
-%%\vspace{-0.5cm}
-%\end{table}
-
-
-
-%\begin{table}[!tbp]\centering
-%\caption{Data Recovery (file size difference) of \approach vs. %the best-performing state-of-the-art methods, i.e. 
-%lexical (Lex.) \ddmax and syntactic (Syn.) \ddmax. 
-%The highest data recovery performance are in bold, significant percentage improvement (Impr.) of \approach over the best baseline that is greater than five percent (>5\%) are also in bold.
-%}
-%%\vspace{-0.5cm}
-%\begin{tabular}{|l | c | r  r  r  r |}
-%\hline
-%&  \multicolumn{5}{c|}{\textbf{\% Data Recovered by Approach}}  \\
-%&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
-%\textbf{Techniques} & \textbf{Total} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-%\hline
-%%\textbf{Baseline}   & (\%) & &  & 	& \\
-%%\textbf{ANTLR} & (\%) & &  & 	& \\
-%\textbf{Lex. ddmax} & 81\% & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% \\			
-%\textbf{Syn. ddmax} & 74\% & 70.6\% & 81.5\%  & 97.0\%	& 47.0\% \\	
-%\hline
-%\textbf{\approach} & \textbf{91\%} & \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100.6\%} & \textbf{82.1\%} \\
-%\hline
-%\textbf{Impr. vs. Lex.} & 12\% & 0.1\%	& \textbf{19.8\%}	& 1.4\%	& \textbf{72.1\%} \\
-%\textbf{Impr. vs. Syn.} & \textbf{23\%} & \textbf{21.6\%} 	& \textbf{20.8\%}	& 3.7\%	& \textbf{74.7\% }\\
-%\hline
-%%\textbf{Total \#Repairs} & (\%) & &  & 	& \\		
-%%\hline
-%\end{tabular}
-%\label{tab:data-recovery}
-%%\vspace{-0.5cm}
-%\end{table}
-
-\noindent
-\textbf{\textit{Data Recovery:}} 
-%\todo{fix to new evaluation results} \todo{``100.6'' in \autoref{tab:data-recovery} is hard to justify, we need to remove insertions when computing this}	
-%For a fair evaluation, % of data recovery, 
-We examine 474 inputs that were completely repaired by %all three approaches, i.e., 
-lexical \ddmax, syntactic \ddmax and \approach. \Cref{tab:data-recovery-and-loss} %and \recheck{Figure X
-highlights the amount of data %loss and data
-recovered and lost % achieved 
-by each approach. %, as average over each file. %Our evaluation r
-
-Our evaluation results show that \textit{\approach recovered up to 91\% of input data, on average. This is 23\% more than the most effective baseline (syntactic \ddmax).} For all four input formats, \approach recovered up to (75\%) more data than both variants of \ddmax. Consider TinyC, where \approach recovered 72 to 75\% more input data than \ddmax (\textit{see} \Cref{tab:data-recovery-and-loss}). These results suggest that \approach is more effective in recovering valid input data 
-than \ddmax.
-
-\noindent
-\textbf{\textit{Data Loss:}} To measure data loss, we compute the Levenshtein distance between repaired and invalid files using %Meanwhile, %For a balanced and tractable evaluation of data loss,
-%we employed the
-a set of 327 completely repaired inputs %by all three approaches which %(321) inputs that
-%which the Levenshtein distance implementation could compute %their edit distance
-where edit distance could be computed within a threshold of 750 edit distances (about 30 seconds).
-
-We found that \textit{\approach achieves a low data loss of about 11 edit distances,on avarage},  which is \textit{up to 10 times lower than (syntactic) \ddmax}. \Cref{tab:data-recovery-and-loss} shows that 
-%this result of this experiment. F
-for almost all input formats, \approach achieved a lower data loss than syntactic and lexical \ddmax (except for SExp). This better  performance is attributed to the lightweight failure feedback of \approach, which allows it to distinguish between incomplete and incorrect input fragments.
-
-\begin{result}
-\approach has a high data recovery rate (91\%, on average) and its data %The data recovery and
-loss is up to 26 times lower than that of ddmax (e.g., INI).
-\end{result}
 
 
 
