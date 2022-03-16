@@ -1192,7 +1192,7 @@ Hence, we allow the user to choose to toggle this option with
 point in the prefix. If it is true, we will only attempt insertions at the end
 of the prefix.
 \begin{lstlisting}[caption=\brepair repairs,label={lst:repairs}]
-def insert_at(item, k, suffix)
+def insert_at(item, k, i, suffix)
     v = (item.inputstr[:k] + i +
         item.inputstr[k:item.boundary] + suffix)
     new_item = Repair(v, k, mask='%s_I%d' % (item.mask, k))
@@ -1205,12 +1205,12 @@ def insert_char(item, i):
     suffix = item.inputstr[item.boundary:]
     return_lst = []
     if LAST_INSERT_ONLY:
-        v = insert_at(item, item.boundary, suffix)
-        if v: return_lst.append(ie)
+        v = insert_at(item, item.boundary, i, suffix)
+        if v is not None: return_lst.append(v)
     else:
         for k in range(item.boundary):
-            v = insert_at(item, k, suffix)
-            if v: return_lst.append(ie)
+            v = insert_at(item, k, i, suffix)
+            if v is not None: return_lst.append(v)
     return return_lst
 
 def apply_insert(item):
@@ -1675,6 +1675,8 @@ namely \textit{lexical \ddmax} and \textit{syntactic \ddmax}.
 
 
 \subsubsection*{\bf Implementation Details:}
+We implemented the test infrastructure in about 12k LOC of Java code, \approach was implemented in 765 lines of Java code.
+All subject programs needed to be modified slightly to provide the required incompleteness feedback (cf. \Cref{tab:subject-programs}).
 
 \subsubsection*{\bf Platform:} All experiments were conducted
 %the experiments
@@ -1684,7 +1686,12 @@ and 32GB of RAM, specifically an AMD Ryzen 5600X @ 3.70GHz, 12~virtual cores, ru
 %\noindent
 %\textbf{
 
-\subsubsection*{\bf Research Protocol:}\todo{we should mention the four minute timeout here ... }
+\subsubsection*{\bf Research Protocol:}
+We first collect a large corpus of files which we split into a set of 50 correct files and a set of real-world invalid files.
+The correct files are mutated using single and up to 16 multiple mutations (random insertions, deletions and byte-flips), which results in the files shown in \Cref{tab:input-details}.
+Then, we run each repair technique on each file and collect the required data, i.e. the run time, number of oracle runs, Levenshtein distance and repair status of each file.
+As repair techniques, we report the \emph{Baseline} (the built-in error recovery strategy of the subject program), the error recovery strategy of \emph{ANTLR}, \ddmax and \ddmaxg and \approach.
+All experiments were conducted within a timeout of four minutes per repair technique per file.
 
 
 
@@ -2074,13 +2081,13 @@ The highest data recovery performance are in bold, significant percentage improv
 \hline
 %\textbf{Baseline}   & (\%) & &  & 	& \\
 %\textbf{ANTLR} & (\%) & &  & 	& \\
-\textbf{Lex. ddmax} & 86\% & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% \\			
-\textbf{Syn. ddmax} & 72\% & 70.6\% & 81.5\%  & 97.0\%	& 47.0\% \\	
+\textbf{Lex. ddmax} & 81\% & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% \\			
+\textbf{Syn. ddmax} & 74\% & 70.6\% & 81.5\%  & 97.0\%	& 47.0\% \\	
 \hline
-\textbf{\approach} & \textbf{87\%} & \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100.6\%} & \textbf{82.1\%} \\
+\textbf{\approach} & \textbf{91\%} & \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100.6\%} & \textbf{82.1\%} \\
 \hline
-\textbf{Impr. vs. Lex.} & 1\% & 0.1\%	& \textbf{19.8\%}	& 1.4\%	& \textbf{72.1\%} \\
-\textbf{Impr. vs. Syn.} & \textbf{21\%} & \textbf{21.6\%} 	& \textbf{20.8\%}	& 3.7\%	& \textbf{74.7\% }\\
+\textbf{Impr. vs. Lex.} & 12\% & 0.1\%	& \textbf{19.8\%}	& 1.4\%	& \textbf{72.1\%} \\
+\textbf{Impr. vs. Syn.} & \textbf{23\%} & \textbf{21.6\%} 	& \textbf{20.8\%}	& 3.7\%	& \textbf{74.7\% }\\
 \hline
 %\textbf{Total \#Repairs} & (\%) & &  & 	& \\		
 %\hline
@@ -2096,7 +2103,7 @@ We examine 474 inputs that were completely repaired by %all three approaches, i.
 lexical \ddmax, syntactic \ddmax and \approach. \Cref{tab:data-recovery} %and \recheck{Figure X
 highlights the amount of data %loss and data
 recovered % achieved 
-by each approach. %Our evaluation r
+by each approach, as average over each file. %Our evaluation r
 
 Our evaluation results show that \textit{\approach recovered up to 84\% of input data and which is 16\% more than the most effective baseline (syntactic \ddmax). } %Notably, f
 For most (three out of four) input formats, \approach recovered up to (74\%) more data than both variants of \ddmax. 
@@ -2133,9 +2140,9 @@ loss is up to 26 times lower than that of ddmax (e.g., INI).
 &  \multicolumn{5}{c|}{\textbf{Average Data Loss }}  \\
 \textbf{Techniques} & \textbf{ALL} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
 \hline
-\textbf{Lex. ddmax} & 18.0 & \textbf{10.2} &	61.6 &	\textbf{6.2} &	 7.5 \\	
+\textbf{Lex. ddmax} & 18.0 & {10.2} &	61.6 &	\textbf{6.2} &	 7.5 \\	
 \textbf{Syn. ddmax} & 119.6 &  258.1 & 82.7 &	76.6 &	33.3 \\
-\textbf{\approach} & \textbf{10.6}  & 9.5 &	\textbf{28.7} &	7.4 & \textbf{1.6} \\
+\textbf{\approach} & \textbf{10.6}  & \textbf{9.5} &	\textbf{28.7} &	7.4 & \textbf{1.6} \\
 \hline
 \textbf{\% Red. vs. Lex.} & \textbf{70\%} &  \textbf{8\%} & \textbf{115\%} & -16\% & \textbf{357\%} \\
 \textbf{\% Red. vs. Syn.} & \textbf{1030\%} & \textbf{2629\%} &	\textbf{188\%} & \textbf{936\%} &\textbf{ 1930\%} \\
