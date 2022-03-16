@@ -1675,6 +1675,8 @@ namely \textit{lexical \ddmax} and \textit{syntactic \ddmax}.
 
 
 \subsubsection*{\bf Implementation Details:}
+We implemented the test infrastructure in about 12k LOC of Java code, \approach was implemented in 765 lines of Java code.
+All subject programs needed to be modified slightly to provide the required incompleteness feedback (cf. \Cref{tab:subject-programs}).
 
 \subsubsection*{\bf Platform:} All experiments were conducted
 %the experiments
@@ -1684,7 +1686,12 @@ and 32GB of RAM, specifically an AMD Ryzen 5600X @ 3.70GHz, 12~virtual cores, ru
 %\noindent
 %\textbf{
 
-\subsubsection*{\bf Research Protocol:}\todo{we should mention the four minute timeout here ... }
+\subsubsection*{\bf Research Protocol:}
+We first collect a large corpus of files which we split into a set of 50 correct files and a set of real-world invalid files.
+The correct files are mutated using single and up to 16 multiple mutations (random insertions, deletions and byte-flips), which results in the files shown in \Cref{tab:input-details}.
+Then, we run each repair technique on each file and collect the required data, i.e. the run time, number of oracle runs, Levenshtein distance and repair status of each file.
+As repair techniques, we report the \emph{Baseline} (the built-in error recovery strategy of the subject program), the error recovery strategy of \emph{ANTLR}, \ddmax and \ddmaxg and \approach.
+All experiments were conducted within a timeout of four minutes per repair technique per file.
 
 
 
