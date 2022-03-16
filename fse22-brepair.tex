@@ -7,6 +7,7 @@
 \newcommand{\mytitle}{Input Debugging via Rich %and Fast
 Failure Feedback}
 \renewcommand{\mytitle}{Repairing Inputs}
+% Consider "Repairing Inputs with Input Synthesis" -- AZ
 
 
 \usepackage{listings}
@@ -574,7 +575,10 @@ As an example, consider the invalid input in \textit{row three} of \Cref{tab:ddm
 %rather than inserted. Hence by handling only spurious insertions, \ddmax misses
 %an important repair requirement.
 
-In this paper, we propose \brepair\footnote{\recheck{\brepair denotes "Fixing invalid input via input SYNTHesis".}}
+In this paper, we propose \brepair\footnote{
+\recheck{\brepair denotes "Fixing invalid input via input SYNTHesis".}
+% Feedback driven SYNThesis of repairs
+}
 %\todo{remember to say the meaning or derivation of the name \approach}
 to address the %provide a solution that addresses these
 limitations of \ddmax via \textit{lightweight error-feedback and input synthesis}. The key insight of this approach is to complete \textit{semantic} repair of invalid inputs using lightweight failure feedback such as the \textit{validity, incompleteness and incorrectness} checks of input fragments. Given an invalid input and a conforming program, \approach performs test experiments of input subsets and candidate insertions to provide a set of repairs prioritized by the distance of the repair from the original input.
@@ -1341,26 +1345,27 @@ def filter_best(items):
 \newlength\ndist\setlength\ndist{.1\nodedst}
 \def\arrowsep{0.20cm}
 \begin{tikzpicture}[node distance=\nodedst]
-    \node[blockdiagramblock] (search) {Find parse boundary};
-    \node[blockdiagramblock,below=of search] (pop) {Sample from PQ};
-    \draw[blockdiagramarrow] (search) -- (pop) node[simpletext,pos=.5,right,font=\scriptsize] {Push PQ};
+    \node[blockdiagramblock] (search) {Find parse boundary (Search)};
+    \node[blockdiagramblock,below=of search] (pop) {Select Repair Thread};
+    \draw[blockdiagramarrow] (search) -- (pop) node[simpletext,pos=.5,right,font=\scriptsize] {}; % PushPQ
     \node[blockdiagramblock,below=of pop] (correct) {Input is correct?};
     \draw[blockdiagramarrow] (pop) -- (correct);
     \node[simpletext,below=.3 of correct] (return) {Return input};
-    \node[blockdiagramblock,right=of correct] (tryDelete) {Delete from orig. input};
-    \node[blockdiagramblock,above=of tryDelete] (tryNewInsert) {Insert Character};
+    \node[blockdiagramblock,right=of correct] (tryDelete) {Apply Repairs};
+    \node[blockdiagramblock,above=of tryDelete] (tryNewInsert) {Extend Threads};
     \draw[blockdiagramarrow] (correct) -- (return) node[simpletext,pos=.6,right] {\pass};
     \draw[blockdiagramarrow] (correct) -- (tryDelete);
     \draw[blockdiagramarrow] (tryDelete) -- (tryNewInsert);
-    \node[simpletext,right=.5 of tryDelete.east,inner sep=1pt] (pqins1) {increase bound,\\push to PQ};
-    \draw[blockdiagramarrow,dashed] (tryDelete) -- (pqins1) node[pos=.5,above] {\pass};
-    \node[simpletext,right=.5 of tryNewInsert.east,inner sep=1pt] (pqins2) {increase bound,\\push to PQ};
-    \draw[blockdiagramarrow,dashed] (tryNewInsert) -- (pqins2) node[pos=.5,above] {\pass};
+    %\node[simpletext,right=.5 of tryDelete.east,inner sep=1pt] (pqins1) {increase bound,\\push to PQ};
+    %\draw[blockdiagramarrow,dashed] (tryDelete) -- (pqins1) node[pos=.5,above] {\pass};
+    %\node[simpletext,right=.5 of tryNewInsert.east,inner sep=1pt] (pqins2) {increase bound,\\push to PQ};
+    %\draw[blockdiagramarrow,dashed] (tryNewInsert) -- (pqins2) node[pos=.5,above] {\pass};
     \draw[blockdiagramarrow] (tryNewInsert) to[out=180,in=0] (pop);
     \pic[] at (search.south east) {numbering=1};
-    \pic[] at ([yshift=-3mm]correct.south east) {numbering=2};
-    \pic[] at (tryDelete.south east) {numbering=3};
-    \pic[] at (tryNewInsert.south east) {numbering=4};
+    \pic[] at ([yshift=-3mm]correct.south east) {numbering=5};
+    \pic[] at (tryDelete.south east) {numbering=2};
+    \pic[] at (pop.south east) {numbering=4};
+    \pic[] at (tryNewInsert.south east) {numbering=3};
     %TODO
 \end{tikzpicture}
 % \vspace*{-0.1in}
@@ -1442,9 +1447,10 @@ result, and repairs set to empty.
 deletion and insertion repairs. A single deletion results in a single repair
 thread which is an extenion of the original repair thread.
 An insertion however, results in multiple repair threads corresponding to the
-number of characters at that index that results in a diffrent parse boundary from
-the old.
-
+number of characters.
+\item \emph{Extention.} For each thread that results from repair, extend the thread
+until the new parse boundary. For threads resulting from insertion, keep only
+those threads that results in a diffrent parse boundary from the old.
 \item \emph{Selection.} We remove any redundant repair threads, and choose the best threads if a
 selection criterion is supplied.
 
