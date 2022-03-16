@@ -41,10 +41,6 @@ class Repair:
         self.mask = mask
         self._status = None
 
-    def full_input(self) -> str:
-        """Return the full input, ignoring the boundary"""
-        return self.inputstr
-
     def test(self, mystr):
         return validate(mystr)
 
