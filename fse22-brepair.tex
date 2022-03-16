@@ -247,11 +247,12 @@ pics/numbering/.style args={#1}{code={
 \date{February 2022}
 
 \begin{abstract}
-Data cleansing and data repair are time-intensive tasks for developers, especially in fields that aggregate data from multiple resources (e.g., \recheck{data centers/warehouses}). Often times,
-input data may conform to a given input format, but can not be parsed by a conforming program, for instance, due to human error or data corruption.
+Data cleansing and data repair are time-consuming tasks for developers, especially in fields that aggregate data from multiple resources (e.g., \recheck{data centers/warehouses}). Often times,
+input data may ostensibly conform to a given input format, but cannot be parsed by a conforming program, for instance, due to human error or data corruption.
 In such cases, a data engineer has to manually repair the corrupt data such that
 it follows a given format, and hence it can be processed by the conforming program.
-Such manual repair can be time consuming, and error-prone.
+Such manual repair can be time consuming, and
+error-prone.
 
 In this work, we show that incorporating light-weight error-feedback (e.g., input incompleteness)\todo{what is lightweight error-feedback?} to parsers
 is sufficient to repair any corrupt input data with maximal closeness to the
@@ -379,7 +380,7 @@ in terms of the set of repairs offered.
 \todo{remember to say the meaning or derivation of the name \approach}
 Data, especially from external, often human sources need to be collected and
 aggregated before information processing algorithms can be run on it to extract
-insights. \todo{add concrete example use case} Unfortunately, data sources may disagree on the format specification, %e.g.,
+insights~\cite{scaffidi2008accommodating}. \todo{add concrete example use case} Unfortunately, data sources may disagree on the format specification, %e.g.,
 %\recheck{
 consequently leading to different %variances in the
 implementations of the specification. %}.
@@ -393,7 +394,8 @@ provide slightly different interpretation of the \<C> language.
 Hence, it is often impossible to process an input artifact that was generated for
 a different implementation. % in mind.
 Another issue is that many such artifacts
-are created by hand, and the process of manual generation can be error-prone.
+are created by hand, and the process of manual generation can be
+error-prone~\cite{scaffidi2008topes,mucslu2015preventing}.
 
 Given such inputs that are \emph{almost} but \emph{not quite} parsable,
 consuming such resources, and aggregating them often involves trying to
@@ -417,8 +419,10 @@ place, which completely captures the intended structure.
 However, %the formal grammar
 \textit{this assumption may not hold in practice} due to several reasons.
 Firstly, %or stance,
-certain input formats (e.g., markdown~\cite{gruber2004markdown}) do not have
-an official formal grammar specification.
+certain input formats (e.g., URL standard from WHATWG~\cite{whatwgurl}) may not have
+an official formal grammar specification. Others may have numerous standards
+(e.g., markdown~\cite{gruber2004markdown}), any of which may be followed by the
+artifact in question.
 %how do you mean? this is not true, there are markdown grammars, ANTLR also has
 %one, Nikolas used some in his Tribble eval too.};
 Documents in languages (such as \<C>) can contain semantic
@@ -434,14 +438,14 @@ be suboptimal for fixing error corruption in practice.
 %the number of columns may be fixed, or because such a grammar is unavailable
 %(as in the case of markdown)
 
-In circumstances where one can not rely on a base grammar, the only option so far
+In circumstances where one cannot rely on a base grammar, the only option so far
 has been \textit{lexical} \ddmax~\cite{kirschner2020debugging}. \ddmax works similar to
 delta-debugging~\cite{zeller2002simplifying}, but in reverse. The idea
 is that given a corrupt input which induces a parse error, and a way to
 decompose the input into independent fragments (called deltas), one can
 successively minimize the parse-error inducing part of the input resulting in a
 maximal parsing input.
-More importantly, \citet{kirschner2020debugging} demonstrates the prevalence of invalid inputs and the importance of input repair in practice. % without grammars or program analysis.
+More importantly, \citet{kirschner2020debugging} and \citet{scaffidi2008topes} demonstrate the prevalence of invalid inputs and the importance of input repair in practice. % without grammars or program analysis.
 %using \ddmax. %}.
 
 
@@ -487,7 +491,7 @@ Notably, two major \ddmax limitations include its (1) \textit{limited repair ope
 %the following
 %() \textit{\ddmax}
 %
-%() \textit{\ddmax repairs are limited to input subsets}, thus it can not complete repairs that require inserting new input structure (see example \recheck{X in Table X}),
+%() \textit{\ddmax repairs are limited to input subsets}, thus it cannot complete repairs that require inserting new input structure (see example \recheck{X in Table X}),
 %() \textit{\ddmax may not completely repair invalid input containing multiple faults}  (e.g., example \recheck{X in Table X}),
 %
 %
@@ -818,7 +822,7 @@ smaller and smaller fragments, none of which isolates an error that when
 removed, results in the solution \letterboxed{123456} with %which clearly has suffered
 significant data loss, including the loss of structure and change in
 input fragment type from string to number.
-Hence, \ddmax can not effectively repair inputs containing multiple faults.
+Hence, \ddmax cannot effectively repair inputs containing multiple faults.
 
 \subsection{Effect of input decomposition}
 Unfortunately \ddmax can produce non-optimal results even when the errors are
@@ -857,7 +861,7 @@ $\cfail \cup \Delta_1$=\letterboxed{]} \fail \\
 \item The solution is $\emptyset$.
 \end{enumerate}
 
-That is, this particular invalid JSON string also can not be repaired by \ddmax.
+That is, this particular invalid JSON string also cannot be repaired by \ddmax.
 As in the previous case, the data loss can be severe.
 Consider
 \letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\ \}} in
@@ -1430,7 +1434,8 @@ the old.
 selection criterion is supplied.
 
 \item \emph{Final Fix.} We then iteratively choose each thread and continue making repairs
-until the parser output changes from \emph{incomplete} to \emph{incorrect}.
+until the parser output at the boundary changes from \emph{incomplete} to
+\emph{complete}.
 \end{enumerate}
 
 The output of the algorithm is a set of repair threads each of which fixes the
@@ -2357,7 +2362,7 @@ Unlike \approach which aims to fix an invalid input, these schemes need an input
 % \end{acks}
 
 
-\balance
+%\balance
 %%
 %% The next two lines define the bibliography style to be used, and
 %% the bibliography file.

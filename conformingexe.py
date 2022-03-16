@@ -3,7 +3,7 @@ from subprocess import run
 import tempfile
 TESTED = {}
 FLAG = ''
-EXE = './sexp'
+EXE = None
 
 num_runs: int = 0
 
