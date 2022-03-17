@@ -2034,7 +2034,7 @@ It repaired four out of five (77\% of) invalid inputs and it is %up to
 
 
 \begin{figure}[!tbp]
-\vspace{-0.1cm}
+%\vspace{-0.1cm}
 \centering
 %\includegraphics[width=0.45\textwidth]{figures/effectiveness.png}
 \pgfplotstableread{
@@ -2148,7 +2148,7 @@ repairs, respectively (\textit{see} \Cref{fig:repair-complementarity}). \approac
 %suggest that this 
 We attribute the unique repair achieved by \approach to the synergistic combination of \textit{failure feedback} and \textit{input synthesis}. % in \approach.
 \begin{figure}[!tbp]
-\vspace{-0.4cm}
+%\vspace{-0.4cm}
 \centering
 \begin{minipage}[b]{0.45\textwidth}
     \centering
@@ -2169,7 +2169,7 @@ We attribute the unique repair achieved by \approach to the synergistic combinat
         \node[lbl] at ($(g3.center) + (0,.2)$) {61};
     \end{tikzpicture}
 \end{minipage}
-%\vspace{-0.4cm}
+\vspace{-0.4cm}
 \caption{Venn Diagram showing the number of invalid inputs repaired (solely) by a (combinations of) technique(s) %, or the combination of approaches
 }
 \label{fig:repair-complementarity}
@@ -2412,20 +2412,22 @@ Unlike \approach which aims to fix an invalid input, these schemes need an input
 \label{sec:conclusion}
 %\recheck{
 %In this paper, we 
-This paper presents \approach, an input repair approach that employs input synthesis and lightweight failure feedback (i.e., incomplete and (in)correct checks) to repair invalid inputs. Our approach is black-box, does not require program analysis or an input grammar. We evaluate the effectiveness, data recovery and efficiency of our approach, in comparison to the state-of-the-art methods. We show that \approach is highly effective and efficient in input repair---it completes the repair of four in five invalid inputs (77\%), within a four minute timeout. Furthermore, we demonstrate that our approach is up to 35\% more effective than the best 
+This paper presents \approach, an input repair approach that employs input synthesis and lightweight failure feedback (i.e., incomplete and (in)correct checks) to repair invalid inputs. Our approach is black-box, does not require program analysis or an input grammar. We evaluate the effectiveness, data recovery and efficiency of our approach, in comparison to the state-of-the-art methods. We show that \approach is highly effective and efficient in input repair---it completes the repair of four in five invalid inputs (77\%) and recover 91\% of input data within four minutes. Furthermore, we demonstrate that our approach is up to 35\% more effective than the best 
 %In comparison to the 
-best baseline---(syntactic) \ddmax, without using an input grammar. Overall, this work demonstrates that lightweight failure feedback and input synthesis are important for the effective repair of invalid inputs, especially in the absence of an input specification (e.g., grammar) and white-box program access. In the future, we plan to investigate how to improve the performance of our approach by learning input semantics and constraints, or via program analysis and the knowledge of the input specification. %grammar.
+best baseline---(syntactic) \ddmax, without using an input grammar. In summary, this work demonstrates that combining lightweight failure feedback and input synthesis are important for the effective repair of invalid inputs, especially in the absence of an input specification (e.g., grammar) and white-box program access.
+
+In the future, we plan to investigate how to improve the performance of our approach by learning input semantics and constraints, or via program analysis and the knowledge of the input specification. %grammar.
 %}
 %  more effective thja
 %\todo{discuss potential future works}
 %\revise{
-We provide our tool, data and experimental results for easy replication, scrutiny and reuse:
+We also provide our implementation, data and experimental results for easy replication, scrutiny and reuse:
 %}
 %\todo{we should provide a github page, including an anonymous notebook that allows to test the examples (in Table 1), it will be interesting}
 
 
  \begin{center}
- \vspace{-0.2mm}
+% \vspace{-0.2mm}
      \textbf{\url{https://tinyurl.com/fsynth-artifact-fse2022}}
  \end{center}
 
@@ -2433,7 +2435,7 @@ We provide our tool, data and experimental results for easy replication, scrutin
 % % To Robert, for the bagels and explaining CMYK and color spaces.
 % \end{acks}
 
-\newpage
+%\newpage
 
 \balance
 %%
