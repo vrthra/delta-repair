@@ -252,7 +252,7 @@ pics/numbering/.style args={#1}{code={
 
 \begin{abstract}
 \done{For the title, I'd definitely include ``synthesis'', as in ``Repairing Inputs with Input Synthesis'' -- AZ}
-Data cleansing and data repair are time-consuming tasks for developers, especially in fields that aggregate data from multiple resources (e.g., data warehousing). Often times,
+Data cleansing and data repair are time-consuming tasks for developers, especially in fields that aggregate data from multiple resources (e.g., data warehousing). Oftentimes,
 input data may ostensibly conform to a given input format, but cannot be parsed by a conforming program, for instance, due to human error or data corruption.
 In such cases, a data engineer has to manually repair the corrupt data such that
 it follows a given format, and hence can be processed by the conforming program.
@@ -266,7 +266,7 @@ Given a conforming program, %\todo{it is not clear, what is a conforming program
 and any invalid input, \brepair provides a set
 of repairs prioritized by the distance of the repair from the original input.
 
-We evaluate \brepair on 806 (real-world) invalid inputs using four well-known input formats, namely INI, TinyC, SExp, and cJSON. In our evaluation, we found that \approach is highly effective and efficient in input repair. It repairs 77\% of invalid inputs and recovers 91\% of input data, within four minutes. It is up to 35\% more effective than \ddmax, the previously best known approach.
+We evaluate \brepair on 806 (real-world) invalid inputs using four well-known input formats, namely INI, TinyC, SExp, and cJSON. In our evaluation, we found that \approach is highly effective and efficient in input repair. It repairs 77\% of invalid inputs and recovers 91\% of input data, within four minutes. It is up to 35\% more effective than \ddmax, the previously best-known approach.
 Overall, our approach addresses several
 limitations of
 \ddmax,
@@ -700,11 +700,15 @@ by modifying the parser to provide such failure feedback, as demonstrated in thi
 %\recheck{
 To the best of our knowledge, \approach is the \textit{first} approach to repair invalid inputs without an input specification (e.g., grammar) or program analysis: It repairs invalid inputs %achieves this 
 by synergistically combining \textit{lightweight failure feedback and input synthesis}. 
-We evaluate \brepair using 806 (real-world) invalid inputs belonging to four well-known input formats (e.g., cJSON). % and TinyC). 
-Results show that %given input processors that can accurately
+We evaluate \brepair using 806 (real-world) invalid inputs belonging to four well-known input formats (e.g., cJSON and TinyC). 
+Our evaluation results show that %given input processors that can accurately
 %signal \emph{incompleteness} or \emph{incorrectness} and % when given
 %invalid inputs,
-\brepair is highly effective (77\% repairs within four minutes), and it is up to 35\% more effective than \ddmax.
+\textit{\brepair is highly effective, 
+it repairs 77\% of invalid inputs and recovers 91\% of input data, within four minutes.}
+% and recovers 91% of input data,
+% (77\% repairs within four minutes), and 
+It is also up to 35\% more effective than \ddmax, the best state-of-the-art input repair method.
 %and \recheck{X\% more efficient} %can provide repairs that are more maximal
 %than \ddmax.
 %, and correctly
@@ -2414,8 +2418,10 @@ best baseline---(syntactic) \ddmax, without using an input grammar. Overall, thi
 %}
 %  more effective thja
 %\todo{discuss potential future works}
-\revise{We provide our tool, data and experimental results for easy replication, scrutiny and reuse:
-}\todo{we should provide a github page, including an anonymous notebook that allows to test the examples (in Table 1), it will be interesting}
+%\revise{
+We provide our tool, data and experimental results for easy replication, scrutiny and reuse:
+%}
+%\todo{we should provide a github page, including an anonymous notebook that allows to test the examples (in Table 1), it will be interesting}
 
 
  \begin{center}
@@ -2427,6 +2433,7 @@ best baseline---(syntactic) \ddmax, without using an input grammar. Overall, thi
 % % To Robert, for the bagels and explaining CMYK and color spaces.
 % \end{acks}
 
+\newpage
 
 \balance
 %%
