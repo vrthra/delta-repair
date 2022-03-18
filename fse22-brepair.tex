@@ -438,7 +438,7 @@ information that is not captured in the context-free grammar, and may not be
 discardable. Some input constraints (e.g., the number of columns in a \<CSV> file) may
 not be captured in a grammar. Finally, even when the base grammar is context-free
 (as in the case of JSON) the serializer and deserializer may implement common
-subsets beyond the base grammar (e.g comments and unquoted keys in JSON) which may
+subsets beyond the base grammar (e.g., comments and unquoted keys in JSON) which may
 contain important information. Hence, relying on error-correcting parsers may
 be suboptimal for fixing error corruption in practice.
 %This may be because the constraints in
@@ -450,7 +450,7 @@ In circumstances where one cannot rely on a base grammar, the only option so far
 has been \textit{lexical} \ddmax~\cite{kirschner2020debugging}. \ddmax works similar to
 Delta Debugging~\cite{zeller2002simplifying}, but in reverse. The idea
 is that given a corrupt input which induces a parse error, and a way to
-decompose the input into independent fragments (called deltas), one can
+decompose the input into independent fragments (called deltas ($\delta$)), one can
 successively minimize the parse-error inducing part of the input resulting in a
 maximal parsing input.
 More importantly, \citet{kirschner2020debugging} and \citet{scaffidi2008topes} demonstrate the prevalence of invalid inputs and the importance of input repair in practice. % without grammars or program analysis.
@@ -491,7 +491,7 @@ we observe it %that \ddmax
 has certain limitations which inhibit it from completely repairing any invalid inputs. % in practice.
 \Cref{tab:ddmaxlimitations} and \Cref{sec:rich-input-structures} illustrate %some of
 these limitations with simplified invalid inputs. % as examples.
-Notably, two major \ddmax limitations include its (1) \textit{limited repair operation} (only deletion), (2) inability to completely repair rich input structures (e.g., invalid inputs containing multiple faults) due to inherent assumptions. % (e.g., its search span)..
+Notably, two major \ddmax limitations include its (1) \textit{limited repair operation} (only deletion), (2) inability to completely repair \textit{rich input structures }(e.g., invalid inputs containing multiple faults) due to inherent assumptions. % (e.g., its search span)..
 %\textit{multiple faults in input data}, and (3)
 %\textit{inherent assumptions about the richness of input structures} (e.g., its search span).
 
@@ -558,7 +558,7 @@ assumption is not met (as in the case of inputs with a rich structure such as
 conforming to a grammar) the repairs produced can be suboptimal as the
 examples show.
 %\recheck{
-As an example, consider the invalid input in \textit{row three} of \Cref{tab:ddmaxlimitations} (i.e.,  \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}}). Due to the multiple faults in this input, the resulting \ddmax repair (i.e., \letterboxed{123456}) is \textit{sub-optimal} causing a 77\% data loss (20 out of 26 bytes).
+As an example, consider the invalid input in \textit{row three} of \Cref{tab:ddmaxlimitations} (i.e.,  \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}}). Due to the \textit{multiple faults (two \letterboxed{*}s)} in this input, the resulting \ddmax repair (i.e., \letterboxed{123456}) is \textit{sub-optimal} causing a 77\% data loss (20 out of 26 bytes).
 %&
 % &
 %\letterboxed{\{"ABCD":["1,2,3,4,5,6"]\}} &
@@ -589,8 +589,8 @@ This paper introduces the \brepair approach\footnote{
 %\todo{remember to say the meaning or derivation of the name \approach}
 to address the %provide a solution that addresses these
 limitations of \ddmax via \textit{lightweight error-feedback and input synthesis}. The key insight of this approach is to complete \textit{semantic} repair of invalid inputs using lightweight failure feedback such as the \textit{validity, incompleteness, and incorrectness} checks of input fragments. Given an invalid input and a conforming program, \approach performs test experiments of input subsets and candidate insertions to provide a set of repairs prioritized by the distance of the repair from the original input.
-Unlike \ddmax, \brepair does not have the implied assumption of independence of
-fragments. Hence, it does not face any limitation when given invalid inputs
+Unlike \ddmax, \brepair does not have the \textit{implied assumption of independence of
+fragments}. Hence, it does not face any limitation when given invalid inputs
 that should conform to a rich structure, and %. It also
 does not stumble when faced
 with multiple faults. Finally, it %\brepair
@@ -647,7 +647,7 @@ resulting input %\\
 %see if it resulted in increasing the size of the
 does not increase the
 maximum parsable prefix. %Here, we see that the maximal parse boundary remains the same.
-Hence \brepair next
+Hence, \brepair next
 attempts to insert a character,
 %. There are 128 printable characters in ASCII,
 %out of which,
@@ -717,7 +717,7 @@ Overall, this paper makes the following %technical
 contributions: %\todo{we need to stress some results here}:
 \begin{itemize}
 \item \textbf{Repairing Rich Input Structures.} One of the major limitations of
-\ddmax is its inability to handle inputs with rich structure. We show that our
+\ddmax is its inability to handle \textit{inputs with rich structure}. We show that our
 \brepair technique can repair inputs with rich structure, including multiple faults.
 \item \textbf{Input Synthesis.} \ddmax is limited to \emph{deletion} of input
 fragments, which makes it unsuitable for repairing errors due to omission and
@@ -733,8 +733,11 @@ how to use lightweight parser-error-feedback (e.g., \textit{incomplete} checks) 
  %  \item We provide two bug fixes to \ddmax.
 \end{itemize}
 
-The remainder of this paper is structured as follows: \Cref{sec:rich-input-structures} highlights the limitations of the state-of-the-art input repair method (\ddmax) and illustrates how \brepair overcomes these limitations. In \Cref{sec:input-synthesis} we describe how \brepair conducts input synthesis, and \Cref{sec:brepair}  describes the \brepair algorithm. We describe our experimental setup and findings in \Cref{sec:experimental-setup} and \Cref{sec:results}. We address the limitations and threats to the validity of this work in \Cref{sec:threats}.
-We conclude this paper with the discussion of related work and conclusions in \Cref{sec:related_work} and \Cref{sec:conclusion}, respectively.
+The remainder of this paper is structured as follows: \Cref{sec:rich-input-structures} highlights the limitations of the state-of-the-art input repair method (\ddmax) and illustrates how \brepair overcomes these limitations. In \Cref{sec:input-synthesis} we describe how \brepair conducts input synthesis, and \Cref{sec:brepair}  describes the \brepair algorithm. We describe our experimental setup and findings in \Cref{sec:experimental-setup} and \Cref{sec:results}. We address the limitations %and threats to the validity 
+of this work in \Cref{sec:threats}, and discuss related work in \Cref{sec:related_work}. Finally, we conclude this paper 
+% with the discussion of related work and conclusions in \Cref{sec:related_work} and 
+with the discussion of future work in \Cref{sec:conclusion}. 
+%, respectively.
 
 
 %\todo{describe sections/order}
@@ -804,7 +807,7 @@ $\test(\dpass) = \pass \land n \leq |\Delta|$.\\
 %
 % \end{figure}
 Let us illustrate the limitations of the state-of-the-art input repair method (\ddmax) and how our approach (\brepair) addresses these limitations.
-\Cref{fig:ddmax} provides a modified version of the lexical \ddmax algorithm presented in Kirschner et al.~\cite{kirschner2020debugging}. A major limitation of lexical \ddmax is that it results in sub-optimal repairs when the invalid input contains \textit{rich structures} or \textit{multiple faults}.
+\Cref{fig:ddmax} provides a modified version of the lexical \ddmax algorithm presented in Kirschner et al.~\cite{kirschner2020debugging}. A major limitation of lexical \ddmax is that it results in sub-optimal repairs when the invalid input contains \textit{rich structures}, e.g., \textit{multiple faults}.
 %needs to conform to specifications such as context-free grammars.
 In the following, we discuss these limitations.
 % specific instances when \ddmax can repair an input suboptimally.
@@ -977,7 +980,7 @@ this would cause an invariant fail for inputs such as \letterboxed{\{*"":2\}}.
 
 \subsection{Repair of rich inputs with \brepair}
 One of the strengths of \brepair is that it can effectively handle inputs with
-rich structure. Consider the input to the JSON processor: \letterboxed{\{\"ABCD":[*"1,2,3,4,5,6"]*\}}.
+rich structure. Consider the input to the JSON processor: \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}}.
 (For ease of explanation, let us consider only deletion as the
 operation used.) Here, the procedure is as follows:
 
@@ -1112,7 +1115,7 @@ In this case, the \letterboxed{"} is deleted first, resulting in: \\
 \item Indeed, only space characters and comma (\letterboxed{,}) can be
 inserted here, resulting in \emph{incomplete} from the JSON parser.
 \item Inserting the \letterboxed{,} results in a new input: \\
-\letterboxed{\{\ "name":\ "Dave"\ ,\"age":\ 42\ \}}
+\letterboxed{\{\ "name":\ "Dave"\ ,"age":\ 42\ \}}
 \item This is accepted as a valid repair.
 \end{enumerate}
 
@@ -1203,7 +1206,7 @@ input string. A repair thread has a single \emph{boundary} and a corresponding
 \emph{valid prefix}.
 \end{description}
 
-The deletion algorithm is simple. When a parse error is observed,
+The \emph{deletion} algorithm is simple. When a parse error is observed,
 the character that caused the error is present at the \<boundary> value.
 That is, we know that \<inputstr[:boundary]> parses correctly. Hence, for
 deletion, we produce a string without the character at the \<boundary>.
@@ -1214,7 +1217,7 @@ def apply_delete(item):
     return extend_deleted_item(Repair(inp, item.boundary))
 \end{lstlisting}
 
-For insertion, the algorithm is more involved. The problem is that we need to
+For \emph{insertion}, the algorithm is more involved. The problem is that we need to
 handle corruption in inputs such as \<"12345mystring"> which is used as input
 to a JSON parser. Consider what happens when the first quote is deleted. In this
 case, we will get the first parse error at \<m>. But plainly, the best repair
@@ -1264,7 +1267,7 @@ def repair(inp):
     boundary = binary_search(inp)
     return find_fixes(inp, boundary)
 \end{lstlisting}
-This function does a binary search (\Cref{lst:bsearch}) on the
+This function does a \emph{binary search} (\Cref{lst:bsearch}) on the
 argument string looking for the parse boundary where the return value changes
 from \emph{incomplete} to \emph{incorrect}. That is, if \<binary\_search>
 returns an index \<n>, then \<inputstr[:boundary]> is a valid prefix, and
@@ -1523,7 +1526,7 @@ least number of repairs required to fix the input.
 \caption{Subject programs used in the evaluation}
 \begin{tabular}{|l | r | l | l | l | l |}
 \hline
-\textbf{Name} & \textbf{LOC} & \textbf{Language} & \textbf{Initial C.} & \textbf{Latest C.} \\
+\textbf{Name} & \textbf{LOC} & \textbf{Lang.} & \textbf{1{st} Commit} & \textbf{Last Commit} \\
 \hline
 \textbf{INI} & 382 & C & Jul 2009 & Jan 2022\\
 \textbf{cJSON} & 3062 & C & Aug 2009 & Jan 2022\\
@@ -1722,7 +1725,7 @@ We also slightly modify subject programs %ubject programs needed to be modified 
 to provide the required incompleteness feedback (\textit{see} \Cref{tab:subject-programs}).
 
 \noindent\textbf{Platform:} All experiments were conducted
-on an ASRock X470D4U with six physical CPU cores and 32GB of RAM, on an AMD Ryzen 5600X @ 3.70GHz, 12~virtual cores, running Debian GNU/Linux.
+on an ASRock X470D4U with six physical CPU cores and 32GB of RAM, with an AMD Ryzen 5600X @ 3.70GHz, 12~virtual cores, running Debian GNU/Linux.
 
 %\noindent
 %\textbf{
@@ -1735,11 +1738,7 @@ We first collect a large corpus of  real-world files which we split into a set o
 Then, we run each repair technique on each file and collect the required data, i.e. the run time, number of oracle runs, Levenshtein distance and repair status of each file.
 As repair techniques, we employ \emph{Baseline}, %(the built-in error recovery strategy of the subject program), the error recovery strategy of 
 \emph{ANTLR}, lexical \ddmax, syntactic \ddmax and \approach.
-All experiments were conducted within a timeout of four minutes per repair technique per input. % file.
-
-
-
-
+All experiments were conducted within a timeout of four minutes per input, for each repair technique. % file.
 
 
 %\subsubsection*{\bf Research Protocol}
@@ -1763,7 +1762,6 @@ All experiments were conducted within a timeout of four minutes per repair techn
 
 \section{Experimental Results}
 \label{sec:results}
-
 In this section, we
 discuss the %findings %
 results
@@ -1833,10 +1831,10 @@ the best-performing state-of-the-art method (\ddmax).
 %\todo{fix to new evaluation results} \todo{``100.6'' in \autoref{tab:data-recovery} is hard to justify, we need to remove insertions when computing this}	
 %For a fair evaluation, % of data recovery, 
 We examine 474 inputs that were completely repaired by %all three approaches, i.e., 
-lexical \ddmax, syntactic \ddmax and \approach. \Cref{tab:data-recovery-and-loss} %and \recheck{Figure X
+lexical \ddmax, syntactic \ddmax and \approach, excluding empty files or files containing only white spaces. \Cref{tab:data-recovery-and-loss} %and \recheck{Figure X
 highlights the amount of data %loss and data
 recovered and lost % achieved 
-by each approach. %, as average over each file. %Our evaluation r
+by each approach.\footnote{Note that due to input synthesis (i.e., insertion of input elements), \brepair may report recovering more than 100\% of the input file (e.g., 100.6\% for SExp in \Cref{tab:data-recovery-and-loss}).} %, as average over each file. %Our evaluation r
 
 Our evaluation results show that \textit{\approach recovered up to 91\% of input data, on average. This is 23\% more than the most effective baseline (syntactic \ddmax).} For all four input formats, \approach recovered up to (75\%) more data than both variants of \ddmax. Consider TinyC, where \approach recovered 72 to 75\% more input data than \ddmax (\textit{see} \Cref{tab:data-recovery-and-loss}). These results suggest that \approach is more effective in recovering valid input data 
 than \ddmax.
@@ -1897,7 +1895,7 @@ For comparison to \textit{grammar-based input repair methods}, we employ the bui
 is highly effective in repairing invalid inputs, it repaired almost four out of every five invalid input withing a four minute timeout}, i.e., % \approach repaired 
 about 77\% (624 out of 806) of invalid inputs. In comparison to language-agnostic approaches, %our 
 \approach is \textit{up to 18 times more effective than the built-in error recovery strategy of the subject programs (33 vs. 624 repairs)}, and % \approach is 
-up to 35\% more effective than the best performing language-agnostic approach for certain input formats (CJSON and TinyC). Overall, 
+up to 35\% more effective than the best performing language-agnostic approach for certain input formats (cJSON and TinyC). Overall, 
 \Cref{tab:effectiveness-no-grammar} shows that \approach is eight percent more effective than the best language-agnostic repair technique (i.e., lexical \ddmax). 
 %Without the knowledge of the input grammar, 
 %IN comparison to grammar-based input repair techniques, 
@@ -2135,12 +2133,13 @@ FSynth     191    158      121          154
 
 
 
-\noindent \textbf{\textit{Complementarity to \ddmax:}} We further inspect the unique repairs achieved by each approach, in order to understand the complementarity of our approach to the state-of-the-art methods. In this experiment, we inspect the number of unique repairs achieved \textit{solely} by a single approach (e.g., \textit{only} \approach), or two or more approaches (e.g., all approaches). 
+\noindent \textbf{\textit{Complementarity to \ddmax:}} We further inspect the unique repairs achieved by each approach %, in order 
+to understand the complementarity of our approach to the state-of-the-art methods. In this experiment, we inspect the number of unique repairs achieved \textit{solely} by a single approach (e.g., \textit{only} \approach), or two or more approaches (e.g., all approaches). 
 %The goal is to determine if there are unique sets of inputs that are solely repaired by a single approach, and not by other approaches. 
 \Cref{fig:repair-complementarity} highlights our findings. 
 
 We found that about \textit{one in ten repairs could be solely completed by \approach}, which is three times and five times as many as lexical and syntactic \ddmax %\textit{only} 
-repairs, respectively (\textit{see} \Cref{fig:repair-complementarity}). \approach \textit{solely} completely 9\% (61/712) of all repaired inputs, all of which \ddmax could not repair. For lexical \ddmax, our approach \textit{solely} repaired 5$\times$ as many invalid files as lexical \ddmax (61 vs. 12), while it repairs thrice as many files as syntactic \ddmax (61 vs. 23). Overall, we observe that all \textit{\approach complements \ddmax, a combination of these approaches completes 88\% of repairs (712), which is 14\% and 23\% more than the repairs completed by \approach and syntactic \ddmax, respectively}. 
+repairs, respectively (\textit{see} \Cref{fig:repair-complementarity}). \approach \textit{solely} completed 9\% (61/712) of all repaired inputs, all of which \ddmax could not repair. For lexical \ddmax, our approach \textit{solely} repaired 5$\times$ as many invalid files as lexical \ddmax (61 vs. 12), while it repairs thrice as many files as syntactic \ddmax (61 vs. 23). Overall, we observe that \textit{\approach complements \ddmax, a combination of these approaches completes 88\% of repairs (712), which is 14\% and 23\% more than the repairs completed \textit{solely} by \approach or syntactic \ddmax, respectively}. 
 %These findings 
 %show that our approach is complementary to ddmax. 
 %It solely completed 61 repairs (9\%), all of which ddmax could not repair. 
@@ -2241,7 +2240,7 @@ reports the efficiency of all three approaches. % approach compared to ddmax. %t
 %For runtime,
 
 %In this evaluation, w
-We found that \textit{\approach is considerably efficient in input repair: It is reasonably fast, it takes about 10 seconds to repair an invalid input file, on average}. However, it is about five times slower than \ddmax (two to three seconds, on average). 
+We found that \textit{\approach is considerably efficient in input repair: It is reasonably fast, it takes about 10 seconds to repair an invalid input, on average}. However, it is about five times slower than \ddmax (two to three seconds, on average). 
 %\approach is 50\% more efficient than lexical ddmax (\recheck{1.7s versus 2.5s}), and syntactic ddmax is about three times as efficient as \approach (\recheck{0.6s versus 1.7s}).
 %The time performance of
 %This implies that \approach is twice as fast as %er than
@@ -2259,7 +2258,7 @@ that the execution time
 %performance cost is much lower for
 of \approach %syntactic ddmax
 is much higher %lower
-than that of syntactic and lexical ddmax. 
+than that of syntactic and lexical \ddmax. 
 %and \approach, since
 %because \approach requires about three times as many program runs as syntactic ddmax (\recheck{505 vs. 1,586} program runs).
 %these approaches is the number of repair attempts and both lexical ddmax and \approach perform more test experiments than syntactic ddmax,
