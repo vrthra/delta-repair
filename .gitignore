@@ -175,5 +175,6 @@ TSWLatexianTemp*
 *.glstex
 
 *.pdf
+!IEEEtran*.pdf
 /.idea/
 /__pycache__/
