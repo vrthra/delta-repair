@@ -147,6 +147,14 @@ pics/numbering/.style args={#1}{code={
     \fcolorbox{white}{light-gray}{\texttt{\strut\@ii}}%
   }%
 }
+
+\newcommand\letterboxedinTable[1]{%
+\setlength{\fboxsep}{0pt}%
+  \@tfor\@ii:=#1\do{%
+    \fcolorbox{white}{light-gray}{\tiny \texttt{\strut\@ii}}%
+  }%
+}
+
 \makeatother
 
 
@@ -283,38 +291,42 @@ in terms of the set of repairs offered.
 \section{Introduction}
 \label{sec:intro}
 
+\revise{
+Input data is prone to unintended errors. Such errors may be introduced when the data is being created (by humans or buggy programs), modified (by external actors)
+or transmitted (via flawed networks)~\cite{scaffidi2008accommodating}. 
+For instance, several inputs are created by hand, leading to \textit{invalid inputs}~\cite{mucslu2015preventing}. Invalid input data may also be caused by  disagreements among data sources on the format specification which leads to different %variances in the
+implementations of the specification. For example, JSON libraries implement slightly different
+definitions of the JSON formats~\cite{harrand2021behavioral,seriot2016parsing}, different database systems support %, each supporting a
+slightly different SQL formats~\cite{arvin2018comparison}, and  various
+\<C> compilers provide slightly different interpretation of the \<C> language.
+These problems lead to invalid inputs that cannot be processed by their conforming programs or consumed by end-users (e.g., developers). 
+%subsequently, developers and software can not consume such inputs. 
+}
 
-Data, especially from external, often human sources need to be collected and
-aggregated before information processing algorithms can be run on it to extract
-insights~\cite{scaffidi2008accommodating}. %\todo{add concrete example use case} 
-For instance, \textit{data warehouses} collect and aggregate data from several %trusted and untrusted 
-sources. 
-Unfortunately, data sources may disagree on the format specification, %e.g.,
-%\recheck{
-consequently leading to different %variances in the
-implementations of the specification. %}.
-For example, (1)~JSON libraries implement slightly different
-definitions of the JSON formats~\cite{harrand2021behavioral,seriot2016parsing};
-(2)~different database systems support %, each supporting a
-slightly different SQL formats~\cite{arvin2018comparison}; (3)~there are a variety of markdown
-syntaxes with subtle differences~\cite{visnoviz2019comparison}; and (4)~various
-\<C> compilers %each supporting a
-provide slightly different interpretation of the \<C> language.
-Hence, it is often impossible to process an input artifact that was generated for
-a different implementation. % in mind.
-Another issue is that many such artifacts
-are created by hand, and the process of manual generation can be
-error-prone~\cite{scaffidi2008topes,mucslu2015preventing}.
+\revise{
+Given such \revise{invalid} inputs that are \emph{almost} but \emph{not quite} parsable, developers are saddled with the task of \textit{input repair}. Input repair is particularly important due to the high prevalence of invalid inputs in software practice~\cite{kirschner2020debugging}. Besides, it is challenging to recover the valid portion of invalid inputs~\cite{scaffidi2008topes}. 
+%}
+%\revise{
+%Specifically, t
+To repair invalid inputs, %consuming such resources %, and aggregating them 
+%often involves trying to
+developers \textit{manually} try to 
+maximally parse them by minimizing parse errors~\cite{kirschner2020debugging}, this manual process is time-consuming and error-prone.}
 
-Given such inputs that are \emph{almost} but \emph{not quite} parsable,
-consuming such resources, and aggregating them often involves trying to
-maximally parse them by minimizing parse errors~\cite{kirschner2020debugging}.
-If the parser at hand conforms to a formal specification such as a context-free
-grammar, and this grammar is available,
+\revise{
+%On one hand, g
+Grammar-based input repair approaches, such as 
+\emph{error-correcting} parsers~\cite{aho1972minimum,diekmann2020dont,parr2011ll}, allow to 
+repair invalid inputs given 
+%parser that conforms to an available 
+a formal specification such as a context-free
+grammar. 
+%, and the grammar is available.
+} 
 %context-free grammar, and an acceptable formal grammar is available,
-the challenge of repairing the input and making it parsable can be solved using
-\emph{error-correcting} parsers~\cite{aho1972minimum,diekmann2020dont,parr2011ll}.
-The idea in such parsers is to generate a universal grammar that captures
+%the challenge of repairing the input and making it parsable can be solved using
+%.
+The main idea of such parsers is to generate a universal grammar that captures
 any mutation of the base grammar. Any parse of the input string that employs a
 mutation is penalized, and the parse with minimal mutation is chosen as the
 best parse, and the corresponding mutation the best repair. The \textit{limitation} of
@@ -333,68 +345,87 @@ an official formal grammar specification.
 %Others may have numerous standards
 %(e.g., markdown~\cite{gruber2004markdown}), any of which may be followed by the
 %artifact in question.
-Documents in languages (such as \<C>) can contain semantic
-information that is not captured in the context-free grammar, and may not be
-discardable. Some input constraints (e.g., the number of columns in a \<CSV> file) may
-not be captured in a grammar. Finally, even when the base grammar is context-free
-(as in the case of JSON) the serializer and deserializer may implement common
+%Documents in languages (such as \<C>) can contain semantic
+%information that is not captured in the context-free grammar, and may not be
+%discardable. Some input constraints (e.g., the number of columns in a \<CSV> file) may
+%not be captured in a grammar. Finally, e
+Even when the base grammar is context-free
+%(e.g., JSON)
+ the serializer and deserializer may implement common
 subsets beyond the base grammar (e.g., comments and unquoted keys in JSON) which may
-contain important information. Hence, relying on error-correcting parsers may
-be suboptimal for fixing error corruption in practice.
+contain important information. 
+\revise{
+Hence, grammar-based 
+%these 
+input repair approaches %relying on error-correcting parsers may
+%be 
+are suboptimal for fixing invalid inputs in practice.}
+% In this work, we address this challenge via a \textit{grammar-agnostic} input repair method.
+% (like \ddmax ~\cite{kirschner2020debugging}). 
+%that addresses this limitation, among many others.
+%}
 %This may be because the constraints in
 %the input may not be fully captured in the grammar as in the case of CSV where
 %the number of columns may be fixed, or because such a grammar is unavailable
 %(as in the case of markdown)
 
-In circumstances where one cannot rely on a base grammar, the only option so far
-has been \textit{lexical} \ddmax~\cite{kirschner2020debugging}. \ddmax works similar to
+\revise{
+%On the other hand, l
+Black-box and language-agnostic input repair methods (e.g., \textit{lexical} \ddmax~\cite{kirschner2020debugging}) repair invalid inputs without a base grammar or program analysis.}
+%In circumstances where one cannot rely on a base grammar, the only option so far
+%has been \textit{lexical} \ddmax~\cite{kirschner2020debugging}. 
+\ddmax works similar to
 Delta Debugging~\cite{zeller2002simplifying}, but in reverse. The idea
 is that given a corrupt input which induces a parse error, and a way to
 decompose the input into independent fragments (called deltas ($\delta$)), one can
 successively minimize the parse-error inducing part of the input resulting in a
 maximal parsing input.
 %TODO Use textcite here:
-More importantly, Kirschner et al.~\cite{kirschner2020debugging} and Scaffidi et al.~\cite{scaffidi2008topes} demonstrate the prevalence of invalid inputs in the wild and the importance of input repair in practice. % without grammars or program analysis.
+%More importantly, Kirschner et al.~\cite{kirschner2020debugging} and Scaffidi et al.~\cite{scaffidi2008topes} demonstrate the prevalence of invalid inputs in the wild and the importance of input repair in practice. % without grammars or program analysis.
 %using \ddmax. %}.
-
-
-\begin{table*}\centering
-\footnotesize
-\caption{\ddmax vs. \approach: examples showing limitations of \ddmax and the strengths of \approach}
-\begin{tabular}{|l | c | c | l |}
-\hline
-\textbf{Example} & \textbf{\ddmax repair} & \textbf{\brepair repair} & \textbf{\ddmax limitation} \\
-\hline
-\letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}} &
-%\letterboxed{\{\ "name":\ "Daveage":\ 42\ \}} &
-\letterboxed{\ \ \ \ 42\ }  &
-\letterboxed{\{\ "name":\ "Dave"\ ,"age":\ 42\ \}} &
-Limited repair options (deletion) \\
-%\hline
-\letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\}} & \letterboxed{\ \ \ \
-3.45\ } & \letterboxed{\{\ "item":\ "Apple",\ "price":\ 3.45\}} & Rich structure
-(spans) \\
-\letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}} &
-\letterboxed{123456} &
-\letterboxed{\{"ABCD":["1,2,3,4,5,6"]\}} &
-Rich Structure (multiple-faults) \\
-
-\hline
-\end{tabular}
-\label{tab:ddmaxlimitations}
-%\vspace{-0.5cm}
-\end{table*}
-
-
 Although \ddmax works very well for most inputs, %, it could repair 69\% of input files and recovered about 78\% of input data.
 %However,
 we observe it %that \ddmax
 has certain limitations which inhibit it from completely repairing any invalid inputs. % in practice.
 \Cref{tab:ddmaxlimitations} and \Cref{sec:rich-input-structures} illustrate %some of
 these limitations with simplified invalid inputs. % as examples.
-Notably, two major \ddmax limitations include its (1) \textit{limited repair operation} (only deletion), (2) inability to completely repair \textit{rich input structures }(e.g., invalid inputs containing multiple faults) due to inherent assumptions. % (e.g., its search span)..
+Notably, two major \ddmax limitations include its (1) \textit{limited repair operation} (only deletion), and (2) inability to completely repair \textit{rich input structures} (e.g., multiple faults) due to inherent assumptions. 
+
+% (e.g., its search span)..
 %\textit{multiple faults in input data}, and (3)
 %\textit{inherent assumptions about the richness of input structures} (e.g., its search span).
+
+
+
+\begin{table*}\centering
+
+\caption{\ddmax vs. \approach: examples showing limitations of \ddmax and the strengths of \approach}
+{\scriptsize  %footnotesize
+\begin{tabular}{|l | c | c | l |}
+\hline
+\textbf{Example} & \textbf{\ddmax repair} & \textbf{\brepair repair} & \textbf{\ddmax limitation} \\
+\hline
+\letterboxedinTable{\{\ "name":\ "Dave"\ "age":\ 42\ \}} &
+%\letterboxed{\{\ "name":\ "Daveage":\ 42\ \}} &
+\letterboxedinTable{\ \ \ \ 42\ }  &
+\letterboxedinTable{\{\ "name":\ "Dave"\ ,"age":\ 42\ \}} &
+Limited repair options (deletion) \\
+%\hline
+\letterboxedinTable{\{\ "item":\ "Apple",\ "price":\ ***3.45\}} & \letterboxedinTable{\ \ \ \
+3.45\ } & \letterboxedinTable{\{\ "item":\ "Apple",\ "price":\ 3.45\}} & Rich structure
+(spans) \\
+\letterboxedinTable{\{"ABCD":[*"1,2,3,4,5,6"]*\}} &
+\letterboxedinTable{123456} &
+\letterboxedinTable{\{"ABCD":["1,2,3,4,5,6"]\}} &
+Rich Structure (multiple-faults) \\
+
+\hline
+\end{tabular}}
+\label{tab:ddmaxlimitations}
+%\vspace{-0.5cm}
+\end{table*}
+
+
 
 %Specifically, \ddmax is limited
 %the following
@@ -435,12 +466,22 @@ Notably, two major \ddmax limitations include its (1) \textit{limited repair ope
 %examples show.
 
 %\todo{reduce further .. and add example}
-Firstly, \ddmax's repair is restricted to deletion, which makes it sub-optimal for repairing some invalid inputs. The problem is that in many circumstances such as
-disk corruption, some input characters are more likely to be \emph{changed} or \emph{deleted}
-rather than \emph{inserted.} Hence, by handling only spurious insertions, \ddmax misses
-an important repair requirement. Consider the sample invalid input in \textit{row one} of \Cref{tab:ddmaxlimitations} (i.e., \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}) which is invalid because of a \textit{missing comma separator} between the two values in the JSON object. Due to the limited repair options of \ddmax (i.e., only deletion), its resulting repair (i.e., \letterboxed{\ \ \ \ 42\ }) is \textit{sub-optimal} leading to a huge (75\%) data loss (21 out of 28 bytes). %, % $\approx$ .
+\revise{In this paper, we address several limitations of \ddmax, without access to an input grammar or program analysis.} Firstly, \ddmax's repair is restricted to deletion, which makes it sub-optimal for repairing some invalid inputs. 
+%The problem is that 
+While \ddmax can repair invalid inputs due to 
+%in many circumstances such as
+%disk corruption, some input characters are more likely to be \emph{changed} or \emph{deleted}
+%rather than \emph{inserted.} Hence, by handling only 
+spurious insertions, it %\ddmax 
+%misses an important repair requirement - for 
+fails to repair input 
+invalidity that is due to \emph{changed} or \emph{deleted} fragments. Consider the sample invalid input in \textit{row one} of \Cref{tab:ddmaxlimitations} (i.e., \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}) which is invalid because of a \textit{missing comma separator} between the two values in the JSON object. Due to the limited repair options of \ddmax (i.e., only deletion), its resulting repair (i.e., \letterboxed{\ \ \ \ 42\ }) is \textit{sub-optimal} leading to a huge (75\%) data loss (21 out of 28 bytes). %, % $\approx$ .
 %  data loss).
 % , only seven out of 28 bytes recovered).
+\revise{
+This work addresses this challenge % with an additional repair requirement to 
+by supporting the synthesis of missing input fragments. 
+}
 
 Secondly,
 %As example,
@@ -451,15 +492,23 @@ contributing to the failure observed can be independently removed without
 affecting the failure observed. When this assumption is not met, (i.e. where
 the inputs have a rich structure) the minimal fragment produced by \ddmin
 can be suboptimal. %Hence, the h
-Hierarchical delta debugging (HDD)~\cite{misherghi2006hdd}
-and its descendants address this concern for reducing failure-inducing inputs, however, this problem remains open for input repair. Notably, a similar constraint also applies to \ddmax, where
-the unstated assumption is that each non-failure-inducing fragment
-can be added to the passing subset without inducing a failure. When this
+%Hierarchical delta debugging (HDD)~\cite{misherghi2006hdd}
+%and its descendants address this concern for reducing failure-inducing inputs, however, this problem remains open for input repair. 
+Similarly, 
+%a similar constraint also applies to \ddmax, where
+%the unstated assumption is that 
+\textit{\ddmax assumes each non-failure-inducing fragment
+can be added to the passing subset without inducing a failure}. When this
 assumption is not met (as in the case of inputs with a rich structure such as
 conforming to a grammar) the repairs produced can be suboptimal as the
 examples show.
 %\recheck{
 As an example, consider the invalid input in \textit{row three} of \Cref{tab:ddmaxlimitations} (i.e.,  \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}}). Due to the \textit{multiple faults (two \letterboxed{*}s)} in this input, the resulting \ddmax repair (i.e., \letterboxed{123456}) is \textit{sub-optimal} causing a 77\% data loss (20 out of 26 bytes).
+%\revise{
+%This paper addresses this limitation to recover almost all valid data. 
+% via a combination of lightweight error-feedback and input synthesis. 
+%}
+
 %&
 % &
 %\letterboxed{\{"ABCD":["1,2,3,4,5,6"]\}} &
@@ -599,32 +648,36 @@ by modifying the parser to provide such failure feedback, as demonstrated in thi
 %In our evaluation, u
 
 %\recheck{
-To the best of our knowledge, \approach is the \textit{first} approach to repair invalid inputs without an input specification (e.g., grammar) or program analysis: It repairs invalid inputs %achieves this 
-by synergistically combining \textit{lightweight failure feedback and input synthesis}. 
-We evaluate \brepair using 806 (real-world) invalid inputs belonging to four well-known input formats (e.g., cJSON and TinyC). 
-Our evaluation results show that %given input processors that can accurately
-%signal \emph{incompleteness} or \emph{incorrectness} and % when given
-%invalid inputs,
-\textit{\brepair is highly effective, 
-it repairs 77\% of invalid inputs and recovers 91\% of input data, within four minutes.}
-% and recovers 91% of input data,
-% (77\% repairs within four minutes), and 
-It is also up to 35\% more effective than \ddmax, the best state-of-the-art input repair method.
-%and \recheck{X\% more efficient} %can provide repairs that are more maximal
-%than \ddmax.
-%, and correctly
-%pass the parser.
-Overall, this paper makes the following %technical
+To the best of our knowledge, \approach is the \textit{first} approach to effectively repair invalid rich inputs without an input specification 
+%(e.g., grammar) 
+or program analysis.
+%: It repairs invalid inputs %achieves this 
+%by synergistically combining \textit{lightweight failure feedback and input synthesis}. 
+%We evaluate \brepair using 806 (real-world) invalid inputs belonging to four well-known input formats (e.g., cJSON and TinyC). 
+%Our evaluation results show that %given input processors that can accurately
+%%signal \emph{incompleteness} or \emph{incorrectness} and % when given
+%%invalid inputs,
+%\textit{\brepair has a high (91\%) data recovery rate}. 
+%%It recovers 91\% of input data 
+%%and it repairs 77\% of invalid inputs and, within four minutes.}
+%% and recovers 91% of input data,
+%% (77\% repairs within four minutes), and 
+%It is also up to 35\% more effective than \ddmax, the state-of-the-art input repair method.
+%%and \recheck{X\% more efficient} %can provide repairs that are more maximal
+%%than \ddmax.
+%%, and correctly
+%%pass the parser.
+%%Overall, t
+This paper makes the following %technical
 contributions: %\todo{we need to stress some results here}:
 \begin{itemize}
-\item \textbf{Repairing Rich Input Structures.} One of the major limitations of
-\ddmax is its inability to handle \textit{inputs with rich structure}. We show that our
-\brepair technique can repair inputs with rich structure, including multiple faults.
-\item \textbf{Input Synthesis.} \ddmax is limited to \emph{deletion} of input
-fragments, which makes it unsuitable for repairing errors due to omission and
-corruption. Our \brepair technique expands the repertoire to \emph{deletion},
-\emph{insertion}, and \emph{modification}.
 %\todo{discuss the repair to subset vs. insertion, refer to \Cref{sec:input-synthesis}}.
+\item \textbf{Repair via Input Synthesis.} \brepair expands the repertoire for input repair to \emph{deletion},
+\emph{insertion}, and \emph{modification}.
+Unlike \ddmax, which is limited to \emph{deletion} of input
+fragments, \approach can repair errors 
+% which makes it unsuitable for repairing errors 
+due to omission. % and corruption. 
 \item \textbf{Lightweight Failure Feedback.} \brepair is the \textit{first} technique
 to demonstrate %hat shows 
 how to use lightweight parser-error-feedback (e.g., \textit{incomplete} checks) for input repair.
@@ -632,6 +685,29 @@ how to use lightweight parser-error-feedback (e.g., \textit{incomplete} checks) 
  %	\item \textbf{}	
  %  \item We identify one of the major limitations to \ddmax{}---the limitation due to rich struture, which can be fixed only by requiring additional constraints.
  %  \item We provide two bug fixes to \ddmax.
+
+\item \textbf{Repairing Rich Input Structures.} We show that our
+\brepair technique can repair inputs with rich structure, including multiple faults and large spans. This is a major limitation of the state-of-the-art \ddmax. 
+%is its inability to handle \textit{inputs with rich structure}. 
+
+\item \textbf{Effectiveness.} We evaluate \brepair using 806 (real-world) invalid inputs belonging to four well-known input formats (e.g., cJSON and TinyC). 
+Our evaluation results show that %given input processors that can accurately
+%signal \emph{incompleteness} or \emph{incorrectness} and % when given
+%invalid inputs,
+\textit{\brepair has a high (91\%) data recovery rate}. 
+%It recovers 91\% of input data 
+%and it repairs 77\% of invalid inputs and, within four minutes.}
+% and recovers 91% of input data,
+% (77\% repairs within four minutes), and 
+It is also up to 35\% more effective than \ddmax.
+%, the state-of-the-art input repair method.
+%and \recheck{X\% more efficient} %can provide repairs that are more maximal
+%than \ddmax.
+%, and correctly
+%pass the parser.
+%Overall, t
+%\item \textbf{}
+
 \end{itemize}
 
 The remainder of this paper is structured as follows: \Cref{sec:rich-input-structures} highlights the limitations of the state-of-the-art input repair method (\ddmax) and illustrates how \brepair overcomes these limitations. In \Cref{sec:input-synthesis} we describe how \brepair conducts input synthesis, and \Cref{sec:brepair}  describes the \brepair algorithm. We describe our experimental setup and findings in \Cref{sec:experimental-setup} and \Cref{sec:results}. We address the limitations %and threats to the validity 
