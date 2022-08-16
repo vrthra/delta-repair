@@ -644,6 +644,15 @@ by modifying the parser to provide such failure feedback, as demonstrated in thi
 % to the parser. % that we require
 %is trivial.
 %not difficult.
+} \revise{
+We note that achieving these parser constraints 
+%, i.e.,
+%determining the incompleteness or incorrectness of an input
+does not require a formal grammar. 
+%this information can be provided by a parser without a grammar. 
+%Even though a parser  often times employ a formal grammar for validity checks, 
+%to determine the incompleteness or incorrectness of an input, %However, 
+There are several systems satisfying our constraints by implementing handwritten parsers without formal grammar. For example, many implementations of JSON are handwritten without a formal grammar~\todo{cite}.
 }
 %In our evaluation, u
 
@@ -690,7 +699,7 @@ how to use lightweight parser-error-feedback (e.g., \textit{incomplete} checks) 
 \brepair technique can repair inputs with rich structure, including multiple faults and large spans. This is a major limitation of the state-of-the-art \ddmax. 
 %is its inability to handle \textit{inputs with rich structure}. 
 
-\item \textbf{Effectiveness.} We evaluate \brepair using 806 (real-world) invalid inputs belonging to four well-known input formats (e.g., cJSON and TinyC). 
+\item \textbf{Empirical Evaluation.} We evaluate \brepair using 806 (real-world) invalid inputs belonging to four well-known input formats (e.g., cJSON and TinyC). 
 Our evaluation results show that %given input processors that can accurately
 %signal \emph{incompleteness} or \emph{incorrectness} and % when given
 %invalid inputs,
@@ -699,7 +708,7 @@ Our evaluation results show that %given input processors that can accurately
 %and it repairs 77\% of invalid inputs and, within four minutes.}
 % and recovers 91% of input data,
 % (77\% repairs within four minutes), and 
-It is also up to 35\% more effective than \ddmax.
+It is up to 35\% more effective than \ddmax.
 %, the state-of-the-art input repair method.
 %and \recheck{X\% more efficient} %can provide repairs that are more maximal
 %than \ddmax.
@@ -1541,15 +1550,7 @@ This section describes the experimental setup of this work.
 %Finally, before popping the next prefix from the queue, \brepair tries to append all characters to the prefix that do not cause the prefix to become \emph{incorrect}, also increasing the editing distance by 1 (\refnumber{5}).
 %
 %In this paper,
-We investigate the \textit{data recovery} (RQ1), \textit{effectiveness} (RQ2), 
-%\textit{diagnostic quality} (RQ3) 
-and \textit{efficiency} (RQ3) of our approach using several well-designed experiments. %For each experiment, w
-We also examine how \approach compares to four state-of-the-art techniques, 
-namely the built-in repair of the programs (\textit{baseline}), error-recovery of \textit{ANTLR}, as well as 
-%'s error recovery strategy, 
-%lexical \ddmax 
-lexical and syntactic 
-\ddmax.
+
 
 %Particularly,
 %To this end,
@@ -1580,13 +1581,13 @@ Inputs}
 \caption{Data Recovery (file size difference) and Data Loss  (Levenshtein distance) of \approach vs. %the best-performing state-of-the-art methods, i.e. 
 lexical (Lex.) \ddmax and syntactic (Syn.) \ddmax. 
 The highest data recovery and lowest data loss are in bold, percentage improvement (Impr.) %or reduction (red.) 
-of \approach over the best baseline which are significant (i.e., greater than five percent (>5\%)) are also in bold.
+of \approach over the best baseline which are significant (i.e., greater than five percent ($>$5\%)) are also in bold.
 }
 %\vspace{-0.5cm}
 \begin{tabular}{|l | c |  r  r  r  r  | c |  r  r  r  r |}
 \hline
  &  \multicolumn{5}{c|}{\textbf{\% Data Recovered by Approach}} &  \multicolumn{5}{c|}{\textbf{Average Data Loss }}  \\
-&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format} (\#inputs)}  &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format} (\#inputs)}  \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
 \textbf{Techniques} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
 \hline
 \textbf{Lex. ddmax} & 81\%  & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% & 18.0 & {10.2} &	61.6 &	\textbf{6.2} & 7.5 \\			
@@ -1604,17 +1605,27 @@ of \approach over the best baseline which are significant (i.e., greater than fi
 %\vspace{-0.5cm}
 \end{table*}
 
-\noindent\textbf{Research Questions:} We pose the following research questions:
+\noindent\textbf{Research Questions:} 
+We investigate the \textit{data recovery} (RQ1), \textit{effectiveness} (RQ2), 
+%\textit{diagnostic quality} (RQ3) 
+and \textit{efficiency} (RQ3) of our approach using several well-designed experiments. %For each experiment, w
+We also examine how \approach compares to four state-of-the-art techniques, 
+namely the built-in repair of the programs (\textit{baseline}), error-recovery of \textit{ANTLR}, as well as 
+%'s error recovery strategy, 
+%lexical \ddmax 
+lexical \ddmax and syntactic 
+\ddmax. Specifically, we pose the following research questions:
 \begin{description}[wide, labelwidth=!, labelindent=0pt]
 
 \item[RQ1: Data Recovery and Data Loss.]
-How much input data is recovered by \approach, and how much data loss is incurred?  Does \approach recover as much data as 
+How much input data is recovered by \approach, and how much data is lost? %s is incurred?  
+Does \approach recover as much data as 
 the state-of-the-art methods?
 
   \item[RQ2: Effectiveness.]  %\& Efficiency:}
-How effective is our approach (\approach) in fixing invalid inputs? Is it as effective as the state-of-the-art methods?
+How effective is \approach in fixing invalid inputs? Is it as effective as the state-of-the-art methods?
 
-\item[RQ3: Efficiency.] What is the efficiency (i.e., time performance) of
+\item[RQ3: Efficiency.] What is the efficiency (runtime) of
 \approach? Is it as efficient as the state-of-the-art techniques?
 \end{description}
 
@@ -1633,19 +1644,20 @@ We evaluate our approach using 806 invalid input files. %.
 As test inputs, we crawled a large corpus of valid and invalid real-world files
 from GitHub using the GitHub crawling API~\cite{githubapi}. 
 %TODO add table with number of files?
-For each format, we introduced a set of 100 artificially mutated (invalid) files
-that we mutated from 50 randomly selected valid real-world files.
+In addition to real invalid inputs, for each format, we introduced a set of 100 artificially mutated (invalid) files
+%that we mutated 
+from 50 randomly selected valid real-world files.
 Half of those mutated files contain a single mutated byte and the other half
 contains multiple (two to 16) mutated bytes.
 Each mutation can either be a byte-flip, an insertion or a deletion to 
 %, which we believe to 
 resemble real-world corruptions as close as possible
-(e.g. bit rot on hard disks or transmission errors in network protocols).
+(e.g., bit rot on hard disks or transmission errors in network protocols).
 
-\noindent\textbf{Metrics and Measures} used to evaluate repair quality includes: 
+\noindent\textbf{Metrics and Measures:} We employ the following metrics and measures to evaluate repair quality: 
 
-\noindent\textit{a.) Number of Repaired Inputs:} We count how many files were repaired before
-a four minute timeout by each input repair approach.
+\noindent\textit{a.) Number of Repaired Inputs:} We count the number of files repaired before
+a four minute timeout for each repair method.
 %\begin{description}[wide, labelwidth=!, labelindent=0pt]
  %of the tested repair programs.
  
@@ -1658,7 +1670,7 @@ the \emph{recovered inputs} and the original
 differs between the \emph{corrupt input} and the \emph{repaired input}.
 %  \cite{levDistance}.
 
-\noindent\textit{d.) Runtime:} We keep track of the time taken for the entire repair.
+\noindent\textit{d.) Runtime} is the time taken for input repair for each method.
 
 \noindent\textit{e.) Number of Program Runs:} To evaluate efficiency, we track the number of times the parser is executed by each approach. 
 %during test experiments of input fragments. 
@@ -1716,6 +1728,8 @@ Then, we run each repair technique on each file and collect the required data, i
 As repair techniques, we employ \emph{Baseline}, %(the built-in error recovery strategy of the subject program), the error recovery strategy of 
 \emph{ANTLR}, lexical \ddmax, syntactic \ddmax and \approach.
 All experiments were conducted within a timeout of four minutes per input, for each repair technique. % file.
+\revise{
+The maximum time budget was empirically determined in our preliminary experiments to ensure a balanced evaluation for all techniques. We found that four minutes is a sufficient time budget to evaluate all techniques on most inputs. It is also a reasonable maximum repair time for an end-user. In our experiments, a longer timeout did not result in a significant increase in repairs for all techniques.}
 
 
 %\subsubsection*{\bf Research Protocol}
@@ -1739,17 +1753,17 @@ All experiments were conducted within a timeout of four minutes per input, for e
 
 \section{Experimental Results}
 \label{sec:results}
-In this section, we
-discuss the %findings %
-results
-of our empirical evaluations.
+%In this section, we
+This section discusses the %findings %
+results %and findings 
+of our experiments. %mpirical evaluations.
 % for each of the posed research questions.
 
 %\todo{RQ1: we need to discuss the number of repair attempts or input fragments tested for feedback for \approach versus ddmax}
 
 \noindent
 \textbf{RQ1 Data Recovery and Data Loss:} 
-Let us investigate the amount of data recovered and lost by our approach (\approach), in comparison to
+Let us investigate the amount of data recovered and lost by \approach), in comparison to
 the best-performing state-of-the-art method (\ddmax). 
 
 %\begin{table}[!tbp]\centering
@@ -1808,22 +1822,26 @@ the best-performing state-of-the-art method (\ddmax).
 %\todo{fix to new evaluation results} \todo{``100.6'' in \autoref{tab:data-recovery} is hard to justify, we need to remove insertions when computing this}	
 %For a fair evaluation, % of data recovery, 
 We examine 474 inputs that were completely repaired by %all three approaches, i.e., 
-lexical \ddmax, syntactic \ddmax and \approach, excluding empty files or files containing only white spaces. \Cref{tab:data-recovery-and-loss} %and \recheck{Figure X
+lexical \ddmax, syntactic \ddmax and \approach, excluding empty files (and white spaces). \Cref{tab:data-recovery-and-loss} %and \recheck{Figure X
 highlights the amount of data %loss and data
 recovered and lost % achieved 
 by each approach.\footnote{Note that due to input synthesis (i.e., insertion of input elements), \brepair may report recovering more than 100\% of the input file (e.g., 100.6\% for SExp in \Cref{tab:data-recovery-and-loss}).} %, as average over each file. %Our evaluation r
 
-Our evaluation results show that \textit{\approach recovered up to 91\% of input data, on average. This is 23\% more than the most effective baseline (syntactic \ddmax).} For all four input formats, \approach recovered up to (75\%) more data than both variants of \ddmax. Consider TinyC, where \approach recovered 72 to 75\% more input data than \ddmax (\textit{see} \Cref{tab:data-recovery-and-loss}). These results suggest that \approach is more effective in recovering valid input data 
+%Evaluation r
+Results show that \textit{\approach has a very high data recovery rate}. 
+It recovered 91\% of input data, on average. 
+This is 23\% more than the most effective baseline (syntactic \ddmax). For all input formats, \approach recovered up to (75\%) more data than both variants of \ddmax. Consider TinyC, where \approach recovered up to 75\% more input data than \ddmax (\textit{see} \Cref{tab:data-recovery-and-loss}). These results show that \approach is more effective in recovering valid input data 
 than \ddmax.
 
 \noindent
 \textbf{\textit{Data Loss:}} To measure data loss, we compute the Levenshtein distance between repaired and invalid files using %Meanwhile, %For a balanced and tractable evaluation of data loss,
 %we employed the
-a set of 327 completely repaired inputs %by all three approaches which %(321) inputs that
+%a set of 
+327 completely repaired inputs %by all three approaches which %(321) inputs that
 %which the Levenshtein distance implementation could compute %their edit distance
 where edit distance could be computed within a threshold of 750 edit distances (about 30 seconds).
 
-We found that \textit{\approach achieves a low data loss of about 11 edit distances,on avarage},  which is \textit{up to 10 times lower than (syntactic) \ddmax}. \Cref{tab:data-recovery-and-loss} shows that 
+We found that \textit{\approach achieves a low data loss of about 11 edit distances, on avarage},  which is \textit{up to 10 times lower than (syntactic) \ddmax}. \Cref{tab:data-recovery-and-loss} shows that 
 %this result of this experiment. F
 for almost all input formats, \approach achieved a lower data loss than syntactic and lexical \ddmax (except for SExp). This better  performance is attributed to the lightweight failure feedback of \approach, which allows it to distinguish between incomplete and incorrect input fragments.
 
@@ -1850,13 +1868,17 @@ four state-of-the-art methods containing
 %that of %in comparison to
 %the number of repairs achieved % compare to %as well as
 both \textit{language-agnostic input repair} approaches and \textit{grammar-based input repair} techniques. 
-\textit{Language-agnostic input repair} approaches include the built-in error-recovery of the subject program (called \textit{baseline}) and the maximizing variants of delta debugging, i.e., \textit{lexical ddmax} (\textit{see}  \Cref{tab:effectiveness-no-grammar}). 
+\textit{Language-agnostic input repair} approaches include the built-in error-recovery of the subject program (called \textit{baseline}) and 
+%the maximizing variants of delta debugging, i.e., 
+\textit{lexical ddmax} (\textit{see}  \Cref{tab:effectiveness-no-grammar}). 
 For comparison to \textit{grammar-based input repair methods}, we employ the built-in error-recovery strategy of the \textit{ANTLR} parser generator, and \textit{syntactic ddmax}  (\textit{see}  \Cref{tab:effectiveness-grammar}). 
 %four state-of-the-art techniques,
 %for all four input formats. We also compare the effectiveness of \approach to that of \recheck{four} state-of-the-art techniques,
 %, namely the built-in error-recovery of the subject program (called \textit{baseline}) and \textit{ANTLR}, and % as well as
 %the two maximizing variants of delta debugging, i.e., \textit{lexical ddmax} and \textit{syntactic ddmax}.   
-\Cref{fig:effectiveness}, \Cref{tab:effectiveness-no-grammar} and \Cref{tab:effectiveness-grammar} highlight the (overall) effectiveness of \approach in contrast to the state-of-the-art methods. 
+\Cref{fig:effectiveness}
+%, \Cref{tab:effectiveness-no-grammar} and \Cref{tab:effectiveness-grammar} 
+also highlights the effectiveness of \approach in contrast to the state-of-the-art methods. 
 %each approach %, as well as their effectiveness
 %for each input format.
 
@@ -1869,7 +1891,7 @@ For comparison to \textit{grammar-based input repair methods}, we employ the bui
 
 \noindent \textbf{\textit{Repair Effectiveness:}} %In our evaluation, %we found that
 \textit{Our approach %(\approach) 
-is highly effective in repairing invalid inputs, it repaired almost four out of every five invalid input withing a four minute timeout}, i.e., % \approach repaired 
+is very effective in repairing invalid inputs, it repaired almost four out of every five invalid input withing a four minute timeout}, i.e., % \approach repaired 
 about 77\% (624 out of 806) of invalid inputs. In comparison to language-agnostic approaches, %our 
 \approach is \textit{up to 18 times more effective than the built-in error recovery strategy of the subject programs (33 vs. 624 repairs)}, and % \approach is 
 up to 35\% more effective than the best performing language-agnostic approach for certain input formats (cJSON and TinyC). Overall, 
@@ -1913,7 +1935,7 @@ the \textit{combination of failure feedback and input synthesis} is vital for th
 %, this is evident by the effectiveness of \approach in comparison to the state-of-the-art methods.
 
 \begin{result}
-\approach is highly effective in repairing invalid input files: %, and more effective than the state-of-the-art.
+\approach is very effective in repairing invalid input files: %, and more effective than the state-of-the-art.
 It repaired four out of five (77\% of) invalid inputs and it is %up to 
 8\% more effective than the best language-agnostic method (lexical \ddmax). %baseline.
 \end{result}
@@ -1959,7 +1981,7 @@ It repaired four out of five (77\% of) invalid inputs and it is %up to
 
 
 \begin{table}[!tbp]\centering
-\caption{Number of Repaired Inputs within a four minute timeout for \approach vs. Language-agnostic state-of-the-art, i.e., lexical \ddmax and  baseline. The highest number of repaired inputs are in bold, as well as significant percentage improvement (Improv.) of \approach over the best baseline greater than five percent (>5\%). }
+\caption{Number of Repaired Inputs within a four minute timeout for \approach vs. Language-agnostic state-of-the-art, i.e., lexical \ddmax and  baseline. The highest number of repaired inputs are in bold, as well as significant percentage improvement (Improv.) of \approach over the best baseline greater than five percent ($>$5\%). }
 %\vspace{-0.5cm}
 \begin{tabular}{|l | c | r  r  r  r |}
 \hline
@@ -1987,7 +2009,7 @@ It repaired four out of five (77\% of) invalid inputs and it is %up to
 
 
 \begin{table}[!tbp]\centering
-\caption{Number of Repaired Invalid Inputs within a four minute timeout for \approach vs. Grammar-based input repair approaches, i.e.,  ANTLR and Syntactic \ddmax. The highest number of repaired inputs are in bold, as well as significant percentage improvement (Improv.) of \approach over the best baseline greater than five percent (>5\%). }
+\caption{Number of Repaired Invalid Inputs within a four minute timeout for \approach vs. Grammar-based input repair approaches, i.e.,  ANTLR and Syntactic \ddmax. The highest number of repaired inputs are in bold, as well as significant percentage improvement (Improv.) of \approach over the best baseline greater than five percent ($>$5\%). }
 %\vspace{-0.5cm}
 \begin{tabular}{|l | c | r  r  r  r |}
 \hline
@@ -2121,8 +2143,13 @@ repairs, respectively (\textit{see} \Cref{fig:repair-complementarity}). \approac
 %show that our approach is complementary to ddmax. 
 %It solely completed 61 repairs (9\%), all of which ddmax could not repair. 
 %Further inspection 
-%suggest that this 
-We attribute the unique repair achieved by \approach to the synergistic combination of \textit{failure feedback} and \textit{input synthesis}. % in \approach.
+%suggest that this
+\revise{On inspection, we found that the types of repairs completed by \approach (but not by \ddmax) were mostly insertions. We found that the insertions performed by \approach were mostly (missing) syntactic elements of the input like curly braces and colons for \texttt{JSON} or line breaks for \texttt{INI}. In some cases, \approach inserted alphanumeric characters. For instance, if a grammar expects a \texttt{char} where there is a missing \texttt{char}.} 
+%Such insertions might alter the data that is contained in the input, for example by adding a value in a JSON dictionary. However, the goal of FSynth (like DDmax) is to provide such candidate repairs for inspection by end-users.
+Overall, we attribute the unique repair achieved by \approach to the synergistic combination of \textit{failure feedback} and \textit{input synthesis}. % in \approach.
+
+
+
 \begin{figure}[!tbp]
 %\vspace{-0.4cm}
 \centering
@@ -2152,9 +2179,10 @@ We attribute the unique repair achieved by \approach to the synergistic combinat
 %\vspace{-0.4cm}
 \end{figure}
 
+
 \begin{result}
 \approach %outperforms and 
-is complementary to the best state-of-the-art methods (lexical and syntactic \ddmax). 
+is complementary to the state-of-the-art methods (lexical and syntactic \ddmax). 
 It %is the only technique that can 
 solely completes 9\% of all repairs, which is 
 up to five times 
@@ -2217,7 +2245,8 @@ reports the efficiency of all three approaches. % approach compared to ddmax. %t
 %For runtime,
 
 %In this evaluation, w
-We found that \textit{\approach is considerably efficient in input repair: It is reasonably fast, it takes about 10 seconds to repair an invalid input, on average}. However, it is about five times slower than \ddmax (two to three seconds, on average). 
+%We found that 
+\textit{\approach is considerably efficient in input repair: It is reasonably fast, it takes about 10 seconds to repair an invalid input, on average}. However, it is about five times slower than \ddmax (two to three seconds, on average). 
 %\approach is 50\% more efficient than lexical ddmax (\recheck{1.7s versus 2.5s}), and syntactic ddmax is about three times as efficient as \approach (\recheck{0.6s versus 1.7s}).
 %The time performance of
 %This implies that \approach is twice as fast as %er than
@@ -2256,7 +2285,7 @@ number of program runs required by \approach, especially due to its additional r
 %, and %it is
 %more efficient than lexical ddmax. %In addition, w
 %We observe that the number of program runs is the 
-is its main performance bottleneck . %of \approach.  % as well as \ddmax. %all three approaches. % to the
+is its main performance bottleneck. %of \approach.  % as well as \ddmax. %all three approaches. % to the
 %These results suggest that \approach is %not very time-consuming or
 %inexpensive, it as a reasonable number of repair attempts and time performance, especially in  comparison to lexical ddmax.
 
@@ -2300,19 +2329,20 @@ are in \textbf{bold}. %, second-best time performance is in \textit{italics}
 Our approach (\approach) and empirical evaluations may be limited by the following: % validity threats:
 
 \noindent
-\textbf{External Validity:} This refers to the \textit{generalizability} of our approach and results, i.e., 
+\textbf{External Validity:} This refers to the \textit{generalizability} of our approach, i.e., 
+%results, i.e., 
 %We acknowledge 
 the threat that \approach may not generalize to other programs and input formats. 
 %and their corresponging program written in \<C>. 
 %programming languages.
 %other than the ones used in this paper. 
-To mitigate this threat, we have employed four well-known input formats with varying complexity, as well as their corresponding programs with varying sizes (375 to 3062 LOC) and maturity (6 to 21 years old). 
+To mitigate this threat, we have employed four well-known input formats with varying complexity, their corresponding programs also have  varying sizes (375 to 3062 LOC) and maturity (6 to 21 years old). 
 
 \noindent
-\textbf{Internal Validity:} This concerns the \textit{correctness} of our implementation and evaluation, especially if we have correctly implemented \approach and the baselines. We mitigate this threat by testing our implementation of all approaches on small and simple test inputs to ensure the implementation behaves as described. 
+\textbf{Internal Validity:} This concerns the \textit{correctness} of our implementation and evaluation, especially if we have correctly implemented \approach and the baselines. We mitigate this threat by testing our implementation of all approaches on small and simple test inputs to ensure the they behave as described. 
 
 \noindent
-\textbf{Construct Validity:} This concerns the test oracle and failure feedback employed in our evaluation. To ensure all subjects provide the expected \textit{incomplete} and i feedback, we tested the programs on sample invalid inputs and modified the subject program if needed. 
+\textbf{Construct Validity:} This concerns the test oracle and failure feedback employed in our evaluation. To ensure all subjects provide the expected \textit{incomplete} and \textit{(in)correct} feedback, we tested the programs on sample invalid inputs and modified the subject program, if needed. 
 
 \noindent
 \textbf{Limited to Data Repair:} The repair produced by our approach aim to ensure maximal data recovery, but it does not ensure that the intended user information is preserved. Hence, \approach is limited to repair of the input data, but not the intended information. 
@@ -2320,9 +2350,13 @@ To mitigate this threat, we have employed four well-known input formats with var
 
 \noindent
 \textbf{Input Constraints and Semantics:} \approach does not address concerns about recovering or preserving the input constraints or intended semantics of the input data. For instance, repairing an invalid checksum or hash requires such information, and \approach will be limited for this use cases. However, it would provide repair candidates that allow end-users to debug such semantic issues. 
+\revise{
+In addition, inputs with significant semantic corruption may not be effectively repaired by FSynth. Even though FSynth is effective in fixing structural parts of invalid inputs, when the corruption is in the semantic part, the missing data becomes difficult to recover. Examples include corrupted numbers in calculations, and dates.}
 
 \noindent
-\textbf{Repair via Input Synthesis:} The repair via synthesis operation %(i.e., insertion) % operation) 
+\textbf{Repair via Input Synthesis:} 
+\revise{Firstly, the repair via synthesis approach of \approach is exhaustive, thus it can quickly become computationally expensive.} 
+Secondly, the repair via synthesis operation %(i.e., insertion) % operation) 
 of our approach poses the risk of introducing input elements with unintended semantic consequences. 
 %Such operations % into the input, which 
 Specifically, insertion operations may lead %cause further 
@@ -2337,6 +2371,7 @@ encourage end-users to select the best semantically-fit repair from the
 %as potential repairs that allows 
 %as
 potential repair candidates provided by \approach. 
+
 %, out of which to select the best semantically fit repair for their use.
 %understanding %and repairing 
 %the input data. 
@@ -2388,11 +2423,15 @@ Unlike \approach which aims to fix an invalid input, these schemes need an input
 \label{sec:conclusion}
 %\recheck{
 %In this paper, we 
-This paper presents \approach, an input repair approach that employs input synthesis and lightweight failure feedback (i.e., incomplete and (in)correct checks) to repair invalid inputs. Our approach is black-box, does not require program analysis or an input grammar. We evaluate the effectiveness, data recovery and efficiency of our approach, in comparison to the state-of-the-art methods. We show that \approach is highly effective and efficient in input repair---it completes the repair of four in five invalid inputs (77\%) and recover 91\% of input data within four minutes. Furthermore, we demonstrate that our approach is up to 35\% more effective than the best 
+This paper presents \approach, an input repair approach that employs input synthesis and lightweight failure feedback (i.e., incomplete and (in)correct checks) to repair invalid inputs. Our approach is black-box, does not require program analysis or an input grammar. We evaluate the data recovery,effectiveness, and efficiency of our approach, in comparison to the state-of-the-art methods. We show that \approach has a very high data recovery rate, it recovered 91\% of input data. 
+It is also very effective and efficient in input repair---it completes the repair of about four in five invalid inputs (77\%) within four minutes. Furthermore, we demonstrate that our approach is up to 35\% more effective than the best 
 %In comparison to the 
-best baseline---(syntactic) \ddmax, without using an input grammar. In summary, this work demonstrates that combining lightweight failure feedback and input synthesis are important for the effective repair of invalid inputs, especially in the absence of an input specification (e.g., grammar) and white-box program access.
+best baseline---(syntactic) \ddmax, without using an input grammar. In summary, this work demonstrates that combining lightweight failure feedback and input synthesis are important for the effective repair of invalid inputs, especially in the absence of an input specification 
+%(e.g., grammar)
+and program analysis.
 
-In the future, we plan to investigate how to improve the performance of our approach by learning input semantics and constraints, or via program analysis and the knowledge of the input specification. %grammar.
+In the future, we plan to investigate how to improve the performance of our approach by learning input semantics and constraints.
+%, or via program analysis and the knowledge of the input specification. %grammar.
 %}
 %  more effective thja
 %\todo{discuss potential future works}
@@ -2404,7 +2443,7 @@ We also provide our implementation, data and experimental results for easy repli
 
  \begin{center}
 % \vspace{-0.2mm}
-     \textbf{\url{https://tinyurl.com/fsynth-artifact-fse2022}}
+     \textbf{\url{https://tinyurl.com/fsynth-artifact-fse2022}}\todo{update link}
  \end{center}
 
 % \begin{acks}
