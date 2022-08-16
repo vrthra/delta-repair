@@ -17,6 +17,7 @@ Failure Feedback}
 \renewcommand{\mytitle}{Repairing Inputs}
 \renewcommand{\mytitle}{Repairing Inputs with Input Synthesis}
 \renewcommand{\mytitle}{Repairing Inputs via Synthesis}
+\renewcommand{\mytitle}{Input Repair via Synthesis and Lightweight \\ Error Feedback}
 
 
 \usepackage{listings}
@@ -195,21 +196,32 @@ pics/numbering/.style args={#1}{code={
 
 \begin{abstract}
 \done{For the title, I'd definitely include ``synthesis'', as in ``Repairing Inputs with Input Synthesis'' -- AZ}
-Data cleansing and data repair are time-consuming tasks for developers, especially in fields that aggregate data from multiple resources (e.g., data warehousing). Oftentimes,
+%Data cleansing and data 
+%in fields that aggregate data from multiple resources (e.g., data warehousing). 
+Oftentimes,
 input data may ostensibly conform to a given input format, but cannot be parsed by a conforming program, for instance, due to human error or data corruption.
-In such cases, a data engineer has to manually repair the corrupt data such that
-it follows a given format, and hence can be processed by the conforming program.
+In such cases, a data engineer \revise{is tasked with \textit{input repair}, i.e., she has to manually repair the corrupt data such that
+it follows a given format, and hence can be processed by the conforming program.}
 Such manual repair can be time-consuming and
-error-prone.
+error-prone. 
+%When a program input is invalid, developers are tasked with repairing such inputs.  
+\revise{In particular, input repair is very challenging without an input specification (e.g., input grammar) or program analysis}.
+
+
 
 In this work, we show that incorporating lightweight failure feedback (e.g., input incompleteness) % \todo{what is lightweight error-feedback?} 
 to parsers is sufficient to repair any corrupt input data with maximal closeness to the
-semantics of the input data. We propose an approach (called \brepair) that leverages \emph{lightweight error-feedback} and \emph{input synthesis} to repair invalid inputs. %\todo{We need to clarify the feedback requirement, correctness and incompleteness}
+semantics of the input data. We propose an approach (called \brepair) that leverages \emph{lightweight error-feedback} and \emph{input synthesis} to repair invalid inputs. 
+\revise{\brepair is \textit{grammar-agnostic} and it does not require program analysis}. 
+%\todo{We need to clarify the feedback requirement, correctness and incompleteness}
 Given a conforming program, %\todo{it is not clear, what is a conforming program, a parser or any program conforming to the input format??}, 
 and any invalid input, \brepair provides a set
 of repairs prioritized by the distance of the repair from the original input.
 
-We evaluate \brepair on 806 (real-world) invalid inputs using four well-known input formats, namely INI, TinyC, SExp, and cJSON. In our evaluation, we found that \approach is highly effective and efficient in input repair. It repairs 77\% of invalid inputs and recovers 91\% of input data, within four minutes. It is up to 35\% more effective than \ddmax, the previously best-known approach.
+We evaluate \brepair on 806 (real-world) invalid inputs using four well-known input formats, namely INI, TinyC, SExp, and cJSON. In our evaluation, we found that \approach 
+\revise{recovers most (91\%) of valid input data.} %and it 
+\approach is also highly effective and efficient in input repair: It repairs 77\% of invalid inputs %and recovers 91\% of input data, 
+within four minutes. It is up to 35\% more effective than \ddmax, the previously best-known approach.
 Overall, our approach addresses several
 limitations of
 \ddmax,
@@ -342,7 +354,7 @@ decompose the input into independent fragments (called deltas ($\delta$)), one c
 successively minimize the parse-error inducing part of the input resulting in a
 maximal parsing input.
 %TODO Use textcite here:
-More importantly, \cite{kirschner2020debugging} and \cite{scaffidi2008topes} demonstrate the prevalence of invalid inputs and the importance of input repair in practice. % without grammars or program analysis.
+More importantly, Kirschner et al.~\cite{kirschner2020debugging} and Scaffidi et al.~\cite{scaffidi2008topes} demonstrate the prevalence of invalid inputs in the wild and the importance of input repair in practice. % without grammars or program analysis.
 %using \ddmax. %}.
 
 
