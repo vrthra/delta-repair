@@ -822,7 +822,7 @@ non-contiguous. The operation of \ddmax (\Cref{fig:ddmax}) proceeds as follows:
 \item The operation starts with $\ddmax_2(\emptyset, 2)$
 \item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply
 \item Increase to complement:\\
-$\cfail - \Delta_2$= \letterboxed{]+} \fail \\
+$\cfail - \Delta_1$= \letterboxed{]+} \fail \\
 $\cfail - \Delta_2$= \letterboxed{[*} \fail \\
 \item Increase to subset:\\
 $\cfail \cup \Delta_1$=\letterboxed{[*} \fail \\
@@ -832,15 +832,15 @@ $\cfail \cup \Delta_2$= \letterboxed{]+} \fail \\
   $\ddmax_2\bigl(\emptyset, 4)\bigr) $
 \item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply.
 \item Increase to complement:\\
-$\cfail - \Delta_2$= \letterboxed{*]+} \fail \\
+$\cfail - \Delta_1$= \letterboxed{*]+} \fail \\
 $\cfail - \Delta_2$= \letterboxed{[]+} \fail \\
-$\cfail - \Delta_2$= \letterboxed{[*+} \fail \\
-$\cfail - \Delta_2$= \letterboxed{[*]} \fail \\
+$\cfail - \Delta_3$= \letterboxed{[*+} \fail \\
+$\cfail - \Delta_4$= \letterboxed{[*]} \fail \\
 \item Increase to subset:\\
 $\cfail \cup \Delta_1$=\letterboxed{[} \fail \\
-$\cfail \cup \Delta_1$=\letterboxed{*} \fail \\
-$\cfail \cup \Delta_1$=\letterboxed{]} \fail \\
-$\cfail \cup \Delta_1$=\letterboxed{+} \fail \\
+$\cfail \cup \Delta_2$=\letterboxed{*} \fail \\
+$\cfail \cup \Delta_3$=\letterboxed{]} \fail \\
+$\cfail \cup \Delta_4$=\letterboxed{+} \fail \\
 \item Increase granularity: $4 < 4$ \fail\\
 \item The solution is $\emptyset$.
 \end{enumerate}
@@ -872,7 +872,7 @@ The operation of \ddmax (\Cref{fig:ddmax}) is as follows:
 \item The operation starts with $\ddmax_2(\emptyset, 2)$
 \item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply
 \item Increase to complement:\\
-$\cfail - \Delta_2$= \letterboxed{+]} \fail \\
+$\cfail - \Delta_1$= \letterboxed{+]} \fail \\
 $\cfail - \Delta_2$= \letterboxed{[*} \fail \\
 \item Increase to subset:\\
 $\cfail \cup \Delta_1$=\letterboxed{[*} \fail \\
@@ -882,15 +882,15 @@ $\cfail \cup \Delta_2$= \letterboxed{+]} \fail \\
   $\ddmax_2\bigl(\emptyset, 4)\bigr) $
 \item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply.
 \item Increase to complement:\\
-$\cfail - \Delta_2$= \letterboxed{*+]} \fail \\
+$\cfail - \Delta_1$= \letterboxed{*+]} \fail \\
 $\cfail - \Delta_2$= \letterboxed{[+]} \fail \\
-$\cfail - \Delta_2$= \letterboxed{[*]} \fail \\
-$\cfail - \Delta_2$= \letterboxed{[*+} \fail \\
+$\cfail - \Delta_3$= \letterboxed{[*]} \fail \\
+$\cfail - \Delta_4$= \letterboxed{[*+} \fail \\
 \item Increase to subset:\\
 $\cfail \cup \Delta_1$=\letterboxed{[} \fail \\
-$\cfail \cup \Delta_1$=\letterboxed{*} \fail \\
-$\cfail \cup \Delta_1$=\letterboxed{+} \fail \\
-$\cfail \cup \Delta_1$=\letterboxed{]} \fail \\
+$\cfail \cup \Delta_2$=\letterboxed{*} \fail \\
+$\cfail \cup \Delta_3$=\letterboxed{+} \fail \\
+$\cfail \cup \Delta_4$=\letterboxed{]} \fail \\
 \item Increase granularity: $4 < 4$ \fail\\
 \item The solution is $\emptyset$.
 \end{enumerate}
