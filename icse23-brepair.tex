@@ -213,7 +213,7 @@ it follows a given format, and hence can be processed by the conforming program.
 Such manual repair can be time-consuming and
 error-prone. 
 %When a program input is invalid, developers are tasked with repairing such inputs.  
-\revise{In particular, input repair is very challenging without an input specification (e.g., input grammar) or program analysis}.
+\revise{In particular, input repair is challenging without an input specification (e.g., input grammar) or program analysis}.
 
 
 
@@ -227,7 +227,7 @@ and any invalid input, \brepair provides a set
 of repairs prioritized by the distance of the repair from the original input.
 
 We evaluate \brepair on 806 (real-world) invalid inputs using four well-known input formats, namely INI, TinyC, SExp, and cJSON. In our evaluation, we found that \approach 
-\revise{recovers most (91\%) of valid input data.} %and it 
+\revise{recovers 91\% of valid input data.} %and it 
 \approach is also highly effective and efficient in input repair: It repairs 77\% of invalid inputs %and recovers 91\% of input data, 
 within four minutes. It is up to 35\% more effective than \ddmax, the previously best-known approach.
 Overall, our approach addresses several
@@ -292,7 +292,8 @@ in terms of the set of repairs offered.
 \label{sec:intro}
 
 \revise{
-Input data is prone to unintended errors. Such errors may be introduced when the data is being created (by humans or buggy programs), modified (by external actors)
+Input data is prone to unintended errors. Such errors may be introduced when
+the data is being created (by humans or by buggy programs), modified (by external actors)
 or transmitted (via flawed networks)~\cite{scaffidi2008accommodating}. 
 For instance, several inputs are created by hand, leading to \textit{invalid inputs}~\cite{mucslu2015preventing}. Invalid input data may also be caused by  disagreements among data sources on the format specification which leads to different %variances in the
 implementations of the specification. For example, JSON libraries implement slightly different
@@ -304,23 +305,31 @@ These problems lead to invalid inputs that cannot be processed by their conformi
 }
 
 \revise{
-Given such \revise{invalid} inputs that are \emph{almost} but \emph{not quite} parsable, developers are saddled with the task of \textit{input repair}. Input repair is particularly important due to the high prevalence of invalid inputs in software practice~\cite{kirschner2020debugging}. Besides, it is challenging to recover the valid portion of invalid inputs~\cite{scaffidi2008topes}. 
-%}
+Given such invalid inputs that are \emph{almost} but \emph{not quite}
+parsable, developers are saddled with the task of \textit{input repair}. Input
+repair is particularly important due to the high prevalence of invalid inputs
+in software practice~\cite{kirschner2020debugging}. It can be challenging
+to recover the valid portion of invalid inputs
+automatically~\cite{scaffidi2008topes}, and developers often have to
+\emph{manually} repair such inputs~\cite{kirschner2020debugging}, which is
+time-consuming and error-prone.
+}
 %\revise{
 %Specifically, t
-To repair invalid inputs, %consuming such resources %, and aggregating them 
+%To repair invalid inputs, %consuming such resources %, and aggregating them 
 %often involves trying to
-developers \textit{manually} try to 
-maximally parse them by minimizing parse errors~\cite{kirschner2020debugging}, this manual process is time-consuming and error-prone.}
+%developers \textit{manually} try to 
+%maximally parse them by minimizing parse errors~\cite{kirschner2020debugging}, this manual process is time-consuming and error-prone.}
 
 \revise{
 %On one hand, g
-Grammar-based input repair approaches, such as 
-\emph{error-correcting} parsers~\cite{aho1972minimum,diekmann2020dont,parr2011ll}, allow to 
-repair invalid inputs given 
+Given a formal grammar for inputs, grammar-based input repair approaches such as 
+\emph{error-correcting}
+parsers~\cite{aho1972minimum,diekmann2020dont,parr2011ll}, can
+repair invalid inputs.
 %parser that conforms to an available 
-a formal specification such as a context-free
-grammar. 
+%a formal specification such as a context-free
+%grammar. 
 %, and the grammar is available.
 } 
 %context-free grammar, and an acceptable formal grammar is available,
@@ -390,7 +399,7 @@ has certain limitations which inhibit it from completely repairing any invalid i
 \Cref{tab:ddmaxlimitations} and \Cref{sec:rich-input-structures} illustrate %some of
 these limitations with simplified invalid inputs. % as examples.
 Notably, two major \ddmax limitations include its (1) \textit{limited repair operation} (only deletion), and (2) inability to completely repair \textit{rich input structures} (e.g., multiple faults) due to inherent assumptions. 
-
+Our approach addresses these limitations of \ddmax, which we now discuss in detail.
 % (e.g., its search span)..
 %\textit{multiple faults in input data}, and (3)
 %\textit{inherent assumptions about the richness of input structures} (e.g., its search span).
@@ -466,7 +475,8 @@ Rich Structure (multiple-faults) \\
 %examples show.
 
 %\todo{reduce further .. and add example}
-\revise{In this paper, we address several limitations of \ddmax, without access to an input grammar or program analysis.} Firstly, \ddmax's repair is restricted to deletion, which makes it sub-optimal for repairing some invalid inputs. 
+%\revise{We discuss the limitations of \ddmax in detail.}
+Firstly, \ddmax's repair is restricted to deletion, which makes it sub-optimal for repairing some invalid inputs. 
 %The problem is that 
 While \ddmax can repair invalid inputs due to 
 %in many circumstances such as
@@ -645,15 +655,18 @@ by modifying the parser to provide such failure feedback, as demonstrated in thi
 %is trivial.
 %not difficult.
 } \revise{
-We note that achieving these parser constraints 
+We note that satisfying the requirements for \approach does not require using a
+formal grammar for parsing, and indeed, there are several systems that
+implement handwritten parsers that satisfy \approach
+constraints~\cite{eaton2021parser}.}
+% Parser generators vs. handwritten parsers: surveying major language implementations in 2021
+% https://notes.eatonphil.com/parser-generators-vs-handwritten-parsers-survey-2021.html
 %, i.e.,
 %determining the incompleteness or incorrectness of an input
-does not require a formal grammar. 
 %this information can be provided by a parser without a grammar. 
 %Even though a parser  often times employ a formal grammar for validity checks, 
 %to determine the incompleteness or incorrectness of an input, %However, 
-There are several systems satisfying our constraints by implementing handwritten parsers without formal grammar. For example, many implementations of JSON are handwritten without a formal grammar~\todo{cite}.
-}
+%There are several systems satisfying our constraints by implementing handwritten parsers without formal grammar. For example, many implementations of JSON are handwritten without a formal grammar~\todo{cite}.
 %In our evaluation, u
 
 %\recheck{
