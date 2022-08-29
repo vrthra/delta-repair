@@ -762,12 +762,12 @@ The \emph{maximizing Delta Debugging algorithm} $\ddmax(c)$ is
     %if len(minus(CX_I, cprime_y)) == 1: return cprime_y
   \textcolor{red}{\dpass} & \text{\textcolor{red}{\hphantom{else }if $|\cfail - \dpass| = 1$} (``base case$^{\textcolor{red}{a}}$'')} \\
 %
-\ddmax_2(\cfail - \Delta_i, 2) & \text{else if $\exists i \in \{1, \dots, n\} \cdot \test(\cfail - \Delta_i) = \pass$ (``increase to complement'')} \\
+\ddmax_2(\cfail - \Delta_i, 2) & \text{else if $\exists i \in \{1, \dots, n\} \cdot \test(\cfail - \Delta_i) = \pass$ (``incr. to complem.'')} \\
 %
 \ddmax_2\bigl(\dpass \cup \Delta_i, \max(n - 1, 2)\bigr) &
-\text{else if $\exists i \in \{1, \dots, n\} \cdot \test(\dpass \cup \Delta_i) = \pass$ (``increase to subset'')} \\
+\text{else if $\exists i \in \{1, \dots, n\} \cdot \test(\dpass \cup \Delta_i) = \pass$ (``incr. to subset'')} \\
 %
-  \ddmax_2\bigl(\dpass, \min(|\cfail \textcolor{red}{- \dpass}|, 2n)\bigr) & \text{else if $n < |\cfail - \dpass|$ (``increase granularity$^{\text{\textcolor{red}{b}}}$'')} \\
+  \ddmax_2\bigl(\dpass, \min(|\cfail \textcolor{red}{- \dpass}|, 2n)\bigr) & \text{else if $n < |\cfail - \dpass|$ (``incr. granularity$^{\text{\textcolor{red}{b}}}$'')} \\
 \dpass & \text{otherwise (``done'').}
 \end{cases}
 \end{align*}
@@ -1212,9 +1212,9 @@ That is, we know that \<inputstr[:boundary]> parses correctly. Hence, for
 deletion, we produce a string without the character at the \<boundary>.
 \begin{lstlisting}[caption=\brepair repairs,label={lst:repairsdelete}]
 def apply_delete(item):
-    inp = item.inputstr[:item.boundary] +
-          item.inputstr[item.boundary + 1:]
-    return extend_deleted_item(Repair(inp, item.boundary))
+  inp = item.inputstr[:item.boundary] +
+      item.inputstr[item.boundary + 1:]
+  return extend_deleted_item(Repair(inp, item.boundary))
 \end{lstlisting}
 
 For \emph{insertion}, the algorithm is more involved. The problem is that we need to
@@ -1231,78 +1231,68 @@ point in the prefix. If it is true, we will only attempt insertions at the end
 of the prefix.
 \begin{lstlisting}[caption=\brepair repairs,label={lst:repairs}]
 def insert_at(item, k, i, suffix)
-    v = (item.inputstr[:k] + i +
-        item.inputstr[k:item.boundary] + suffix)
-    new_item = Repair(v, k, mask='%s_I%d' % (item.mask, k))
-    ie = extend_inserted_item(new_item)
-    if ie.boundary > k:
-       return ie
-    return None
+  v = (item.inputstr[:k] + i +
+    item.inputstr[k:item.boundary] + suffix)
+  new_item = Repair(v, k, mask='%s_I%d' % (item.mask, k))
+  ie = extend_inserted_item(new_item)
+  if ie.boundary > k:
+    return ie
+  return None
 
 def insert_char(item, i):
-    suffix = item.inputstr[item.boundary:]
-    return_lst = []
-    if LAST_INSERT_ONLY:
-        v = insert_at(item, item.boundary, i, suffix)
-        if v is not None: return_lst.append(v)
-    else:
-        for k in range(item.boundary):
-            v = insert_at(item, k, i, suffix)
-            if v is not None: return_lst.append(v)
-    return return_lst
+  suffix = item.inputstr[item.boundary:]
+  return_lst = []
+  if LAST_INSERT_ONLY:
+    v = insert_at(item, item.boundary, i, suffix)
+    if v is not None: return_lst.append(v)
+  else:
+    for k in range(item.boundary):
+      v = insert_at(item, k, i, suffix)
+      if v is not None: return_lst.append(v)
+  return return_lst
 
 def apply_insert(item):
-    new_items = []
-    for i in CHARACTERS:
-        items = item.insert_char(i)
-        if items:
-            new_items.extend(items)
-    return new_items
+  new_items = []
+  for i in CHARACTERS:
+    items = item.insert_char(i)
+    if items:
+      new_items.extend(items)
+  return new_items
 \end{lstlisting}
 
 \Cref{lst:brepair} shows how \brepair is invoked. The input string is passed to
 \<repair()>.
 \begin{lstlisting}[caption=\brepair initial search,label={lst:brepair}]
 def repair(inp):
-    boundary = binary_search(inp)
-    return find_fixes(inp, boundary)
+  boundary = binary_search(inp)
+  return find_fixes(inp, boundary)
 \end{lstlisting}
-This function does a \emph{binary search} (\Cref{lst:bsearch}) on the
+This function does a \emph{binary search}
+%(see supplementary material)
+on the
 argument string looking for the parse boundary where the return value changes
 from \emph{incomplete} to \emph{incorrect}. That is, if \<binary\_search>
 returns an index \<n>, then \<inputstr[:boundary]> is a valid prefix, and
 \<inputstr[boundary]> is the error causing character if one exists or the
 \<inputstr> is \emph{incomplete}.
-\begin{lstlisting}[caption=binary search,label={lst:bsearch}]
-def binary_search(inputstr, left=0, right=len(inputstr)-1):
-    if not inputstr: return left
-    if is_incomplete(Repair(inputstr, right)):
-        return len(inputstr)-1
-    while left + 1 < right:
-        middle = (left + right) // 2
-        if is_incomplete(Repair(inputstr, middle)):
-            left = middle
-        else:
-            right = middle
-    return left
-\end{lstlisting}
+%SupplMat
 The \<boundary> value is then passed
 to \<find\_fixes()> (\Cref{lst:findfixes}).
 \begin{lstlisting}[caption=find fixes,label={lst:findfixes}]
 def find_fixes(inputval, boundary):
-    next_items = [Repair(inputval, boundary)]
-    while True:
-        current_items, next_items = next_items, []
-        completed = []
-        for item in sample_items_by_mask(current_items)
-            for i in repair_and_extend(item)
-                next_items.append(i)
-                if i.is_complete(): completed.append(i)
-        if completed: return completed
+  next_items = [Repair(inputval, boundary)]
+  while True:
+    current_items, next_items = next_items, []
+    completed = []
+    for item in sample_items_by_mask(current_items)
+      for i in repair_and_extend(item)
+        next_items.append(i)
+        if i.is_complete(): completed.append(i)
+    if completed: return completed
 \end{lstlisting}
 The function \<find\_fixes()> takes in the input string and the parse boundary.
 It then generates a set of repair threads, out of which a few are chosen for
-continuation (\Cref{lst:sampling}).
+continuation (for a definition of \lstinline|sample_items_by_mask()|, see supplementary material).%\Cref{lst:sampling}).
 Then, each repair thread is processed individually.
 On each thread, a set of repairs (\Cref{lst:repairsdelete}, \Cref{lst:repairs})
 are applied. If the repair succeeds,
@@ -1315,7 +1305,7 @@ The sampling procedure attempts to discard redundant repairs so that the number
 of simultaneous threads we have to maintain does not grow unbounded. While doing
 that, it ensures that no unique repairs are discarded. For
 example, given a JSON fragment \<[1,2> a repair of \<[1,23>, \<[1,24>
-and \<[1,25> are redunant but \<[1,2,> is unique because the last repair
+and \<[1,25> are redundant but \<[1,2,> is unique because the last repair
 represents a change in semantics for the parser. The key insight here is to
 look at the \emph{extension} of a given string to classify whether it is unique
 or not. That is, given a string \<[1,2"x"]>, after repair of \<[1,23>, the next
@@ -1334,30 +1324,7 @@ can be rather time consuming. If this is the case, one can limit the repair
 threads to the best performing ones in terms of the parse boundary by using
 \<filter\_best()>.
 
-\begin{lstlisting}[caption=Sampling,label={lst:sampling}]
-def sample_items_by_mask(items):
-    masks = {}
-    for i in items:
-        key = (i.mask, i.boundary, i.inputstr[i.boundary-1])
-        if i.mask not in masks: masks[key] = []
-        masks[key].append(i)
-
-    sampled = []
-    for key in masks:
-        if len(masks[key]) < MAX_NUM_PER_MASK:
-            res = masks[key]
-        else:
-            res = random.sample(masks[key], MAX_NUM_PER_MASK)
-        sampled.extend(res)
-    return filter_best(sampled)
-
-def filter_best(items):
-    if MAX_SIMULTANIOUS_CORRECTIONS < 0: return items
-    boundaries = unique_sorted_boundaries(items)
-    return [i for i in items if i.boundary in
-            boundaries[:MAX_SIMULTANIOUS_CORRECTIONS]]
-\end{lstlisting}
-
+%SupplMat
 \begin{figure}
 \newlength\nodedst\setlength\nodedst{.5cm}
 \newlength\ndist\setlength\ndist{.1\nodedst}
@@ -1401,39 +1368,12 @@ repeatedly extending the string with a pending character from the remaining
 suffix in the input string. The small complication here is that different
 search algorithms are more suitable for deletion and insertion. With deletion,
 we have removed the error causing character, so the next parse error may
-be far away. Hence, we use binary search to find the next parse error (\Cref{lst:extenditem}).
-\begin{lstlisting}[caption=Extend the boundary,label={lst:extenditem}]
-def extend_deleted_item(item):
-    return bsearch_extend_item(item)
-
-def bsearch_extend_item(item):
-    bs = binary_search(item.inputstr, left=item.boundary)
-    if bs >= len(item.inputstr):
-        item.boundary = bs
-        return item
-    item.boundary = bs
-    return item
-\end{lstlisting}
+be far away. Hence, we use binary search to find the next parse error.%\Cref{lst:extenditem}).
+\par
 In the case of insert, however, in most cases, the character being inserted,
 and the character that originally caused a parse error can still cause a parse
-error. Hence, we apply linear search instead (\Cref{lst:extenditeminsert}).
-\begin{lstlisting}[caption=Extend the boundary,label={lst:extenditeminsert}]
-def extend_inserted_item(item):
-    return lsearch_extend_item(item, nxt=1)
-
-def lsearch_extend_item(item, nxt=1):
-    while True:
-        if (item.boundary + nxt) > len(item.inputstr):
-            item.boundary = item.boundary + nxt - 1
-            return item
-        s = Repair(item.inputstr, item.boundary + nxt)
-        if is_incomplete(s):
-            nxt += 1
-            continue
-        if is_incorrect(s):
-            item.boundary = item.boundary + nxt - 1
-            return item
-\end{lstlisting}
+error. Hence, we apply linear search instead (we provide code examples for binary and linear search in the supplementary material).% (\Cref{lst:extenditeminsert}).
+\par
 If this succeeds, the parse boundary after the repair
 would be larger than the old parse boundary. Hence, if the parse boundary has
 increased (\Cref{lst:repairandextend}), then
@@ -1442,7 +1382,7 @@ the
 repair is saved. If not, the repair is discarded.
 \begin{lstlisting}[caption=Repair and extend,label={lst:repairandextend}]
 def repair_and_extend(item):
-    return [apply_delete(item)] + apply_insert(item)
+  return [apply_delete(item)] + apply_insert(item)
 \end{lstlisting}
 The output from \<find\_fixes()> (\Cref{lst:findfixes}) is a set of repair
 threads with the least number of repairs from the passed input string.
@@ -1890,9 +1830,9 @@ For comparison to \textit{grammar-based input repair methods}, we employ the bui
 %for all four input formats. We also compare the effectiveness of \approach to that of \recheck{four} state-of-the-art techniques,
 %, namely the built-in error-recovery of the subject program (called \textit{baseline}) and \textit{ANTLR}, and % as well as
 %the two maximizing variants of delta debugging, i.e., \textit{lexical ddmax} and \textit{syntactic ddmax}.   
-\Cref{fig:effectiveness}
+%\Cref{tab:effectiveness-grammar}
 %, \Cref{tab:effectiveness-no-grammar} and \Cref{tab:effectiveness-grammar} 
-also highlights the effectiveness of \approach in contrast to the state-of-the-art methods. 
+%also highlights the effectiveness of \approach in contrast to the state-of-the-art methods. 
 %each approach %, as well as their effectiveness
 %for each input format.
 
@@ -1927,7 +1867,7 @@ Despite zero knowledge of the input format,
 \Cref{tab:effectiveness-grammar}
 %illustrates these results.
 shows that %for most (three out of four) input formats, 
-our approach outperformed the grammar-based input repair approaches: \approach is almost twice as effective as the error-recovery strategy of ANTLR (\textit{see} \Cref{fig:effectiveness}), and 
+our approach outperformed the grammar-based input repair approaches: \approach is almost twice as effective as the error-recovery strategy of ANTLR (\textit{see} \Cref{tab:effectiveness-grammar}), and 
 %In addition, 
 %Furthermore, %\approach 
 %it is 
@@ -2042,51 +1982,7 @@ It repaired four out of five (77\% of) invalid inputs and it is %up to
 \label{tab:effectiveness-grammar}
 \end{table}
 
-
-
-\begin{figure}[!tbp]
-%\vspace{-0.1cm}
-\centering
-%\includegraphics[width=0.45\textwidth]{figures/effectiveness.png}
-\pgfplotstableread{
-Label      INI    cJSON    SExpParser   TinyC
-Baseline   27     6        0            0
-ANTLR      133    69       96           46
-Lex.ddmax  201    132      131          114
-Syn.ddmax  201    144      149          120
-FSynth     191    158      121          154
-    }\effectivenessdata
-\begin{minipage}{.45\textwidth}
-\begin{tikzpicture}
-\begin{axis}[
-    ybar stacked,
-    ymin=0,
-    ymax=750,
-    xtick=data,
-    bar width=25,
-    legend style={cells={anchor=west}, legend pos=north west},
-    reverse legend=true,
-    xticklabels from table={\effectivenessdata}{Label},
-    xticklabel style={text width=2cm,align=center,font=\footnotesize},
-    xtick style={draw=none},
-]
-    \addplot [fill=darkgray] table [y=INI, meta=Label, x expr=\coordindex] {\effectivenessdata};
-    \addlegendentry{INI}
-    \addplot [fill=gray] table [y=cJSON, meta=Label, x expr=\coordindex] {\effectivenessdata};
-    \addlegendentry{cJSON}
-    \addplot [fill=lightgray] table [y=SExpParser, meta=Label, x expr=\coordindex] {\effectivenessdata};
-    \addlegendentry{SExpParser}
-    \addplot [fill=white,nodes near coords,point meta=y] table [y=TinyC, meta=Label, x expr=\coordindex] {\effectivenessdata};
-    \addlegendentry{TinyC}
-\end{axis}
-\end{tikzpicture}
-\end{minipage}
-\caption{Number of files repaired by each approach}
-\label{fig:effectiveness}
-%\vspace{-0.6cm}
-\end{figure}
-
-
+%Figure "Number of files repaired by each approach (bar chart) moved to supplementary material"
 
 %\begin{figure}[!tbp]
 %\vspace{-0.1cm}
