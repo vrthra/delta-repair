@@ -180,7 +180,6 @@ TSWLatexianTemp*
 /.idea/
 /__pycache__/
 
-acmart.cls
 acmart.pdf
 acmguide.pdf
 samples/sample-*.pdf
