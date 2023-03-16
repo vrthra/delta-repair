@@ -530,8 +530,8 @@ Our approach addresses these limitations of \ddmax, which we now discuss in deta
 %\footnotesize
 \begin{tabular}{|l | l | l | l |}
 \hline
-& \textbf{\ddmax} & & \textbf{\ddmax} \\
-\textbf{Sample Invalid Inputs} & \textbf{repair} & \textbf{\brepair repair} & \textbf{ limitation} \\
+\textbf{Examples of Invalid}& \textbf{\ddmax} & \textbf{\brepair} & \textbf{\ddmax} \\
+\textbf{Program Inputs} & \textbf{Repair} & \textbf{Repair} & \textbf{Limitation} \\
 \hline
 \letterboxedinTable{\{\ "name":\ "Dave"\ "age":\ 42\ \}} &
 %\letterboxed{\{\ "name":\ "Daveage":\ 42\ \}} &
@@ -703,7 +703,8 @@ data engineers.
 %bFuzzer is getting submitted at FSE too. -> alright, we can cite it after if accepted}.
 
 %\recheck{
-For instance, consider the invalid input in \textit{row one} of \Cref{tab:ddmaxlimitations} (i.e., \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}) which is invalid because of a \textit{missing comma separator} between the two values in the JSON object. While \ddmax could not completely repair this input, \brepair could complete a repair via input synthesis. % owing to its input synthesis component.
+For instance, consider the invalid input in \textit{row one} of \Cref{tab:ddmaxlimitations} (i.e., \letterboxed{\{\ "name":\ "Dave"\ "age":}
+\letterboxed{\ 42\ \}}) which is invalid because of a \textit{missing comma separator} between the two values in the JSON object. While \ddmax could not completely repair this input, \brepair could complete a repair via input synthesis. % owing to its input synthesis component.
 %\todo{to Move/restructure}
 %Specifically, o
 \Cref{sec:input-synthesis}
@@ -887,7 +888,7 @@ The \emph{maximizing Delta Debugging algorithm} $\ddmax(c)$ is
 \ddmax_2(\cfail - \Delta_i, 2) & \text{else if $\exists i \in \{1, \dots, n\} \cdot \test(\cfail - \Delta_i) = \pass$ (``incr. to complem.'')} \\
 %
 \ddmax_2\bigl(\dpass \cup \Delta_i, \max(n - 1, 2)\bigr) &
-\text{else if $\exists i \in \{1, \dots, n\} \cdot \test(\dpass \cup \Delta_i) = \pass$ (``incr. to subset'')} \\
+\text{else if $\exists i \in \{1, \dots, n\} \cdot \test(\dpass \cup \Delta_i) = \pass $ (``incr. to subset'')} \\
 %
   \ddmax_2\bigl(\dpass, \min(|\cfail \textcolor{red}{- \dpass}|, 2n)\bigr) & \text{else if $n < |\cfail - \dpass|$ (``incr. granularity$^{\text{\textcolor{red}{b}}}$'')} \\
 \dpass & \text{otherwise (``done'').}
