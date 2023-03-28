@@ -1361,50 +1361,12 @@ input string. A repair thread has a single \emph{boundary} and a corresponding
 \emph{valid prefix}.
 \end{description}
 
-
-\begin{lstlisting}[caption=Code that shows the sampling process,label={lst:sampling}]
-def sample_items_by_mask(items):
-  masks = {}
-  for i in items:
-    key = (i.mask, i.boundary, i.inputstr[i.boundary-1])
-    if i.mask not in masks: masks[key] = []
-    masks[key].append(i)
-
-  sampled = []
-  for key in masks:
-    if len(masks[key]) < MAX_NUM_PER_MASK:
-      res = masks[key]
-    else:
-      res = random.sample(masks[key], MAX_NUM_PER_MASK)
-    sampled.extend(res)
-  return filter_best(sampled)
-
-def filter_best(items):
-  if MAX_SIMULTANIOUS_CORRECTIONS < 0: return items
-  boundaries = unique_sorted_boundaries(items)
-  return [i for i in items if i.boundary in
-          boundaries[:MAX_SIMULTANIOUS_CORRECTIONS]]
-\end{lstlisting}
-
-\begin{lstlisting}[caption=Code for extending the boundary by performing binary search,label={lst:extenditem}]
-def extend_deleted_item(item):
-  return bsearch_extend_item(item)
-
-def bsearch_extend_item(item):
-  bs = binary_search(item.inputstr, 
-                     left=item.boundary)
-  if bs >= len(item.inputstr):
-    item.boundary = bs
-    return item
-  item.boundary = bs
-  return item
-\end{lstlisting}
-
-
 The \emph{deletion} algorithm is simple. When a parse error is observed,
 the character that caused the error is present at the \<boundary> value.
 That is, we know that \<inputstr[:boundary]> parses correctly. Hence, for
 deletion, we produce a string without the character at the \<boundary>.
+
+
 \begin{lstlisting}[caption=\brepair repairs,label={lst:repairsdelete}]
 def apply_delete(item):
   inp = item.inputstr[:item.boundary] +
@@ -1424,37 +1386,20 @@ Hence, we allow the user to choose to toggle this option with
 \<LAST\_INSERT\_ONLY>. If the option is false, we will attempt repairs at any
 point in the prefix. If it is true, we will only attempt insertions at the end
 of the prefix.
-\begin{lstlisting}[caption=\brepair repairs,label={lst:repairs}]
-def insert_at(item, k, i, suffix)
-  v = (item.inputstr[:k] + i +
-    item.inputstr[k:item.boundary] + suffix)
-  new_item = Repair(v, k, mask='%s_I%d' % (item.mask, k))
-  ie = extend_inserted_item(new_item)
-  if ie.boundary > k:
-    return ie
-  return None
 
-def insert_char(item, i):
-  suffix = item.inputstr[item.boundary:]
-  return_lst = []
-  if LAST_INSERT_ONLY:
-    v = insert_at(item, item.boundary, i, suffix)
-    if v is not None: return_lst.append(v)
-  else:
-    for k in range(item.boundary):
-      v = insert_at(item, k, i, suffix)
-      if v is not None: return_lst.append(v)
-  return return_lst
+\begin{lstlisting}[caption=Code for extending the boundary by performing binary search,label={lst:extenditem}]
+def extend_deleted_item(item):
+  return bsearch_extend_item(item)
 
-def apply_insert(item):
-  new_items = []
-  for i in CHARACTERS:
-    items = item.insert_char(i)
-    if items:
-      new_items.extend(items)
-  return new_items
+def bsearch_extend_item(item):
+  bs = binary_search(item.inputstr, 
+                     left=item.boundary)
+  if bs >= len(item.inputstr):
+    item.boundary = bs
+    return item
+  item.boundary = bs
+  return item
 \end{lstlisting}
-
 \begin{lstlisting}[caption=Code showing the binary search that is performed at the beginning of the repair,label={lst:bsearch}]
 def binary_search(inputstr, left=0, 
                 right=len(inputstr)-1):
@@ -1507,6 +1452,30 @@ the string can use more characters from the pending suffix resulting in a
 larger valid prefix string, but with a larger edit distance. This procedure is
 repeated until the prefix string is marked \emph{complete} by the input
 processor.
+
+\begin{lstlisting}[caption=Code that shows the sampling process,label={lst:sampling}]
+def sample_items_by_mask(items):
+  masks = {}
+  for i in items:
+    key = (i.mask, i.boundary, i.inputstr[i.boundary-1])
+    if i.mask not in masks: masks[key] = []
+    masks[key].append(i)
+
+  sampled = []
+  for key in masks:
+    if len(masks[key]) < MAX_NUM_PER_MASK:
+      res = masks[key]
+    else:
+      res = random.sample(masks[key], MAX_NUM_PER_MASK)
+    sampled.extend(res)
+  return filter_best(sampled)
+
+def filter_best(items):
+  if MAX_SIMULTANIOUS_CORRECTIONS < 0: return items
+  boundaries = unique_sorted_boundaries(items)
+  return [i for i in items if i.boundary in
+          boundaries[:MAX_SIMULTANIOUS_CORRECTIONS]]
+\end{lstlisting}
 
 The sampling procedure attempts to discard redundant repairs so that the number
 of simultaneous threads we have to maintain does not grow unbounded. While doing
@@ -1567,6 +1536,37 @@ threads to the best performing ones in terms of the parse boundary by using
 \end{figure}
 \newcommand{\refnumber}[1]{\hyperref[fig:brepair_flowchart]{Step~#1}}
 
+
+\begin{lstlisting}[caption=\brepair repairs,label={lst:repairs}]
+def insert_at(item, k, i, suffix)
+  v = (item.inputstr[:k] + i +
+    item.inputstr[k:item.boundary] + suffix)
+  new_item = Repair(v, k, mask='%s_I%d' % (item.mask, k))
+  ie = extend_inserted_item(new_item)
+  if ie.boundary > k:
+    return ie
+  return None
+
+def insert_char(item, i):
+  suffix = item.inputstr[item.boundary:]
+  return_lst = []
+  if LAST_INSERT_ONLY:
+    v = insert_at(item, item.boundary, i, suffix)
+    if v is not None: return_lst.append(v)
+  else:
+    for k in range(item.boundary):
+      v = insert_at(item, k, i, suffix)
+      if v is not None: return_lst.append(v)
+  return return_lst
+
+def apply_insert(item):
+  new_items = []
+  for i in CHARACTERS:
+    items = item.insert_char(i)
+    if items:
+      new_items.extend(items)
+  return new_items
+\end{lstlisting}
 
 After each repair, the new string is checked  to see if
 the string results in \emph{incomplete} rather than \emph{incorrect}. If the
