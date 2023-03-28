@@ -1361,6 +1361,46 @@ input string. A repair thread has a single \emph{boundary} and a corresponding
 \emph{valid prefix}.
 \end{description}
 
+
+\begin{lstlisting}[caption=Code that shows the sampling process,label={lst:sampling}]
+def sample_items_by_mask(items):
+  masks = {}
+  for i in items:
+    key = (i.mask, i.boundary, i.inputstr[i.boundary-1])
+    if i.mask not in masks: masks[key] = []
+    masks[key].append(i)
+
+  sampled = []
+  for key in masks:
+    if len(masks[key]) < MAX_NUM_PER_MASK:
+      res = masks[key]
+    else:
+      res = random.sample(masks[key], MAX_NUM_PER_MASK)
+    sampled.extend(res)
+  return filter_best(sampled)
+
+def filter_best(items):
+  if MAX_SIMULTANIOUS_CORRECTIONS < 0: return items
+  boundaries = unique_sorted_boundaries(items)
+  return [i for i in items if i.boundary in
+          boundaries[:MAX_SIMULTANIOUS_CORRECTIONS]]
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Code for extending the boundary by performing binary search,label={lst:extenditem}]
+def extend_deleted_item(item):
+  return bsearch_extend_item(item)
+
+def bsearch_extend_item(item):
+  bs = binary_search(item.inputstr, 
+                     left=item.boundary)
+  if bs >= len(item.inputstr):
+    item.boundary = bs
+    return item
+  item.boundary = bs
+  return item
+\end{lstlisting}
+
+
 The \emph{deletion} algorithm is simple. When a parse error is observed,
 the character that caused the error is present at the \<boundary> value.
 That is, we know that \<inputstr[:boundary]> parses correctly. Hence, for
@@ -1415,17 +1455,29 @@ def apply_insert(item):
   return new_items
 \end{lstlisting}
 
-\Cref{lst:brepair} shows how \brepair is invoked. The input string is passed to
-\<repair()>.
+\begin{lstlisting}[caption=Code showing the binary search that is performed at the beginning of the repair,label={lst:bsearch}]
+def binary_search(inputstr, left=0, 
+                right=len(inputstr)-1):
+  if not inputstr: return left
+  if is_incomplete(Repair(inputstr, right)):
+    return len(inputstr)-1
+  while left + 1 < right:
+    middle = (left + right) // 2
+    if is_incomplete(Repair(inputstr, middle)):
+      left = middle
+    else:
+      right = middle
+  return left
+\end{lstlisting}
+
 \begin{lstlisting}[caption=\brepair initial search,label={lst:brepair}]
 def repair(inp):
   boundary = binary_search(inp)
   return find_fixes(inp, boundary)
 \end{lstlisting}
-This function does a \emph{binary search}
-%(see supplementary material)
-on the
-argument string looking for the parse boundary where the return value changes
+\Cref{lst:brepair} shows how \brepair is invoked. The input string is passed to
+\<repair()>.
+This function does a \emph{binary search} (\Cref{lst:bsearch}) on the argument string looking for the parse boundary where the return value changes
 from \emph{incomplete} to \emph{incorrect}. That is, if \<binary\_search>
 returns an index \<n>, then \<inputstr[:boundary]> is a valid prefix, and
 \<inputstr[boundary]> is the error causing character if one exists or the
@@ -1447,7 +1499,7 @@ def find_fixes(inputval, boundary):
 \end{lstlisting}
 The function \<find\_fixes()> takes in the input string and the parse boundary.
 It then generates a set of repair threads, out of which a few are chosen for
-continuation (for a definition of \lstinline|sample_items_by_mask()|, see supplementary material).%\Cref{lst:sampling}).
+continuation (for a definition of \lstinline|sample_items_by_mask()|, see \Cref{lst:sampling}).
 Then, each repair thread is processed individually.
 On each thread, a set of repairs (\Cref{lst:repairsdelete}, \Cref{lst:repairs})
 are applied. If the repair succeeds,
@@ -1525,9 +1577,26 @@ search algorithms are more suitable for deletion and insertion. With deletion,
 we have removed the error causing character, so the next parse error may
 be far away. Hence, we use binary search to find the next parse error.%\Cref{lst:extenditem}).
 \par
+\begin{lstlisting}[caption=Code that shows linear search performed when extending after inserting a character,label={lst:extenditeminsert}]
+def extend_inserted_item(item):
+    return lsearch_extend_item(item, nxt=1)
+
+def lsearch_extend_item(item, nxt=1):
+  while True:
+    if (item.boundary + nxt) > len(item.inputstr):
+      item.boundary = item.boundary + nxt - 1
+      return item
+    s = Repair(item.inputstr, item.boundary + nxt)
+    if is_incomplete(s):
+      nxt += 1
+      continue
+    if is_incorrect(s):
+      item.boundary = item.boundary + nxt - 1
+      return item
+\end{lstlisting}
 In the case of insert, however, in most cases, the character being inserted,
 and the character that originally caused a parse error can still cause a parse
-error. Hence, we apply linear search instead (we provide code examples for binary and linear search in the supplementary material).% (\Cref{lst:extenditeminsert}).
+error. Hence, we apply linear search instead (we provide code examples for binary and linear search in \Cref{lst:bsearch} and \Cref{lst:extenditeminsert}, respectively).% (\Cref{lst:extenditeminsert}).
 \par
 If this succeeds, the parse boundary after the repair
 would be larger than the old parse boundary. Hence, if the parse boundary has
@@ -2149,7 +2218,47 @@ It repaired four out of five (77\% of) invalid inputs and it is %up to
 \label{tab:effectiveness-grammar}
 \end{table}
 
-%Figure "Number of files repaired by each approach (bar chart) moved to supplementary material"
+\begin{figure}
+%\vspace{-0.1cm}
+\centering
+%\includegraphics[width=0.45\textwidth]{figures/effectiveness.png}
+\pgfplotstableread{
+Label      INI    cJSON    SExpParser   TinyC
+Baseline   27     6        0            0
+ANTLR      133    69       96           46
+Lex.ddmax  201    132      131          114
+Syn.ddmax  201    144      149          120
+FSynth     191    158      121          154
+    }\effectivenessdata
+\begin{minipage}{.45\textwidth}
+\begin{tikzpicture}
+\begin{axis}[
+    ybar stacked,
+    ymin=0,
+    ymax=750,
+    xtick=data,
+    bar width=25,
+    legend style={cells={anchor=west}, legend pos=north west},
+    reverse legend=true,
+    xticklabels from table={\effectivenessdata}{Label},
+    xticklabel style={text width=2cm,align=center,font=\footnotesize},
+    xtick style={draw=none},
+]
+    \addplot [fill=darkgray] table [y=INI, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addlegendentry{INI}
+    \addplot [fill=gray] table [y=cJSON, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addlegendentry{cJSON}
+    \addplot [fill=lightgray] table [y=SExpParser, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addlegendentry{SExpParser}
+    \addplot [fill=white,nodes near coords,point meta=y] table [y=TinyC, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addlegendentry{TinyC}
+\end{axis}
+\end{tikzpicture}
+\end{minipage}
+\caption{Number of files repaired by each approach}
+\label{fig:effectiveness}
+%\vspace{-0.6cm}
+\end{figure}
 
 %\begin{figure}[!tbp]
 %\vspace{-0.1cm}
