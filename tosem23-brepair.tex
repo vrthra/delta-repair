@@ -885,12 +885,12 @@ The \emph{maximizing Delta Debugging algorithm} $\ddmax(c)$ is
     %if len(minus(CX_I, cprime_y)) == 1: return cprime_y
   \textcolor{red}{\dpass} & \text{\textcolor{red}{\hphantom{else }if $|\cfail - \dpass| = 1$} (``base case$^{\textcolor{red}{a}}$'')} \\
 %
-\ddmax_2(\cfail - \Delta_i, 2) & \text{else if $\exists i \in \{1, \dots, n\} \cdot \test(\cfail - \Delta_i) = \pass$ (``incr. to complem.'')} \\
+  \ddmax_2(\cfail - \Delta_i, 2) & \parbox[t]{.45\textwidth}{else if $\exists i \in \{1, \dots, n\} \cdot \test(\cfail - \Delta_i) = \pass$ (``incr. to complem.'')} \\
 %
 \ddmax_2\bigl(\dpass \cup \Delta_i, \max(n - 1, 2)\bigr) &
-\text{else if $\exists i \in \{1, \dots, n\} \cdot \test(\dpass \cup \Delta_i) = \pass $ (``incr. to subset'')} \\
+\parbox[t]{.45\textwidth}{else if $\exists i \in \{1, \dots, n\} \cdot \test(\dpass \cup \Delta_i)~=~\pass $ (``incr. to subset'')} \\
 %
-  \ddmax_2\bigl(\dpass, \min(|\cfail \textcolor{red}{- \dpass}|, 2n)\bigr) & \text{else if $n < |\cfail - \dpass|$ (``incr. granularity$^{\text{\textcolor{red}{b}}}$'')} \\
+\ddmax_2\bigl(\dpass, \min(|\cfail \textcolor{red}{- \dpass}|, 2n)\bigr) & \text{else if $n < |\cfail - \dpass|$ (``incr. granularity$^{\text{\textcolor{red}{b}}}$'')} \\
 \dpass & \text{otherwise (``done'').}
 \end{cases}
 \end{align*}
@@ -1696,6 +1696,7 @@ The highest data recovery and lowest data loss are in bold, percentage improveme
 of \approach over the best baseline which are significant (i.e., greater than five percent ($>$5\%)) are also in bold.
 }
 %\vspace{-0.5cm}
+\footnotesize
 \begin{tabular}{|l | c |  r  r  r  r  | c |  r  r  r  r |}
 \hline
  &  \multicolumn{5}{c|}{\textbf{\% Data Recovered by Approach}} &  \multicolumn{5}{c|}{\textbf{Average Data Loss }}  \\
