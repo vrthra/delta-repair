@@ -112,6 +112,7 @@
 %\usepackage{balance}
 
 \usepackage{listings}
+
 \lstset{ % General setup for the package
     language=Python,
     %basicstyle=\small\sffamily,
@@ -127,7 +128,10 @@
     showtabs=false,
     keepspaces,
     commentstyle=\color{green},
-    keywordstyle=\color{blue}
+    keywordstyle=\color{blue},
+    xleftmargin=1.45in 
+%    ,
+%    xrightmargin=2.25in
 }
 \usepackage{xspace}
 \usepackage{array,multirow,graphicx}
@@ -226,6 +230,7 @@ pics/numbering/.style args={#1}{code={
 % Boxes around letters
 \definecolor{light-gray}{gray}{0.87}
 \makeatletter
+
 \newcommand\letterboxed[1]{%
 \setlength{\fboxsep}{0pt}%
   \@tfor\@ii:=#1\do{%
@@ -290,7 +295,7 @@ pics/numbering/.style args={#1}{code={
   \institution{Royal Holloway, University of London} % (RHUL)}
 %  \streetaddress{1 Th{\o}rv{\"a}ld Circle}
 %  \city{Hekla}
-  \country{UK}} %nited Kingdom (UK)}}
+  \country{United Kingdom}} %nited Kingdom (UK)}}
 \email{ezekiel.soremekun@rhul.ac.uk}
 
 \author{Rahul Gopinath}
@@ -910,17 +915,6 @@ $\test(\dpass) = \pass \land n \leq |\Delta|$.\\
 \label{fig:ddmax}
 \end{figure*}
 
-
-
-
-
-
-
-
-
-
-
-
 \section{Rich Input Structures} %Limitations of \ddmax}
 \label{sec:rich-input-structures}
 %\todo{discuss first (two) examples}
@@ -938,6 +932,7 @@ $\test(\dpass) = \pass \land n \leq |\Delta|$.\\
 % \label{fig:bad-json-input-asterisks}
 %
 % \end{figure}
+
 Let us illustrate the limitations of the state-of-the-art input repair method (\ddmax) and how our approach (\brepair) addresses these limitations.
 \Cref{fig:ddmax} provides a modified version of the lexical \ddmax algorithm presented in Kirschner et al.~\cite{kirschner2020debugging}. A major limitation of lexical \ddmax is that it results in sub-optimal repairs when the invalid input contains \textit{rich structures}, e.g., \textit{multiple faults}.
 %needs to conform to specifications such as context-free grammars.
@@ -951,6 +946,7 @@ Here, the JSON string is invalid because of two invalid characters that are
 non-contiguous. The operation of \ddmax (\Cref{fig:ddmax}) proceeds as follows:
 
 \begin{enumerate}
+[labelwidth=!, labelindent=20pt]
 \item The operation starts with $\ddmax_2(\emptyset, 2)$
 \item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply
 \item Increase to complement:\\
@@ -973,8 +969,9 @@ $\emptyset \cup \Delta_1$=\letterboxed{[} \fail \\
 $\emptyset \cup \Delta_2$=\letterboxed{*} \fail \\
 $\emptyset \cup \Delta_3$=\letterboxed{]} \fail \\
 $\emptyset \cup \Delta_4$=\letterboxed{+} \fail \\
-\item Increase granularity: $4 < 4$ \fail\\
-\item The solution is $\emptyset$.
+\item Increase granularity: $4 < 4$ \fail \\
+\item The solution is $\emptyset$. 
+
 \end{enumerate}
 
 That is, \ddmax is unable to optimally repair inputs of this kind which
@@ -1141,17 +1138,6 @@ resulting in
 \item The JSON processor responds with \emph{complete}.
 \end{enumerate}
 This completes the repair of the given input. This demonstrates that \brepair has no problem repairing rich inputs containing multiple errors.
-
-
-
-
-
-
-
-
-
-
-
 
 
 \section{Input Synthesis}
@@ -1347,7 +1333,7 @@ accessing its first argument with \<inputstr> and its second argument with
 \<boundary>.
 
 We define a few terms before we start:
-\begin{description}
+\begin{description}[labelwidth=!, labelindent=15pt]
 \item[valid substring.] The \emph{valid substring} of a string is the maximal prefix where the parser returns
 \emph{incomplete}.
 \item[boundary.] The \emph{boundary} or \emph{parse boundary} is the index of
@@ -1366,13 +1352,20 @@ the character that caused the error is present at the \<boundary> value.
 That is, we know that \<inputstr[:boundary]> parses correctly. Hence, for
 deletion, we produce a string without the character at the \<boundary>.
 
-
+%\begin{center}
+%\begin{tabular}{c}
+%\centering
+%    \begin{tabular}{c}{
 \begin{lstlisting}[caption=\brepair repairs,label={lst:repairsdelete}]
 def apply_delete(item):
   inp = item.inputstr[:item.boundary] +
       item.inputstr[item.boundary + 1:]
   return extend_deleted_item(Repair(inp, item.boundary))
 \end{lstlisting}
+\vspace{\baselineskip}
+%}\end{tabular}
+%\end{center}
+
 
 For \emph{insertion}, the algorithm is more involved. The problem is that we need to
 handle corruption in inputs such as \<"12345mystring"> which is used as input
@@ -1400,6 +1393,9 @@ def bsearch_extend_item(item):
   item.boundary = bs
   return item
 \end{lstlisting}
+\vspace{\baselineskip}
+
+
 \begin{lstlisting}[caption=Code showing the binary search that is performed at the beginning of the repair,label={lst:bsearch}]
 def binary_search(inputstr, left=0, 
                 right=len(inputstr)-1):
@@ -1414,12 +1410,16 @@ def binary_search(inputstr, left=0,
       right = middle
   return left
 \end{lstlisting}
+\vspace{\baselineskip}
+
 
 \begin{lstlisting}[caption=\brepair initial search,label={lst:brepair}]
 def repair(inp):
   boundary = binary_search(inp)
   return find_fixes(inp, boundary)
 \end{lstlisting}
+\vspace{\baselineskip}
+
 \Cref{lst:brepair} shows how \brepair is invoked. The input string is passed to
 \<repair()>.
 This function does a \emph{binary search} (\Cref{lst:bsearch}) on the argument string looking for the parse boundary where the return value changes
@@ -1442,6 +1442,8 @@ def find_fixes(inputval, boundary):
         if i.is_complete(): completed.append(i)
     if completed: return completed
 \end{lstlisting}
+\vspace{\baselineskip}
+
 The function \<find\_fixes()> takes in the input string and the parse boundary.
 It then generates a set of repair threads, out of which a few are chosen for
 continuation (for a definition of \lstinline|sample_items_by_mask()|, see \Cref{lst:sampling}).
@@ -1476,6 +1478,8 @@ def filter_best(items):
   return [i for i in items if i.boundary in
           boundaries[:MAX_SIMULTANIOUS_CORRECTIONS]]
 \end{lstlisting}
+\vspace{\baselineskip}
+
 
 The sampling procedure attempts to discard redundant repairs so that the number
 of simultaneous threads we have to maintain does not grow unbounded. While doing
@@ -1500,8 +1504,98 @@ can be rather time consuming. If this is the case, one can limit the repair
 threads to the best performing ones in terms of the parse boundary by using
 \<filter\_best()>.
 
+
+
+
+\begin{lstlisting}[caption=\brepair repairs,label={lst:repairs}]
+def insert_at(item, k, i, suffix)
+  v = (item.inputstr[:k] + i +
+    item.inputstr[k:item.boundary] + suffix)
+  new_item = Repair(v, k, mask='%s_I%d' % (item.mask, k))
+  ie = extend_inserted_item(new_item)
+  if ie.boundary > k:
+    return ie
+  return None
+
+def insert_char(item, i):
+  suffix = item.inputstr[item.boundary:]
+  return_lst = []
+  if LAST_INSERT_ONLY:
+    v = insert_at(item, item.boundary, i, suffix)
+    if v is not None: return_lst.append(v)
+  else:
+    for k in range(item.boundary):
+      v = insert_at(item, k, i, suffix)
+      if v is not None: return_lst.append(v)
+  return return_lst
+
+def apply_insert(item):
+  new_items = []
+  for i in CHARACTERS:
+    items = item.insert_char(i)
+    if items:
+      new_items.extend(items)
+  return new_items
+\end{lstlisting}
+\vspace{\baselineskip}
+
+
+After each repair, the new string is checked  to see if
+the string results in \emph{incomplete} rather than \emph{incorrect}. If the
+string results in \emph{incomplete}, a new parse boundary is found by
+repeatedly extending the string with a pending character from the remaining
+suffix in the input string. The small complication here is that different
+search algorithms are more suitable for deletion and insertion. With deletion,
+we have removed the error causing character, so the next parse error may
+be far away. Hence, we use binary search to find the next parse error.%\Cref{lst:extenditem}).
+\par
+\begin{lstlisting}[caption=Code that shows linear search performed when extending after inserting a character,label={lst:extenditeminsert}]
+def extend_inserted_item(item):
+    return lsearch_extend_item(item, nxt=1)
+
+def lsearch_extend_item(item, nxt=1):
+  while True:
+    if (item.boundary + nxt) > len(item.inputstr):
+      item.boundary = item.boundary + nxt - 1
+      return item
+    s = Repair(item.inputstr, item.boundary + nxt)
+    if is_incomplete(s):
+      nxt += 1
+      continue
+    if is_incorrect(s):
+      item.boundary = item.boundary + nxt - 1
+      return item
+\end{lstlisting}
+\vspace{\baselineskip}
+
+In the case of insert, however, in most cases, the character being inserted,
+and the character that originally caused a parse error can still cause a parse
+error. Hence, we apply linear search instead (we provide code examples for binary and linear search in \Cref{lst:bsearch} and \Cref{lst:extenditeminsert}, respectively).% (\Cref{lst:extenditeminsert}).
+\par
+If this succeeds, the parse boundary after the repair
+would be larger than the old parse boundary. Hence, if the parse boundary has
+increased (\Cref{lst:repairandextend}), then
+%. If the boundary has increased,
+the
+repair is saved. If not, the repair is discarded.
+\begin{lstlisting}[caption=Repair and extend,label={lst:repairandextend}]
+def repair_and_extend(item):
+  return [apply_delete(item)] + apply_insert(item)
+\end{lstlisting}
+\vspace{\baselineskip}
+
+The output from \<find\_fixes()> (\Cref{lst:findfixes}) is a set of repair
+threads with the least number of repairs from the passed input string.
+
+%The \brepair algorithm works as follows.
+%We start with the assumption that 
+\approach assumes the parser correctly signals
+\emph{incomplete} for incomplete inputs, \emph{incorrect} for other invalid
+inputs, and \emph{complete} if the input was valid. 
+Given this, \brepair algorithm works as follows (\Cref{fig:brepair_flowchart}):
+
 %SupplMat
-\begin{figure}
+\begin{figure}[tbp!]
 \newlength\nodedst\setlength\nodedst{.5cm}
 \newlength\ndist\setlength\ndist{.1\nodedst}
 \def\arrowsep{0.20cm}
@@ -1535,88 +1629,6 @@ threads to the best performing ones in terms of the parse boundary by using
     % \vspace*{-0.1in}
 \end{figure}
 \newcommand{\refnumber}[1]{\hyperref[fig:brepair_flowchart]{Step~#1}}
-
-
-\begin{lstlisting}[caption=\brepair repairs,label={lst:repairs}]
-def insert_at(item, k, i, suffix)
-  v = (item.inputstr[:k] + i +
-    item.inputstr[k:item.boundary] + suffix)
-  new_item = Repair(v, k, mask='%s_I%d' % (item.mask, k))
-  ie = extend_inserted_item(new_item)
-  if ie.boundary > k:
-    return ie
-  return None
-
-def insert_char(item, i):
-  suffix = item.inputstr[item.boundary:]
-  return_lst = []
-  if LAST_INSERT_ONLY:
-    v = insert_at(item, item.boundary, i, suffix)
-    if v is not None: return_lst.append(v)
-  else:
-    for k in range(item.boundary):
-      v = insert_at(item, k, i, suffix)
-      if v is not None: return_lst.append(v)
-  return return_lst
-
-def apply_insert(item):
-  new_items = []
-  for i in CHARACTERS:
-    items = item.insert_char(i)
-    if items:
-      new_items.extend(items)
-  return new_items
-\end{lstlisting}
-
-After each repair, the new string is checked  to see if
-the string results in \emph{incomplete} rather than \emph{incorrect}. If the
-string results in \emph{incomplete}, a new parse boundary is found by
-repeatedly extending the string with a pending character from the remaining
-suffix in the input string. The small complication here is that different
-search algorithms are more suitable for deletion and insertion. With deletion,
-we have removed the error causing character, so the next parse error may
-be far away. Hence, we use binary search to find the next parse error.%\Cref{lst:extenditem}).
-\par
-\begin{lstlisting}[caption=Code that shows linear search performed when extending after inserting a character,label={lst:extenditeminsert}]
-def extend_inserted_item(item):
-    return lsearch_extend_item(item, nxt=1)
-
-def lsearch_extend_item(item, nxt=1):
-  while True:
-    if (item.boundary + nxt) > len(item.inputstr):
-      item.boundary = item.boundary + nxt - 1
-      return item
-    s = Repair(item.inputstr, item.boundary + nxt)
-    if is_incomplete(s):
-      nxt += 1
-      continue
-    if is_incorrect(s):
-      item.boundary = item.boundary + nxt - 1
-      return item
-\end{lstlisting}
-In the case of insert, however, in most cases, the character being inserted,
-and the character that originally caused a parse error can still cause a parse
-error. Hence, we apply linear search instead (we provide code examples for binary and linear search in \Cref{lst:bsearch} and \Cref{lst:extenditeminsert}, respectively).% (\Cref{lst:extenditeminsert}).
-\par
-If this succeeds, the parse boundary after the repair
-would be larger than the old parse boundary. Hence, if the parse boundary has
-increased (\Cref{lst:repairandextend}), then
-%. If the boundary has increased,
-the
-repair is saved. If not, the repair is discarded.
-\begin{lstlisting}[caption=Repair and extend,label={lst:repairandextend}]
-def repair_and_extend(item):
-  return [apply_delete(item)] + apply_insert(item)
-\end{lstlisting}
-The output from \<find\_fixes()> (\Cref{lst:findfixes}) is a set of repair
-threads with the least number of repairs from the passed input string.
-
-%The \brepair algorithm works as follows.
-%We start with the assumption that 
-\approach assumes the parser correctly signals
-\emph{incomplete} for incomplete inputs, \emph{incorrect} for other invalid
-inputs, and \emph{complete} if the input was valid. 
-Given this, \brepair algorithm works as follows (\Cref{fig:brepair_flowchart}):
 %\todo{we need to sync these steps with the workflow diagram (\autoref{fig:brepair_flowchart}), and also name/number steps 1,2, ...}
 
 \begin{enumerate}
@@ -1738,6 +1750,94 @@ This section describes the experimental setup of this work.
 %we pose the following \textit{research questions} (RQ):
 % concerning the performance of \approach:
 
+
+
+%\noindent\textbf{
+
+\subsection{Research Questions} 
+We investigate the \textit{data recovery} (RQ1), \textit{effectiveness} (RQ2), 
+%\textit{diagnostic quality} (RQ3) 
+and \textit{efficiency} (RQ3) of our approach using several well-designed experiments. %For each experiment, w
+We also examine how \approach compares to four state-of-the-art techniques, 
+namely the built-in repair of the programs (\textit{baseline}), error-recovery of \textit{ANTLR}, as well as 
+%'s error recovery strategy, 
+%lexical \ddmax 
+lexical \ddmax and syntactic 
+\ddmax. Specifically, we pose the following research questions:
+
+\begin{description}[labelwidth=!, labelindent=15pt]
+
+\item[RQ1: Data Recovery and Data Loss.]
+How much input data is recovered by \approach, and how much data is lost? %s is incurred?  
+Does \approach recover as much data as 
+the state-of-the-art methods?
+
+  \item[RQ2: Effectiveness.]  %\& Efficiency:}
+How effective is \approach in fixing invalid inputs? Is it as effective as the state-of-the-art methods?
+
+\item[RQ3: Efficiency.] What is the efficiency (runtime) of
+\approach? Is it as efficient as the state-of-the-art techniques?
+\end{description}
+
+
+%\noindent\textbf{
+\subsection{Subject Programs} %As subjects w
+We used four input formats and their corresponding programs. These are INI (INI), JSON (cJSON), S-Expressions (SExpParser) and TinyC (TinyC). Each program is moderately large (between 375 LOC to 3062 LOC), relatively mature (6 to 21 years old), and written in \<C>. Further details are provided in \Cref{tab:subject-programs}.
+
+%\subsubsection*{\bf Test inputs}\todo{refactor this}
+%\noindent
+%\textbf{
+\subsection{Test Inputs} 
+\Cref{tab:input-details} provides details of the number of
+real-world invalid inputs and mutated invalid inputs employed in our experiment.
+%,for each input format. 
+We evaluate our approach using 806 invalid input files. %.
+%belonging to four different input formats, namely INI, cJSON, SExp, and TinyC. 
+As test inputs, we crawled a large corpus of valid and invalid real-world files
+from GitHub using the GitHub crawling API~\cite{githubapi}. 
+%TODO add table with number of files?
+In addition to real invalid inputs, for each format, we introduced a set of 100 artificially mutated (invalid) files
+%that we mutated 
+from 50 randomly selected valid real-world files.
+Half of those mutated files contain a single mutated byte and the other half
+contains multiple (two to 16) mutated bytes.
+Each mutation can either be a byte-flip, an insertion or a deletion to 
+%, which we believe to 
+resemble real-world corruptions as close as possible
+(e.g., bit rot on hard disks or transmission errors in network protocols).
+
+%\noindent\textbf{
+
+\subsection{Metrics and Measures} We employ the following metrics and measures to evaluate repair quality: 
+
+\begin{itemize}
+
+\item[(a.)] \textit{Number of Repaired Inputs:} We count the number of files repaired before
+a four minute timeout for each repair method.
+%\begin{description}[wide, labelwidth=!, labelindent=0pt]
+ %of the tested repair programs.
+ 
+\item[(b.)]  \textit{File Size Difference:} To determine the amount of data recovered by each approach, 
+we evaluate the difference in \emph{file size} of
+the \emph{recovered inputs} and the original
+\emph{valid input}. %. This measurement tracks the effectiveness of 
+
+\item[(c.)]  \textit{Edit Distance:} This is measured as the number of characters that
+differs between the \emph{corrupt input} and the \emph{repaired input}.
+%  \cite{levDistance}.
+
+\item[(d.)]  \textit{Runtime} is the time taken for input repair for each method.
+
+\item[(e.)]  \textit{Number of Program Runs:} To evaluate efficiency, we track the number of times the parser is executed by each approach. 
+
+\end{itemize}
+
+%during test experiments of input fragments. 
+%we need to run the
+%parser can provide a useful metric for evaluation. %Hence, we track this also.
+%\end{description}
+
+
 \begin{table}[!tbp]\centering
 \caption{Details of Invalid 
 %Failure-inducing 
@@ -1758,117 +1858,19 @@ Inputs}
 %\vspace{-0.5cm}
 \end{table}
 
-\begin{table*}[!tbp]\centering
-\caption{Data Recovery (file size difference) and Data Loss  (Levenshtein distance) of \approach vs. %the best-performing state-of-the-art methods, i.e. 
-lexical (Lex.) \ddmax and syntactic (Syn.) \ddmax. 
-The highest data recovery and lowest data loss are in bold, percentage improvement (Impr.) %or reduction (red.) 
-of \approach over the best baseline which are significant (i.e., greater than five percent ($>$5\%)) are also in bold.
-}
-%\vspace{-0.5cm}
-\footnotesize
-\begin{tabular}{|l | c |  r  r  r  r  | c |  r  r  r  r |}
-\hline
- &  \multicolumn{5}{c|}{\textbf{\% Data Recovered by Approach}} &  \multicolumn{5}{c|}{\textbf{Average Data Loss }}  \\
-&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
-\textbf{Techniques} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-\hline
-\textbf{Lex. ddmax} & 81\%  & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% & 18.0 & {10.2} &	61.6 &	\textbf{6.2} & 7.5 \\			
-\textbf{Syn. ddmax} & 74\%  &  70.6\% & 81.5\%  & 97.0\%	& 47.0\% & 119.6 &  258.1 & 82.7 &	76.6 &	33.3 \\	
-\hline
-\textbf{\approach} & \textbf{91\%}  &  \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100.6\%} & \textbf{82.1\%} & \textbf{10.6}  & \textbf{9.5} &	\textbf{28.7} &	7.4 & \textbf{1.6} \\
-\hline
-\textbf{Impr. vs. Lex.} & 12\% &  0.1\%	& \textbf{19.8\%}	& 1.4\%	& \textbf{72.1\%} & \textbf{70\%} &  \textbf{8\%} & \textbf{115\%} & -16\% & \textbf{357\%} \\
-\textbf{Impr. vs. Syn.} & \textbf{23\%}  &  \textbf{21.6\%} 	& \textbf{20.8\%}	& 3.7\%	& \textbf{74.7\% }  & \textbf{1030\%} & \textbf{2629\%} &	\textbf{188\%} & \textbf{936\%} &\textbf{ 1930\%} \\
-\hline
-%\textbf{Total \#Repairs} & (\%) & &  & 	& \\		
-%\hline
-\end{tabular}
-\label{tab:data-recovery-and-loss}
-%\vspace{-0.5cm}
-\end{table*}
 
-\noindent\textbf{Research Questions:} 
-We investigate the \textit{data recovery} (RQ1), \textit{effectiveness} (RQ2), 
-%\textit{diagnostic quality} (RQ3) 
-and \textit{efficiency} (RQ3) of our approach using several well-designed experiments. %For each experiment, w
-We also examine how \approach compares to four state-of-the-art techniques, 
-namely the built-in repair of the programs (\textit{baseline}), error-recovery of \textit{ANTLR}, as well as 
-%'s error recovery strategy, 
-%lexical \ddmax 
-lexical \ddmax and syntactic 
-\ddmax. Specifically, we pose the following research questions:
-\begin{description}[wide, labelwidth=!, labelindent=0pt]
-
-\item[RQ1: Data Recovery and Data Loss.]
-How much input data is recovered by \approach, and how much data is lost? %s is incurred?  
-Does \approach recover as much data as 
-the state-of-the-art methods?
-
-  \item[RQ2: Effectiveness.]  %\& Efficiency:}
-How effective is \approach in fixing invalid inputs? Is it as effective as the state-of-the-art methods?
-
-\item[RQ3: Efficiency.] What is the efficiency (runtime) of
-\approach? Is it as efficient as the state-of-the-art techniques?
-\end{description}
-
-
-\noindent\textbf{Subject Programs:} %As subjects w
-We used four input formats and their corresponding programs. These are INI (INI), JSON (cJSON), S-Expressions (SExpParser) and TinyC (TinyC). Each program is moderately large (between 375 LOC to 3062 LOC), relatively mature (6 to 21 years old), and written in \<C>. Further details are provided in \Cref{tab:subject-programs}.
-
-%\subsubsection*{\bf Test inputs}\todo{refactor this}
-\noindent
-\textbf{Test inputs:} 
-\Cref{tab:input-details} provides details of the number of
-real-world invalid inputs and mutated invalid inputs employed in our experiment.
-%,for each input format. 
-We evaluate our approach using 806 invalid input files. %.
-%belonging to four different input formats, namely INI, cJSON, SExp, and TinyC. 
-As test inputs, we crawled a large corpus of valid and invalid real-world files
-from GitHub using the GitHub crawling API~\cite{githubapi}. 
-%TODO add table with number of files?
-In addition to real invalid inputs, for each format, we introduced a set of 100 artificially mutated (invalid) files
-%that we mutated 
-from 50 randomly selected valid real-world files.
-Half of those mutated files contain a single mutated byte and the other half
-contains multiple (two to 16) mutated bytes.
-Each mutation can either be a byte-flip, an insertion or a deletion to 
-%, which we believe to 
-resemble real-world corruptions as close as possible
-(e.g., bit rot on hard disks or transmission errors in network protocols).
-
-\noindent\textbf{Metrics and Measures:} We employ the following metrics and measures to evaluate repair quality: 
-
-\noindent\textit{a.) Number of Repaired Inputs:} We count the number of files repaired before
-a four minute timeout for each repair method.
-%\begin{description}[wide, labelwidth=!, labelindent=0pt]
- %of the tested repair programs.
- 
-\noindent\textit{b.) File Size Difference:} To determine the amount of data recovered by each approach, 
-we evaluate the difference in \emph{file size} of
-the \emph{recovered inputs} and the original
-\emph{valid input}. %. This measurement tracks the effectiveness of 
-
-\noindent\textit{c.) Edit Distance:} This is measured as the number of characters that
-differs between the \emph{corrupt input} and the \emph{repaired input}.
-%  \cite{levDistance}.
-
-\noindent\textit{d.) Runtime} is the time taken for input repair for each method.
-
-\noindent\textit{e.) Number of Program Runs:} To evaluate efficiency, we track the number of times the parser is executed by each approach. 
-%during test experiments of input fragments. 
-%we need to run the
-%parser can provide a useful metric for evaluation. %Hence, we track this also.
-%\end{description}
-
-\noindent\textbf{State-of-the-art:}
+%\noindent\textbf{
+\subsection{State-of-the-art Methods}
 In this work, we compare the performance of \approach to the following
 techniques:
-%\begin{description}[wide]
-\noindent\textbf{(1) Baseline:} The built-in error-recovery technique of the subject programs.
+\begin{description}[wide]
+%\noindent
+\item[\textbf{(1) Baseline:}] The built-in error-recovery technique of the subject programs.
  % In this work,  \recheck{we compare the effectiveness of the subject program to that of \approach (\textit{see} RQ1)}. Specifically, we measure the effectiveness of the built-in error recovery feature of the program by measuring the number of invalid input files that could be processed as valid inputs by a subject program without inducing a program failure, crash or timeout. In our evaluation, we compare the number of such repairs to that of \approach.
-\noindent\textbf{(2) ANTLR:} This is the inbuilt error recovery strategy of the ANTLR parser generator when equipped with an input grammar specifying the allowed input structure~\cite[Automatic Error Recovery Strategy]{parr2013definitive}.
+
+\item[\textbf{(2) ANTLR:}] This is the inbuilt error recovery strategy of the ANTLR parser generator when equipped with an input grammar specifying the allowed input structure~\cite[Automatic Error Recovery Strategy]{parr2013definitive}.
   %In this work, we compare the number of invalid inputs that could be processed by \textbf{ANTLR} to the number of repairs performed by \approach (\textit{see} RQ1).
-\noindent\textbf{(3) \ddmax:} Kirschner et al.~\cite{kirschner2020debugging} proposed %This refers to the
+\item[\textbf{(3) \ddmax:}] Kirschner et al.~\cite{kirschner2020debugging} proposed %This refers to the
 two variants of the maximizing variant of the delta debugging algorithm (called \ddmax), %proposed by ,
 namely \textit{lexical \ddmax} and \textit{syntactic \ddmax}.
     %For all research questions in this work, we compare the performance of \approach to both \textit{lexical} and \textit{syntactic} \ddmax, since \ddmax is the current best performing state-of-the-art input repair method.
@@ -1876,7 +1878,7 @@ namely \textit{lexical \ddmax} and \textit{syntactic \ddmax}.
 %a delta debugging (DD) algorithm designed to diagnose the root cause of a program failure %, \ddmin isolates a failure cause
 %by minimizing a failure-inducing input to the minimal input subset that reproduces
 %the observed program failure. In our evaluation of the diagnostic quality of \approach (\textit{see} RQ3), we compare the performance of \approach to \ddmin.
-%\end{description}
+\end{description}
 
 %(a)  (\textit{baseline}), (b) the inbuilt error recovery strategy of the ANTLR parser generator (\textit{ANTLR})~\cite{}, (c) the minimizing variant of delta debugging (DDMin)~\cite{} and (d) three variants of the maximizing variant of delta debugging (DDMax)~\cite{kirschner2020debugging}.
 %%\todo{cite and create command shortcuts for the state-of-the-art}
@@ -1889,19 +1891,23 @@ namely \textit{lexical \ddmax} and \textit{syntactic \ddmax}.
 %
 %\noindent \textit{DDMax:}
 
+\subsection{Implementation Details and Platform}
 
-\noindent\textbf{Implementation Details:}
+%\noindent\textbf{Implementation Details:}
 We implemented the test infrastructure in about 12k LOC of Java code, \approach was implemented in 765 lines of Java code.
 We also slightly modify subject programs %ubject programs needed to be modified slightly 
 to provide the required incompleteness feedback (\textit{see} \Cref{tab:subject-programs}).
 
-\noindent\textbf{Platform:} All experiments were conducted
+%\vspace{\baselineskip}
+%\noindent\textbf{Platform:} 
+All experiments were conducted
 on an ASRock X470D4U with six physical CPU cores and 32GB of RAM, with an AMD Ryzen 5600X @ 3.70GHz, 12~virtual cores, running Debian GNU/Linux.
 
 %\noindent
 %\textbf{
 
-\noindent\textbf{Research Protocol:}
+%\noindent\textbf{
+\subsection{Research Protocol}
 We first collect a large corpus of  real-world files which we split into a set of (50) valid files and invalid files. We create additional mutated invalid files by injecting single and up to 16 multiple mutations (random insertions, deletions and byte-flips) into the valid files  
 % are then mutated using single and up to 16 multiple mutations (random insertions, deletions and byte-flips), which results in the files 
 %shown in 
@@ -1951,8 +1957,40 @@ of our experiments. %mpirical evaluations.
 
 %\todo{RQ1: we need to discuss the number of repair attempts or input fragments tested for feedback for \approach versus ddmax}
 
-\noindent
-\textbf{RQ1 Data Recovery and Data Loss:} 
+%\noindent
+%\textbf{
+
+\begin{table*}[!tbp]\centering
+\caption{Data Recovery (file size difference) and Data Loss  (Levenshtein distance) of \approach vs. %the best-performing state-of-the-art methods, i.e. 
+lexical (Lex.) \ddmax and syntactic (Syn.) \ddmax. 
+The highest data recovery and lowest data loss are in bold, percentage improvement (Impr.) %or reduction (red.) 
+of \approach over the best baseline which are significant (i.e., greater than five percent ($>$5\%)) are also in bold.
+}
+%\vspace{-0.5cm}
+\footnotesize
+\begin{tabular}{|l | c |  r  r  r  r  | c |  r  r  r  r |}
+\hline
+ &  \multicolumn{5}{c|}{\textbf{\% Data Recovered by Approach}} &  \multicolumn{5}{c|}{\textbf{Average Data Loss }}  \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
+\textbf{Techniques} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+\textbf{Lex. ddmax} & 81\%  & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% & 18.0 & {10.2} &	61.6 &	\textbf{6.2} & 7.5 \\			
+\textbf{Syn. ddmax} & 74\%  &  70.6\% & 81.5\%  & 97.0\%	& 47.0\% & 119.6 &  258.1 & 82.7 &	76.6 &	33.3 \\	
+\hline
+\textbf{\approach} & \textbf{91\%}  &  \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100.6\%} & \textbf{82.1\%} & \textbf{10.6}  & \textbf{9.5} &	\textbf{28.7} &	7.4 & \textbf{1.6} \\
+\hline
+\textbf{Impr. vs. Lex.} & 12\% &  0.1\%	& \textbf{19.8\%}	& 1.4\%	& \textbf{72.1\%} & \textbf{70\%} &  \textbf{8\%} & \textbf{115\%} & -16\% & \textbf{357\%} \\
+\textbf{Impr. vs. Syn.} & \textbf{23\%}  &  \textbf{21.6\%} 	& \textbf{20.8\%}	& 3.7\%	& \textbf{74.7\% }  & \textbf{1030\%} & \textbf{2629\%} &	\textbf{188\%} & \textbf{936\%} &\textbf{ 1930\%} \\
+\hline
+%\textbf{Total \#Repairs} & (\%) & &  & 	& \\		
+%\hline
+\end{tabular}
+\label{tab:data-recovery-and-loss}
+%\vspace{-0.5cm}
+\end{table*}
+
+
+\subsection{RQ1 Data Recovery and Data Loss} 
 Let us investigate the amount of data recovered and lost by \approach), in comparison to
 the best-performing state-of-the-art method (\ddmax). 
 
@@ -2007,6 +2045,7 @@ the best-performing state-of-the-art method (\ddmax).
 %%\vspace{-0.5cm}
 %\end{table}
 
+\vspace{\baselineskip}
 \noindent
 \textbf{\textit{Data Recovery:}} 
 %\todo{fix to new evaluation results} \todo{``100.6'' in \autoref{tab:data-recovery} is hard to justify, we need to remove insertions when computing this}	
@@ -2015,7 +2054,7 @@ We examine 474 inputs that were completely repaired by %all three approaches, i.
 lexical \ddmax, syntactic \ddmax and \approach, excluding empty files (and white spaces). \Cref{tab:data-recovery-and-loss} %and \recheck{Figure X
 highlights the amount of data %loss and data
 recovered and lost % achieved 
-by each approach.\footnote{Note that due to input synthesis (i.e., insertion of input elements), \brepair may report recovering more than 100\% of the input file (e.g., 100.6\% for SExp in \Cref{tab:data-recovery-and-loss}).} %, as average over each file. %Our evaluation r
+by each approach.\footnote{Note that due to input synthesis (i.e., insertion of input elements), \brepair may report recovering more than 100\% of the size of the original input file (e.g., 100.6\% for SExp in \Cref{tab:data-recovery-and-loss}).} %, as average over each file. %Our evaluation r
 
 %Evaluation r
 Results show that \textit{\approach has a very high data recovery rate}. 
@@ -2023,6 +2062,7 @@ It recovered 91\% of input data, on average.
 This is 23\% more than the most effective baseline (syntactic \ddmax). For all input formats, \approach recovered up to (75\%) more data than both variants of \ddmax. Consider TinyC, where \approach recovered up to 75\% more input data than \ddmax (\textit{see} \Cref{tab:data-recovery-and-loss}). These results show that \approach is more effective in recovering valid input data 
 than \ddmax.
 
+\vspace{\baselineskip}
 \noindent
 \textbf{\textit{Data Loss:}} To measure data loss, we compute the Levenshtein distance between repaired and invalid files using %Meanwhile, %For a balanced and tractable evaluation of data loss,
 %we employed the
@@ -2036,14 +2076,61 @@ We found that \textit{\approach achieves a low data loss of about 11 edit distan
 for almost all input formats, \approach achieved a lower data loss than syntactic and lexical \ddmax (except for SExp). This better  performance is attributed to the lightweight failure feedback of \approach, which allows it to distinguish between incomplete and incorrect input fragments.
 
 \begin{result}
-\approach has a high data recovery rate (91\%, on average) and its data %The data recovery and
-loss is up to 26 times lower than that of ddmax (e.g., INI).
+\approach has a high data recovery rate (91\%, on average).  
+%and its data %
+In addition, the data 
+%recovery and
+loss of \approach is up to 26 times (26X) lower than that of ddmax (e.g., INI).
 \end{result}
 
 
 
-\noindent
-\textbf{RQ2 Effectiveness:} 
+%\noindent
+%\textbf{
+
+\begin{figure}[!tbp]\centering
+%\vspace{-0.1cm}
+\centering
+%\includegraphics[width=0.45\textwidth]{figures/effectiveness.png}
+\pgfplotstableread{
+Label      INI    cJSON    SExpParser   TinyC
+Baseline   27     6        0            0
+ANTLR      133    69       96           46
+Lex.ddmax  201    132      131          114
+Syn.ddmax  201    144      149          120
+FSynth     191    158      121          154
+    }\effectivenessdata
+\begin{minipage}{.45\textwidth}
+\begin{tikzpicture}
+\begin{axis}[
+    ybar stacked,
+    ymin=0,
+    ymax=750,
+    xtick=data,
+    bar width=25,
+    legend style={cells={anchor=west}, legend pos=north west},
+    reverse legend=true,
+    xticklabels from table={\effectivenessdata}{Label},
+    xticklabel style={text width=2cm,align=center,font=\footnotesize},
+    xtick style={draw=none},
+]
+    \addplot [fill=darkgray] table [y=INI, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addlegendentry{INI}
+    \addplot [fill=gray] table [y=cJSON, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addlegendentry{cJSON}
+    \addplot [fill=lightgray] table [y=SExpParser, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addlegendentry{SExpParser}
+    \addplot [fill=white,nodes near coords,point meta=y] table [y=TinyC, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addlegendentry{TinyC}
+\end{axis}
+\end{tikzpicture}
+\end{minipage}
+\caption{Number of files repaired by each approach}
+\label{fig:effectiveness}
+%\vspace{-0.6cm}
+\end{figure}
+
+\subsection{RQ2 Effectiveness} 
 %\Cref{tab:input-details} provides details of the %number of
 %%real-world and mutated
 %invalid inputs used for each input format.
@@ -2052,16 +2139,20 @@ In this experiment,
 %and efficiency of our approach
 %Specifically,
 we measure the total number of files repaired by our approach. In addition, we compare 
-the performance of \approach to 
+the 
+%performance 
+effectiveness of \approach to 
 %Overall, we compare \approach to 
 four state-of-the-art methods containing 
 %that of %in comparison to
 %the number of repairs achieved % compare to %as well as
 both \textit{language-agnostic input repair} approaches and \textit{grammar-based input repair} techniques. 
+\autoref{fig:effectiveness} shows the effectiveness of \approach versus the state-of-the-art methods. 
 \textit{Language-agnostic input repair} approaches include the built-in error-recovery of the subject program (called \textit{baseline}) and 
 %the maximizing variants of delta debugging, i.e., 
 \textit{lexical ddmax} (\textit{see}  \Cref{tab:effectiveness-no-grammar}). 
 For comparison to \textit{grammar-based input repair methods}, we employ the built-in error-recovery strategy of the \textit{ANTLR} parser generator, and \textit{syntactic ddmax}  (\textit{see}  \Cref{tab:effectiveness-grammar}). 
+ 
 %four state-of-the-art techniques,
 %for all four input formats. We also compare the effectiveness of \approach to that of \recheck{four} state-of-the-art techniques,
 %, namely the built-in error-recovery of the subject program (called \textit{baseline}) and \textit{ANTLR}, and % as well as
@@ -2078,11 +2169,15 @@ For comparison to \textit{grammar-based input repair methods}, we employ the bui
 
 %\noindent \textit{Effectiveness:}
 %\todo{tables and figures}
-
-\noindent \textbf{\textit{Repair Effectiveness:}} %In our evaluation, %we found that
+\vspace{\baselineskip}
+\noindent 
+\textbf{\textit{Repair Effectiveness:}} %In our evaluation, %we found that
 \textit{Our approach %(\approach) 
-is very effective in repairing invalid inputs, it repaired almost four out of every five invalid input withing a four minute timeout}, i.e., % \approach repaired 
-about 77\% (624 out of 806) of invalid inputs. In comparison to language-agnostic approaches, %our 
+is %very 
+effective in repairing invalid inputs, it repaired almost four out of every five invalid input within a four minute timeout}, i.e., % \approach repaired 
+about 77\% (624 out of 806) of invalid inputs. 
+\autoref{fig:effectiveness} further shows the effectiveness of \approach, in comparison to the baselines.  
+In comparison to language-agnostic approaches, %our 
 \approach is \textit{up to 18 times more effective than the built-in error recovery strategy of the subject programs (33 vs. 624 repairs)}, and % \approach is 
 up to 35\% more effective than the best performing language-agnostic approach for certain input formats (cJSON and TinyC). Overall, 
 \Cref{tab:effectiveness-no-grammar} shows that \approach is eight percent more effective than the best language-agnostic repair technique (i.e., lexical \ddmax). 
@@ -2125,7 +2220,9 @@ the \textit{combination of failure feedback and input synthesis} is vital for th
 %, this is evident by the effectiveness of \approach in comparison to the state-of-the-art methods.
 
 \begin{result}
-\approach is very effective in repairing invalid input files: %, and more effective than the state-of-the-art.
+\approach is 
+%very 
+effective in repairing invalid input files: %, and more effective than the state-of-the-art.
 It repaired four out of five (77\% of) invalid inputs and it is %up to 
 8\% more effective than the best language-agnostic method (lexical \ddmax). %baseline.
 \end{result}
@@ -2217,48 +2314,6 @@ It repaired four out of five (77\% of) invalid inputs and it is %up to
 \end{tabular}
 \label{tab:effectiveness-grammar}
 \end{table}
-
-\begin{figure}
-%\vspace{-0.1cm}
-\centering
-%\includegraphics[width=0.45\textwidth]{figures/effectiveness.png}
-\pgfplotstableread{
-Label      INI    cJSON    SExpParser   TinyC
-Baseline   27     6        0            0
-ANTLR      133    69       96           46
-Lex.ddmax  201    132      131          114
-Syn.ddmax  201    144      149          120
-FSynth     191    158      121          154
-    }\effectivenessdata
-\begin{minipage}{.45\textwidth}
-\begin{tikzpicture}
-\begin{axis}[
-    ybar stacked,
-    ymin=0,
-    ymax=750,
-    xtick=data,
-    bar width=25,
-    legend style={cells={anchor=west}, legend pos=north west},
-    reverse legend=true,
-    xticklabels from table={\effectivenessdata}{Label},
-    xticklabel style={text width=2cm,align=center,font=\footnotesize},
-    xtick style={draw=none},
-]
-    \addplot [fill=darkgray] table [y=INI, meta=Label, x expr=\coordindex] {\effectivenessdata};
-    \addlegendentry{INI}
-    \addplot [fill=gray] table [y=cJSON, meta=Label, x expr=\coordindex] {\effectivenessdata};
-    \addlegendentry{cJSON}
-    \addplot [fill=lightgray] table [y=SExpParser, meta=Label, x expr=\coordindex] {\effectivenessdata};
-    \addlegendentry{SExpParser}
-    \addplot [fill=white,nodes near coords,point meta=y] table [y=TinyC, meta=Label, x expr=\coordindex] {\effectivenessdata};
-    \addlegendentry{TinyC}
-\end{axis}
-\end{tikzpicture}
-\end{minipage}
-\caption{Number of files repaired by each approach}
-\label{fig:effectiveness}
-%\vspace{-0.6cm}
-\end{figure}
 
 %\begin{figure}[!tbp]
 %\vspace{-0.1cm}
@@ -2400,8 +2455,9 @@ as much as \ddmax.
 
 
 
-\noindent
-\textbf{RQ3 Efficiency:} %\todo{fix to new evaluation results}
+%\noindent
+%\textbf{
+\subsection{RQ3 Efficiency} %\todo{fix to new evaluation results}
 %\todo{mention that run-time is the execution time of the algorithm, without accounting for the time for experimental pre/post processings }
 Let us evaluate the time performance of our approach.
 %, i.e., %we investigate
@@ -2528,8 +2584,10 @@ are in \textbf{bold}. %, second-best time performance is in \textit{italics}
 
 Our approach (\approach) and empirical evaluations may be limited by the following: % validity threats:
 
-\noindent
-\textbf{External Validity:} This refers to the \textit{generalizability} of our approach, i.e., 
+%\noindent
+%\textbf{
+
+\subsection{External Validity} This refers to the \textit{generalizability} of our approach, i.e., 
 %results, i.e., 
 %We acknowledge 
 the threat that \approach may not generalize to other programs and input formats. 
@@ -2538,23 +2596,33 @@ the threat that \approach may not generalize to other programs and input formats
 %other than the ones used in this paper. 
 To mitigate this threat, we have employed four well-known input formats with varying complexity, their corresponding programs also have  varying sizes (375 to 3062 LOC) and maturity (6 to 21 years old). 
 
-\noindent
-\textbf{Internal Validity:} This concerns the \textit{correctness} of our implementation and evaluation, especially if we have correctly implemented \approach and the baselines. We mitigate this threat by testing our implementation of all approaches on small and simple test inputs to ensure the they behave as described. 
+%\noindent
+%\textbf{
 
-\noindent
-\textbf{Construct Validity:} This concerns the test oracle and failure feedback employed in our evaluation. To ensure all subjects provide the expected \textit{incomplete} and \textit{(in)correct} feedback, we tested the programs on sample invalid inputs and modified the subject program, if needed. 
+\subsection{Internal Validity} This concerns the \textit{correctness} of our implementation and evaluation, especially if we have correctly implemented \approach and the baselines. We mitigate this threat by testing our implementation of all approaches on small and simple test inputs to ensure the they behave as described. 
 
-\noindent
-\textbf{Limited to Data Repair:} The repair produced by our approach aim to ensure maximal data recovery, but it does not ensure that the intended user information is preserved. Hence, \approach is limited to repair of the input data, but not the intended information. 
+%\noindent
+%\textbf{
 
+\subsection{Construct Validity} This concerns the test oracle and failure feedback employed in our evaluation. To ensure all subjects provide the expected \textit{incomplete} and \textit{(in)correct} feedback, we tested the programs on sample invalid inputs and modified the subject program, if needed. 
 
-\noindent
-\textbf{Input Constraints and Semantics:} \approach does not address concerns about recovering or preserving the input constraints or intended semantics of the input data. For instance, repairing an invalid checksum or hash requires such information, and \approach will be limited for this use cases. However, it would provide repair candidates that allow end-users to debug such semantic issues. 
+%\noindent
+%\textbf{
+
+\subsection{Limited to Data Repair} The repair produced by our approach aim to ensure maximal data recovery, but it does not ensure that the intended user information is preserved. Hence, \approach is limited to repair of the input data, but not the intended information. 
+
+%
+%\noindent
+%\textbf{
+
+\subsection{Input Constraints and Semantics} \approach does not address concerns about recovering or preserving the input constraints or intended semantics of the input data. For instance, repairing an invalid checksum or hash requires such information, and \approach will be limited for this use cases. However, it would provide repair candidates that allow end-users to debug such semantic issues. 
 \revise{
 In addition, inputs with significant semantic corruption may not be effectively repaired by FSynth. Even though FSynth is effective in fixing structural parts of invalid inputs, when the corruption is in the semantic part, the missing data becomes difficult to recover. Examples include corrupted numbers in calculations, and dates.}
 
-\noindent
-\textbf{Repair via Input Synthesis:} 
+%\noindent
+%\textbf{
+
+\subsection{Repair via Input Synthesis} 
 \revise{Firstly, the repair via synthesis approach of \approach is exhaustive, thus it can quickly become computationally expensive.} 
 Secondly, the repair via synthesis operation %(i.e., insertion) % operation) 
 of our approach poses the risk of introducing input elements with unintended semantic consequences. 
@@ -2586,23 +2654,28 @@ potential repair candidates provided by \approach.
 \section{Related Work}
 \label{sec:related_work}
 
-\noindent
-\textbf{Black-box Input Repair:} 
+%\noindent
+%\textbf{
+Let us discuss the state-of-the-art input repair approaches and how they compare to \approach. 
+
+\subsection{Black-box Input Repair} 
 A few techniques have been proposed to analyze input data without program analysis, albeit with the aim of understanding and localizing faults in the program. The earliest works were either focused on simplifying failure-inducing inputs~\cite{zeller2002simplifying, clause2009penumbra}, or isolating fault-revealing input fragments~\cite{hierarchicalDD, sterling2007automated}. Notably, the minimizing delta debugging algorithm (\ddmin) is focused on reducing failure-inducing inputs in order to diagnose and localize faults in the program. More recently, Kirschner et al.~\cite{kirschner2020debugging} proposed a maximizing variant of the delta debugging algorithm (\ddmax) to repair invalid inputs to subsets via deletion, we compare \approach to \ddmax in this work. In contrast to \ddmax, \approach also synthesizes input elements to complete input repair. 
 
 
-\noindent
-\textbf{White and Grey-box Input Repair:} Some techniques employ program analysis to fix invalid inputs. As an example, \emph{docovery}~\cite{docovery:ase14} applies symbolic execution to change broken inputs to take error-free paths in the subject program. Similarly, Ammann and Knight~\cite{data_diversity} proposed a method to transform invalid inputs into valid inputs by analyzing the region of the input causing the fault and changing those regions to avoid the fault. Unlike these methods, \approach 
+%\noindent
+%\textbf{
+\subsection{White and Grey-box Input Repair} Some techniques employ program analysis to fix invalid inputs. As an example, \emph{docovery}~\cite{docovery:ase14} applies symbolic execution to change broken inputs to take error-free paths in the subject program. Similarly, Ammann and Knight~\cite{data_diversity} proposed a method to transform invalid inputs into valid inputs by analyzing the region of the input causing the fault and changing those regions to avoid the fault. Unlike these methods, \approach 
 is black-box, it relies on the failure feedback of the subject program. 
 
 
-\noindent
-\textbf{Constraint-based Input Repair:} %via Constraint Learning:} 
+\subsection{Constraint-based Input Repair} %via Constraint Learning:} 
 These approaches automatically learn input constraints then enforce the learned constraints to repair invalid inputs~\cite{hussain2010dynamic, Demsky:2006:IED:1146238.1146266} 
 These constraints are often extracted from valid inputs~\cite{Long:2012:AIR:2337223.2337233, Rinard:2007:LCZ:1297027.1297072}, specified with predicates~\cite{elkarablieh2008juzi}, model-based systems~\cite{Demsky:2003:ADR:949343.949314}, goal-directed reasoning~\cite{1553560}, dynamic symbolic execution~\cite{hussain2010dynamic} or invariants~\cite{Demsky:2006:IED:1146238.1146266}. For instance, \emph{S-DAGs}~\cite{scheffczyk2004s} enforce constraints on invalid inputs in a semi-automatic way. Unlike these approaches, \approach does not learn input constraints, it employs input synthesis and failure feedback to fix invalid inputs. 
 
-\noindent
-\textbf{Parser-directed Input Repair:}
+%\noindent
+%\textbf{
+
+\subsection{Parser-directed Input Repair} %:}
 This refers to the input repair schemes of parsers, interpreters and compilers~\cite{parr2011ll, diekmann2020dont, aho1972minimum, hammond1984survey, backhouse1979syntax}. 
 %In most of the syntactic recovery approaches, various different 
 These techniques employ operations such as insertion, deletion and replacement of symbols~\cite{anderson1981locally, cerecke2003locally, anderson1983assessment}, extending forward or backwards from a parser error~\cite{burke1982practical, mauney1982forward}, or more general methods of recovery and diagnosis~\cite{krawczyk1980error, aho1972minimum}. 
@@ -2628,26 +2701,27 @@ Unlike \approach which aims to fix an invalid input, these schemes need an input
 \label{sec:conclusion}
 %\recheck{
 %In this paper, we 
-This paper presents \approach, an input repair approach that employs input synthesis and lightweight failure feedback (i.e., incomplete and (in)correct checks) to repair invalid inputs. Our approach is black-box, does not require program analysis or an input grammar. We evaluate the data recovery,effectiveness, and efficiency of our approach, in comparison to the state-of-the-art methods. We show that \approach has a very high data recovery rate, it recovered 91\% of input data. 
+This paper presents \approach, an input repair approach that employs input synthesis and lightweight failure feedback (i.e., incomplete and (in)correct checks) to repair invalid inputs. Our approach is black-box, does not require program analysis or an input grammar. We evaluate the data recovery, repair effectiveness, and efficiency of our approach, in comparison to the state-of-the-art methods. We show that \approach has a very high data recovery rate, it recovered 91\% of input data. 
 It is also very effective and efficient in input repair---it completes the repair of about four in five invalid inputs (77\%) within four minutes. Furthermore, we demonstrate that our approach is up to 35\% more effective than the best 
 %In comparison to the 
 best baseline---(syntactic) \ddmax, without using an input grammar. In summary, this work demonstrates that combining lightweight failure feedback and input synthesis are important for the effective repair of invalid inputs, especially in the absence of an input specification 
 %(e.g., grammar)
 and program analysis.
-
 In the future, we plan to investigate how to improve the performance of our approach by learning input semantics and constraints.
 %, or via program analysis and the knowledge of the input specification. %grammar.
 %}
 %  more effective thja
 %\todo{discuss potential future works}
 %\revise{
-We also provide our implementation, data and experimental results for easy replication, scrutiny and reuse:
+
+We provide our implementation, experimental data and results for easy replication, scrutiny and reuse:
 %}
 %\todo{we should provide a github page, including an anonymous notebook that allows to test the examples (in Table 1), it will be interesting}
 
 
  \begin{center}
 % \vspace{-0.2mm}
+\todo{fix github page and tinyurl link}
      \textbf{\url{https://tinyurl.com/fsynth-artifact-icse2023}}%\todo{update link}
  \end{center}
 
