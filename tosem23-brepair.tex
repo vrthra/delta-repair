@@ -1603,11 +1603,11 @@ Given this, \brepair algorithm works as follows (\Cref{fig:brepair_flowchart}):
     \node[blockdiagramblock] (search) {Find parse boundary (Search)};
     \node[blockdiagramblock,below=of search] (repair) {Apply Repairs};
     \draw[blockdiagramarrow] (search) -- (repair); %node[simpletext,pos=.5,right,font=\scriptsize] {}; % PushPQ
-    \node[blockdiagramblock,below=of repair] (extend) {\mbox{Extend Threads}};
+    \node[blockdiagramblock,below=of repair] (extend) {Extend Threads};
     \draw[blockdiagramarrow] (repair) -- (extend);
-    \node[blockdiagramblock,right=of extend] (isvalid) {\mbox{Valid Input?}};
+    \node[blockdiagramblock,right=of extend] (isvalid) {Valid Input?};
     \node[simpletext,below=.3 of isvalid] (return) {\mbox{Return input}};
-    \node[blockdiagramblock,above=of isvalid] (select) {\mbox{Select Threads}};
+    \node[blockdiagramblock,above=of isvalid] (select) {Select Threads};
     \draw[blockdiagramarrow] (extend) -- (isvalid);
     \draw[blockdiagramarrow] (isvalid) -- (return) node[simpletext,pos=.6,right] {\pass};
     \draw[blockdiagramarrow] (isvalid) -- (select);
