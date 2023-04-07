@@ -1596,10 +1596,9 @@ Given this, \brepair algorithm works as follows (\Cref{fig:brepair_flowchart}):
 
 %SupplMat
 \begin{figure}[tbp!]
-\newlength\nodedst\setlength\nodedst{.7cm}
+\newlength\nodedst\setlength\nodedst{.35cm}
 \newlength\ndist\setlength\ndist{.1\nodedst}
-\def\arrowsep{0.20cm}
-\begin{tikzpicture}[node distance=\nodedst]
+\begin{tikzpicture}[node distance=\nodedst and 2.5\nodedst]
     \node[blockdiagramblock] (search) {Find parse boundary (Search)};
     \node[blockdiagramblock,below=of search] (repair) {Apply Repairs};
     \draw[blockdiagramarrow] (search) -- (repair); %node[simpletext,pos=.5,right,font=\scriptsize] {}; % PushPQ
@@ -1623,7 +1622,7 @@ Given this, \brepair algorithm works as follows (\Cref{fig:brepair_flowchart}):
     \pic[] at (select.south east) {numbering=4};
     %TODO
 \end{tikzpicture}
-% \vspace*{-0.1in}
+\vspace*{-0.1in}
     \caption{Work flow of \brepair}
     \label{fig:brepair_flowchart}
     % \vspace*{-0.1in}
