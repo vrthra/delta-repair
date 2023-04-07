@@ -218,7 +218,7 @@ blockdiagramlines/.style={draw,stroke=black,line width=1.2pt},
 blockdiagramarrow/.style={blockdiagramlines,->},
 blockdiagramdashedarrow/.style={blockdiagramarrow,dashed},
 blockdiagramannot/.style={blockdiagramlines,text=black,align=center},
-blockdiagramblock/.style={lflowchartnode,blockdiagramannot,minimum width=1.5cm,minimum height=0.5cm,text width=1.9cm},
+blockdiagramblock/.style={lflowchartnode,blockdiagramannot,minimum width=2.5cm,minimum height=0.65cm,text width=2.9cm},
 blockdiagrammicroblock/.style={blockdiagramannot,font=\tiny,minimum width=1.5cm,minimum height=.5cm,rounded corners=.5pt},
 blockdiagramarrowcaption/.style={font=\scriptsize\sffamily,inner sep=1.5pt,text=black},
 blockdiagramouterbox/.style={blockdiagramlines,densely dotted,line width=.7pt},
@@ -1596,7 +1596,7 @@ Given this, \brepair algorithm works as follows (\Cref{fig:brepair_flowchart}):
 
 %SupplMat
 \begin{figure}[tbp!]
-\newlength\nodedst\setlength\nodedst{.5cm}
+\newlength\nodedst\setlength\nodedst{.7cm}
 \newlength\ndist\setlength\ndist{.1\nodedst}
 \def\arrowsep{0.20cm}
 \begin{tikzpicture}[node distance=\nodedst]
@@ -1609,7 +1609,7 @@ Given this, \brepair algorithm works as follows (\Cref{fig:brepair_flowchart}):
     \node[simpletext,below=.3 of isvalid] (return) {\mbox{Return input}};
     \node[blockdiagramblock,above=of isvalid] (select) {Select Threads};
     \draw[blockdiagramarrow] (extend) -- (isvalid);
-    \draw[blockdiagramarrow] (isvalid) -- (return) node[simpletext,pos=.6,right] {\pass};
+    \draw[blockdiagramarrow] (isvalid) -- (return) node[simpletext,pos=.6,right,yshift=-.5mm] {\pass};
     \draw[blockdiagramarrow] (isvalid) -- (select);
     %\node[simpletext,right=.5 of isvalid.east,inner sep=1pt] (pqins1) {increase bound,\\push to PQ};
     %\draw[blockdiagramarrow,dashed] (isvalid) -- (pqins1) node[pos=.5,above] {\pass};
@@ -1617,7 +1617,7 @@ Given this, \brepair algorithm works as follows (\Cref{fig:brepair_flowchart}):
     %\draw[blockdiagramarrow,dashed] (select) -- (pqins2) node[pos=.5,above] {\pass};
     \draw[blockdiagramarrow] (select) to[out=180,in=0] (repair);
     \pic[] at (search.south east) {numbering=1};
-    \pic[] at ([yshift=-3mm]isvalid.south east) {numbering=5};
+    \pic[] at (isvalid.south east) {numbering=5};
     \pic[] at (extend.south east) {numbering=3};
     \pic[] at (repair.south east) {numbering=2};
     \pic[] at (select.south east) {numbering=4};
