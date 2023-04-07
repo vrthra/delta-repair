@@ -1600,13 +1600,13 @@ Given this, \brepair algorithm works as follows (\Cref{fig:brepair_flowchart}):
 \newlength\ndist\setlength\ndist{.1\nodedst}
 \begin{tikzpicture}[node distance=\nodedst and 2.5\nodedst]
     \node[blockdiagramblock] (search) {Find parse boundary (Search)};
-    \node[blockdiagramblock,below=of search] (repair) {Apply Repairs};
+    \node[blockdiagramblock,right=of search] (repair) {Apply Repairs};
     \draw[blockdiagramarrow] (search) -- (repair); %node[simpletext,pos=.5,right,font=\scriptsize] {}; % PushPQ
-    \node[blockdiagramblock,below=of repair] (extend) {Extend Threads};
+    \node[blockdiagramblock,right=of repair] (extend) {Extend Threads};
     \draw[blockdiagramarrow] (repair) -- (extend);
-    \node[blockdiagramblock,right=of extend] (isvalid) {Valid Input?};
+    \node[blockdiagramblock,below=of extend] (isvalid) {Valid Input?};
     \node[simpletext,below=.3 of isvalid] (return) {\mbox{Return input}};
-    \node[blockdiagramblock,above=of isvalid] (select) {Select Threads};
+    \node[blockdiagramblock,left=of isvalid] (select) {Select Threads};
     \draw[blockdiagramarrow] (extend) -- (isvalid);
     \draw[blockdiagramarrow] (isvalid) -- (return) node[simpletext,pos=.6,right,yshift=-.5mm] {\pass};
     \draw[blockdiagramarrow] (isvalid) -- (select);
@@ -1614,7 +1614,7 @@ Given this, \brepair algorithm works as follows (\Cref{fig:brepair_flowchart}):
     %\draw[blockdiagramarrow,dashed] (isvalid) -- (pqins1) node[pos=.5,above] {\pass};
     %\node[simpletext,right=.5 of select.east,inner sep=1pt] (pqins2) {increase bound,\\push to PQ};
     %\draw[blockdiagramarrow,dashed] (select) -- (pqins2) node[pos=.5,above] {\pass};
-    \draw[blockdiagramarrow] (select) to[out=180,in=0] (repair);
+    \draw[blockdiagramarrow] (select) -- (repair);
     \pic[] at (search.south east) {numbering=1};
     \pic[] at (isvalid.south east) {numbering=5};
     \pic[] at (extend.south east) {numbering=3};
