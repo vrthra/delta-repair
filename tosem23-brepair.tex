@@ -1,3 +1,7 @@
+% TODO from AZ Mail: Avoid Appreviations in tables & make tables smaller
+% TODO from AZ Mail: Align Data in Tables under Period
+% TODO from AZ Mail: Mark Improvements with + sign
+% TODO from AZ Mail: Table 5 and 6 Total on the right, also report percentages for formats
 %%
 %% This is derived from file `sample-acmsmall-submission.tex',
 %% generated with the docstrip utility.
@@ -518,8 +522,8 @@ Although \ddmax works very well for most inputs, %, it could repair 69\% of inpu
 %However,
 we observe it %that \ddmax
 has certain limitations which inhibit it from completely repairing any invalid inputs. % in practice.
-\Cref{tab:ddmaxlimitations} and \Cref{sec:rich-input-structures} illustrate %some of
-these limitations with simplified invalid inputs. % as examples.
+%\Cref{tab:ddmaxlimitations} and \Cref{sec:rich-input-structures} illustrate %some of
+%these limitations with simplified invalid inputs. % as examples.
 Notably, two major \ddmax limitations include its (1) \textit{limited repair operation} (only deletion), and (2) inability to completely repair \textit{rich input structures} (e.g., multiple faults) due to inherent assumptions. 
 Our approach addresses these limitations of \ddmax, which we now discuss in detail.
 % (e.g., its search span)..
@@ -1108,7 +1112,7 @@ input should be considered rather than the size of the entire text. Not doing
 this would cause an invariant fail for inputs such as \letterboxed{\{*"":2\}}.
 
 \subsection{Repair of rich inputs with \brepair}
-One of the strengths of \brepair is that it can effectively handle inputs with
+One advantage of \brepair is that it can effectively handle inputs with
 rich structure. Consider the input to the JSON processor: \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}}.
 (For ease of explanation, let us consider only deletion as the
 operation used.) Here, the procedure is as follows:
@@ -1324,7 +1328,7 @@ to more effective repairs.
 
 \section{\approach}
 \label{sec:brepair}
-The main strength of \brepair is its repertoire of repairs.
+The main contribution of \brepair is its repertoire of repairs.
 The input string can be modified by \emph{deleting} any character
 (\Cref{lst:repairsdelete}), or
 \emph{inserting} a character at any index (\Cref{lst:repairsdelete}).
@@ -1375,8 +1379,8 @@ is before the first parse error. The problem is that insertions at random
 points in the prefix is very costly, resulting in $|\alpha| \times |S|$
 modifications where $|\alpha|$ is the number of alphabets (characters) the
 language has, and $|S|$ is the length of the prefix.
-Hence, we allow the user to choose to toggle this option with
-\<LAST\_INSERT\_ONLY>. If the option is false, we will attempt repairs at any
+Hence, we introduce an option named \<LAST\_INSERT\_ONLY> which allows the user to toggle this behavior.
+If the option is false, we will attempt repairs at any
 point in the prefix. If it is true, we will only attempt insertions at the end
 of the prefix.
 
@@ -1973,13 +1977,13 @@ of \approach over the best baseline which are significant (i.e., greater than fi
 &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
 \textbf{Techniques} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
 \hline
-\textbf{Lex. ddmax} & 81\%  & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% & 18.0 & {10.2} &	61.6 &	\textbf{6.2} & 7.5 \\			
-\textbf{Syn. ddmax} & 74\%  &  70.6\% & 81.5\%  & 97.0\%	& 47.0\% & 119.6 &  258.1 & 82.7 &	76.6 &	33.3 \\	
+\textbf{Lex. \ddmax} & 81\%  & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% & 18.0 & {10.2} &	61.6 &	\textbf{6.2} & 7.5 \\			
+\textbf{Syn. \ddmax} & 74\%  &  70.6\% & 81.5\%  & 97.0\%	& 47.0\% & 119.6 &  258.1 & 82.7 &	76.6 &	33.3 \\	
 \hline
 \textbf{\approach} & \textbf{91\%}  &  \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100.6\%} & \textbf{82.1\%} & \textbf{10.6}  & \textbf{9.5} &	\textbf{28.7} &	7.4 & \textbf{1.6} \\
 \hline
-\textbf{Impr. vs. Lex.} & 12\% &  0.1\%	& \textbf{19.8\%}	& 1.4\%	& \textbf{72.1\%} & \textbf{70\%} &  \textbf{8\%} & \textbf{115\%} & -16\% & \textbf{357\%} \\
-\textbf{Impr. vs. Syn.} & \textbf{23\%}  &  \textbf{21.6\%} 	& \textbf{20.8\%}	& 3.7\%	& \textbf{74.7\% }  & \textbf{1030\%} & \textbf{2629\%} &	\textbf{188\%} & \textbf{936\%} &\textbf{ 1930\%} \\
+\textbf{Impr. over Lex.} & 12\% &  0.1\%	& \textbf{19.8\%}	& 1.4\%	& \textbf{72.1\%} & \textbf{70\%} &  \textbf{8\%} & \textbf{115\%} & -16\% & \textbf{357\%} \\
+\textbf{Impr. over Syn.} & \textbf{23\%}  &  \textbf{21.6\%} 	& \textbf{20.8\%}	& 3.7\%	& \textbf{74.7\% }  & \textbf{1030\%} & \textbf{2629\%} &	\textbf{188\%} & \textbf{936\%} &\textbf{ 1930\%} \\
 \hline
 %\textbf{Total \#Repairs} & (\%) & &  & 	& \\		
 %\hline
@@ -2079,7 +2083,7 @@ for almost all input formats, \approach achieved a lower data loss than syntacti
 %and its data %
 In addition, the data 
 %recovery and
-loss of \approach is up to 26 times (26X) lower than that of ddmax (e.g., INI).
+loss of \approach is up to 26 times (26X) lower than that of \ddmax (e.g., INI).
 \end{result}
 
 
@@ -2149,8 +2153,8 @@ both \textit{language-agnostic input repair} approaches and \textit{grammar-base
 \autoref{fig:effectiveness} shows the effectiveness of \approach versus the state-of-the-art methods. 
 \textit{Language-agnostic input repair} approaches include the built-in error-recovery of the subject program (called \textit{baseline}) and 
 %the maximizing variants of delta debugging, i.e., 
-\textit{lexical ddmax} (\textit{see}  \Cref{tab:effectiveness-no-grammar}). 
-For comparison to \textit{grammar-based input repair methods}, we employ the built-in error-recovery strategy of the \textit{ANTLR} parser generator, and \textit{syntactic ddmax}  (\textit{see}  \Cref{tab:effectiveness-grammar}). 
+\textit{lexical \ddmax} (\textit{see}  \Cref{tab:effectiveness-no-grammar}). 
+For comparison to \textit{grammar-based input repair methods}, we employ the built-in error-recovery strategy of the \textit{ANTLR} parser generator, and \textit{syntactic \ddmax}  (\textit{see}  \Cref{tab:effectiveness-grammar}). 
  
 %four state-of-the-art techniques,
 %for all four input formats. We also compare the effectiveness of \approach to that of \recheck{four} state-of-the-art techniques,
@@ -2179,7 +2183,7 @@ about 77\% (624 out of 806) of invalid inputs.
 In comparison to language-agnostic approaches, %our 
 \approach is \textit{up to 18 times more effective than the built-in error recovery strategy of the subject programs (33 vs. 624 repairs)}, and % \approach is 
 up to 35\% more effective than the best performing language-agnostic approach for certain input formats (cJSON and TinyC). Overall, 
-\Cref{tab:effectiveness-no-grammar} shows that \approach is eight percent more effective than the best language-agnostic repair technique (i.e., lexical \ddmax). 
+\Cref{tab:effectiveness-no-grammar} shows that \approach repairs eight percent more inputs than the best language-agnostic repair technique (i.e., lexical \ddmax). 
 %Without the knowledge of the input grammar, 
 %IN comparison to grammar-based input repair techniques, 
 %In our evaluation, w
@@ -2222,8 +2226,7 @@ the \textit{combination of failure feedback and input synthesis} is vital for th
 \approach is 
 %very 
 effective in repairing invalid input files: %, and more effective than the state-of-the-art.
-It repaired four out of five (77\% of) invalid inputs and it is %up to 
-8\% more effective than the best language-agnostic method (lexical \ddmax). %baseline.
+It repaired four out of five (77\% of) invalid inputs and repaired 8\% more invalid inputs than the best language-agnostic method (lexical \ddmax). %baseline.
 \end{result}
 \done{8\% is not much, and only on average, too. This may not be the best opener, although the later results (specifically data loss) are impressive. -- AZ}
 
@@ -2277,7 +2280,7 @@ It repaired four out of five (77\% of) invalid inputs and it is %up to
 \hline
 \textbf{Baseline}   & 33 (4\%) & 27	 & 6 &	0	& 0\\
 %\textbf{ANTLR} & 344 (43\%) & 133 & 69 & 96 &  46   \\
-\textbf{Lex. ddmax} & 578 (72\%) & \textbf{201}  & 132  & \textbf{131} & 114  \\ 		
+\textbf{Lex. \ddmax} & 578 (72\%) & \textbf{201}  & 132  & \textbf{131} & 114  \\ 		
 \hline	
 %\textbf{Syn. ddmax} & \textbf{614} (\textbf{76\%}) & \textbf{201}  & \textbf{144}  & \textbf{149}  & \textbf{120}  \\ 	
 %\hline
@@ -2304,7 +2307,7 @@ It repaired four out of five (77\% of) invalid inputs and it is %up to
 \textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
 \hline
 \textbf{ANTLR} & 344 (43\%) & 133 & 69 & 96 &  46   \\
-\textbf{Syn. ddmax} & 614 (76\%) & \textbf{201}  & 144  & \textbf{149}  & 120  \\ 	
+\textbf{Syn. \ddmax} & 614 (76\%) & \textbf{201}  & 144  & \textbf{149}  & 120  \\ 	
 \hline
 \textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & 121  &  \textbf{154} \\
 \hline
@@ -2555,8 +2558,8 @@ are in \textbf{bold}. %, second-best time performance is in \textit{italics}
 \textbf{Techniques} %& \textbf{Inputs}
 &  \textbf{Avg.}  & \textbf{Total} & \textbf{Avg.}  & \textbf{Total} \\
 \hline
-\textbf{Lex. ddmax} & 3.4 & 1653 & 3260 & 1564781 \\
-\textbf{Syn. ddmax} & \textbf{2.0} & \textbf{982}  & \textbf{2075}  & \textbf{995802}  \\
+\textbf{Lex. \ddmax} & 3.4 & 1653 & 3260 & 1564781 \\
+\textbf{Syn. \ddmax} & \textbf{2.0} & \textbf{982}  & \textbf{2075}  & \textbf{995802}  \\
 \hline
 \textbf{\approach} &  10.2 & 4938  & 11537 & 5537601  \\
 \hline
@@ -2576,12 +2579,11 @@ are in \textbf{bold}. %, second-best time performance is in \textit{italics}
 
 
 
-\section{Limitations and Threats to Validity}
+\section{Threats to Validity}
 \label{sec:threats}
 
 %\todo{discuss threats to validity .... discuss issues like input synthesis (insertion), requires rich feedback: incorrect and incomplete input fragment}
 
-Our approach (\approach) and empirical evaluations may be limited by the following: % validity threats:
 
 %\noindent
 %\textbf{
@@ -2607,6 +2609,9 @@ To mitigate this threat, we have employed four well-known input formats with var
 
 %\noindent
 %\textbf{
+
+\section{Limitations}
+Our approach (\approach) and empirical evaluations may be limited by the following: % validity threats:
 
 \subsection{Limited to Data Repair} The repair produced by our approach aim to ensure maximal data recovery, but it does not ensure that the intended user information is preserved. Hence, \approach is limited to repair of the input data, but not the intended information. 
 
