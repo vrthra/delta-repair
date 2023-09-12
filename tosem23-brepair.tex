@@ -1780,6 +1780,9 @@ How effective is \approach in fixing invalid inputs? Is it as effective as the s
 
 \item[RQ3: Efficiency.] What is the efficiency (runtime) of
 \approach? Is it as efficient as the state-of-the-art techniques?
+
+\item[RQ4: Perfect Repair.] How many files are repaired prefectly by
+\approach? How does the number of perfect repairs compare to the state-of-the-art methods?
 \end{description}
 
 
@@ -2568,12 +2571,43 @@ are in \textbf{bold}. %, second-best time performance is in \textit{italics}
 %\vspace{-0.5cm}
 \end{table}
 
+\subsection{RQ4 Perfect Repair.}
+\revise{In this research question, we would like to evaluate the number of files that have been repaired perfectly by each approach, that is - the repaired file is exactly the same file as the file before it was mutated.
+Since this obviously limits the number of files we can use in the evaluation to the artificially mutated files, the total number of files is smaller in this section of the experiments.}
 
+\revise{We report the number of repaired files in \cref{tab:perfectrepairs}.
+The total number of perfectly repaired files for \approach (49) is slightly (X\%) higher than for \ddmax (42), while \ddmaxg did not manage to perfectly repair any file at all.
+This might be due to the fact that \ddmaxg needs to parse and un-parse all input files to work on the parse tree instead of the characters, which introduces noise by changing whitespaces and line breaks in the files.
+}
 
+\revise{If we take a look at the overlap of files that could be repaired perfectly by \approach and \ddmax (\cref{fig:perfectlyrepairedvenndiagram}), we notice that there were more (X\%) files that could only be repaired by \approach (13) than \ddmax (6) which showcases the ability of \approach to repair files that are difficult to repair for \ddmax.
+}
 
+\begin{table}[!tbp]\centering
+\caption{Number of perfectly repaired files for \approach in comparison to \ddmax and \ddmaxg
+}
+%\vspace{-0.5cm}
+\begin{tabular}{|l |  r  r  r  r | r |}
+\hline
+\textbf{Techniques}&  \textbf{INI}&\textbf{cJSON} &\textbf{sExp}&\textbf{TinyC}&\textbf{Total}  \\
+\hline
+\textbf{Lex. \ddmax}  & 1 & 14 & 2 & 25 & 42 \\
+\textbf{Syn. \ddmaxg} & 0 & 0  & 0 & 0  & 0  \\
+\hline
+\textbf{\approach} &  1 & 18  & 0 & 30 & 49  \\
+\hline
+\end{tabular}
+\label{tab:perfectrepairs}
+%\vspace{-0.5cm}
+\end{table}
 
-
-
+\begin{figure}[!tbp]\centering
+\caption{Venn Diagram showing the overlap of files that could be perfectly repaired by \approach vs. \ddmax
+}
+TODO Venn Diagram: \ddmax 6 36 13 \approach
+\label{fig:perfectlyrepairedvenndiagram}
+%\vspace{-0.5cm}
+\end{figure}
 
 
 
