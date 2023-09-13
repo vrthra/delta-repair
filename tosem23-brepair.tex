@@ -1,7 +1,3 @@
-% TODO from AZ Mail: Avoid Appreviations in tables & make tables smaller
-% TODO from AZ Mail: Align Data in Tables under Period
-% TODO from AZ Mail: Mark Improvements with + sign
-% TODO from AZ Mail: Table 5 and 6 Total on the right, also report percentages for formats
 %%
 %% This is derived from file `sample-acmsmall-submission.tex',
 %% generated with the docstrip utility.
@@ -267,6 +263,11 @@ pics/numbering/.style args={#1}{code={
 %% end of the preamble, start of the body of the document source.
 \begin{document}
 
+\todo{from AZ Mail: Avoid Appreviations in tables \& make tables smaller}
+\todo{from AZ Mail: Align Data in Tables under Period}
+\todo{from AZ Mail: Mark Improvements with + sign}
+\todo{from AZ Mail: Table 5 and 6 Total on the right, also report percentages for formats}
+\todo{EZ: AZ Language Model (see mail)}
 %%
 %% The "title" command has an optional parameter,
 %% allowing the author to define a "short title" to be used in page headers.
@@ -1783,6 +1784,8 @@ How effective is \approach in fixing invalid inputs? Is it as effective as the s
 
 \item[RQ4: Perfect Repair.] How many files are repaired prefectly by
 \approach? How does the number of perfect repairs compare to the state-of-the-art methods?
+
+\item[RQ5: Quality of Repairs.] How does the quality of the repaired files compare for each approach?
 \end{description}
 
 
@@ -2609,12 +2612,13 @@ TODO Venn Diagram: \ddmax 6 36 13 \approach
 %\vspace{-0.5cm}
 \end{figure}
 
-
-
-
+\subsection{RQ5 Quality of Repaired Files}
+\todo{EZ: Write RQ5}
 
 \section{Threats to Validity}
 \label{sec:threats}
+
+\todo{EZ: Add Rich Feedback Oracle problem to threats (the approach very much relies on reliable oracles and even one small faulty feedback might make the whole input unrepairable)}
 
 %\todo{discuss threats to validity .... discuss issues like input synthesis (insertion), requires rich feedback: incorrect and incomplete input fragment}
 
