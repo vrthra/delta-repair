@@ -2607,9 +2607,22 @@ This might be due to the fact that \ddmaxg needs to parse and un-parse all input
 \begin{figure}[!tbp]\centering
 \caption{Venn Diagram showing the overlap of files that could be perfectly repaired by \approach vs. \ddmax
 }
-TODO Venn Diagram: \ddmax 6 36 13 \approach
+\centering
+\begin{minipage}[b]{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}[circ/.style={draw=black,line width=1pt,fill=none,shape=circle,minimum width=2.0cm,minimum height=2.5cm},lbl/.style={font=\bfseries}]
+        \node[draw=none,minimum width=1.5cm,minimum height=1.29904cm,inner sep=0,outer sep=0] at (0,0) (anchor) {};
+        \node[circ] at (anchor.south west) (g1) {};
+        \node[circ] at (anchor.south east) (g2) {};
+        \node[lbl,anchor=north] at (g1.south) {\strut\ddmax};
+        \node[lbl,anchor=north] at (g2.south) {\strut\approach};
+        \node[lbl] at ($(g1)!0.5!(g2) - (0,.1)$) {6};
+        \node[lbl] at ($(g1.center) - (.2,.1)$) {36};
+        \node[lbl] at ($(g2.center) - (-.2,.1)$) {13};
+    \end{tikzpicture}
+\end{minipage}
+\vspace{-0.4cm}
 \label{fig:perfectlyrepairedvenndiagram}
-%\vspace{-0.5cm}
 \end{figure}
 
 \subsection{RQ5 Quality of Repaired Files}
