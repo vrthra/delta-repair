@@ -271,7 +271,7 @@ pics/numbering/.style args={#1}{code={
 %%
 %% The "title" command has an optional parameter,
 %% allowing the author to define a "short title" to be used in page headers.
-\title{Repairing Inputs via Synthesis}
+\title{Input Repair without Formal Specifications}
 
 %%
 %% The "author" command and its associated commands are used to define
@@ -332,38 +332,35 @@ pics/numbering/.style args={#1}{code={
 %% The abstract is a short summary of the work to be presented in the
 %% article.
 \begin{abstract}
-\done{For the title, I'd definitely include ``synthesis'', as in ``Repairing Inputs with Input Synthesis'' -- AZ}
-%Data cleansing and data 
-%in fields that aggregate data from multiple resources (e.g., data warehousing). 
-%Oftentimes,
-Input data may ostensibly conform to a given input format, but cannot be parsed by a conforming program, for instance, due to human error or data corruption.
-In such cases, a data engineer \revise{is tasked with \textit{input repair}, i.e., she has to manually repair the corrupt data such that
-it follows a given format, and hence can be processed by the conforming program.}
-Such manual repair can be time-consuming and
-error-prone. 
-%When a program input is invalid, developers are tasked with repairing such inputs.  
-\revise{In particular, input repair is challenging without an input specification (e.g., input grammar) or program analysis}.
+In data processing, engineers often encounter datasets that are expected to
+conform to specific formats but contain variations due to factors such as
+human error or data corruption.
+These inconsistencies prevent standard programs from parsing the data correctly.
+Consequently, data engineers must perform \emph{input repair,} manually
+adjusting the non-conforming data to match the required format.
+This process is time-consuming and prone to errors, particularly when
+clear formal input specifications are lacking, which is often the case as
+input formats are frequently defined exclusively by their parsers.
 
+In this work, we show that one can often repair the data corruption or
+conformance problems by leveraging failure feedback from parsers even in
+the absence of a formal input specification.
 
+Our approach, which we call \brepair, can automatically produce repair
+candidates for corrupt or non-conforming input data ranked by maximal
+closeness to the original data.
 
-In this work, we show that incorporating lightweight failure feedback (e.g., input incompleteness) % \todo{what is lightweight error-feedback?} 
-to parsers is sufficient to repair any corrupt input data with maximal closeness to the
-semantics of the input data. We propose an approach (called \brepair) that leverages \emph{lightweight error-feedback} and \emph{input synthesis} to repair invalid inputs. 
-\revise{\brepair is \textit{grammar-agnostic} and it does not require program analysis}. 
-%\todo{We need to clarify the feedback requirement, correctness and incompleteness}
-Given a conforming program, %\todo{it is not clear, what is a conforming program, a parser or any program conforming to the input format??}, 
-and any invalid input, \brepair provides a set
-of repairs prioritized by the distance of the repair from the original input.
-
-We evaluate \brepair on 806 (real-world) invalid inputs using four well-known input formats, namely INI, TinyC, SExp, and cJSON. In our evaluation, we found that \approach 
-\revise{recovers 91\% of valid input data.} %and it 
-\approach is also highly effective and efficient in input repair: It repairs 77\% of invalid inputs %and recovers 91\% of input data, 
+We evaluate \brepair on 806 (real-world) invalid inputs using four
+well-known input formats, namely INI, TinyC, SExp, and cJSON.
+In our evaluation, we found that %\approach 
+%\revise{recovers 91\% of valid input data.} %and it 
+\approach is highly effective and efficient in input repair: It repairs 77\% of invalid inputs %and recovers 91\% of input data, 
 within four minutes. It is up to 35\% more effective than \ddmax, the previously best-known approach.
-Overall, our approach addresses several
-limitations of
-\ddmax,
-both in terms of what it can repair, as well as
-in terms of the set of repairs offered.
+%Overall, our approach addresses several
+%limitations of
+%\ddmax,
+%both in terms of what it can repair, as well as
+%in terms of the set of repairs offered.
 \end{abstract}
 
 %%

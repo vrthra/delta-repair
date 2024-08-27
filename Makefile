@@ -1,4 +1,4 @@
-all: icse23-brepair.pdf
+all: tosem23-brepair.pdf
 
 %.pdf: %.tex %.bib
 	latexmk -pdf $*.tex
