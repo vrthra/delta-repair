@@ -311,14 +311,11 @@ pics/numbering/.style args={#1}{code={
   \country{Australia}
 }
 
-\author{Andreas Zeller}
-\email{zeller@cispa.saarland}
-\affiliation{%
- \institution{CISPA Helmholtz Center for Information Security}
-% \streetaddress{Rono-Hills}
-% \city{Doimukh}
-% \state{Arunachal Pradesh}
- \country{Germany}}
+%\author{Andreas Zeller}
+%\email{zeller@cispa.saarland}
+%\affiliation{%
+% \institution{CISPA Helmholtz Center for Information Security}
+% \country{Germany}}
 
 %%
 %% By default, the full list of authors will be used in the page
@@ -419,12 +416,12 @@ within four minutes. It is up to 35\% more effective than \ddmax, the previously
 Input data is prone to unintended errors. Such errors may be introduced when
 the data is being created (by humans or by buggy programs), modified (by external actors)
 or transmitted (via flawed networks)~\cite{scaffidi2008accommodating}. 
-For instance, several inputs are created by hand, leading to \textit{invalid inputs}~\cite{mucslu2015preventing}. Invalid input data may also be caused by  disagreements among data sources on the format specification which leads to different %variances in the
+For instance, several inputs are created by hand, leading to \textit{non-conforming inputs}~\cite{mucslu2015preventing}. Such non-conforming input data may also be caused by  disagreements among data sources on the format specification which leads to different %variances in the
 implementations of the specification. For example, JSON libraries implement slightly different
 definitions of the JSON formats~\cite{harrand2021behavioral,seriot2016parsing}, different database systems support %, each supporting a
 slightly different SQL formats~\cite{arvin2018comparison}, and  various
 \<C> compilers provide slightly different interpretation of the \<C> language.
-These problems lead to invalid inputs that cannot be processed by their conforming programs or consumed by end-users (e.g., developers). 
+These problems lead to non-conforming inputs that cannot be processed by their conforming programs or consumed by end-users (e.g., developers). 
 %subsequently, developers and software can not consume such inputs. 
 }
 
