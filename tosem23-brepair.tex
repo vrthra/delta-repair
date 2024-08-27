@@ -271,7 +271,7 @@ pics/numbering/.style args={#1}{code={
 %%
 %% The "title" command has an optional parameter,
 %% allowing the author to define a "short title" to be used in page headers.
-\title{Input Repair without Formal Specifications}
+\title{Data Repair without Format Specifications}
 
 %%
 %% The "author" command and its associated commands are used to define
@@ -412,73 +412,45 @@ within four minutes. It is up to 35\% more effective than \ddmax, the previously
 \section{Introduction}
 \label{sec:intro}
 
-%\revise{
-Large data repositories often have data that contains unintended errors.
-Such errors may be introduced when
-the data is being created (by humans or by buggy programs), modified (by external actors)
-or transmitted (via flawed networks)~\cite{scaffidi2008accommodating}. 
-For instance, several records are input by hand without validation,
-leading to \textit{non-conforming inputs}~\cite{mucslu2015preventing}.
-Such non-conforming records may also be caused by disagreements among data sources on the format specification which leads to different %variances in the
-implementations of the specification. For example, JSON libraries implement slightly different
-definitions of the JSON formats~\cite{harrand2021behavioral,seriot2016parsing}, different database systems support %, each supporting a
-slightly different SQL formats~\cite{arvin2018comparison}, making their data dumps incompatible,
-CSVs and other data formats often differ between applications of the same
-company~\cite{taocp}, and  various
-\<C> compilers provide slightly different interpretation of the \<C> language.
-Even when a format is completely specified, such XML, there is no guarantee that
-an input record can be processed by a given parser because the parser may be
-non-conformant, implementing only a subset of the format~\cite{xmlconformance}.
-These problems lead to non-conforming inputs that cannot be processed by their
-conforming programs or consumed by end-users (e.g., developers). 
-%subsequently, developers and software can not consume such inputs. 
-%}
+Large data repositories often contain data with unintended errors. These errors
+may be introduced when data is created (by humans or buggy programs), modified
+(by external actors), or transmitted (via flawed networks)~\cite{scaffidi2008accommodating}.
+For instance, many records are input by hand without validation, leading to
+\textit{non-conforming records}~\cite{mucslu2015preventing}. Such non-conforming
+records may also result from disagreements among data sources on format
+specifications, leading to different implementations. For example, JSON
+libraries implement slightly different definitions of JSON formats~\cite{harrand2021behavioral,seriot2016parsing},
+different database systems support slightly different SQL formats~\cite{arvin2018comparison},
+making their data dumps incompatible, CSVs and other data formats often differ
+between applications of the same company~\cite{taocp}, and various C compilers
+provide slightly different interpretations of the C language.
 
-\revise{
-Given such non-conforming inputs that are \emph{almost} but \emph{not quite}
-parsable, developers are saddled with the task of \textit{input repair}. Input
+Even when a format is completely specified, such as XML, there is no guarantee
+that an input record can be processed by a given parser because the parser may
+be non-conformant, implementing only a subset of the format~\cite{xmlconformance}.
+These problems lead to records that cannot be processed by their
+intended programs or consumed by end-users (e.g., developers).
+
+Given such non-conforming records that are \emph{almost} but \emph{not quite}
+parsable, developers are saddled with the task of \textit{data repair}. Data
 repair is particularly important due to the high prevalence of non-conforming
-inputs in software practice~\cite{kirschner2020debugging}. It can be challenging
-to recover the conforming portion of non-conforming inputs
-automatically~\cite{scaffidi2008topes}, and developers often have to
-\emph{manually} repair such inputs~\cite{kirschner2020debugging}, which is
-time-consuming and error-prone.
-}
-%\revise{
-%Specifically, t
-%To repair invalid inputs, %consuming such resources %, and aggregating them 
-%often involves trying to
-%developers \textit{manually} try to 
-%maximally parse them by minimizing parse errors~\cite{kirschner2020debugging}, this manual process is time-consuming and error-prone.}
+records in software practice~\cite{kirschner2020debugging}. It can be challenging
+to recover the conforming portion of non-conforming data records automatically~\cite{scaffidi2008topes},
+and developers often have to \emph{manually} repair such records~\cite{kirschner2020debugging},
+which is time-consuming and error-prone.
 
-\revise{
-%On one hand, g
-Given a formal grammar for inputs, grammar-based input repair approaches such as 
-\emph{error-correcting}
-parsers~\cite{aho1972minimum,diekmann2020dont,parr2011ll}, can
+Given a formal grammar for inputs, grammar-based input repair approaches such as
+\emph{error-correcting} parsers~\cite{aho1972minimum,diekmann2020dont,parr2011ll}, can
 repair invalid inputs.
-%parser that conforms to an available 
-%a formal specification such as a context-free
-%grammar. 
-%, and the grammar is available.
-} 
-%context-free grammar, and an acceptable formal grammar is available,
-%the challenge of repairing the input and making it parsable can be solved using
-%.
 The main idea of such parsers is to generate a universal grammar that captures
 any mutation of the base grammar. Any parse of the input string that employs a
 mutation is penalized, and the parse with minimal mutation is chosen as the
 best parse, and the corresponding mutation the best repair. The \textit{limitation} of
 this approach is that\textit{ it assumes the existence of a formal grammar} in the first
 place, which completely captures the intended structure.
-%However, %\recheck{
-%formats such as markdown~\cite{gruber2004markdown} does not have
-%an official formal grammar;
-%%}\todo{how do you mean? this is not true, there are markdown grammars, ANTLR also has one, Nikolas used some in his Tribble eval too.};
-%documents in languages such as \<C> can contain semantic
-However, %the formal grammar
+However,
 \textit{this assumption may not hold in practice} due to several reasons.
-Firstly, %or stance,
+Firstly,
 certain input formats (e.g., URL standard from WHATWG~\cite{whatwgurl}) may not have
 an official formal grammar specification.
 %Others may have numerous standards
