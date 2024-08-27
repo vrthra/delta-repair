@@ -426,7 +426,7 @@ between applications of the same company~\cite{taocp}, and various C compilers
 provide slightly different interpretations of the C language.
 
 Even when a format is completely specified, such as XML, there is no guarantee
-that an input record can be processed by a given parser because the parser may
+that an data record can be processed by a given parser because the parser may
 be non-conformant, implementing only a subset of the format~\cite{xmlconformance}.
 These problems lead to records that cannot be processed by their
 intended programs or consumed by end-users (e.g., developers).
@@ -453,32 +453,33 @@ the first place, which completely captures the intended structure.
 However,
 \textit{this assumption may not hold in practice} due to several reasons.
 Firstly,
-certain input formats (e.g., CSV~\cite{taocp}, URL standard from
+certain data formats (e.g., CSV~\cite{taocp}, URL standard from
 WHATWG~\cite{whatwgurl}) may not have an official formal grammar specification.
 Others may have numerous incompatible standards
 (e.g., markdown~\cite{gruber2004markdown}), any of which may be followed by the
 parser in question, and in many cases the parser may be non-conformant due to bugs
 or quirks,
 implementing a subtly different format than the one expected.
-Hence, grammar-based input repair approaches
-are suboptimal for fixing invalid inputs in practice.
+Hence, grammar-based data repair approaches
+are suboptimal for fixing corrupt records in practice.
 
-Black-box and language-agnostic input repair methods (e.g., \textit{lexical} \ddmax~\cite{kirschner2020debugging}) repair invalid inputs without a base grammar or program analysis.
+When a formal specification of the data format is unavailable, or unreliable,
+the only option left is language-agnostic data repair.
+Such language-agnostic data repair methods (e.g., \textit{lexical} \ddmax~\cite{kirschner2020debugging}) can repair non-conformant records without a base grammar.
 \ddmax works similar to
 Delta Debugging~\cite{zeller2002simplifying}, but in reverse. The idea
-is that given a corrupt input which induces a parse error, and a way to
-decompose the input into independent fragments (called deltas ($\delta$)), one can
-successively minimize the parse-error inducing part of the input resulting in a
-maximal parsing input.
-%TODO Use textcite here:
-%More importantly, Kirschner et al.~\cite{kirschner2020debugging} and Scaffidi et al.~\cite{scaffidi2008topes} demonstrate the prevalence of invalid inputs in the wild and the importance of input repair in practice. % without grammars or program analysis.
-Although \ddmax works very well for most inputs, %, it could repair 69\% of input files and recovered about 78\% of input data.
-%However,
-we observe it %that \ddmax
-has certain limitations which inhibit it from completely repairing any invalid inputs. % in practice.
-%\Cref{tab:ddmaxlimitations} and \Cref{sec:rich-input-structures} illustrate %some of
-%these limitations with simplified invalid inputs. % as examples.
-Notably, two major \ddmax limitations include its (1) \textit{limited repair operation} (only deletion), and (2) inability to completely repair \textit{rich input structures} (e.g., multiple faults) due to inherent assumptions. 
+is that given a corrupt record which induces a parse error, and a way to
+decompose the record into independent fragments (called deltas ($\delta$)), one can
+successively minimize the parse-error inducing part of the record resulting in a
+maximal parsing record.
+
+While \ddmax was shown to work well in tested scenarios, certain limitations
+prevent it obtaining a maximal data repair (resulting in severe data loss) in
+several instances.
+Notably, two major \ddmax limitations include its
+(1) \textit{limited repair operation} (only deletion), and
+(2) inability to completely repair \textit{rich input structures}
+(e.g., multiple faults) due to inherent assumptions. 
 Our approach addresses these limitations of \ddmax, which we now discuss in detail.
 
 \begin{table*}\centering
@@ -488,7 +489,7 @@ Our approach addresses these limitations of \ddmax, which we now discuss in deta
 %\footnotesize
 \begin{tabular}{|l | l | l | l |}
 \hline
-\textbf{Examples of Invalid}& \textbf{\ddmax} & \textbf{\brepair} & \textbf{\ddmax} \\
+\textbf{Examples of NonConforming}& \textbf{\ddmax} & \textbf{\brepair} & \textbf{\ddmax} \\
 \textbf{Program Inputs} & \textbf{Repair} & \textbf{Repair} & \textbf{Limitation} \\
 \hline
 \letterboxedinTable{\{\ "name":\ "Dave"\ "age":\ 42\ \}} &
