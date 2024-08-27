@@ -439,52 +439,31 @@ to recover the conforming portion of non-conforming data records automatically~\
 and developers often have to \emph{manually} repair such records~\cite{kirschner2020debugging},
 which is time-consuming and error-prone.
 
-Given a formal grammar for inputs, grammar-based input repair approaches such as
-\emph{error-correcting} parsers~\cite{aho1972minimum,diekmann2020dont,parr2011ll}, can
-repair invalid inputs.
+A popular alternative is automatic repair. Given a formal grammar for data records,
+grammar-based data repair approaches such as \emph{error-correcting}
+parsers~\cite{aho1972minimum,diekmann2020dont,parr2011ll}, can
+repair non-conforming records.
 The main idea of such parsers is to generate a universal grammar that captures
-any mutation of the base grammar. Any parse of the input string that employs a
-mutation is penalized, and the parse with minimal mutation is chosen as the
-best parse, and the corresponding mutation the best repair. The \textit{limitation} of
-this approach is that\textit{ it assumes the existence of a formal grammar} in the first
-place, which completely captures the intended structure.
+any \emph{mutation} of the base grammar. Any parse of the non-conforming
+record that employs a mutation is penalized. The parse with minimal number
+of mutations is chosen as the best parse,
+and the corresponding mutation the best repair. The \textit{limitation} of
+this approach is that\textit{ it assumes the existence of a formal grammar} in
+the first place, which completely captures the intended structure.
 However,
 \textit{this assumption may not hold in practice} due to several reasons.
 Firstly,
-certain input formats (e.g., URL standard from WHATWG~\cite{whatwgurl}) may not have
-an official formal grammar specification.
-%Others may have numerous standards
-%(e.g., markdown~\cite{gruber2004markdown}), any of which may be followed by the
-%artifact in question.
-%Documents in languages (such as \<C>) can contain semantic
-%information that is not captured in the context-free grammar, and may not be
-%discardable. Some input constraints (e.g., the number of columns in a \<CSV> file) may
-%not be captured in a grammar. Finally, e
-Even when the base grammar is context-free
-%(e.g., JSON)
- the serializer and deserializer may implement common
-subsets beyond the base grammar (e.g., comments and unquoted keys in JSON) which may
-contain important information. 
-\revise{
-Hence, grammar-based 
-%these 
-input repair approaches %relying on error-correcting parsers may
-%be 
-are suboptimal for fixing invalid inputs in practice.}
-% In this work, we address this challenge via a \textit{grammar-agnostic} input repair method.
-% (like \ddmax ~\cite{kirschner2020debugging}). 
-%that addresses this limitation, among many others.
-%}
-%This may be because the constraints in
-%the input may not be fully captured in the grammar as in the case of CSV where
-%the number of columns may be fixed, or because such a grammar is unavailable
-%(as in the case of markdown)
+certain input formats (e.g., CSV~\cite{taocp}, URL standard from
+WHATWG~\cite{whatwgurl}) may not have an official formal grammar specification.
+Others may have numerous incompatible standards
+(e.g., markdown~\cite{gruber2004markdown}), any of which may be followed by the
+parser in question, and in many cases the parser may be non-conformant due to bugs
+or quirks,
+implementing a subtly different format than the one expected.
+Hence, grammar-based input repair approaches
+are suboptimal for fixing invalid inputs in practice.
 
-\revise{
-%On the other hand, l
-Black-box and language-agnostic input repair methods (e.g., \textit{lexical} \ddmax~\cite{kirschner2020debugging}) repair invalid inputs without a base grammar or program analysis.}
-%In circumstances where one cannot rely on a base grammar, the only option so far
-%has been \textit{lexical} \ddmax~\cite{kirschner2020debugging}. 
+Black-box and language-agnostic input repair methods (e.g., \textit{lexical} \ddmax~\cite{kirschner2020debugging}) repair invalid inputs without a base grammar or program analysis.
 \ddmax works similar to
 Delta Debugging~\cite{zeller2002simplifying}, but in reverse. The idea
 is that given a corrupt input which induces a parse error, and a way to
@@ -493,7 +472,6 @@ successively minimize the parse-error inducing part of the input resulting in a
 maximal parsing input.
 %TODO Use textcite here:
 %More importantly, Kirschner et al.~\cite{kirschner2020debugging} and Scaffidi et al.~\cite{scaffidi2008topes} demonstrate the prevalence of invalid inputs in the wild and the importance of input repair in practice. % without grammars or program analysis.
-%using \ddmax. %}.
 Although \ddmax works very well for most inputs, %, it could repair 69\% of input files and recovered about 78\% of input data.
 %However,
 we observe it %that \ddmax
@@ -502,11 +480,6 @@ has certain limitations which inhibit it from completely repairing any invalid i
 %these limitations with simplified invalid inputs. % as examples.
 Notably, two major \ddmax limitations include its (1) \textit{limited repair operation} (only deletion), and (2) inability to completely repair \textit{rich input structures} (e.g., multiple faults) due to inherent assumptions. 
 Our approach addresses these limitations of \ddmax, which we now discuss in detail.
-% (e.g., its search span)..
-%\textit{multiple faults in input data}, and (3)
-%\textit{inherent assumptions about the richness of input structures} (e.g., its search span).
-
-
 
 \begin{table*}\centering
 
