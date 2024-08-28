@@ -69,6 +69,8 @@
 }{
 }
 
+\newcommand{\dtask}{data repair\xspace}
+\newcommand{\Dtask}{Data repair\xspace}
 \newcommand{\dd}{\textit{dd}\xspace}
 \newcommand{\ddmin}{\textit{ddmin}\xspace}
 \newcommand{\test}{\textit{test}\xspace}
@@ -147,7 +149,7 @@ pics/numbering/.style args={#1}{code={
 
 
 \begin{document}
-\title{Data Repair without Format Specifications}
+\title{Automatic Data Repair without Format Specifications}
 \author{Lukas Kirschner}
 \email{kirschlu@gmail.com}
 \affiliation{%
@@ -176,10 +178,10 @@ In data processing, engineers often encounter datasets that are expected to
 conform to specific formats but contain variations due to factors such as
 human error or data corruption.
 These inconsistencies prevent standard programs from parsing the data correctly.
-Consequently, data engineers must perform \emph{data repair,} manually
-adjusting the non-conforming data to match the required format.
+Consequently, data engineers must perform \emph{\dtask,} manually
+adjusting the nonconforming data to match the required format.
 This process is time-consuming and prone to errors, particularly when
-clear formal data format specifications are lacking, which is often the case as
+format specifications are lacking, which is often the case as
 data formats are frequently defined exclusively by their parsers.
 
 In this work, we show that one can often repair the data corruption or
@@ -187,10 +189,10 @@ conformance problems by leveraging failure feedback from parsers even in
 the absence of a reliable data format specification.
 
 Our approach, which we call \approach, can automatically produce repair
-candidates for corrupt or non-conforming input data ranked by maximal
+candidates for corrupt or nonconforming input data ranked by maximal
 closeness to the original data.
 
-We evaluate \approach on 806 (real-world) non-conforming inputs in four
+We evaluate \approach on 806 (real-world) nonconforming inputs in four
 well-known input formats, namely INI, TinyC, SExp, and cJSON.
 In our evaluation, we found that %\approach 
 \approach is highly effective and efficient in input repair: It repairs 77\% of invalid inputs %and recovers 91\% of input data, 
@@ -213,72 +215,87 @@ within four minutes. It is up to 35\% more effective than \ddmax, the previously
 Large data repositories often contain data with unintended errors. These errors
 may be introduced when data is created (by humans or buggy programs), modified
 (by external actors), or transmitted (via flawed networks)~\cite{scaffidi2008accommodating}.
-For instance, many records are input by hand without validation, leading to
-\textit{non-conforming records}~\cite{mucslu2015preventing}. Such non-conforming
+For instance, many records are added by hand without validation, leading to
+\textit{nonconforming records}~\cite{mucslu2015preventing}. Such nonconforming
 records may also result from disagreements among data sources on format
 specifications, leading to different implementations. For example, JSON
 libraries implement slightly different definitions of JSON formats~\cite{harrand2021behavioral,seriot2016parsing},
 different database systems support slightly different SQL formats~\cite{arvin2018comparison},
-making their data dumps incompatible, CSVs and other data formats often differ
-between applications of the same company~\cite{taocp}, and various C compilers
-provide slightly different interpretations of the C language.
+making their data dumps incompatible,
+CSVs and similar data formats often differ between applications of the same
+company~\cite{taocp},
+and various C compilers provide slightly different interpretations of the C language.
 
-Even when a format is completely specified, such as XML, there is no guarantee
-that an data record can be processed by a given parser because the parser may
-be non-conformant, implementing only a subset of the format~\cite{xmlconformance}.
+Even for comparatively rigid formats such as XML, there is no guarantee
+that a data record can be processed by a given parser because the parser may
+be nonconforming, implementing only a subset of the format~\cite{xmlconformance}.
 These problems lead to records that cannot be processed by their
-intended programs or consumed by end-users (e.g., developers).
+intended programs or consumed by end-users (e.g., data-engineers).
 
-Given such non-conforming records that are \emph{almost} but \emph{not quite}
-parsable, developers are saddled with the task of \textit{data repair}. Data
-repair is particularly important due to the high prevalence of non-conforming
-records in software practice~\cite{kirschner2020debugging}. It can be challenging
-to recover the conforming portion of non-conforming data records automatically~\cite{scaffidi2008topes},
-and developers often have to \emph{manually} repair such records~\cite{kirschner2020debugging},
+Given such nonconforming records that are \emph{almost} but \emph{not quite}
+parsable, developers are saddled with the task of \textit{\dtask}.
+\Dtask is particularly important due to the high prevalence of nonconforming
+records in data science and engineering~\cite{ridzuan2019review,kirschner2020debugging}.
+It can be challenging to recover the conforming portion of nonconforming
+data records automatically~\cite{scaffidi2008topes,ridzuan2019review},
+and developers often have to either purge such records~\cite{hernandez1998real},
+or \emph{manually} repair nonconforming parts of such records~\cite{kirschner2020debugging},
 which is time-consuming and error-prone.
 
-A popular alternative is automatic repair. Given a formal grammar for data records,
-grammar-based data repair approaches such as \emph{error-correcting}
-parsers~\cite{aho1972minimum,diekmann2020dont,parr2011ll}, can
-repair non-conforming records.
-The main idea of such parsers is to generate a universal grammar that captures
-any \emph{mutation} of the base grammar. Any parse of the non-conforming
-record that employs a mutation is penalized. The parse with minimal number
-of mutations is chosen as the best parse,
-and the corresponding mutation the best repair. The \textit{limitation} of
-this approach is that\textit{ it assumes the existence of a formal grammar} in
-the first place, which completely captures the intended structure.
+A popular alternative is automatic \dtask.
+Given a formal grammar for data records,
+grammar-based \dtask approaches such as
+\emph{error-correcting} parsers~\cite{aho1972minimum,diekmann2020dont,parr2011ll}, can
+repair nonconforming records.
+The main idea in such techniques is to generate a \emph{universal grammar}
+that captures \emph{all possible data-corruptions} as mutation rules
+in the base grammar.
+The different parses of the nonconforming data by such a universal grammar is
+penalized by the number of mutation rule applications, and the parse with the
+lowest penalty is chosen as the best parse.
+The limitation of this approach is that this approach is only workable when
+a formal grammar is available.
 However,
-\textit{this assumption may not hold in practice} due to several reasons.
+this assumption may not hold in practice due to several reasons.
 Firstly,
-certain data formats (e.g., CSV~\cite{taocp}, URL standard from
-WHATWG~\cite{whatwgurl,urldisagree}) may not have an official formal grammar specification.
-Others may have numerous incompatible standards
+certain data formats (e.g., CSV~\cite{taocp},
+URL standard from WHATWG~\cite{whatwgurl,urldisagree}, markdown~\cite{gruber2004markdown})
+may not have an official formal grammar specification, or may
+have numerous incompatible standards
 (e.g., markdown~\cite{gruber2004markdown}), any of which may be followed by the
-parser in question, and in many cases the parser may be handwritten~\cite{uncommongrammars,uncommongrammars2}, and non-conformant due to bugs or quirks,
-implementing a subtly different format than the one expected.
-Hence, grammar-based data repair approaches
+parser in question. In many cases the parser may be handwritten~\cite{uncommongrammars,uncommongrammars2}, and nonconforming due to bugs or quirks,
+implementing a subtly different format than the one specified.
+Hence, grammar-based \dtask approaches
 are suboptimal for fixing corrupt records in practice.
 
 When a formal specification of the data format is unavailable, or unreliable,
-the only option left is language-agnostic data repair.
-Such language-agnostic data repair methods (e.g., \textit{lexical} \ddmax~\cite{kirschner2020debugging}) can repair non-conformant records without a base grammar.
-\ddmax works similar to
-Delta Debugging~\cite{zeller2002simplifying}, but in reverse. The idea
-is that given a corrupt record which induces a parse error, and a way to
-decompose the record into independent fragments (called deltas ($\delta$)), one can
-successively minimize the parse-error inducing part of the record resulting in a
-maximal parsing record.
-
-While \ddmax was shown to work well in tested scenarios, certain limitations
-prevent it obtaining a maximal data repair (resulting in severe data loss) in
-several instances.
-Notably, two major \ddmax limitations include its
-(1) \textit{limited repair operation} (only deletion), and
-(2) inability to completely repair \textit{rich input structures}
-(e.g., multiple faults) due to inherent assumptions.
+the only option left is language-agnostic \dtask provided by \ddmax~\cite{kirschner2020debugging}
+which operates without a formal grammar.
+%Such language-agnostic \dtask methods
+%(e.g., \ddmax~\cite{kirschner2020debugging}) can repair nonconforming records without a base grammar.
+%\ddmax works similar to
+%Delta Debugging~\cite{zeller2002simplifying}, but in reverse. The idea
+%is that given a corrupt record which induces a parse error, and a way to
+%decompose the record into independent fragments (called deltas ($\delta$)), one can
+%successively minimize the parse-error inducing part of the record resulting in a
+%maximal parsing record.
+While \ddmax was shown to work well in tested scenarios, it has two major limitations:
+(1) \ddmax only allows \emph{token deletion} as a repair operation, and 
+(2) it cannot repair \emph{complex data formats} (e.g., multiple faults).
+These limitations prevent \ddmax from obtaining a maximal data repair in
+several instances, resulting in severe data loss.
+%Notably, two major \ddmax limitations include its
+%(1) \textit{limited repair operation} (only deletion), and
+%(2) inability to completely repair \textit{complex data formats}
+%(e.g., multiple faults) due to inherent assumptions.
 Table~\ref{tab:ddmaxlimitations} presents three examples where these
-limitations lead to significant data loss.
+limitations lead to significant data loss, especially when compared to
+automatic \dtask using formal specifications.
+
+The key insight of this paper is that one can leverage the \emph{parse failure feedback}
+to simulate the behavior of a universal grammar and obtain a maximal data repair.
+This allows our approach \approach to leverage deletion, insertion and substitution as repair
+operations, which are not allowed by \ddmax.
 
 \begin{table*}\centering
 
@@ -334,21 +351,17 @@ assumption is not met (as in the case of inputs with a rich structure such as
 conforming to a grammar) the repairs produced can be suboptimal as the
 examples show.
 As an example, consider the invalid input in \textit{row three} of \Cref{tab:ddmaxlimitations} (i.e.,  \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}}). Due to the \textit{multiple faults (two \letterboxed{*}s)} in this input, the resulting \ddmax repair (i.e., \letterboxed{123456}) is \textit{sub-optimal} causing a 77\% data loss (20 out of 26 bytes).
-\end{comment}
-
 This paper identifies previously unknown limitations of
-\ddmax (~\ref{tab:ddmaxlimitations}), and suggests an alternative
+\ddmax (Section~\ref{tab:ddmaxlimitations}), and suggests an alternative
 approach (called \approach) for overcoming the identified limitations.
 The key insight of our approach is to complete \textit{syntactic} repair of
 invalid inputs leveraging the \emph{parse failure feedback} already provided by
 many parsers.
-Given a non-conforming record and a program that provides immediate feedback on
+Given a nonconforming record and a program that provides immediate feedback on
 parsing failure, \approach iteratively evaluates possible mutations to the input
 candidate insertions to provide a set of repairs ranked by the distance
 of the repair from the original record.
 
-
-\begin{comment}
 For instance, consider the invalid input in \textit{row one} of \Cref{tab:ddmaxlimitations} (i.e., \letterboxed{\{\ "name":\ "Dave"\ "age":}
 \letterboxed{\ 42\ \}}) which is invalid because of a \textit{missing comma separator} between the two values in the JSON object. While \ddmax could not completely repair this input, \approach could complete a repair via input synthesis. % owing to its input synthesis component.
 \Cref{sec:input-synthesis}
@@ -381,26 +394,29 @@ valid repair: %newly constructed string: %\\
 
 \end{comment}
  %Further, the list of repairs it suggests will include the
-In this work, we % paper %We
-show that invalid inputs with rich structure can be repaired adequately if
-the input processor can provide at least some indication of progress.
-That is, as with \ddmax, we require the input processor to indicate if the input
-is valid.  However, when given an invalid input, we \textit{require} the input processor
-to indicate whether the input is merely \emph{incomplete} (that is, the input
-is a prefix of a valid input) or is \emph{incorrect} (that is, no suffix to
-this input will result in a valid input).\footnote{This requirement is
+%In this work, we % paper %We
+%show that invalid inputs with rich structure can be repaired adequately if
+%the input processor can provide at least some indication of progress.
+That is, as with \ddmax, we require the data processor to indicate if the given record
+is valid.  However, when given a nonconforming record,
+we \textit{require} the data processor to indicate whether the record is
+merely \emph{incomplete} (that is, the record fragment is a prefix of a conforming record)
+or is \emph{incorrect} (that is, no suffix to
+this record fragment will result in a conforming record).\footnote{This requirement is
 provided by most parsers. %,
 In the cases where parsers do not provide
 this information, it can be obtained
 by external instrumentation 
 as demonstrated by Bj\"orn et al.~\cite{mathis2019parser}, or 
 by modifying the parser to provide such failure feedback, as demonstrated in this work. 
-} \revise{
+}
+% \revise{
 We note that similar to \ddmax,
 satisfying the requirements for \approach does not require using a
 formal grammar for parsing, and indeed, there are several systems that
 implement handwritten parsers that satisfy \approach
-constraints~\cite{eaton2021parser}.}
+constraints~\cite{eaton2021parser}.
+%}
 
 %To the best of our knowledge, \approach is the \textit{first} approach to effectively repair invalid rich inputs without an input specification 
 %or program analysis.
@@ -411,9 +427,11 @@ contributions: %\todo{we need to stress some results here}:
 the state of the art language agnostic \ddmax algorithm, which can result in
 significant data loss.
 \item \textbf{Parse Failure Feedback.} We demonstrate how to leverage
-parse-failure-feedback to overcome the limitations in \ddmax for effective data repair.
+parse-failure-feedback 
+%to overcome the limitations in \ddmax 
+for effective data repair using \approach.
 
-\item \textbf{Empirical Evaluation.} We evaluate \approach using 806 (real-world) non-conforming
+\item \textbf{Empirical Evaluation.} We evaluate \approach using 806 (real-world) nonconforming
 records belonging to four well-known input formats (e.g., cJSON and TinyC). 
 Our evaluation results show that %given input processors that can accurately
 \textit{\approach has a high (91\%) data recovery rate}. 
