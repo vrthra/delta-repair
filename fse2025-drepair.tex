@@ -647,11 +647,12 @@ presented in Kirschner et al.~\cite{kirschner2020debugging}.
 
 \subsection{Correcting the \ddmax algorithm}
 We start with an observation. The \ddmax algorithm that was presented in
-Kirschner et al.~\cite{kirschner2020debugging} contained two errors.
+Kirschner et al.~\cite[Figure 5]{kirschner2020debugging} contained two errors.
 The first is that, when $|\cfail-\dpass| = 1$ then there exists a $\Delta_i$
 that can be removed from $\cfail$. However, invoking $\ddmax_2(\cfail-\Delta_i, 2)$
 will lead to infinite recursion. Hence, we add a base case when $|\cfail-\dpass| = 1$
-(Figure~\ref{fig:ddmax}).
+(Figure~\ref{fig:ddmax}). A second issue is that the third recursive call is
+missing a reduction in grannularity.
 
 
 A major limitation of \ddmax algorithm is that it results in sub-optimal
