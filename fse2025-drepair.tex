@@ -645,7 +645,7 @@ Let us first illustrate the limitations of the state-of-the-art \dtask method (\
 \Cref{fig:ddmax} provides the \ddmax algorithm
 presented in Kirschner et al.~\cite{kirschner2020debugging}.
 
-\subsection{Correcting the \ddmax algorithm}
+\subsection{\ddmax corrections}
 We start with an observation. The \ddmax algorithm that was presented in
 Kirschner et al.~\cite[Figure 5]{kirschner2020debugging} contained two errors.
 The first is that, when $|\cfail-\dpass| = 1$ then there exists a $\Delta_i$
@@ -654,11 +654,10 @@ will lead to infinite recursion. Hence, we add a base case when $|\cfail-\dpass|
 (Figure~\ref{fig:ddmax}). A second issue is that the third recursive call is
 missing a reduction in grannularity.
 
-
-A major limitation of \ddmax algorithm is that it results in sub-optimal
-repairs when the data is expected to conform to \textit{complex formats},
-and the corruption is not simple (i.e., \textit{multiple faults}).
-In the following, we discuss these limitations.
+%A major limitation of \ddmax algorithm is that it results in sub-optimal
+%repairs when the data is expected to conform to \textit{complex formats},
+%and the corruption is not simple (i.e., \textit{multiple faults}).
+%In the following, we discuss these limitations.
 
 \subsection{Limitations due to multiple faults}
 A pattern of failure of \ddmax occurs when \ddmax is given an input with
@@ -752,13 +751,21 @@ Consider
 \Cref{tab:ddmaxlimitations} which is similar to
 Kirchner et al.~\cite[Figure 1]{kirschner2020debugging} but with an extra
 \letterboxed{*}. \ddmax repairs this input to \letterboxed{\ \ \ \ 3.45},
-resulting in data loss. % of information.
+resulting in loss of data and structure. % of information.
 
-The problem here is that the successive partitions attempted by \ddmax fails to
-isolate the failure causing fragment even though the fragment is contiguous.
-That is, no single independent fragment is found, the removal of which results
-in removal of the error. Hence, \ddmax keeps searching for smaller and smaller
-fragments discarding larger and larger chunks of data.
+%The problem here is that the successive partitions attempted by \ddmax fails to
+%isolate the failure causing fragment even though the fragment is contiguous.
+%That is, no single independent fragment is found, the removal of which results
+%in removal of the error. Hence, \ddmax keeps searching for smaller and smaller
+%fragments discarding larger and larger chunks of data.
+
+The issue arises from \ddmax's partitioning strategy, which fails to isolate
+the error-causing fragment, even when it is contiguous.
+Despite the error being localized,
+no single removable fragment is identified that eliminates the error.
+Consequently, \ddmax continues to search for increasingly smaller fragments,
+inadvertently discarding larger portions of potentially valid data in
+the process.
 
 \subsection{Discussion}
 Why does \ddmax fail to repair these inputs? A major limitation of \ddmax is
