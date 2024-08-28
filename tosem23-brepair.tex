@@ -481,15 +481,24 @@ $\test(\dpass) = \pass \land n \leq |\Delta|$.\\
 \textcolor{red}{b}: Bugfix: We should look for minimum of the remaining so that invariant $n \leq |\Delta|$ is not violated for JSON input \letterboxed{\{*"":2\}}.
 \end{minipage}
 \end{boxedminipage}
-\caption{Modified Maximizing Lexical Delta Debugging algorithm, extended from Kirschner et al.~\cite{kirschner2020debugging}}
+\caption{Maximizing Lexical Delta Debugging algorithm from Kirschner et al.~\cite{kirschner2020debugging} with corrections.}
 \label{fig:ddmax}
 \end{figure*}
 
-\section{Rich Input Structures} %Limitations of \ddmax}
+\section{Limitations of \ddmax}
 \label{sec:rich-input-structures}
 
-Let us illustrate the limitations of the state-of-the-art input repair method (\ddmax) and how our approach (\approach) addresses these limitations.
-\Cref{fig:ddmax} provides a modified version of the lexical \ddmax algorithm presented in Kirschner et al.~\cite{kirschner2020debugging}. A major limitation of lexical \ddmax is that it results in sub-optimal repairs when the invalid input contains \textit{rich structures}, e.g., \textit{multiple faults}.
+Let us first illustrate the limitations of the state-of-the-art \dtask method (\ddmax)
+ and how our approach (\approach) addresses these limitations.
+\Cref{fig:ddmax} provides the \ddmax algorithm
+presented in Kirschner et al.~\cite{kirschner2020debugging}.
+We note that the \ddmax algorithm that was presented in
+Kirschner et al.~\cite{kirschner2020debugging} contained two errors.
+The first is that, it does not include a base case. 
+
+A major limitation of \ddmax algorithm is that it results in sub-optimal
+repairs when the data is expected to conform to \textit{complex formats},
+and the corruption is not simple (i.e., \textit{multiple faults}).
 In the following, we discuss these limitations.
 
 \subsection{Limitations due to multiple faults}

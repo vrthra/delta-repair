@@ -493,34 +493,6 @@ implementing a subtly different format than the one specified.
 Hence, grammar-based \dtask approaches
 are suboptimal for fixing corrupt records in practice.
 
-When a formal specification of the data format is unavailable, or unreliable,
-the only option left is language-agnostic \dtask provided by
-\ddmax~\cite{kirschner2020debugging} which does not require a formal grammar.
-\ddmax works similar to Delta Debugging~\cite{zeller2002simplifying},
-but in reverse.
-Given a corrupt record which induces a parse error,
-and a way to decompose the record into independent fragments
-one can successively minimize the parse-error inducing part of the
-record resulting in a maximal parsing record.
-%which operates without a formal grammar.
-While \ddmax was shown to work well in tested scenarios, it has two major limitations:
-(1) \ddmax only allows \emph{token deletion} as a repair operation, and 
-(2) it cannot repair \emph{complex data formats} (e.g., multiple faults).
-These limitations prevent \ddmax from obtaining a maximal data repair in
-several instances, resulting in severe data loss.
-%Notably, two major \ddmax limitations include its
-%(1) \textit{limited repair operation} (only deletion), and
-%(2) inability to completely repair \textit{complex data formats}
-%(e.g., multiple faults) due to inherent assumptions.
-Table~\ref{tab:ddmaxlimitations} presents three examples where these
-limitations lead to significant data loss, especially when compared to
-automatic \dtask using formal specifications.
-
-The key insight of this paper is that one can leverage the \emph{parse failure feedback}
-to simulate the behavior of a universal grammar and obtain a maximal data repair.
-This allows our approach \approach to leverage deletion, insertion and substitution as repair
-operations, which are not allowed by \ddmax.
-
 \begin{table*}\centering
 
 \caption{\ddmax vs. \approach: examples showing limitations of \ddmax and the strengths of \approach}
@@ -552,89 +524,46 @@ Rich Structure\\
 \label{tab:ddmaxlimitations}
 \end{table*}
 
-\begin{comment}
-Firstly, \ddmax's repair is restricted to deletion, which makes it sub-optimal for repairing some invalid inputs. 
-While \ddmax can repair invalid inputs due to 
-spurious insertions, it %\ddmax 
-fails to repair input 
-invalidity that is due to \emph{changed} or \emph{deleted} fragments. Consider the sample invalid input in \textit{row one} of \Cref{tab:ddmaxlimitations} (i.e., \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}) which is invalid because of a \textit{missing comma separator} between the two values in the JSON object. Due to the limited repair options of \ddmax (i.e., only deletion), its resulting repair (i.e., \letterboxed{\ \ \ \ 42\ }) is \textit{sub-optimal} leading to a huge (75\%) data loss (21 out of 28 bytes). %, % $\approx$ .
-This work addresses this challenge
-by supporting the synthesis of missing input fragments. 
+When a formal specification of the data format is unavailable, or unreliable,
+the only option left is language-agnostic \dtask provided by
+\ddmax~\cite{kirschner2020debugging} which does not require a formal grammar.
+\ddmax works similar to Delta Debugging~\cite{zeller2002simplifying},
+but in reverse.
+Given a corrupt record which induces a parse error,
+and a way to decompose the record into independent tokens ($\delta$s)
+one can successively minimize the parse-error inducing part of the
+record resulting in a maximal parsing record.
+%which operates without a formal grammar.
+While \ddmax was shown to work well in tested scenarios, it has two major limitations:
+(1) \ddmax only allows \emph{token deletion} as a repair operation, and 
+(2) it cannot repair \emph{complex corruptions} containing multiple faults.
+These limitations prevent \ddmax from obtaining a maximal data repair in
+several instances, resulting in severe data loss.
+%Notably, two major \ddmax limitations include its
+%(1) \textit{limited repair operation} (only deletion), and
+%(2) inability to completely repair \textit{complex data formats}
+%(e.g., multiple faults) due to inherent assumptions.
+Table~\ref{tab:ddmaxlimitations} presents three examples where these
+limitations lead to significant data loss, especially when compared to
+automatic \dtask using formal specifications.
 
-Secondly,
-\ddmax is modeled after \ddmin, where one of
-the unstated assumptions is that the $\delta$ fragments that are not
-contributing to the failure observed can be independently removed without
-affecting the failure observed. When this assumption is not met, (i.e. where
-the inputs have a rich structure) the minimal fragment produced by \ddmin
-can be suboptimal. %Hence, the h
-Similarly, 
-\textit{\ddmax assumes each non-failure-inducing fragment
-can be added to the passing subset without inducing a failure}. When this
-assumption is not met (as in the case of inputs with a rich structure such as
-conforming to a grammar) the repairs produced can be suboptimal as the
-examples show.
-As an example, consider the invalid input in \textit{row three} of \Cref{tab:ddmaxlimitations} (i.e.,  \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}}). Due to the \textit{multiple faults (two \letterboxed{*}s)} in this input, the resulting \ddmax repair (i.e., \letterboxed{123456}) is \textit{sub-optimal} causing a 77\% data loss (20 out of 26 bytes).
-This paper identifies previously unknown limitations of
-\ddmax (Section~\ref{tab:ddmaxlimitations}), and suggests an alternative
-approach (called \approach) for overcoming the identified limitations.
-The key insight of our approach is to complete \textit{syntactic} repair of
-invalid inputs leveraging the \emph{parse failure feedback} already provided by
-many parsers.
-Given a nonconforming record and a program that provides immediate feedback on
-parsing failure, \approach iteratively evaluates possible mutations to the input
-candidate insertions to provide a set of repairs ranked by the distance
-of the repair from the original record.
-
-For instance, consider the invalid input in \textit{row one} of \Cref{tab:ddmaxlimitations} (i.e., \letterboxed{\{\ "name":\ "Dave"\ "age":}
-\letterboxed{\ 42\ \}}) which is invalid because of a \textit{missing comma separator} between the two values in the JSON object. While \ddmax could not completely repair this input, \approach could complete a repair via input synthesis. % owing to its input synthesis component.
-\Cref{sec:input-synthesis}
- describes the full steps of \approach for this input.
- %Our \approach algorithm
-Specifically, \approach first finds the maximal parsable
-prefix to be \letterboxed{\{\ "name":\ "Dave"\ }, and
-determines that the \textit{parse boundary}, i.e., the
-shift from \emph{incomplete} to \emph{incorrect}
-happens at boundary %as %\\
-\letterboxed{\{\ "name":\ "Dave"\ "}. % where the parser response shifts from
-Next, \approach applies \textit{deletion}, or \textit{insertion} of characters
-in order.
-In this case, the \letterboxed{"} is deleted first, but the
-resulting input %\\
-\letterboxed{\{\ "name":\ "Dave"\ age":\ 42 \}} %is
-does not increase the
-maximum parsable prefix. %Here, we see that the maximal parse boundary remains the same.
-Hence, \approach next
-attempts to insert a character,
-eventually determining that
-only space characters and
-comma (\letterboxed{,}) can be inserted here,
-resulting in an increase of the maximal parse prefix. Out of these two insertion candidates, inserting comma results in the maximum advancement of the parse boundary, resulting in the
-valid repair: %newly constructed string: %\\
-\letterboxed{\{\ "name":\ "Dave"\ ,"age":\ 42\ \}}. %,
-\done{In Table~1, the comma is inserted after the quote; here, it is inserted after the space -- AZ}
-
-
-
-\end{comment}
- %Further, the list of repairs it suggests will include the
-%In this work, we % paper %We
-%show that invalid inputs with rich structure can be repaired adequately if
-%the input processor can provide at least some indication of progress.
-That is, as with \ddmax, we require the data processor to indicate if the given record
-is valid.  However, when given a nonconforming record,
+The key insight of this paper is that one can leverage the \emph{parse failure feedback}
+to simulate the behavior of a universal grammar and obtain a maximal data repair.
+This allows our approach \approach to leverage deletion, insertion and substitution as repair
+operations. % which are not allowed by \ddmax.
+As with \ddmax, we require the data processor to indicate if the given record
+is conforming to the expected format (i.e., valid).  However, when given a nonconforming record,
 we \textit{require} the data processor to indicate whether the record is
 merely \emph{incomplete} (that is, the record fragment is a prefix of a conforming record)
 or is \emph{incorrect} (that is, no suffix to
-this record fragment will result in a conforming record).\footnote{This requirement is
+this record fragment will result in a conforming record)\footnote{This requirement is
 provided by most parsers. %,
 In the cases where parsers do not provide
 this information, it can be obtained
 by external instrumentation 
 as demonstrated by Bj\"orn et al.~\cite{mathis2019parser}, or 
 by modifying the parser to provide such failure feedback, as demonstrated in this work. 
-}
-% \revise{
+}. \approach leverages the parser response to predict which mutation is likely to fix the record with maximal data recovery. 
 We note that similar to \ddmax,
 satisfying the requirements for \approach does not require using a
 formal grammar for parsing, and indeed, there are several systems that
@@ -642,22 +571,20 @@ implement handwritten parsers that satisfy \approach
 constraints~\cite{eaton2021parser}.
 %}
 
-%To the best of our knowledge, \approach is the \textit{first} approach to effectively repair invalid rich inputs without an input specification 
-%or program analysis.
-This paper makes the following %technical
-contributions: %\todo{we need to stress some results here}:
+This paper makes the following
+contributions:
 \begin{itemize}
-\item \textbf{Limitations of \ddmax.} We identify and demonstrate problems with
-the state of the art language agnostic \ddmax algorithm, which can result in
+\item \textbf{Identifying \ddmax Limitations.} We identify and demonstrate problems with
+the state-of-the-art language agnostic \ddmax algorithm, which can result in
 significant data loss.
-\item \textbf{Parse Failure Feedback.} We demonstrate how to leverage
+\item \textbf{Allround Data Repair.} We demonstrate how to leverage
 parse-failure-feedback 
 %to overcome the limitations in \ddmax 
-for effective data repair using \approach.
+for effective data repair using each mutation operations: deletion insertion.
 
 \item \textbf{Empirical Evaluation.} We evaluate \approach using 806 (real-world) nonconforming
 records belonging to four well-known input formats (e.g., cJSON and TinyC). 
-Our evaluation results show that %given input processors that can accurately
+Our results show that
 \textit{\approach has a high (91\%) data recovery rate}. 
 It is up to 35\% more effective than \ddmax.
 
