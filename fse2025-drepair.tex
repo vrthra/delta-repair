@@ -45,7 +45,7 @@
 %% for your publication.
 %%
 %%
-\documentclass[acmsmall]{acmart}
+\documentclass[acmsmall,screen,review,anonymous]{acmart}
 
 %%
 %% \BibTeX command to typeset BibTeX logo in the docs
@@ -111,101 +111,275 @@
 
 %%
 %% end of the preamble, start of the body of the document source.
+
+
+\usepackage{amsmath,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+
+\usepackage{listings}
+
+\lstset{ % General setup for the package
+    language=Python,
+    %basicstyle=\small\sffamily,
+    %basicstyle=\footnotesize,  % *Please* use a monospaced font -- AZ
+    basicstyle=\footnotesize\ttfamily,
+    numbers=left,
+    numberstyle=\tiny,
+    frame=none,
+    tabsize=4,
+    columns=flexible,
+    keepspaces=true,
+    showstringspaces=false,
+    showtabs=false,
+    keepspaces,
+    commentstyle=\color{green},
+    keywordstyle=\color{blue},
+    xleftmargin=1.45in
+}
+\usepackage{xspace}
+\usepackage{array,multirow,graphicx}
+\usepackage{float}
+\usepackage{framed}
+\usepackage{tikz,pgfplots,pgfplotstable}
+\usetikzlibrary{calc,positioning,patterns}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{boxedminipage}
+\usepackage[inline]{enumitem}
+
+\newenvironment{result}{\begin{framed}\centering\it}{\end{framed}}
+
+\newcounter{todocounter}
+\newcommand{\todo}[1]{\marginpar{$|$}\textcolor{red}{\stepcounter{todocounter}\footnote[\thetodocounter]{\textcolor{red}{\textbf{TODO }}\textit{#1}}}}
+\newcommand{\done}[1]{\marginpar{$*$}\textcolor{green}{\stepcounter{todocounter}\footnote[\thetodocounter]{\textcolor{black}{\textbf{DONE }}\textit{#1}}}}
+
+\newcommand{\recheck}[1]{\textcolor{red}{#1}}
+\newcommand{\revise}[1]{\textcolor{black}{#1}}
+
+\renewcommand{\done}[1]{} % comment to see responses.
+
+\IfFileExists{SUBMIT}{
+\renewcommand{\todo}[1]{}
+\renewcommand{\done}[1]{}
+}{
+}
+
+\newcommand{\dtask}{data repair\xspace}
+\newcommand{\Dtask}{Data repair\xspace}
+\newcommand{\dd}{\textit{dd}\xspace}
+\newcommand{\ddmin}{\textit{ddmin}\xspace}
+\newcommand{\test}{\textit{test}\xspace}
+
+\usepackage{pifont}
+\newcommand{\pass}{\text{\ding{52}}\xspace}
+\newcommand{\fail}{\text{\ding{56}}\xspace}
+\newcommand{\unresolved}{\lower0.1ex\hbox{\includegraphics*[height=1.7ex]{question.pdf}}}
+
+
+\newcommand{\cpass}{{c_{\scriptscriptstyle \pass}}}
+\newcommand{\cfail}{{c_{\scriptscriptstyle \fail}}}
+\newcommand{\dpass}{{c'_{\scriptscriptstyle \pass}}}
+\newcommand{\dfail}{{c'_{\scriptscriptstyle \fail}}}
+
+
+\newcommand{\approach}{\textsc{$\Delta$Repair}\xspace}
+\def\bfr{bFuzzerRepairer\xspace}
+\def\ddmin{DDMin\xspace}
+\newcommand{\ddmax}{\textit{DDMax}\xspace}
+\newcommand{\ddmaxg}{\textit{DDmaxG}\xspace}
+\newcommand{\bsimple}{\textit{bsimple}\xspace}
+\newcommand{\drepair}{\approach}
+
+\tikzset{inlinenode/.style={draw=white,text=black,fill=light-gray,inner sep=.1em,outer sep=0em}}
+\newcommand{\inlinenode}[1]{\text{\hspace{.1em}\tikz[baseline=(n.base)]{\node[inlinenode] (n) {\strut \hspace*{.3em}#1\hspace*{.3em}};}\hspace{.1em}}}
+\newcommand{\inlinetext}[1]{\text{\hspace{.1em}\tikz[baseline=(n.base)]{\node[inlinenode] (n) {\strut \hspace*{.3em}\letterboxed{#1}\hspace*{.3em}};}\hspace{.1em}}}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=0.3pt] (char) {#1};}}
+
+\tikzset{%
+simpletext/.style={draw=none,text=black,font=\normalfont\normalsize,align=center},
+gparsetreenode/.style={minimum width=6mm,minimum height=5mm},
+lparsetreenode/.style={gparsetreenode,simpletext,rectangle,draw=white,fill=white,align=center},
+lparsetreeerrornode/.style={lparsetreenode,font=\bfseries},
+lparsetreephantomnode/.style={gparsetreenode,edge from parent/.append style={draw=none},shape=coordinate,minimum width=15mm},
+lparsetreestrikethrough/.style={draw=black,thick},
+lparsetreedeletednode/.style={lparsetreenode,append after command={\pgfextra \draw[lparsetreestrikethrough] (\tikzlastnode.north west) -- (\tikzlastnode.south east); \draw[lparsetreestrikethrough] (\tikzlastnode.north east) -- (\tikzlastnode.south west);\endpgfextra}},
+lparsetree/.style={node distance=5mm,level distance=10mm,every node/.style={lparsetreenode},edge from parent/.style={draw=black,-latex,shorten >=.5mm}
+},
+lflowchartnode/.style={lparsetreenode,draw=black,rounded corners=.5pt},
+blockdiagramlines/.style={draw,stroke=black,line width=1.2pt},
+blockdiagramarrow/.style={blockdiagramlines,->},
+blockdiagramdashedarrow/.style={blockdiagramarrow,dashed},
+blockdiagramannot/.style={blockdiagramlines,text=black,align=center},
+blockdiagramblock/.style={lflowchartnode,blockdiagramannot,minimum width=2.5cm,minimum height=0.65cm,text width=2.9cm},
+blockdiagrammicroblock/.style={blockdiagramannot,font=\tiny,minimum width=1.5cm,minimum height=.5cm,rounded corners=.5pt},
+blockdiagramarrowcaption/.style={font=\scriptsize\sffamily,inner sep=1.5pt,text=black},
+blockdiagramouterbox/.style={blockdiagramlines,densely dotted,line width=.7pt},
+blockdiagramouterboxcaption/.style={blockdiagramarrowcaption,font=\itshape\scriptsize,inner sep=1pt},
+pics/numbering/.style args={#1}{code={
+    \node[draw=black,shape=circle,fill=white,text=black,font=\ttfamily\scriptsize,inner sep=1pt,text width=8pt,align=center,outer sep=0] (-number) {#1};
+}}}
+
+\definecolor{light-gray}{gray}{0.87}
+\makeatletter
+
+\newcommand\letterboxed[1]{%
+\setlength{\fboxsep}{0pt}%
+  \@tfor\@ii:=#1\do{%
+    \fcolorbox{white}{light-gray}{\texttt{\strut\@ii}}%
+  }%
+}
+
+\newcommand\letterboxedinTable[1]{%
+\setlength{\fboxsep}{0pt}%
+  \@tfor\@ii:=#1\do{%
+    \fcolorbox{white}{light-gray}{\tiny \texttt{\strut\@ii}}%
+  }%
+}
+
+\makeatother
+
+\def\|#1|{\textit{#1}}
+\def\<#1>{\texttt{#1}}
+
 \begin{document}
-
-%%
-%% The "title" command has an optional parameter,
-%% allowing the author to define a "short title" to be used in page headers.
-\title{The Name of the Title Is Hope}
-
-%%
-%% The "author" command and its associated commands are used to define
-%% the authors and their affiliations.
-%% Of note is the shared affiliation of the first two authors, and the
-%% "authornote" and "authornotemark" commands
-%% used to denote shared contribution to the research.
-\author{Ben Trovato}
-\authornote{Both authors contributed equally to this research.}
-\email{trovato@corporation.com}
-\orcid{1234-5678-9012}
-\author{G.K.M. Tobin}
-\authornotemark[1]
-\email{webmaster@marysville-ohio.com}
+\title{Automatic Data Repair without Format Specifications}
+\author{Lukas Kirschner}
+\email{kirschlu@gmail.com}
 \affiliation{%
-  \institution{Institute for Clarity in Documentation}
-  \city{Dublin}
-  \state{Ohio}
-  \country{USA}
+  \institution{Saarland University}
+  \country{Germany}
 }
 
-\author{Lars Th{\o}rv{\"a}ld}
+\author{Ezekiel Soremekun}
 \affiliation{%
-  \institution{The Th{\o}rv{\"a}ld Group}
-  \city{Hekla}
-  \country{Iceland}}
-\email{larst@affiliation.org}
+  \institution{Royal Holloway, University of London} % (RHUL)}
+  \country{United Kingdom}} %nited Kingdom (UK)}}
+\email{ezekiel.soremekun@rhul.ac.uk}
 
-\author{Valerie B\'eranger}
+\author{Rahul Gopinath}
+\email{rahul.gopinath@sydney.edu.au}
 \affiliation{%
-  \institution{Inria Paris-Rocquencourt}
-  \city{Rocquencourt}
-  \country{France}
+  \institution{University of Sydney}
+  \country{Australia}
 }
 
-\author{Aparna Patel}
-\affiliation{%
- \institution{Rajiv Gandhi University}
- \city{Doimukh}
- \state{Arunachal Pradesh}
- \country{India}}
 
-\author{Huifen Chan}
-\affiliation{%
-  \institution{Tsinghua University}
-  \city{Haidian Qu}
-  \state{Beijing Shi}
-  \country{China}}
+\renewcommand{\shortauthors}{Kirschner et al.}
 
-\author{Charles Palmer}
-\affiliation{%
-  \institution{Palmer Research Laboratories}
-  \city{San Antonio}
-  \state{Texas}
-  \country{USA}}
-\email{cpalmer@prl.com}
 
-\author{John Smith}
-\affiliation{%
-  \institution{The Th{\o}rv{\"a}ld Group}
-  \city{Hekla}
-  \country{Iceland}}
-\email{jsmith@affiliation.org}
-
-\author{Julius P. Kumquat}
-\affiliation{%
-  \institution{The Kumquat Consortium}
-  \city{New York}
-  \country{USA}}
-\email{jpkumquat@consortium.net}
-
-%%
-%% By default, the full list of authors will be used in the page
-%% headers. Often, this list is too long, and will overlap
-%% other information printed in the page headers. This command allows
-%% the author to define a more concise list
-%% of authors' names for this purpose.
-\renewcommand{\shortauthors}{Trovato et al.}
+% %%
+% %% The "title" command has an optional parameter,
+% %% allowing the author to define a "short title" to be used in page headers.
+% 
+% %%
+% %% The "author" command and its associated commands are used to define
+% %% the authors and their affiliations.
+% %% Of note is the shared affiliation of the first two authors, and the
+% %% "authornote" and "authornotemark" commands
+% %% used to denote shared contribution to the research.
+% \author{Ben Trovato}
+% \authornote{Both authors contributed equally to this research.}
+% \email{trovato@corporation.com}
+% \orcid{1234-5678-9012}
+% \author{G.K.M. Tobin}
+% \authornotemark[1]
+% \email{webmaster@marysville-ohio.com}
+% \affiliation{%
+%   \institution{Institute for Clarity in Documentation}
+%   \city{Dublin}
+%   \state{Ohio}
+%   \country{USA}
+% }
+% 
+% \author{Lars Th{\o}rv{\"a}ld}
+% \affiliation{%
+%   \institution{The Th{\o}rv{\"a}ld Group}
+%   \city{Hekla}
+%   \country{Iceland}}
+% \email{larst@affiliation.org}
+% 
+% \author{Valerie B\'eranger}
+% \affiliation{%
+%   \institution{Inria Paris-Rocquencourt}
+%   \city{Rocquencourt}
+%   \country{France}
+% }
+% 
+% \author{Aparna Patel}
+% \affiliation{%
+%  \institution{Rajiv Gandhi University}
+%  \city{Doimukh}
+%  \state{Arunachal Pradesh}
+%  \country{India}}
+% 
+% \author{Huifen Chan}
+% \affiliation{%
+%   \institution{Tsinghua University}
+%   \city{Haidian Qu}
+%   \state{Beijing Shi}
+%   \country{China}}
+% 
+% \author{Charles Palmer}
+% \affiliation{%
+%   \institution{Palmer Research Laboratories}
+%   \city{San Antonio}
+%   \state{Texas}
+%   \country{USA}}
+% \email{cpalmer@prl.com}
+% 
+% \author{John Smith}
+% \affiliation{%
+%   \institution{The Th{\o}rv{\"a}ld Group}
+%   \city{Hekla}
+%   \country{Iceland}}
+% \email{jsmith@affiliation.org}
+% 
+% \author{Julius P. Kumquat}
+% \affiliation{%
+%   \institution{The Kumquat Consortium}
+%   \city{New York}
+%   \country{USA}}
+% \email{jpkumquat@consortium.net}
+% 
+% %%
+% %% By default, the full list of authors will be used in the page
+% %% headers. Often, this list is too long, and will overlap
+% %% other information printed in the page headers. This command allows
+% %% the author to define a more concise list
+% %% of authors' names for this purpose.
+% \renewcommand{\shortauthors}{Trovato et al.}
 
 %%
 %% The abstract is a short summary of the work to be presented in the
 %% article.
 \begin{abstract}
-  A clear and well-documented \LaTeX\ document is presented as an
-  article formatted for publication by ACM in a conference proceedings
-  or journal publication. Based on the ``acmart'' document class, this
-  article presents and explains many of the common variations, as well
-  as many of the formatting elements an author may use in the
-  preparation of the documentation of their work.
+In data processing, engineers often encounter datasets that are expected to
+conform to specific formats but contain variations due to factors such as
+human error or data corruption.
+These inconsistencies prevent standard programs from parsing the data correctly.
+Consequently, data engineers must perform \emph{\dtask,} manually
+adjusting the nonconforming data to match the required format.
+This process is time-consuming and prone to errors, particularly when
+format specifications are lacking, which is often the case as
+data formats are frequently defined exclusively by their parsers.
+
+In this work, we show that one can often repair the data corruption or
+conformance problems by leveraging failure feedback from parsers even in
+the absence of a reliable data format specification.
+
+Our approach, which we call \approach, can automatically produce repair
+candidates for corrupt or nonconforming input data ranked by maximal
+closeness to the original data.
+
+We evaluate \approach on 806 (real-world) nonconforming inputs in four
+well-known input formats, namely INI, TinyC, SExp, and cJSON.
+In our evaluation, we found that %\approach 
+\approach is highly effective and efficient in input repair: It repairs 77\% of invalid inputs %and recovers 91\% of input data, 
+within four minutes. It is up to 35\% more effective than \ddmax, the previously best-known approach.
 \end{abstract}
 
 %%
@@ -261,550 +435,1514 @@
 \maketitle
 
 \section{Introduction}
-ACM's consolidated article template, introduced in 2017, provides a
-consistent \LaTeX\ style for use across ACM publications, and
-incorporates accessibility and metadata-extraction functionality
-necessary for future Digital Library endeavors. Numerous ACM and
-SIG-specific \LaTeX\ templates have been examined, and their unique
-features incorporated into this single new template.
 
-If you are new to publishing with ACM, this document is a valuable
-guide to the process of preparing your work for publication. If you
-have published with ACM before, this document provides insight and
-instruction into more recent changes to the article template.
+\label{sec:intro}
 
-The ``\verb|acmart|'' document class can be used to prepare articles
-for any ACM publication --- conference or journal, and for any stage
-of publication, from review to final ``camera-ready'' copy, to the
-author's own version, with {\itshape very} few changes to the source.
+Large data repositories often contain data with unintended errors. These errors
+may be introduced when data is created (by humans or buggy programs), modified
+(by external actors), or transmitted (via flawed networks)~\cite{scaffidi2008accommodating}.
+For instance, many records are added by hand without validation, leading to
+\textit{nonconforming records}~\cite{mucslu2015preventing}. Such nonconforming
+records may also result from disagreements among data sources on format
+specifications, leading to different implementations. For example, JSON
+libraries implement slightly different definitions of JSON formats~\cite{harrand2021behavioral,seriot2016parsing},
+different database systems support slightly different SQL formats~\cite{arvin2018comparison},
+making their data dumps incompatible,
+CSVs and similar data formats often differ between applications of the same
+company~\cite{taocp},
+and various C compilers provide slightly different interpretations of the C language.
 
-\section{Template Overview}
-As noted in the introduction, the ``\verb|acmart|'' document class can
-be used to prepare many different kinds of documentation --- a
-double-anonymous initial submission of a full-length technical paper, a
-two-page SIGGRAPH Emerging Technologies abstract, a ``camera-ready''
-journal article, a SIGCHI Extended Abstract, and more --- all by
-selecting the appropriate {\itshape template style} and {\itshape
-  template parameters}.
+Even for comparatively rigid formats such as XML, there is no guarantee
+that a data record can be processed by a given parser because the parser may
+be nonconforming, implementing only a subset of the format~\cite{xmlconformance}.
+These problems lead to records that cannot be processed by their
+intended programs or consumed by end-users (e.g., data-engineers).
 
-This document will explain the major features of the document
-class. For further information, the {\itshape \LaTeX\ User's Guide} is
-available from
-\url{https://www.acm.org/publications/proceedings-template}.
+Given such nonconforming records that are \emph{almost} but \emph{not quite}
+parsable, developers are saddled with the task of \textit{\dtask}.
+\Dtask is particularly important due to the high prevalence of nonconforming
+records in data science and engineering~\cite{ridzuan2019review,kirschner2020debugging}.
+It can be challenging to recover the conforming portion of nonconforming
+data records automatically~\cite{scaffidi2008topes,ridzuan2019review},
+and developers often have to either purge such records~\cite{hernandez1998real},
+or \emph{manually} repair nonconforming parts of such records~\cite{kirschner2020debugging},
+which is time-consuming and error-prone.
 
-\subsection{Template Styles}
+A popular alternative is automatic \dtask.
+Given a formal grammar for data records,
+grammar-based \dtask approaches such as
+\emph{error-correcting} parsers~\cite{aho1972minimum,diekmann2020dont,parr2011ll}, can
+repair nonconforming records.
+The main idea in such techniques is to generate a \emph{universal grammar}
+that captures \emph{all possible data-corruptions} as mutation rules
+in the base grammar.
+The different parses of the nonconforming data by such a universal grammar is
+penalized by the number of mutation rule applications, and the parse with the
+lowest penalty is chosen as the best parse.
+The limitation of this approach is that this approach is only workable when
+a formal grammar is available.
+However,
+this assumption may not hold in practice due to several reasons.
+Firstly,
+certain data formats (e.g., CSV~\cite{taocp},
+URL standard from WHATWG~\cite{whatwgurl,urldisagree}, markdown~\cite{gruber2004markdown})
+may not have an official formal grammar specification, or may
+have numerous incompatible standards
+(e.g., markdown~\cite{gruber2004markdown}), any of which may be followed by the
+parser in question. In many cases the parser may be handwritten~\cite{uncommongrammars,uncommongrammars2}, and nonconforming due to bugs or quirks,
+implementing a subtly different format than the one specified.
+Hence, grammar-based \dtask approaches
+are suboptimal for fixing corrupt records in practice.
 
-The primary parameter given to the ``\verb|acmart|'' document class is
-the {\itshape template style} which corresponds to the kind of publication
-or SIG publishing the work. This parameter is enclosed in square
-brackets and is a part of the {\verb|documentclass|} command:
-\begin{verbatim}
-  \documentclass[STYLE]{acmart}
-\end{verbatim}
+When a formal specification of the data format is unavailable, or unreliable,
+the only option left is language-agnostic \dtask provided by \ddmax~\cite{kirschner2020debugging}
+which operates without a formal grammar.
+%Such language-agnostic \dtask methods
+%(e.g., \ddmax~\cite{kirschner2020debugging}) can repair nonconforming records without a base grammar.
+%\ddmax works similar to
+%Delta Debugging~\cite{zeller2002simplifying}, but in reverse. The idea
+%is that given a corrupt record which induces a parse error, and a way to
+%decompose the record into independent fragments (called deltas ($\delta$)), one can
+%successively minimize the parse-error inducing part of the record resulting in a
+%maximal parsing record.
+While \ddmax was shown to work well in tested scenarios, it has two major limitations:
+(1) \ddmax only allows \emph{token deletion} as a repair operation, and 
+(2) it cannot repair \emph{complex data formats} (e.g., multiple faults).
+These limitations prevent \ddmax from obtaining a maximal data repair in
+several instances, resulting in severe data loss.
+%Notably, two major \ddmax limitations include its
+%(1) \textit{limited repair operation} (only deletion), and
+%(2) inability to completely repair \textit{complex data formats}
+%(e.g., multiple faults) due to inherent assumptions.
+Table~\ref{tab:ddmaxlimitations} presents three examples where these
+limitations lead to significant data loss, especially when compared to
+automatic \dtask using formal specifications.
 
-Journals use one of three template styles. All but three ACM journals
-use the {\verb|acmsmall|} template style:
-\begin{itemize}
-\item {\texttt{acmsmall}}: The default journal template style.
-\item {\texttt{acmlarge}}: Used by JOCCH and TAP.
-\item {\texttt{acmtog}}: Used by TOG.
-\end{itemize}
+The key insight of this paper is that one can leverage the \emph{parse failure feedback}
+to simulate the behavior of a universal grammar and obtain a maximal data repair.
+This allows our approach \approach to leverage deletion, insertion and substitution as repair
+operations, which are not allowed by \ddmax.
 
-The majority of conference proceedings documentation will use the {\verb|acmconf|} template style.
-\begin{itemize}
-\item {\texttt{sigconf}}: The default proceedings template style.
-\item{\texttt{sigchi}}: Used for SIGCHI conference articles.
-\item{\texttt{sigplan}}: Used for SIGPLAN conference articles.
-\end{itemize}
+\begin{table*}\centering
 
-\subsection{Template Parameters}
+\caption{\ddmax vs. \approach: examples showing limitations of \ddmax and the strengths of \approach}
+{%\scriptsize  
+\begin{tabular}{|l | l | l | l |}
+\hline
+\textbf{Examples of NonConforming}& \textbf{\ddmax} & \textbf{\approach} & \textbf{\ddmax} \\
+\textbf{Program Inputs} & \textbf{Repair} & \textbf{Repair} & \textbf{Limitation} \\
+\hline
+\letterboxedinTable{\{\ "name":\ "Dave"\ "age":\ 42\ \}} &
+\letterboxedinTable{\ \ \ \ 42\ }  &
+\letterboxedinTable{\{\ "name":\ "Dave"\ ,"age":\ 42\ \}} &
+Limited repair \\
+& & & options (deletion) \\
+\hline
+\letterboxedinTable{\{\ "item":\ "Apple",\ "price"} & \letterboxedinTable{\ \ \ \
+3.45\ } & \letterboxedinTable{\{\ "item":\ "Apple",\ "price"} & Rich structure
+\\
+\letterboxedinTable{:\ ***3.45\}} & &\letterboxedinTable{:\ 3.45\}} &  (spans) \\
+\hline
+\letterboxedinTable{\{"ABCD":[*"1,2,3,4,5,6"]*\}} &
+\letterboxedinTable{123456} &
+\letterboxedinTable{\{"ABCD":["1,2,3,4,5,6"]\}} &
+Rich Structure\\
 
-In addition to specifying the {\itshape template style} to be used in
-formatting your work, there are a number of {\itshape template parameters}
-which modify some part of the applied template style. A complete list
-of these parameters can be found in the {\itshape \LaTeX\ User's Guide.}
-
-Frequently-used parameters, or combinations of parameters, include:
-\begin{itemize}
-\item {\texttt{anonymous,review}}: Suitable for a ``double-anonymous''
-  conference submission. Anonymizes the work and includes line
-  numbers. Use with the \texttt{\acmSubmissionID} command to print the
-  submission's unique ID on each page of the work.
-\item{\texttt{authorversion}}: Produces a version of the work suitable
-  for posting by the author.
-\item{\texttt{screen}}: Produces colored hyperlinks.
-\end{itemize}
-
-This document uses the following string as the first command in the
-source file:
-\begin{verbatim}
-\documentclass[acmsmall]{acmart}
-\end{verbatim}
-
-\section{Modifications}
-
-Modifying the template --- including but not limited to: adjusting
-margins, typeface sizes, line spacing, paragraph and list definitions,
-and the use of the \verb|\vspace| command to manually adjust the
-vertical spacing between elements of your work --- is not allowed.
-
-{\bfseries Your document will be returned to you for revision if
-  modifications are discovered.}
-
-\section{Typefaces}
-
-The ``\verb|acmart|'' document class requires the use of the
-``Libertine'' typeface family. Your \TeX\ installation should include
-this set of packages. Please do not substitute other typefaces. The
-``\verb|lmodern|'' and ``\verb|ltimes|'' packages should not be used,
-as they will override the built-in typeface families.
-
-\section{Title Information}
-
-The title of your work should use capital letters appropriately -
-\url{https://capitalizemytitle.com/} has useful rules for
-capitalization. Use the {\verb|title|} command to define the title of
-your work. If your work has a subtitle, define it with the
-{\verb|subtitle|} command.  Do not insert line breaks in your title.
-
-If your title is lengthy, you must define a short version to be used
-in the page headers, to prevent overlapping text. The \verb|title|
-command has a ``short title'' parameter:
-\begin{verbatim}
-  \title[short title]{full title}
-\end{verbatim}
-
-\section{Authors and Affiliations}
-
-Each author must be defined separately for accurate metadata
-identification.  As an exception, multiple authors may share one
-affiliation. Authors' names should not be abbreviated; use full first
-names wherever possible. Include authors' e-mail addresses whenever
-possible.
-
-Grouping authors' names or e-mail addresses, or providing an ``e-mail
-alias,'' as shown below, is not acceptable:
-\begin{verbatim}
-  \author{Brooke Aster, David Mehldau}
-  \email{dave,judy,steve@university.edu}
-  \email{firstname.lastname@phillips.org}
-\end{verbatim}
-
-The \verb|authornote| and \verb|authornotemark| commands allow a note
-to apply to multiple authors --- for example, if the first two authors
-of an article contributed equally to the work.
-
-If your author list is lengthy, you must define a shortened version of
-the list of authors to be used in the page headers, to prevent
-overlapping text. The following command should be placed just after
-the last \verb|\author{}| definition:
-\begin{verbatim}
-  \renewcommand{\shortauthors}{McCartney, et al.}
-\end{verbatim}
-Omitting this command will force the use of a concatenated list of all
-of the authors' names, which may result in overlapping text in the
-page headers.
-
-The article template's documentation, available at
-\url{https://www.acm.org/publications/proceedings-template}, has a
-complete explanation of these commands and tips for their effective
-use.
-
-Note that authors' addresses are mandatory for journal articles.
-
-\section{Rights Information}
-
-Authors of any work published by ACM will need to complete a rights
-form. Depending on the kind of work, and the rights management choice
-made by the author, this may be copyright transfer, permission,
-license, or an OA (open access) agreement.
-
-Regardless of the rights management choice, the author will receive a
-copy of the completed rights form once it has been submitted. This
-form contains \LaTeX\ commands that must be copied into the source
-document. When the document source is compiled, these commands and
-their parameters add formatted text to several areas of the final
-document:
-\begin{itemize}
-\item the ``ACM Reference Format'' text on the first page.
-\item the ``rights management'' text on the first page.
-\item the conference information in the page header(s).
-\end{itemize}
-
-Rights information is unique to the work; if you are preparing several
-works for an event, make sure to use the correct set of commands with
-each of the works.
-
-The ACM Reference Format text is required for all articles over one
-page in length, and is optional for one-page articles (abstracts).
-
-\section{CCS Concepts and User-Defined Keywords}
-
-Two elements of the ``acmart'' document class provide powerful
-taxonomic tools for you to help readers find your work in an online
-search.
-
-The ACM Computing Classification System ---
-\url{https://www.acm.org/publications/class-2012} --- is a set of
-classifiers and concepts that describe the computing
-discipline. Authors can select entries from this classification
-system, via \url{https://dl.acm.org/ccs/ccs.cfm}, and generate the
-commands to be included in the \LaTeX\ source.
-
-User-defined keywords are a comma-separated list of words and phrases
-of the authors' choosing, providing a more flexible way of describing
-the research being presented.
-
-CCS concepts and user-defined keywords are required for for all
-articles over two pages in length, and are optional for one- and
-two-page articles (or abstracts).
-
-\section{Sectioning Commands}
-
-Your work should use standard \LaTeX\ sectioning commands:
-\verb|section|, \verb|subsection|, \verb|subsubsection|, and
-\verb|paragraph|. They should be numbered; do not remove the numbering
-from the commands.
-
-Simulating a sectioning command by setting the first word or words of
-a paragraph in boldface or italicized text is {\bfseries not allowed.}
-
-\section{Tables}
-
-The ``\verb|acmart|'' document class includes the ``\verb|booktabs|''
-package --- \url{https://ctan.org/pkg/booktabs} --- for preparing
-high-quality tables.
-
-Table captions are placed {\itshape above} the table.
-
-Because tables cannot be split across pages, the best placement for
-them is typically the top of the page nearest their initial cite.  To
-ensure this proper ``floating'' placement of tables, use the
-environment \textbf{table} to enclose the table's contents and the
-table caption.  The contents of the table itself must go in the
-\textbf{tabular} environment, to be aligned properly in rows and
-columns, with the desired horizontal and vertical rules.  Again,
-detailed instructions on \textbf{tabular} material are found in the
-\textit{\LaTeX\ User's Guide}.
-
-Immediately following this sentence is the point at which
-Table~\ref{tab:freq} is included in the input file; compare the
-placement of the table here with the table in the printed output of
-this document.
-
-\begin{table}
-  \caption{Frequency of Special Characters}
-  \label{tab:freq}
-  \begin{tabular}{ccl}
-    \toprule
-    Non-English or Math&Frequency&Comments\\
-    \midrule
-    \O & 1 in 1,000& For Swedish names\\
-    $\pi$ & 1 in 5& Common in math\\
-    \$ & 4 in 5 & Used in business\\
-    $\Psi^2_1$ & 1 in 40,000& Unexplained usage\\
-  \bottomrule
-\end{tabular}
-\end{table}
-
-To set a wider table, which takes up the whole width of the page's
-live area, use the environment \textbf{table*} to enclose the table's
-contents and the table caption.  As with a single-column table, this
-wide table will ``float'' to a location deemed more
-desirable. Immediately following this sentence is the point at which
-Table~\ref{tab:commands} is included in the input file; again, it is
-instructive to compare the placement of the table here with the table
-in the printed output of this document.
-
-\begin{table*}
-  \caption{Some Typical Commands}
-  \label{tab:commands}
-  \begin{tabular}{ccl}
-    \toprule
-    Command &A Number & Comments\\
-    \midrule
-    \texttt{{\char'134}author} & 100& Author \\
-    \texttt{{\char'134}table}& 300 & For tables\\
-    \texttt{{\char'134}table*}& 400& For wider tables\\
-    \bottomrule
-  \end{tabular}
+& & &  (multiple-faults)  \\
+\hline
+\end{tabular}}
+\label{tab:ddmaxlimitations}
 \end{table*}
 
-Always use midrule to separate table header rows from data rows, and
-use it only for this purpose. This enables assistive technologies to
-recognise table headers and support their users in navigating tables
-more easily.
+\begin{comment}
+Firstly, \ddmax's repair is restricted to deletion, which makes it sub-optimal for repairing some invalid inputs. 
+While \ddmax can repair invalid inputs due to 
+spurious insertions, it %\ddmax 
+fails to repair input 
+invalidity that is due to \emph{changed} or \emph{deleted} fragments. Consider the sample invalid input in \textit{row one} of \Cref{tab:ddmaxlimitations} (i.e., \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}) which is invalid because of a \textit{missing comma separator} between the two values in the JSON object. Due to the limited repair options of \ddmax (i.e., only deletion), its resulting repair (i.e., \letterboxed{\ \ \ \ 42\ }) is \textit{sub-optimal} leading to a huge (75\%) data loss (21 out of 28 bytes). %, % $\approx$ .
+This work addresses this challenge
+by supporting the synthesis of missing input fragments. 
 
-\section{Math Equations}
-You may want to display math equations in three distinct styles:
-inline, numbered or non-numbered display.  Each of the three are
-discussed in the next sections.
+Secondly,
+\ddmax is modeled after \ddmin, where one of
+the unstated assumptions is that the $\delta$ fragments that are not
+contributing to the failure observed can be independently removed without
+affecting the failure observed. When this assumption is not met, (i.e. where
+the inputs have a rich structure) the minimal fragment produced by \ddmin
+can be suboptimal. %Hence, the h
+Similarly, 
+\textit{\ddmax assumes each non-failure-inducing fragment
+can be added to the passing subset without inducing a failure}. When this
+assumption is not met (as in the case of inputs with a rich structure such as
+conforming to a grammar) the repairs produced can be suboptimal as the
+examples show.
+As an example, consider the invalid input in \textit{row three} of \Cref{tab:ddmaxlimitations} (i.e.,  \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}}). Due to the \textit{multiple faults (two \letterboxed{*}s)} in this input, the resulting \ddmax repair (i.e., \letterboxed{123456}) is \textit{sub-optimal} causing a 77\% data loss (20 out of 26 bytes).
+This paper identifies previously unknown limitations of
+\ddmax (Section~\ref{tab:ddmaxlimitations}), and suggests an alternative
+approach (called \approach) for overcoming the identified limitations.
+The key insight of our approach is to complete \textit{syntactic} repair of
+invalid inputs leveraging the \emph{parse failure feedback} already provided by
+many parsers.
+Given a nonconforming record and a program that provides immediate feedback on
+parsing failure, \approach iteratively evaluates possible mutations to the input
+candidate insertions to provide a set of repairs ranked by the distance
+of the repair from the original record.
 
-\subsection{Inline (In-text) Equations}
-A formula that appears in the running text is called an inline or
-in-text formula.  It is produced by the \textbf{math} environment,
-which can be invoked with the usual
-\texttt{{\char'134}begin\,\ldots{\char'134}end} construction or with
-the short form \texttt{\$\,\ldots\$}. You can use any of the symbols
-and structures, from $\alpha$ to $\omega$, available in
-\LaTeX~\cite{Lamport:LaTeX}; this section will simply show a few
-examples of in-text equations in context. Notice how this equation:
-\begin{math}
-  \lim_{n\rightarrow \infty}x=0
-\end{math},
-set here in in-line math style, looks slightly different when
-set in display style.  (See next section).
-
-\subsection{Display Equations}
-A numbered display equation---one set off by vertical space from the
-text and centered horizontally---is produced by the \textbf{equation}
-environment. An unnumbered display equation is produced by the
-\textbf{displaymath} environment.
-
-Again, in either environment, you can use any of the symbols and
-structures available in \LaTeX\@; this section will just give a couple
-of examples of display equations in context.  First, consider the
-equation, shown as an inline equation above:
-\begin{equation}
-  \lim_{n\rightarrow \infty}x=0
-\end{equation}
-Notice how it is formatted somewhat differently in
-the \textbf{displaymath}
-environment.  Now, we'll enter an unnumbered equation:
-\begin{displaymath}
-  \sum_{i=0}^{\infty} x + 1
-\end{displaymath}
-and follow it with another numbered equation:
-\begin{equation}
-  \sum_{i=0}^{\infty}x_i=\int_{0}^{\pi+2} f
-\end{equation}
-just to demonstrate \LaTeX's able handling of numbering.
-
-\section{Figures}
-
-The ``\verb|figure|'' environment should be used for figures. One or
-more images can be placed within a figure. If your figure contains
-third-party material, you must clearly identify it as such, as shown
-in the example below.
-
-Your figures should contain a caption which describes the figure to
-the reader.
-
-Figure captions are placed {\itshape below} the figure.
-
-Every figure should also have a figure description unless it is purely
-decorative. These descriptions convey what’s in the image to someone
-who cannot see it. They are also used by search engine crawlers for
-indexing images, and when images cannot be loaded.
-
-A figure description must be unformatted plain text less than 2000
-characters long (including spaces).  {\bfseries Figure descriptions
-  should not repeat the figure caption – their purpose is to capture
-  important information that is not already provided in the caption or
-  the main text of the paper.} For figures that convey important and
-complex new information, a short text description may not be
-adequate. More complex alternative descriptions can be placed in an
-appendix and referenced in a short figure description. For example,
-provide a data table capturing the information in a bar chart, or a
-structured list representing a graph.  For additional information
-regarding how best to write figure descriptions and why doing this is
-so important, please see
-\url{https://www.acm.org/publications/taps/describing-figures/}.
-
-\subsection{The ``Teaser Figure''}
-
-A ``teaser figure'' is an image, or set of images in one figure, that
-are placed after all author and affiliation information, and before
-the body of the article, spanning the page. If you wish to have such a
-figure in your article, place the command immediately before the
-\verb|\maketitle| command:
-\begin{verbatim}
-  \begin{teaserfigure}
-    \includegraphics[width=\textwidth]{sampleteaser}
-    \caption{figure caption}
-    \Description{figure description}
-  \end{teaserfigure}
-\end{verbatim}
-
-\section{Citations and Bibliographies}
-
-The use of \BibTeX\ for the preparation and formatting of one's
-references is strongly recommended. Authors' names should be complete
---- use full first names (``Donald E. Knuth'') not initials
-(``D. E. Knuth'') --- and the salient identifying features of a
-reference should be included: title, year, volume, number, pages,
-article DOI, etc.
-
-The bibliography is included in your source document with these two
-commands, placed just before the \verb|\end{document}| command:
-\begin{verbatim}
-  \bibliographystyle{ACM-Reference-Format}
-  \bibliography{bibfile}
-\end{verbatim}
-where ``\verb|bibfile|'' is the name, without the ``\verb|.bib|''
-suffix, of the \BibTeX\ file.
-
-Citations and references are numbered by default. A small number of
-ACM publications have citations and references formatted in the
-``author year'' style; for these exceptions, please include this
-command in the {\bfseries preamble} (before the command
-``\verb|\begin{document}|'') of your \LaTeX\ source:
-\begin{verbatim}
-  \citestyle{acmauthoryear}
-\end{verbatim}
+For instance, consider the invalid input in \textit{row one} of \Cref{tab:ddmaxlimitations} (i.e., \letterboxed{\{\ "name":\ "Dave"\ "age":}
+\letterboxed{\ 42\ \}}) which is invalid because of a \textit{missing comma separator} between the two values in the JSON object. While \ddmax could not completely repair this input, \approach could complete a repair via input synthesis. % owing to its input synthesis component.
+\Cref{sec:input-synthesis}
+ describes the full steps of \approach for this input.
+ %Our \approach algorithm
+Specifically, \approach first finds the maximal parsable
+prefix to be \letterboxed{\{\ "name":\ "Dave"\ }, and
+determines that the \textit{parse boundary}, i.e., the
+shift from \emph{incomplete} to \emph{incorrect}
+happens at boundary %as %\\
+\letterboxed{\{\ "name":\ "Dave"\ "}. % where the parser response shifts from
+Next, \approach applies \textit{deletion}, or \textit{insertion} of characters
+in order.
+In this case, the \letterboxed{"} is deleted first, but the
+resulting input %\\
+\letterboxed{\{\ "name":\ "Dave"\ age":\ 42 \}} %is
+does not increase the
+maximum parsable prefix. %Here, we see that the maximal parse boundary remains the same.
+Hence, \approach next
+attempts to insert a character,
+eventually determining that
+only space characters and
+comma (\letterboxed{,}) can be inserted here,
+resulting in an increase of the maximal parse prefix. Out of these two insertion candidates, inserting comma results in the maximum advancement of the parse boundary, resulting in the
+valid repair: %newly constructed string: %\\
+\letterboxed{\{\ "name":\ "Dave"\ ,"age":\ 42\ \}}. %,
+\done{In Table~1, the comma is inserted after the quote; here, it is inserted after the space -- AZ}
 
 
-  Some examples.  A paginated journal article \cite{Abril07}, an
-  enumerated journal article \cite{Cohen07}, a reference to an entire
-  issue \cite{JCohen96}, a monograph (whole book) \cite{Kosiur01}, a
-  monograph/whole book in a series (see 2a in spec. document)
-  \cite{Harel79}, a divisible-book such as an anthology or compilation
-  \cite{Editor00} followed by the same example, however we only output
-  the series if the volume number is given \cite{Editor00a} (so
-  Editor00a's series should NOT be present since it has no vol. no.),
-  a chapter in a divisible book \cite{Spector90}, a chapter in a
-  divisible book in a series \cite{Douglass98}, a multi-volume work as
-  book \cite{Knuth97}, a couple of articles in a proceedings (of a
-  conference, symposium, workshop for example) (paginated proceedings
-  article) \cite{Andler79, Hagerup1993}, a proceedings article with
-  all possible elements \cite{Smith10}, an example of an enumerated
-  proceedings article \cite{VanGundy07}, an informally published work
-  \cite{Harel78}, a couple of preprints \cite{Bornmann2019,
-    AnzarootPBM14}, a doctoral dissertation \cite{Clarkson85}, a
-  master's thesis: \cite{anisi03}, an online document / world wide web
-  resource \cite{Thornburg01, Ablamowicz07, Poker06}, a video game
-  (Case 1) \cite{Obama08} and (Case 2) \cite{Novak03} and \cite{Lee05}
-  and (Case 3) a patent \cite{JoeScientist001}, work accepted for
-  publication \cite{rous08}, 'YYYYb'-test for prolific author
-  \cite{SaeediMEJ10} and \cite{SaeediJETC10}. Other cites might
-  contain 'duplicate' DOI and URLs (some SIAM articles)
-  \cite{Kirschmer:2010:AEI:1958016.1958018}. Boris / Barbara Beeton:
-  multi-volume works as books \cite{MR781536} and \cite{MR781537}. A
-  couple of citations with DOIs:
-  \cite{2004:ITE:1009386.1010128,Kirschmer:2010:AEI:1958016.1958018}. Online
-  citations: \cite{TUGInstmem, Thornburg01, CTANacmart}.
-  Artifacts: \cite{R} and \cite{UMassCitations}.
 
-\section{Acknowledgments}
+\end{comment}
+ %Further, the list of repairs it suggests will include the
+%In this work, we % paper %We
+%show that invalid inputs with rich structure can be repaired adequately if
+%the input processor can provide at least some indication of progress.
+That is, as with \ddmax, we require the data processor to indicate if the given record
+is valid.  However, when given a nonconforming record,
+we \textit{require} the data processor to indicate whether the record is
+merely \emph{incomplete} (that is, the record fragment is a prefix of a conforming record)
+or is \emph{incorrect} (that is, no suffix to
+this record fragment will result in a conforming record).\footnote{This requirement is
+provided by most parsers. %,
+In the cases where parsers do not provide
+this information, it can be obtained
+by external instrumentation 
+as demonstrated by Bj\"orn et al.~\cite{mathis2019parser}, or 
+by modifying the parser to provide such failure feedback, as demonstrated in this work. 
+}
+% \revise{
+We note that similar to \ddmax,
+satisfying the requirements for \approach does not require using a
+formal grammar for parsing, and indeed, there are several systems that
+implement handwritten parsers that satisfy \approach
+constraints~\cite{eaton2021parser}.
+%}
 
-Identification of funding sources and other support, and thanks to
-individuals and groups that assisted in the research and the
-preparation of the work should be included in an acknowledgment
-section, which is placed just before the reference section in your
-document.
+%To the best of our knowledge, \approach is the \textit{first} approach to effectively repair invalid rich inputs without an input specification 
+%or program analysis.
+This paper makes the following %technical
+contributions: %\todo{we need to stress some results here}:
+\begin{itemize}
+\item \textbf{Limitations of \ddmax.} We identify and demonstrate problems with
+the state of the art language agnostic \ddmax algorithm, which can result in
+significant data loss.
+\item \textbf{Parse Failure Feedback.} We demonstrate how to leverage
+parse-failure-feedback 
+%to overcome the limitations in \ddmax 
+for effective data repair using \approach.
 
-This section has a special environment:
-\begin{verbatim}
-  \begin{acks}
-  ...
-  \end{acks}
-\end{verbatim}
-so that the information contained therein can be more easily collected
-during the article metadata extraction phase, and to ensure
-consistency in the spelling of the section heading.
+\item \textbf{Empirical Evaluation.} We evaluate \approach using 806 (real-world) nonconforming
+records belonging to four well-known input formats (e.g., cJSON and TinyC). 
+Our evaluation results show that %given input processors that can accurately
+\textit{\approach has a high (91\%) data recovery rate}. 
+It is up to 35\% more effective than \ddmax.
 
-Authors should not prepare this section as a numbered or unnumbered {\verb|\section|}; please use the ``{\verb|acks|}'' environment.
+\end{itemize}
 
-\section{Appendices}
+The remainder of this paper is structured as follows: \Cref{sec:rich-input-structures} highlights the limitations of the state-of-the-art input repair method (\ddmax) and illustrates how \approach overcomes these limitations. In \Cref{sec:input-synthesis} we describe how \approach conducts input synthesis, and \Cref{sec:drepair}  describes the \approach algorithm. We describe our experimental setup and findings in \Cref{sec:experimental-setup} and \Cref{sec:results}. We address the limitations %and threats to the validity 
+of this work in \Cref{sec:threats}, and discuss related work in \Cref{sec:related_work}. Finally, we conclude this paper 
+with the discussion of future work in \Cref{sec:conclusion}. 
 
-If your work needs an appendix, add it before the
-``\verb|\end{document}|'' command at the conclusion of your source
-document.
 
-Start the appendix with the ``\verb|appendix|'' command:
-\begin{verbatim}
-  \appendix
-\end{verbatim}
-and note that in the appendix, sections are lettered, not
-numbered. This document has two appendices, demonstrating the section
-and subsection identification method.
 
-\section{Multi-language papers}
+\begin{figure*}[t]
+\begin{boxedminipage}{\textwidth}
+\smallskip
+\ \begin{minipage}{0.9\textwidth}
+\subsection*{Maximizing Delta Debugging Algorithm}
+\medskip
 
-Papers may be written in languages other than English or include
-titles, subtitles, keywords and abstracts in different languages (as a
-rule, a paper in a language other than English should include an
-English title and an English abstract).  Use \verb|language=...| for
-every language used in the paper.  The last language indicated is the
-main language of the paper.  For example, a French paper with
-additional titles and abstracts in English and German may start with
-the following command
-\begin{verbatim}
-\documentclass[sigconf, language=english, language=german,
-               language=french]{acmart}
-\end{verbatim}
+Let $\test$ and $\cfail$ be given such that $\test(\emptyset) = \pass \land
+\test(\cfail) = \fail$ hold.
 
-The title, subtitle, keywords and abstract will be typeset in the main
-language of the paper.  The commands \verb|\translatedXXX|, \verb|XXX|
-begin title, subtitle and keywords, can be used to set these elements
-in the other languages.  The environment \verb|translatedabstract| is
-used to set the translation of the abstract.  These commands and
-environment have a mandatory first argument: the language of the
-second argument.  See \verb|sample-sigconf-i13n.tex| file for examples
-of their usage.
+The goal is to find $\dpass = \ddmax(\cfail)$ such that $\dpass \subset \cfail$, $\test(\dpass) = \pass$, and~$\Delta = \cfail - \dpass$ is 1-minimal.
 
-\section{SIGCHI Extended Abstracts}
+The \emph{maximizing Delta Debugging algorithm} $\ddmax(c)$ is
+\begin{align*}
+\ddmax(\cfail) &= \ddmax_2(\emptyset, 2) \quad \text{where} \\
+\ddmax_2(\dpass, n) &=
+\begin{cases}
+    %if len(minus(CX_I, cprime_y)) == 1: return cprime_y
+  \textcolor{red}{\dpass} & \text{\textcolor{red}{\hphantom{else }if $|\cfail - \dpass| = 1$} (``base case$^{\textcolor{red}{a}}$'')} \\
+  \ddmax_2(\cfail - \Delta_i, 2) & \parbox[t]{.45\textwidth}{else if $\exists i \in \{1, \dots, n\} \cdot \test(\cfail - \Delta_i) = \pass$ (``incr. to complem.'')} \\
+\ddmax_2\bigl(\dpass \cup \Delta_i, \max(n - 1, 2)\bigr) &
+\parbox[t]{.45\textwidth}{else if $\exists i \in \{1, \dots, n\} \cdot \test(\dpass \cup \Delta_i)~=~\pass $ (``incr. to subset'')} \\
+\ddmax_2\bigl(\dpass, \min(|\cfail \textcolor{red}{- \dpass}|, 2n)\bigr) & \text{else if $n < |\cfail - \dpass|$ (``incr. granularity$^{\text{\textcolor{red}{b}}}$'')} \\
+\dpass & \text{otherwise (``done'').}
+\end{cases}
+\end{align*}
+where $\Delta = \cfail - \dpass = \Delta_1 \cup \Delta_2 \cup \dots \cup \Delta_n$, all
+$\Delta_i$ are pairwise disjoint, and $\forall \Delta_i \cdot |\Delta_i| \approx |\cfail - \dpass| / n$
+holds.
 
-The ``\verb|sigchi-a|'' template style (available only in \LaTeX\ and
-not in Word) produces a landscape-orientation formatted article, with
-a wide left margin. Three environments are available for use with the
-``\verb|sigchi-a|'' template style, and produce formatted output in
-the margin:
-\begin{description}
-\item[\texttt{sidebar}:]  Place formatted text in the margin.
-\item[\texttt{marginfigure}:] Place a figure in the margin.
-\item[\texttt{margintable}:] Place a table in the margin.
+The recursion invariant (and thus precondition) for $\ddmax_2$ is
+$\test(\dpass) = \pass \land n \leq |\Delta|$.\\
+\textcolor{red}{a}: Bugfix: This base case is necessary to ensure that repairing JSON input \letterboxed{1*1} does not violate the invariant $n \leq |\Delta|$.\\
+\textcolor{red}{b}: Bugfix: We should look for minimum of the remaining so that invariant $n \leq |\Delta|$ is not violated for JSON input \letterboxed{\{*"":2\}}.
+\end{minipage}
+\end{boxedminipage}
+\caption{Maximizing Lexical Delta Debugging algorithm from Kirschner et al.~\cite{kirschner2020debugging} with corrections.}
+\label{fig:ddmax}
+\end{figure*}
+
+\section{Limitations of \ddmax}
+\label{sec:rich-input-structures}
+
+Let us first illustrate the limitations of the state-of-the-art \dtask method (\ddmax)
+ and how our approach (\approach) addresses these limitations.
+\Cref{fig:ddmax} provides the \ddmax algorithm
+presented in Kirschner et al.~\cite{kirschner2020debugging}.
+We note that the \ddmax algorithm that was presented in
+Kirschner et al.~\cite{kirschner2020debugging} contained two errors.
+The first is that, it does not include a base case. 
+
+A major limitation of \ddmax algorithm is that it results in sub-optimal
+repairs when the data is expected to conform to \textit{complex formats},
+and the corruption is not simple (i.e., \textit{multiple faults}).
+In the following, we discuss these limitations.
+
+\subsection{Limitations due to multiple faults}
+A pattern of failure of \ddmax occurs when \ddmax is given an input with
+multiple errors.  For example, consider the JSON input \letterboxed{[*]+}.
+Here, the JSON string is invalid because of two invalid characters that are
+non-contiguous. The operation of \ddmax (\Cref{fig:ddmax}) proceeds as follows:
+
+\begin{enumerate}
+[labelwidth=!, labelindent=20pt]
+\item The operation starts with $\ddmax_2(\emptyset, 2)$
+\item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply
+\item Increase to complement:\\
+$\cfail - \Delta_1$= \letterboxed{]+} \fail \\
+$\cfail - \Delta_2$= \letterboxed{[*} \fail \\
+\item Increase to subset:\\
+$\emptyset \cup \Delta_1$=\letterboxed{[*} \fail \\
+$\emptyset \cup \Delta_2$= \letterboxed{]+} \fail \\
+\item Increase granularity: $n < |\cfail-\dpass|$ which is $2 < |\cfail-\emptyset|$ \pass \\
+  Hence the next iteration is:
+  $\ddmax_2\bigl(\emptyset, 4)\bigr) $
+\item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply.
+\item Increase to complement:\\
+$\cfail - \Delta_1$= \letterboxed{*]+} \fail \\
+$\cfail - \Delta_2$= \letterboxed{[]+} \fail \\
+$\cfail - \Delta_3$= \letterboxed{[*+} \fail \\
+$\cfail - \Delta_4$= \letterboxed{[*]} \fail \\
+\item Increase to subset:\\
+$\emptyset \cup \Delta_1$=\letterboxed{[} \fail \\
+$\emptyset \cup \Delta_2$=\letterboxed{*} \fail \\
+$\emptyset \cup \Delta_3$=\letterboxed{]} \fail \\
+$\emptyset \cup \Delta_4$=\letterboxed{+} \fail \\
+\item Increase granularity: $4 < 4$ \fail \\
+\item The solution is $\emptyset$. 
+
+\end{enumerate}
+
+That is, \ddmax is unable to optimally repair inputs of this kind which
+contains multiple errors. While in this example, the data loss that occurred
+may seem somewhat limited, this need not always be the case. A similar example
+is given in \Cref{tab:ddmaxlimitations}.
+Here, \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}} contains two distinct
+corruptions.
+As in the previous case, \ddmax attempts to fix this input by dividing it into
+smaller and smaller fragments, none of which isolates an error that when
+removed, results in the solution \letterboxed{123456} with %which clearly has suffered
+significant data loss, including the loss of structure and change in
+input fragment type from string to number.
+Hence, \ddmax cannot effectively repair inputs containing multiple faults.
+
+\subsection{Effect of input decomposition}
+Unfortunately \ddmax can produce non-optimal results even when the errors are
+contiguous, and hence considered \emph{single} by \ddmax. The problem happens
+when the corruption in the input interacts with the fragment decomposition
+algorithm of \ddmax.
+As an example, consider a variant of the previous input: \letterboxed{[*+]}.
+The JSON string is invalid here because it contains two invalid characters
+which are contiguous.
+The operation of \ddmax (\Cref{fig:ddmax}) is as follows:
+
+\begin{enumerate}
+\item The operation starts with $\ddmax_2(\emptyset, 2)$
+\item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply
+\item Increase to complement:\\
+$\cfail - \Delta_1$= \letterboxed{+]} \fail \\
+$\cfail - \Delta_2$= \letterboxed{[*} \fail \\
+\item Increase to subset:\\
+$\emptyset \cup \Delta_1$=\letterboxed{[*} \fail \\
+$\emptyset \cup \Delta_2$= \letterboxed{+]} \fail \\
+\item Increase granularity: $n < |\cfail-\dpass|$ which is $2 < |\cfail-\emptyset|$ \pass \\
+  Hence the next iteration is:
+  $\ddmax_2\bigl(\emptyset, 4)\bigr) $
+\item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply.
+\item Increase to complement:\\
+$\cfail - \Delta_1$= \letterboxed{*+]} \fail \\
+$\cfail - \Delta_2$= \letterboxed{[+]} \fail \\
+$\cfail - \Delta_3$= \letterboxed{[*]} \fail \\
+$\cfail - \Delta_4$= \letterboxed{[*+} \fail \\
+\item Increase to subset:\\
+$\emptyset \cup \Delta_1$=\letterboxed{[} \fail \\
+$\emptyset \cup \Delta_2$=\letterboxed{*} \fail \\
+$\emptyset \cup \Delta_3$=\letterboxed{+} \fail \\
+$\emptyset \cup \Delta_4$=\letterboxed{]} \fail \\
+\item Increase granularity: $4 < 4$ \fail\\
+\item The solution is $\emptyset$.
+\end{enumerate}
+
+That is, this particular invalid JSON string also cannot be repaired by \ddmax.
+As in the previous case, the data loss can be severe.
+Consider
+\letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\ \}} in
+\Cref{tab:ddmaxlimitations} which is similar to
+Kirchner et al.~\cite[Figure 1]{kirschner2020debugging} but with an extra
+\letterboxed{*}. \ddmax repairs this input to \letterboxed{\ \ \ \ 3.45},
+resulting in data loss. % of information.
+
+The problem here is that the successive partitions attempted by \ddmax fails to
+isolate the failure causing fragment even though the fragment is contiguous.
+That is, no single independent fragment is found, the removal of which results
+in removal of the error. Hence, \ddmax keeps searching for smaller and smaller
+fragments discarding larger and larger chunks of data.
+
+\subsection{Discussion}
+Why does \ddmax fail to repair these inputs? A major limitation of \ddmax is
+that it is modeled on \ddmin, which is an effective tool for minimization of
+failure inducing inputs. Given a failure inducing input, the idea of \ddmin is
+to successively partition the input into smaller and smaller chunks, remove one
+chunk at a time and check whether the remaining chunks are sufficient to
+reproduce the failure. As this implies, a key assumption of \ddmin is that
+we can actually remove such chunks independently. That is, if a chunk does not
+contribute to the observed failure, it can be removed without affecting the
+failure observed. Secondly, if multiple chunks independently cause
+the same failure, only one chunk will be chosen, and minimized further.
+
+The definition of \ddmax is a mirror of \ddmin. \ddmax starts with an empty
+input that is assumed to be passing. Then, it partitions the input into chunks,
+and tries to concatenate any of these chunks to the passing input, producing a
+larger passing input. If after dividing the input into \<n> chunks, none of the
+chunks could produce a passing input, it tries again by dividing the
+input into \<2n> chunks.
+
+As in the case of \ddmin, the \textit{unstated assumption} here is that if a chunk was
+not responsible for the observed failure, it can be extracted independently of
+other chunks and added to the passing input fragment without changing the
+semantics. This particular \textit{assumption need not hold when we are dealing with
+inputs that have a rich structure}. That is, \letterboxed{"1,2,3,4,5"} is very
+different from \letterboxed{12345} even though a significant portion of the raw
+characters from first is preserved in the second. Further, once such a
+semantically changed fragment forms the seed of the passing fragment, due to
+the constraints in the input structure, the remaining fragments from the
+original will likely not combine with the seed fragment, resulting in further
+data loss.
+
+Although \ddmax will have no problems maximizing any inputs \textit{if  the input processor conforms to this constraint}, we note that this can be a rather \textit{strong
+constraint in practice}.
+
+
+
+
+
+\subsection{Updates to \ddmax definition}
+While evaluating \ddmax, we noticed two cases where the formal definition of
+\ddmax was underspecified. These are noted in \Cref{fig:ddmax}. Specifically,
+(1)~\ddmax requires the base case when $|\cfail-\cpass| = 1$. If not, \ddmax can
+go into unbounded recursion on inputs such as the JSON input:
+\letterboxed{1*1}. (2)~when increasing granularity, the size of the remaining
+input should be considered rather than the size of the entire text. Not doing
+this would cause an invariant fail for inputs such as \letterboxed{\{*"":2\}}.
+
+\subsection{Repair of rich inputs with \approach}
+One advantage of \approach is that it can effectively handle inputs with
+rich structure. Consider the input to the JSON processor: \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}}.
+(For ease of explanation, let us consider only deletion as the
+operation used.) Here, the procedure is as follows:
+
+\begin{enumerate}
+\item \approach starts by executing a binary search for the boundary where the
+input prefix changes from \emph{incomplete} to \emph{incorrect}. This is
+obtained at index 10, providing the incomplete substring
+\letterboxed{\{"ABCD":[}. %*"1,2,3,4,5,6"]*\}}.
+\item \approach then appends the next character \letterboxed{*} to the input,
+resulting in \letterboxed{\{"ABCD":[*} %"1,2,3,4,5,6"]*\}}.
+and observes the result. In this case, the JSON processor returns
+\emph{incorrect}.
+\item Hence, the newly added character is discarded, and the character at the
+next index is appended, resulting in
+\letterboxed{\{"ABCD":["}. %1,2,3,4,5,6"]*\}}.
+This results in JSON processor responding \emph{incomplete}.
+\item \approach now appends the character in the next index, resulting in
+\letterboxed{\{"ABCD":[1"} which again results in \emph{incomplete} from JSON
+processor.
+\item Proceeding in this fashion the input reaches \\
+\letterboxed{\{"ABCD":["1,2,3,4,5,6"]*} %\}}.
+at which point, we again have the response \emph{incorrect} from the JSON
+processor. Hence, we discard this character, and try the next character,
+resulting in
+\letterboxed{\{"ABCD":["1,2,3,4,5,6"]\}}.
+\item The JSON processor responds with \emph{complete}.
+\end{enumerate}
+This completes the repair of the given input. This demonstrates that \approach has no problem repairing rich inputs containing multiple errors.
+
+
+\section{Input Synthesis}
+\label{sec:input-synthesis}
+
+The second major limitation of
+\ddmax is that the only operation in its toolbox is \emph{deletion} of input
+fragments. Consider\\
+\letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}
+Here, there is a missing quote in the key. \ddmax repair of this string will
+result in
+\letterboxed{\ \ \ \ 42}.
+The problem is that, deletion of fragments alone can lead to significant
+corruption of information. In this instance, the availability of \emph{insertion}
+could have repaired the input string to \\
+\letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}}. Unfortunately, because
+\ddmax is unable to synthesize any framents, opportunities for repair can be
+missed.
+
+
+
+
+
+The \approach algorithm on the other hand, follows in this fashion.
+\begin{enumerate}
+\item \approach algorithm starts with the corrupted input and quickly finds the
+maximal parsable prefix using a binary search: \\
+\letterboxed{\{\ "name":\ "Dave"\ }.
+\item At this point, \approach applies \emph{deletion}, \emph{insertion}, or
+\emph{modification} of characters in order.
+In this case, the \letterboxed{"} is deleted first, resulting in: \\
+\letterboxed{\{\ "name":\ "Dave"\ age":\ 42 \}}.
+\item The JSON parser responds with \emph{incorrect} for this input.
+\item \approach next attempts to insert a character. Say we tried to insert
+\letterboxed{1}. This results in: \\
+\letterboxed{\{\ "name":\ "Dave"\ 1"age":\ 42 \}}.
+\item The JSON parser responds with \emph{incorrect} for this input.
+\item Indeed, only space characters and comma (\letterboxed{,}) can be
+inserted here, resulting in \emph{incomplete} from the JSON parser.
+\item Inserting the \letterboxed{,} results in a new input: \\
+\letterboxed{\{\ "name":\ "Dave"\ ,"age":\ 42\ \}}
+\item This is accepted as a valid repair.
+\end{enumerate}
+
+That is, the ability of \approach to synthesize characters for repair can lead
+to more effective repairs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{\approach}
+\label{sec:drepair}
+The main contribution of \approach is its repertoire of repairs.
+The input string can be modified by \emph{deleting} any character
+(\Cref{lst:repairsdelete}), or
+\emph{inserting} a character at any index (\Cref{lst:repairsdelete}).
+In the listings below, \<Repair> is a tuple that allows
+accessing its first argument with \<inputstr> and its second argument with
+\<boundary>.
+
+We define a few terms before we start:
+\begin{description}[labelwidth=!, labelindent=15pt]
+\item[valid substring.] The \emph{valid substring} of a string is the maximal prefix where the parser returns
+\emph{incomplete}.
+\item[boundary.] The \emph{boundary} or \emph{parse boundary} is the index of
+the first character after the valid substring that results in
+\emph{incorrect} response from the parser, or one past the end if the input is
+\emph{incomplete}.
+\item[repair.] A repair is a single modification (deletion or insertion of a
+single character) made on an input string.
+\item[repair thread.] A \emph{repair thread} is is a set of repairs made on an
+input string. A repair thread has a single \emph{boundary} and a corresponding
+\emph{valid prefix}.
 \end{description}
 
-%%
-%% The acknowledgments section is defined using the "acks" environment
-%% (and NOT an unnumbered section). This ensures the proper
-%% identification of the section in the article metadata, and the
-%% consistent spelling of the heading.
-\begin{acks}
-To Robert, for the bagels and explaining CMYK and color spaces.
-\end{acks}
+The \emph{deletion} algorithm is simple. When a parse error is observed,
+the character that caused the error is present at the \<boundary> value.
+That is, we know that \<inputstr[:boundary]> parses correctly. Hence, for
+deletion, we produce a string without the character at the \<boundary>.
 
-%%
-%% The next two lines define the bibliography style to be used, and
-%% the bibliography file.
+\begin{lstlisting}[caption=\approach repairs,label={lst:repairsdelete}]
+def apply_delete(item):
+  inp = item.inputstr[:item.boundary] +
+      item.inputstr[item.boundary + 1:]
+  return extend_deleted_item(Repair(inp, item.boundary))
+\end{lstlisting}
+\vspace{\baselineskip}
+
+
+For \emph{insertion}, the algorithm is more involved. The problem is that we need to
+handle corruption in inputs such as \<"12345mystring"> which is used as input
+to a JSON parser. Consider what happens when the first quote is deleted. In this
+case, we will get the first parse error at \<m>. But plainly, the best repair
+is before the first parse error. The problem is that insertions at random
+points in the prefix is very costly, resulting in $|\alpha| \times |S|$
+modifications where $|\alpha|$ is the number of alphabets (characters) the
+language has, and $|S|$ is the length of the prefix.
+Hence, we introduce an option named \<LAST\_INSERT\_ONLY> which allows the user to toggle this behavior.
+If the option is false, we will attempt repairs at any
+point in the prefix. If it is true, we will only attempt insertions at the end
+of the prefix.
+
+\begin{lstlisting}[caption=Code for extending the boundary by performing binary search,label={lst:extenditem}]
+def extend_deleted_item(item):
+  return bsearch_extend_item(item)
+
+def bsearch_extend_item(item):
+  bs = binary_search(item.inputstr, 
+                     left=item.boundary)
+  if bs >= len(item.inputstr):
+    item.boundary = bs
+    return item
+  item.boundary = bs
+  return item
+\end{lstlisting}
+\vspace{\baselineskip}
+
+
+\begin{lstlisting}[caption=Code showing the binary search that is performed at the beginning of the repair,label={lst:bsearch}]
+def binary_search(inputstr, left=0, 
+                right=len(inputstr)-1):
+  if not inputstr: return left
+  if is_incomplete(Repair(inputstr, right)):
+    return len(inputstr)-1
+  while left + 1 < right:
+    middle = (left + right) // 2
+    if is_incomplete(Repair(inputstr, middle)):
+      left = middle
+    else:
+      right = middle
+  return left
+\end{lstlisting}
+\vspace{\baselineskip}
+
+
+\begin{lstlisting}[caption=\approach initial search,label={lst:drepair}]
+def repair(inp):
+  boundary = binary_search(inp)
+  return find_fixes(inp, boundary)
+\end{lstlisting}
+\vspace{\baselineskip}
+
+\Cref{lst:drepair} shows how \drepair is invoked. The input string is passed to
+\<repair()>.
+This function does a \emph{binary search} (\Cref{lst:bsearch}) on the argument string looking for the parse boundary where the return value changes
+from \emph{incomplete} to \emph{incorrect}. That is, if \<binary\_search>
+returns an index \<n>, then \<inputstr[:boundary]> is a valid prefix, and
+\<inputstr[boundary]> is the error causing character if one exists or the
+\<inputstr> is \emph{incomplete}.
+The \<boundary> value is then passed
+to \<find\_fixes()> (\Cref{lst:findfixes}).
+\begin{lstlisting}[caption=find fixes,label={lst:findfixes}]
+def find_fixes(inputval, boundary):
+  next_items = [Repair(inputval, boundary)]
+  while True:
+    current_items, next_items = next_items, []
+    completed = []
+    for item in sample_items_by_mask(current_items)
+      for i in repair_and_extend(item)
+        next_items.append(i)
+        if i.is_complete(): completed.append(i)
+    if completed: return completed
+\end{lstlisting}
+\vspace{\baselineskip}
+
+The function \<find\_fixes()> takes in the input string and the parse boundary.
+It then generates a set of repair threads, out of which a few are chosen for
+continuation (for a definition of \lstinline|sample_items_by_mask()|, see \Cref{lst:sampling}).
+Then, each repair thread is processed individually.
+On each thread, a set of repairs (\Cref{lst:repairsdelete}, \Cref{lst:repairs})
+are applied. If the repair succeeds,
+the string can use more characters from the pending suffix resulting in a
+larger valid prefix string, but with a larger edit distance. This procedure is
+repeated until the prefix string is marked \emph{complete} by the input
+processor.
+
+\begin{lstlisting}[caption=Code that shows the sampling process,label={lst:sampling}]
+def sample_items_by_mask(items):
+  masks = {}
+  for i in items:
+    key = (i.mask, i.boundary, i.inputstr[i.boundary-1])
+    if i.mask not in masks: masks[key] = []
+    masks[key].append(i)
+
+  sampled = []
+  for key in masks:
+    if len(masks[key]) < MAX_NUM_PER_MASK:
+      res = masks[key]
+    else:
+      res = random.sample(masks[key], MAX_NUM_PER_MASK)
+    sampled.extend(res)
+  return filter_best(sampled)
+
+def filter_best(items):
+  if MAX_SIMULTANIOUS_CORRECTIONS < 0: return items
+  boundaries = unique_sorted_boundaries(items)
+  return [i for i in items if i.boundary in
+          boundaries[:MAX_SIMULTANIOUS_CORRECTIONS]]
+\end{lstlisting}
+\vspace{\baselineskip}
+
+
+The sampling procedure attempts to discard redundant repairs so that the number
+of simultaneous threads we have to maintain does not grow unbounded. While doing
+that, it ensures that no unique repairs are discarded. For
+example, given a JSON fragment \<[1,2> a repair of \<[1,23>, \<[1,24>
+and \<[1,25> are redundant but \<[1,2,> is unique because the last repair
+represents a change in semantics for the parser. The key insight here is to
+look at the \emph{extension} of a given string to classify whether it is unique
+or not. That is, given a string \<[1,2"x"]>, after repair of \<[1,23>, the next
+extension of the string is likely to be a comma or a digit insertion. However,
+after \<[1,2,> the pending suffix can be used to extend the string resulting in
+\<[1,2,"x"]>.
+    Hence, we use the kind of repairs conducted on a string, the
+length of the prefix, as well as the last character added as the
+uniqueness indicator.
+
+Unfortunately, using all repairs even after eliminating all redundant repairs
+can be rather time consuming. If this is the case, one can limit the repair
+threads to the best performing ones in terms of the parse boundary by using
+\<filter\_best()>.
+
+
+
+
+\begin{lstlisting}[caption=\drepair repairs,label={lst:repairs}]
+def insert_at(item, k, i, suffix)
+  v = (item.inputstr[:k] + i +
+    item.inputstr[k:item.boundary] + suffix)
+  new_item = Repair(v, k, mask='%s_I%d' % (item.mask, k))
+  ie = extend_inserted_item(new_item)
+  if ie.boundary > k:
+    return ie
+  return None
+
+def insert_char(item, i):
+  suffix = item.inputstr[item.boundary:]
+  return_lst = []
+  if LAST_INSERT_ONLY:
+    v = insert_at(item, item.boundary, i, suffix)
+    if v is not None: return_lst.append(v)
+  else:
+    for k in range(item.boundary):
+      v = insert_at(item, k, i, suffix)
+      if v is not None: return_lst.append(v)
+  return return_lst
+
+def apply_insert(item):
+  new_items = []
+  for i in CHARACTERS:
+    items = item.insert_char(i)
+    if items:
+      new_items.extend(items)
+  return new_items
+\end{lstlisting}
+\vspace{\baselineskip}
+
+
+After each repair, the new string is checked  to see if
+the string results in \emph{incomplete} rather than \emph{incorrect}. If the
+string results in \emph{incomplete}, a new parse boundary is found by
+repeatedly extending the string with a pending character from the remaining
+suffix in the input string. The small complication here is that different
+search algorithms are more suitable for deletion and insertion. With deletion,
+we have removed the error causing character, so the next parse error may
+be far away. Hence, we use binary search to find the next parse error.%\Cref{lst:extenditem}).
+\par
+\begin{lstlisting}[caption=Code that shows linear search performed when extending after inserting a character,label={lst:extenditeminsert}]
+def extend_inserted_item(item):
+    return lsearch_extend_item(item, nxt=1)
+
+def lsearch_extend_item(item, nxt=1):
+  while True:
+    if (item.boundary + nxt) > len(item.inputstr):
+      item.boundary = item.boundary + nxt - 1
+      return item
+    s = Repair(item.inputstr, item.boundary + nxt)
+    if is_incomplete(s):
+      nxt += 1
+      continue
+    if is_incorrect(s):
+      item.boundary = item.boundary + nxt - 1
+      return item
+\end{lstlisting}
+\vspace{\baselineskip}
+
+In the case of insert, however, in most cases, the character being inserted,
+and the character that originally caused a parse error can still cause a parse
+error. Hence, we apply linear search instead (we provide code examples for binary and linear search in \Cref{lst:bsearch} and \Cref{lst:extenditeminsert}, respectively).% (\Cref{lst:extenditeminsert}).
+\par
+If this succeeds, the parse boundary after the repair
+would be larger than the old parse boundary. Hence, if the parse boundary has
+increased (\Cref{lst:repairandextend}), then
+the
+repair is saved. If not, the repair is discarded.
+\begin{lstlisting}[caption=Repair and extend,label={lst:repairandextend}]
+def repair_and_extend(item):
+  return [apply_delete(item)] + apply_insert(item)
+\end{lstlisting}
+\vspace{\baselineskip}
+
+The output from \<find\_fixes()> (\Cref{lst:findfixes}) is a set of repair
+threads with the least number of repairs from the passed input string.
+
+\approach assumes the parser correctly signals
+\emph{incomplete} for incomplete inputs, \emph{incorrect} for other invalid
+inputs, and \emph{complete} if the input was valid. 
+Given this, \drepair algorithm works as follows (\Cref{fig:brepair_flowchart}):
+
+\begin{figure}[tbp!]
+\newlength\nodedst\setlength\nodedst{.35cm}
+\newlength\ndist\setlength\ndist{.1\nodedst}
+\begin{tikzpicture}[node distance=\nodedst and 2.5\nodedst]
+    \node[blockdiagramblock] (search) {Find parse boundary (Search)};
+    \node[blockdiagramblock,right=of search] (repair) {Apply Repairs};
+    \draw[blockdiagramarrow] (search) -- (repair); %node[simpletext,pos=.5,right,font=\scriptsize] {}; % PushPQ
+    \node[blockdiagramblock,right=of repair] (extend) {Extend Threads};
+    \draw[blockdiagramarrow] (repair) -- (extend);
+    \node[blockdiagramblock,below=of extend] (isvalid) {Valid Input?};
+    \node[simpletext,below=.3 of isvalid] (return) {\mbox{Return input}};
+    \node[blockdiagramblock,left=of isvalid] (select) {Select Threads};
+    \draw[blockdiagramarrow] (extend) -- (isvalid);
+    \draw[blockdiagramarrow] (isvalid) -- (return) node[simpletext,pos=.6,right,yshift=-.5mm] {\pass};
+    \draw[blockdiagramarrow] (isvalid) -- (select);
+    %\node[simpletext,right=.5 of isvalid.east,inner sep=1pt] (pqins1) {increase bound,\\push to PQ};
+    %\draw[blockdiagramarrow,dashed] (isvalid) -- (pqins1) node[pos=.5,above] {\pass};
+    %\node[simpletext,right=.5 of select.east,inner sep=1pt] (pqins2) {increase bound,\\push to PQ};
+    %\draw[blockdiagramarrow,dashed] (select) -- (pqins2) node[pos=.5,above] {\pass};
+    \draw[blockdiagramarrow] (select) -- (repair);
+    \pic[] at (search.south east) {numbering=1};
+    \pic[] at (isvalid.south east) {numbering=5};
+    \pic[] at (extend.south east) {numbering=3};
+    \pic[] at (repair.south east) {numbering=2};
+    \pic[] at (select.south east) {numbering=4};
+    %TODO
+\end{tikzpicture}
+\vspace*{-0.1in}
+    \caption{Work flow of \drepair}
+    \label{fig:brepair_flowchart}
+    % \vspace*{-0.1in}
+\end{figure}
+\newcommand{\refnumber}[1]{\hyperref[fig:brepair_flowchart]{Step~#1}}
+
+\begin{enumerate}
+\item \emph{Binary search.} Given any corrupt input, \drepair starts by a
+binary search of the input to determine the parse boundary. This then is used
+to construct the first repair thread, with boundary set to the binary search
+result, and repairs set to empty.
+
+\item \emph{Repair.} Starting with any existing repair thread, \drepair applies
+deletion and insertion repairs. A single deletion results in a single repair
+thread which is an extenion of the original repair thread.
+An insertion however, results in multiple repair threads corresponding to the
+number of characters.
+\item \emph{Extention.} For each thread that results from repair, extend the thread
+until the new parse boundary. For threads resulting from insertion, keep only
+those threads that results in a diffrent parse boundary from the old.
+\item \emph{Selection.} We remove any redundant repair threads, and choose the best threads if a
+selection criterion is supplied.
+
+\item \emph{Final Fix.} We then iteratively choose each thread and continue making repairs
+until the parser output at the boundary changes from \emph{incomplete} to
+\emph{complete}.
+\end{enumerate}
+
+The output of the algorithm is a set of repair threads each of which fixes the
+input using a set of repairs. The repair threads are sorted in the order of
+least number of repairs required to fix the input.
+
+
+
+
+
+
+\begin{table}[!tbp]\centering
+\caption{Subject programs used in the evaluation}
+\begin{tabular}{|l | r | l | l | l | l |}
+\hline
+\textbf{Name} & \textbf{LOC} & \textbf{Lang.} & \textbf{1{st} Commit} & \textbf{Last Commit} \\
+\hline
+\textbf{INI} & 382 & C & Jul 2009 & Jan 2022\\
+\textbf{cJSON} & 3062 & C & Aug 2009 & Jan 2022\\
+\textbf{SExpParser} & 656 & C & Sep 2016 & Sep 2016\\
+\textbf{TinyC} & 375 & C & 2001 & Apr 2018\\
+\hline
+\end{tabular}
+\label{tab:subject-programs}
+\end{table}
+
+
+
+
+
+
+
+
+\section{Experimental Setup}
+\label{sec:experimental-setup}
+
+
+
+This section describes the experimental setup of this work.
+
+
+
+
+
+
+\subsection{Research Questions} 
+We investigate the \textit{data recovery} (RQ1), \textit{effectiveness} (RQ2), 
+and \textit{efficiency} (RQ3) of our approach using several well-designed experiments. %For each experiment, w
+We also examine how \approach compares to four state-of-the-art techniques, 
+namely the built-in repair of the programs (\textit{baseline}), error-recovery of \textit{ANTLR}, as well as 
+lexical \ddmax and syntactic 
+\ddmax. Specifically, we pose the following research questions:
+
+\begin{description}[labelwidth=!, labelindent=15pt]
+
+\item[RQ1: Data Recovery and Data Loss.]
+How much input data is recovered by \approach, and how much data is lost? %s is incurred?  
+Does \approach recover as much data as 
+the state-of-the-art methods?
+
+  \item[RQ2: Effectiveness.]  %\& Efficiency:}
+How effective is \approach in fixing invalid inputs? Is it as effective as the state-of-the-art methods?
+
+\item[RQ3: Efficiency.] What is the efficiency (runtime) of
+\approach? Is it as efficient as the state-of-the-art techniques?
+
+\item[RQ4: Perfect Repair.] How many files are repaired prefectly by
+\approach? How does the number of perfect repairs compare to the state-of-the-art methods?
+
+\item[RQ5: Quality of Repairs.] How does the quality of the repaired files compare for each approach?
+\end{description}
+
+
+\subsection{Subject Programs} %As subjects w
+We used four input formats and their corresponding programs. These are INI (INI), JSON (cJSON), S-Expressions (SExpParser) and TinyC (TinyC). Each program is moderately large (between 375 LOC to 3062 LOC), relatively mature (6 to 21 years old), and written in \<C>. Further details are provided in \Cref{tab:subject-programs}.
+
+\subsection{Test Inputs} 
+\Cref{tab:input-details} provides details of the number of
+real-world invalid inputs and mutated invalid inputs employed in our experiment.
+We evaluate our approach using 806 invalid input files. %.
+As test inputs, we crawled a large corpus of valid and invalid real-world files
+from GitHub using the GitHub crawling API~\cite{githubapi}. 
+In addition to real invalid inputs, for each format, we introduced a set of 100 artificially mutated (invalid) files
+from 50 randomly selected valid real-world files.
+Half of those mutated files contain a single mutated byte and the other half
+contains multiple (two to 16) mutated bytes.
+Each mutation can either be a byte-flip, an insertion or a deletion to 
+resemble real-world corruptions as close as possible
+(e.g., bit rot on hard disks or transmission errors in network protocols).
+
+
+\subsection{Metrics and Measures} We employ the following metrics and measures to evaluate repair quality: 
+
+\begin{itemize}
+
+\item[(a.)] \textit{Number of Repaired Inputs:} We count the number of files repaired before
+a four minute timeout for each repair method.
+ %of the tested repair programs.
+ 
+\item[(b.)]  \textit{File Size Difference:} To determine the amount of data recovered by each approach, 
+we evaluate the difference in \emph{file size} of
+the \emph{recovered inputs} and the original
+\emph{valid input}. %. This measurement tracks the effectiveness of 
+
+\item[(c.)]  \textit{Edit Distance:} This is measured as the number of characters that
+differs between the \emph{corrupt input} and the \emph{repaired input}.
+
+\item[(d.)]  \textit{Runtime} is the time taken for input repair for each method.
+
+\item[(e.)]  \textit{Number of Program Runs:} To evaluate efficiency, we track the number of times the parser is executed by each approach. 
+
+\end{itemize}
+
+
+
+\begin{table}[!tbp]\centering
+\caption{Details of Invalid 
+Inputs}
+\begin{tabular}{|l | r | r | r | r |}
+\hline
+&  \multicolumn{4}{c|}{\textbf{Number of Invalid Inputs}}  \\
+\textbf{Type of Invalid Inputs} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+\textbf{Real-World Inputs} & 101 & 107 & 50 & 148 \\
+\textbf{Single Mutation} & 50 & 50 & 50 & 50 \\
+\textbf{Multiple Mutations} & 50 & 50 & 50 & 50 \\
+\hline
+\textbf{Total } (806) & 201 & 207 & 150 & 248 \\
+\hline
+\end{tabular}
+\label{tab:input-details}
+\end{table}
+
+
+\subsection{State-of-the-art Methods}
+In this work, we compare the performance of \approach to the following
+techniques:
+\begin{description}[wide]
+\item[\textbf{(1) Baseline:}] The built-in error-recovery technique of the subject programs.
+ % In this work,  \recheck{we compare the effectiveness of the subject program to that of \approach (\textit{see} RQ1)}. Specifically, we measure the effectiveness of the built-in error recovery feature of the program by measuring the number of invalid input files that could be processed as valid inputs by a subject program without inducing a program failure, crash or timeout. In our evaluation, we compare the number of such repairs to that of \approach.
+
+\item[\textbf{(2) ANTLR:}] This is the inbuilt error recovery strategy of the ANTLR parser generator when equipped with an input grammar specifying the allowed input structure~\cite[Automatic Error Recovery Strategy]{parr2013definitive}.
+  %In this work, we compare the number of invalid inputs that could be processed by \textbf{ANTLR} to the number of repairs performed by \approach (\textit{see} RQ1).
+\item[\textbf{(3) \ddmax:}] Kirschner et al.~\cite{kirschner2020debugging} proposed %This refers to the
+two variants of the maximizing variant of the delta debugging algorithm (called \ddmax), %proposed by ,
+namely \textit{lexical \ddmax} and \textit{syntactic \ddmax}.
+    %For all research questions in this work, we compare the performance of \approach to both \textit{lexical} and \textit{syntactic} \ddmax, since \ddmax is the current best performing state-of-the-art input repair method.
+\end{description}
+
+
+\subsection{Implementation Details and Platform}
+
+We implemented the test infrastructure in about 12k LOC of Java code, \approach was implemented in 765 lines of Java code.
+We also slightly modify subject programs %ubject programs needed to be modified slightly 
+to provide the required incompleteness feedback (\textit{see} \Cref{tab:subject-programs}).
+
+All experiments were conducted
+on an ASRock X470D4U with six physical CPU cores and 32GB of RAM, with an AMD Ryzen 5600X @ 3.70GHz, 12~virtual cores, running Debian GNU/Linux.
+
+
+\subsection{Research Protocol}
+We first collect a large corpus of  real-world files which we split into a set of (50) valid files and invalid files. We create additional mutated invalid files by injecting single and up to 16 multiple mutations (random insertions, deletions and byte-flips) into the valid files  
+(\Cref{tab:input-details}).
+Then, we run each repair technique on each file and collect the required data, i.e. the run time, number of oracle runs, Levenshtein distance and repair status of each file.
+As repair techniques, we employ \emph{Baseline}, %(the built-in error recovery strategy of the subject program), the error recovery strategy of 
+\emph{ANTLR}, lexical \ddmax, syntactic \ddmax and \approach.
+All experiments were conducted within a timeout of four minutes per input, for each repair technique. % file.
+\revise{
+The maximum time budget was empirically determined in our preliminary experiments to ensure a balanced evaluation for all techniques. We found that four minutes is a sufficient time budget to evaluate all techniques on most inputs. It is also a reasonable maximum repair time for an end-user. In our experiments, a longer timeout did not result in a significant increase in repairs for all techniques.}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Experimental Results}
+\label{sec:results}
+This section discusses the %findings %
+results %and findings 
+of our experiments. %mpirical evaluations.
+
+
+
+\begin{table*}[!tbp]\centering
+\caption{Data Recovery (file size difference) and Data Loss  (Levenshtein distance) of \approach vs. %the best-performing state-of-the-art methods, i.e. 
+lexical (Lex.) \ddmax and syntactic (Syn.) \ddmax. 
+The highest data recovery and lowest data loss are in bold, percentage improvement (Impr.) %or reduction (red.) 
+of \approach over the best baseline which are significant (i.e., greater than five percent ($>$5\%)) are also in bold.
+}
+\footnotesize
+\begin{tabular}{|l | c |  r  r  r  r  | c |  r  r  r  r |}
+\hline
+ &  \multicolumn{5}{c|}{\textbf{\% Data Recovered by Approach}} &  \multicolumn{5}{c|}{\textbf{Average Data Loss }}  \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
+\textbf{Techniques} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+\textbf{Lex. \ddmax} & 81\%  & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% & 18.0 & {10.2} &	61.6 &	\textbf{6.2} & 7.5 \\			
+\textbf{Syn. \ddmax} & 74\%  &  70.6\% & 81.5\%  & 97.0\%	& 47.0\% & 119.6 &  258.1 & 82.7 &	76.6 &	33.3 \\	
+\hline
+\textbf{\approach} & \textbf{91\%}  &  \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100.6\%} & \textbf{82.1\%} & \textbf{10.6}  & \textbf{9.5} &	\textbf{28.7} &	7.4 & \textbf{1.6} \\
+\hline
+\textbf{Impr. over Lex.} & 12\% &  0.1\%	& \textbf{19.8\%}	& 1.4\%	& \textbf{72.1\%} & \textbf{70\%} &  \textbf{8\%} & \textbf{115\%} & -16\% & \textbf{357\%} \\
+\textbf{Impr. over Syn.} & \textbf{23\%}  &  \textbf{21.6\%} 	& \textbf{20.8\%}	& 3.7\%	& \textbf{74.7\% }  & \textbf{1030\%} & \textbf{2629\%} &	\textbf{188\%} & \textbf{936\%} &\textbf{ 1930\%} \\
+\hline
+\end{tabular}
+\label{tab:data-recovery-and-loss}
+\end{table*}
+
+
+\subsection{RQ1 Data Recovery and Data Loss} 
+Let us investigate the amount of data recovered and lost by \approach), in comparison to
+the best-performing state-of-the-art method (\ddmax). 
+
+
+
+
+
+\vspace{\baselineskip}
+\noindent
+\textbf{\textit{Data Recovery:}} 
+We examine 474 inputs that were completely repaired by %all three approaches, i.e., 
+lexical \ddmax, syntactic \ddmax and \approach, excluding empty files (and white spaces). \Cref{tab:data-recovery-and-loss} %and \recheck{Figure X
+highlights the amount of data %loss and data
+recovered and lost % achieved 
+by each approach.\footnote{Note that due to input synthesis (i.e., insertion of input elements), \drepair may report recovering more than 100\% of the size of the original input file (e.g., 100.6\% for SExp in \Cref{tab:data-recovery-and-loss}).} %, as average over each file. %Our evaluation r
+
+Results show that \textit{\approach has a very high data recovery rate}. 
+It recovered 91\% of input data, on average. 
+This is 23\% more than the most effective baseline (syntactic \ddmax). For all input formats, \approach recovered up to (75\%) more data than both variants of \ddmax. Consider TinyC, where \approach recovered up to 75\% more input data than \ddmax (\textit{see} \Cref{tab:data-recovery-and-loss}). These results show that \approach is more effective in recovering valid input data 
+than \ddmax.
+
+\vspace{\baselineskip}
+\noindent
+\textbf{\textit{Data Loss:}} To measure data loss, we compute the Levenshtein distance between repaired and invalid files using %Meanwhile, %For a balanced and tractable evaluation of data loss,
+327 completely repaired inputs %by all three approaches which %(321) inputs that
+where edit distance could be computed within a threshold of 750 edit distances (about 30 seconds).
+
+We found that \textit{\approach achieves a low data loss of about 11 edit distances, on avarage},  which is \textit{up to 10 times lower than (syntactic) \ddmax}. \Cref{tab:data-recovery-and-loss} shows that 
+for almost all input formats, \approach achieved a lower data loss than syntactic and lexical \ddmax (except for SExp). This better  performance is attributed to the lightweight failure feedback of \approach, which allows it to distinguish between incomplete and incorrect input fragments.
+
+\begin{result}
+\approach has a high data recovery rate (91\%, on average).  
+In addition, the data 
+loss of \approach is up to 26 times (26X) lower than that of \ddmax (e.g., INI).
+\end{result}
+
+
+
+
+\begin{figure}[!tbp]\centering
+\centering
+\pgfplotstableread{
+Label      INI    cJSON    SExpParser   TinyC
+Baseline   27     6        0            0
+ANTLR      133    69       96           46
+Lex.ddmax  201    132      131          114
+Syn.ddmax  201    144      149          120
+FSynth     191    158      121          154
+    }\effectivenessdata
+\begin{minipage}{.45\textwidth}
+\begin{tikzpicture}
+\begin{axis}[
+    ybar stacked,
+    ymin=0,
+    ymax=750,
+    xtick=data,
+    bar width=25,
+    legend style={cells={anchor=west}, legend pos=north west},
+    reverse legend=true,
+    xticklabels from table={\effectivenessdata}{Label},
+    xticklabel style={text width=2cm,align=center,font=\footnotesize},
+    xtick style={draw=none},
+]
+    \addplot [fill=darkgray] table [y=INI, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addlegendentry{INI}
+    \addplot [fill=gray] table [y=cJSON, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addlegendentry{cJSON}
+    \addplot [fill=lightgray] table [y=SExpParser, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addlegendentry{SExpParser}
+    \addplot [fill=white,nodes near coords,point meta=y] table [y=TinyC, meta=Label, x expr=\coordindex] {\effectivenessdata};
+    \addlegendentry{TinyC}
+\end{axis}
+\end{tikzpicture}
+\end{minipage}
+\caption{Number of files repaired by each approach}
+\label{fig:effectiveness}
+\end{figure}
+
+\subsection{RQ2 Effectiveness} 
+In this experiment,
+we measure the total number of files repaired by our approach. In addition, we compare 
+the 
+effectiveness of \approach to 
+four state-of-the-art methods containing 
+both \textit{language-agnostic input repair} approaches and \textit{grammar-based input repair} techniques. 
+\autoref{fig:effectiveness} shows the effectiveness of \approach versus the state-of-the-art methods. 
+\textit{Language-agnostic input repair} approaches include the built-in error-recovery of the subject program (called \textit{baseline}) and 
+\textit{lexical \ddmax} (\textit{see}  \Cref{tab:effectiveness-no-grammar}). 
+For comparison to \textit{grammar-based input repair methods}, we employ the built-in error-recovery strategy of the \textit{ANTLR} parser generator, and \textit{syntactic \ddmax}  (\textit{see}  \Cref{tab:effectiveness-grammar}). 
+ 
+
+
+\vspace{\baselineskip}
+\noindent 
+\textbf{\textit{Repair Effectiveness:}} %In our evaluation, %we found that
+\textit{Our approach %(\approach) 
+is %very 
+effective in repairing invalid inputs, it repaired almost four out of every five invalid input within a four minute timeout}, i.e., % \approach repaired 
+about 77\% (624 out of 806) of invalid inputs. 
+\autoref{fig:effectiveness} further shows the effectiveness of \approach, in comparison to the baselines.  
+In comparison to language-agnostic approaches, %our 
+\approach is \textit{up to 18 times more effective than the built-in error recovery strategy of the subject programs (33 vs. 624 repairs)}, and % \approach is 
+up to 35\% more effective than the best performing language-agnostic approach for certain input formats (cJSON and TinyC). Overall, 
+\Cref{tab:effectiveness-no-grammar} shows that \approach repairs eight percent more inputs than the best language-agnostic repair technique (i.e., lexical \ddmax). 
+Additionally, results show that %e found that 
+\approach outperforms the %best performing 
+grammar-based input repair approaches by up to 28\%. 
+Despite zero knowledge of the input format, 
+\Cref{tab:effectiveness-grammar}
+shows that %for most (three out of four) input formats, 
+our approach outperformed the grammar-based input repair approaches: \approach is almost twice as effective as the error-recovery strategy of ANTLR (\textit{see} \Cref{tab:effectiveness-grammar}), and 
+slightly (2\%) more effective than the best-performing grammar-based approach (i.e., syntactic \ddmax). %We believe tT
+The effectiveness of syntactic \ddmax is due to its knowledge of the input grammar. 
+These results suggest that %(a) \approach is highly effective in repairing invalid input files, (b) our approach more effective than the baselines, and (c)
+the \textit{combination of failure feedback and input synthesis} is vital for the effective repair of invalid inputs. 
+
+\begin{result}
+\approach is 
+effective in repairing invalid input files: %, and more effective than the state-of-the-art.
+It repaired four out of five (77\% of) invalid inputs and repaired 8\% more invalid inputs than the best language-agnostic method (lexical \ddmax). %baseline.
+\end{result}
+\done{8\% is not much, and only on average, too. This may not be the best opener, although the later results (specifically data loss) are impressive. -- AZ}
+
+
+
+
+\begin{table}[!tbp]\centering
+\caption{Number of Repaired Inputs within a four minute timeout for \approach vs. Language-agnostic state-of-the-art, i.e., lexical \ddmax and  baseline. The highest number of repaired inputs are in bold, as well as significant percentage improvement (Improv.) of \approach over the best baseline greater than five percent ($>$5\%). }
+\begin{tabular}{|l | c | r  r  r  r |}
+\hline
+&  \multicolumn{5}{c|}{\textbf{Number of Repaired Inputs}}  \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
+\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+\textbf{Baseline}   & 33 (4\%) & 27	 & 6 &	0	& 0\\
+\textbf{Lex. \ddmax} & 578 (72\%) & \textbf{201}  & 132  & \textbf{131} & 114  \\ 		
+\hline	
+\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & 121  & \textbf{154} \\
+\hline
+\textbf{Improv.} &  \textbf{8\%}  & $-$5\% & \textbf{20\%} & $-$8\% & \textbf{35\%} \\
+\hline
+\end{tabular}
+\label{tab:effectiveness-no-grammar}
+\end{table}
+
+
+\begin{table}[!tbp]\centering
+\caption{Number of Repaired Invalid Inputs within a four minute timeout for \approach vs. Grammar-based input repair approaches, i.e.,  ANTLR and Syntactic \ddmax. The highest number of repaired inputs are in bold, as well as significant percentage improvement (Improv.) of \approach over the best baseline greater than five percent ($>$5\%). }
+\begin{tabular}{|l | c | r  r  r  r |}
+\hline
+&  \multicolumn{5}{c|}{\textbf{Number of Repaired Inputs}}  \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
+\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+\textbf{ANTLR} & 344 (43\%) & 133 & 69 & 96 &  46   \\
+\textbf{Syn. \ddmax} & 614 (76\%) & \textbf{201}  & 144  & \textbf{149}  & 120  \\ 	
+\hline
+\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & 121  &  \textbf{154} \\
+\hline
+\textbf{Improv.} &  2\%  & $-$5\% & \textbf{10\%} & $-$19\% & \textbf{28\%} \\
+\hline
+\end{tabular}
+\label{tab:effectiveness-grammar}
+\end{table}
+
+
+
+
+
+
+
+\noindent \textbf{\textit{Complementarity to \ddmax:}} We further inspect the unique repairs achieved by each approach %, in order 
+to understand the complementarity of our approach to the state-of-the-art methods. In this experiment, we inspect the number of unique repairs achieved \textit{solely} by a single approach (e.g., \textit{only} \approach), or two or more approaches (e.g., all approaches). 
+\Cref{fig:repair-complementarity} highlights our findings. 
+
+We found that about \textit{one in ten repairs could be solely completed by \approach}, which is three times and five times as many as lexical and syntactic \ddmax %\textit{only} 
+repairs, respectively (\textit{see} \Cref{fig:repair-complementarity}).
+\approach \textit{solely} completed 9\% (61/712) of all repaired inputs, all of
+which \ddmax could not repair. For lexical \ddmax, our approach \textit{solely}
+repaired 5$\times$ as many invalid files as lexical \ddmax (61 vs. 12), while
+it repairs thrice as many files as syntactic \ddmax (\ddmaxg) (61 vs. 23). Overall, we observe that \textit{\approach complements \ddmax, a combination of these approaches completes 88\% of repairs (712), which is 14\% and 23\% more than the repairs completed \textit{solely} by \approach or syntactic \ddmax, respectively}. 
+\revise{On inspection, we found that the types of repairs completed by \approach (but not by \ddmax) were mostly insertions. We found that the insertions performed by \approach were mostly (missing) syntactic elements of the input like curly braces and colons for \texttt{JSON} or line breaks for \texttt{INI}. In some cases, \approach inserted alphanumeric characters. For instance, if a grammar expects a \texttt{char} where there is a missing \texttt{char}.} 
+Overall, we attribute the unique repair achieved by \approach to the synergistic combination of \textit{failure feedback} and \textit{input synthesis}. % in \approach.
+
+
+
+\begin{figure}[!tbp]
+\centering
+\begin{minipage}[b]{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}[circ/.style={draw=black,line width=1pt,fill=none,shape=circle,minimum width=2.5cm,minimum height=2.5cm},lbl/.style={font=\bfseries}]
+        \node[draw=none,minimum width=1.5cm,minimum height=1.29904cm,inner sep=0,outer sep=0] at (0,0) (anchor) {};
+        \node[circ] at (anchor.south west) (g1) {};
+        \node[circ] at (anchor.south east) (g2) {};
+        \node[circ] at (anchor.north) (g3) {};
+        \node[lbl,anchor=north] at (g1.south) {\ddmax};
+        \node[lbl,anchor=north] at (g2.south) {\ddmaxg};
+        \node[lbl,anchor=south] at (g3.north) {\drepair};
+        \node[lbl] at ($(g1)!0.5!(g2) - (0,.4)$) {53};
+        \node[lbl] at ($(g2)!0.5!(g3) + (.2,.2)$) {50};
+        \node[lbl] at ($(g1)!0.5!(g3) + (-.2,.2)$) {25};
+        \node[lbl] at ($(anchor.center) - (0,.2)$) {488};
+        \node[lbl] at ($(g1.center) - (.2,.1)$) {12};
+        \node[lbl] at ($(g2.center) - (-.2,.1)$) {23};
+        \node[lbl] at ($(g3.center) + (0,.2)$) {61};
+    \end{tikzpicture}
+\end{minipage}
+\vspace{-0.4cm}
+\caption{Venn Diagram showing the number of invalid inputs repaired (solely) by a (combinations of) technique(s) %, or the combination of approaches
+}
+\label{fig:repair-complementarity}
+\end{figure}
+
+
+\begin{result}
+\approach %outperforms and 
+is complementary to the state-of-the-art methods (lexical and syntactic \ddmax). 
+It %is the only technique that can 
+solely completes 9\% of all repairs, which is 
+up to five times 
+as much as \ddmax.
+\end{result}
+
+
+
+
+
+
+
+
+
+
+
+\subsection{RQ3 Efficiency} %\todo{fix to new evaluation results}
+Let us evaluate the time performance of our approach.
+For a balanced evaluation, we
+analyse a set of 480 invalid inputs % files
+that were completely repaired by all three approaches within %, in less than
+the four minutes timeout, %. % (120,000ms).
+without %accounting for
+data collection and % or 
+experimental
+analysis time.
+\Cref{tab:efficiency} %and figure X}
+reports the efficiency of all three approaches. % approach compared to ddmax. %the state-of-the-art methods.
+
+
+\textit{\approach is considerably efficient in input repair: It is reasonably fast, it takes about 10 seconds to repair an invalid input, on average}. However, it is about five times slower than \ddmax (two to three seconds, on average). 
+\Cref{tab:efficiency} %} %  and Table/Figure X show}
+shows %the %Inspecting
+that the execution time
+of \approach %syntactic ddmax
+is much higher %lower
+than that of syntactic and lexical \ddmax. 
+This result is %ese findings are
+due to the %can be explained
+number of program runs required by \approach, especially due to its additional repair operation (input synthesis) and its extra oracle checks (incompleteness and parser boundary).
+\approach is reasonably efficient, similar to \ddmax, the number of program runs 
+is its main performance bottleneck. %of \approach.  % as well as \ddmax. %all three approaches. % to the
+
+\begin{result}
+\approach is reasonably fast (10 seconds), but it 
+is 5$\times$ slower than \ddmax because it requires
+additional operations and oracle checks. 
+\end{result}
+
+\begin{table}[!tbp]\centering
+\caption{Efficiency of \approach vs. \ddmax, lowest runtime and smaller number of program runs %and significant \% improvement in efficiency
+are in \textbf{bold}. %, second-best time performance is in \textit{italics}
+}
+\begin{tabular}{|l |  r  r | r  r |}
+\hline
+&  \multicolumn{2}{c|}{\textbf{Runtime (s)}} & \multicolumn{2}{c|}{\textbf{\#Prog. Runs}}  \\
+\textbf{Techniques} %& \textbf{Inputs}
+&  \textbf{Avg.}  & \textbf{Total} & \textbf{Avg.}  & \textbf{Total} \\
+\hline
+\textbf{Lex. \ddmax} & 3.4 & 1653 & 3260 & 1564781 \\
+\textbf{Syn. \ddmax} & \textbf{2.0} & \textbf{982}  & \textbf{2075}  & \textbf{995802}  \\
+\hline
+\textbf{\approach} &  10.2 & 4938  & 11537 & 5537601  \\
+\hline
+\end{tabular}
+\label{tab:efficiency}
+\end{table}
+
+\subsection{RQ4 Perfect Repair.}
+\revise{In this research question, we would like to evaluate the number of files that have been repaired perfectly by each approach, that is - the repaired file is exactly the same file as the file before it was mutated.
+Since this obviously limits the number of files we can use in the evaluation to the artificially mutated files, the total number of files is smaller in this section of the experiments.}
+
+\revise{We report the number of repaired files in \cref{tab:perfectrepairs}.
+The total number of perfectly repaired files for \approach (49) is slightly (X\%) higher than for \ddmax (42), while \ddmaxg did not manage to perfectly repair any file at all.
+This might be due to the fact that \ddmaxg needs to parse and un-parse all input files to work on the parse tree instead of the characters, which introduces noise by changing whitespaces and line breaks in the files.
+}
+
+\revise{If we take a look at the overlap of files that could be repaired perfectly by \approach and \ddmax (\cref{fig:perfectlyrepairedvenndiagram}), we notice that there were more (X\%) files that could only be repaired by \approach (13) than \ddmax (6) which showcases the ability of \approach to repair files that are difficult to repair for \ddmax.
+}
+
+\begin{table}[!tbp]\centering
+\caption{Number of perfectly repaired files for \approach in comparison to \ddmax and \ddmaxg
+}
+\begin{tabular}{|l |  r  r  r  r | r |}
+\hline
+\textbf{Techniques}&  \textbf{INI}&\textbf{cJSON} &\textbf{sExp}&\textbf{TinyC}&\textbf{Total}  \\
+\hline
+\textbf{Lex. \ddmax}  & 1 & 14 & 2 & 25 & 42 \\
+\textbf{Syn. \ddmaxg} & 0 & 0  & 0 & 0  & 0  \\
+\hline
+\textbf{\approach} &  1 & 18  & 0 & 30 & 49  \\
+\hline
+\end{tabular}
+\label{tab:perfectrepairs}
+\end{table}
+
+\begin{figure}[!tbp]\centering
+\caption{Venn Diagram showing the overlap of files that could be perfectly repaired by \approach vs. \ddmax
+}
+\centering
+\begin{minipage}[b]{0.45\textwidth}
+    \centering
+    \begin{tikzpicture}[circ/.style={draw=black,line width=1pt,fill=none,shape=circle,minimum width=2.0cm,minimum height=2.5cm},lbl/.style={font=\bfseries}]
+        \node[draw=none,minimum width=1.5cm,minimum height=1.29904cm,inner sep=0,outer sep=0] at (0,0) (anchor) {};
+        \node[circ] at (anchor.south west) (g1) {};
+        \node[circ] at (anchor.south east) (g2) {};
+        \node[lbl,anchor=north] at (g1.south) {\strut\ddmax};
+        \node[lbl,anchor=north] at (g2.south) {\strut\approach};
+        \node[lbl] at ($(g1)!0.5!(g2) - (0,.1)$) {6};
+        \node[lbl] at ($(g1.center) - (.2,.1)$) {36};
+        \node[lbl] at ($(g2.center) - (-.2,.1)$) {13};
+    \end{tikzpicture}
+\end{minipage}
+\vspace{-0.4cm}
+\label{fig:perfectlyrepairedvenndiagram}
+\end{figure}
+
+\subsection{RQ5 Quality of Repaired Files}
+\todo{EZ: Write RQ5}
+
+\section{Threats to Validity}
+\label{sec:threats}
+
+\todo{EZ: Add Rich Feedback Oracle problem to threats (the approach very much relies on reliable oracles and even one small faulty feedback might make the whole input unrepairable)}
+
+
+
+
+\subsection{External Validity} This refers to the \textit{generalizability} of our approach, i.e., 
+the threat that \approach may not generalize to other programs and input formats. 
+To mitigate this threat, we have employed four well-known input formats with varying complexity, their corresponding programs also have  varying sizes (375 to 3062 LOC) and maturity (6 to 21 years old). 
+
+
+\subsection{Internal Validity} This concerns the \textit{correctness} of our implementation and evaluation, especially if we have correctly implemented \approach and the baselines. We mitigate this threat by testing our implementation of all approaches on small and simple test inputs to ensure the they behave as described. 
+
+
+\subsection{Construct Validity} This concerns the test oracle and failure feedback employed in our evaluation. To ensure all subjects provide the expected \textit{incomplete} and \textit{(in)correct} feedback, we tested the programs on sample invalid inputs and modified the subject program, if needed. 
+
+
+\section{Limitations}
+Our approach (\approach) and empirical evaluations may be limited by the following: % validity threats:
+
+\subsection{Limited to Data Repair} The repair produced by our approach aim to ensure maximal data recovery, but it does not ensure that the intended user information is preserved. Hence, \approach is limited to repair of the input data, but not the intended information. 
+
+
+\subsection{Input Constraints and Semantics} \approach does not address concerns about recovering or preserving the input constraints or intended semantics of the input data. For instance, repairing an invalid checksum or hash requires such information, and \approach will be limited for this use cases. However, it would provide repair candidates that allow end-users to debug such semantic issues. 
+\revise{
+In addition, inputs with significant semantic corruption may not be effectively repaired by FSynth. Even though FSynth is effective in fixing structural parts of invalid inputs, when the corruption is in the semantic part, the missing data becomes difficult to recover. Examples include corrupted numbers in calculations, and dates.}
+
+
+\subsection{Repair via Input Synthesis} 
+\revise{Firstly, the repair via synthesis approach of \approach is exhaustive, thus it can quickly become computationally expensive.} 
+Secondly, the repair via synthesis operation %(i.e., insertion) % operation) 
+of our approach poses the risk of introducing input elements with unintended semantic consequences. 
+Specifically, insertion operations may lead %cause further 
+to data corruption and information distortion. To mitigate this threat, \approach provides several valid candidate repairs ranked by the edit distance 
+of each repair candidate from the original input. %to %.
+Hence, we 
+encourage end-users to select the best semantically-fit repair from the 
+potential repair candidates provided by \approach. 
+
+
+\done{Do you talk about the risk of input synthesis (which may be perceived as greater than the risk of input deletion) somewhere? A small lexical change may have large semantical consequences -- AZ}
+
+
+
+
+
+
+\section{Related Work}
+\label{sec:related_work}
+
+Let us discuss the state-of-the-art input repair approaches and how they compare to \approach. 
+
+\subsection{Black-box Input Repair} 
+A few techniques have been proposed to analyze input data without program analysis, albeit with the aim of understanding and localizing faults in the program. The earliest works were either focused on simplifying failure-inducing inputs~\cite{zeller2002simplifying, clause2009penumbra}, or isolating fault-revealing input fragments~\cite{hierarchicalDD, sterling2007automated}. Notably, the minimizing delta debugging algorithm (\ddmin) is focused on reducing failure-inducing inputs in order to diagnose and localize faults in the program. More recently, Kirschner et al.~\cite{kirschner2020debugging} proposed a maximizing variant of the delta debugging algorithm (\ddmax) to repair invalid inputs to subsets via deletion, we compare \approach to \ddmax in this work. In contrast to \ddmax, \approach also synthesizes input elements to complete input repair. 
+
+
+\subsection{White and Grey-box Input Repair} Some techniques employ program analysis to fix invalid inputs. As an example, \emph{docovery}~\cite{docovery:ase14} applies symbolic execution to change broken inputs to take error-free paths in the subject program. Similarly, Ammann and Knight~\cite{data_diversity} proposed a method to transform invalid inputs into valid inputs by analyzing the region of the input causing the fault and changing those regions to avoid the fault. Unlike these methods, \approach 
+is black-box, it relies on the failure feedback of the subject program. 
+
+
+\subsection{Constraint-based Input Repair} %via Constraint Learning:} 
+These approaches automatically learn input constraints then enforce the learned constraints to repair invalid inputs~\cite{hussain2010dynamic, Demsky:2006:IED:1146238.1146266} 
+These constraints are often extracted from valid inputs~\cite{Long:2012:AIR:2337223.2337233, Rinard:2007:LCZ:1297027.1297072}, specified with predicates~\cite{elkarablieh2008juzi}, model-based systems~\cite{Demsky:2003:ADR:949343.949314}, goal-directed reasoning~\cite{1553560}, dynamic symbolic execution~\cite{hussain2010dynamic} or invariants~\cite{Demsky:2006:IED:1146238.1146266}. For instance, \emph{S-DAGs}~\cite{scheffczyk2004s} enforce constraints on invalid inputs in a semi-automatic way. Unlike these approaches, \approach does not learn input constraints, it employs input synthesis and failure feedback to fix invalid inputs. 
+
+
+\subsection{Parser-directed Input Repair} %:}
+This refers to the input repair schemes of parsers, interpreters and compilers~\cite{parr2011ll, diekmann2020dont, aho1972minimum, hammond1984survey, backhouse1979syntax}. 
+These techniques employ operations such as insertion, deletion and replacement of symbols~\cite{anderson1981locally, cerecke2003locally, anderson1983assessment}, extending forward or backwards from a parser error~\cite{burke1982practical, mauney1982forward}, or more general methods of recovery and diagnosis~\cite{krawczyk1980error, aho1972minimum}. 
+In this work, we compare \approach to the recovery scheme of the ANTLR parser generator~\cite{parr2011ll} which leverages the input grammar to guide input repair. %Compared to \approach, t
+Unlike \approach which aims to fix an invalid input, these schemes need an input grammar, and aim to ensure the compiler does not halt while parsing. 
+
+
+
+
+
+\section{Conclusion}
+\label{sec:conclusion}
+This paper presents \approach, an input repair approach that employs input synthesis and lightweight failure feedback (i.e., incomplete and (in)correct checks) to repair invalid inputs. Our approach is black-box, does not require program analysis or an input grammar. We evaluate the data recovery, repair effectiveness, and efficiency of our approach, in comparison to the state-of-the-art methods. We show that \approach has a very high data recovery rate, it recovered 91\% of input data. 
+It is also very effective and efficient in input repair---it completes the repair of about four in five invalid inputs (77\%) within four minutes. Furthermore, we demonstrate that our approach is up to 35\% more effective than the best 
+best baseline---(syntactic) \ddmax, without using an input grammar. In summary, this work demonstrates that combining lightweight failure feedback and input synthesis are important for the effective repair of invalid inputs, especially in the absence of an input specification 
+and program analysis.
+In the future, we plan to investigate how to improve the performance of our approach by learning input semantics and constraints.
+
+We provide our implementation, experimental data and results for easy replication, scrutiny and reuse:
+
+
+ \begin{center}
+ \textbf{\url{https://tinyurl.com/fsynth}}
+ \end{center}
+
+
+
+
+
+
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{tosem23-brepair}
+
+
+
+
+
+
+\end{document}
+\endinput
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{fse2025-drepair}
-
-
-%%
-%% If your work has an appendix, this is the place to put it.
-\appendix
-
-\section{Research Methods}
-
-\subsection{Part One}
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-malesuada, quam in pulvinar varius, metus nunc fermentum urna, id
-sollicitudin purus odio sit amet enim. Aliquam ullamcorper eu ipsum
-vel mollis. Curabitur quis dictum nisl. Phasellus vel semper risus, et
-lacinia dolor. Integer ultricies commodo sem nec semper.
-
-\subsection{Part Two}
-
-Etiam commodo feugiat nisl pulvinar pellentesque. Etiam auctor sodales
-ligula, non varius nibh pulvinar semper. Suspendisse nec lectus non
-ipsum convallis congue hendrerit vitae sapien. Donec at laoreet
-eros. Vivamus non purus placerat, scelerisque diam eu, cursus
-ante. Etiam aliquam tortor auctor efficitur mattis.
-
-\section{Online Resources}
-
-Nam id fermentum dui. Suspendisse sagittis tortor a nulla mollis, in
-pulvinar ex pretium. Sed interdum orci quis metus euismod, et sagittis
-enim maximus. Vestibulum gravida massa ut felis suscipit
-congue. Quisque mattis elit a risus ultrices commodo venenatis eget
-dui. Etiam sagittis eleifend elementum.
-
-Nam interdum magna at lectus dignissim, ac dignissim lorem
-rhoncus. Maecenas eu arcu ac neque placerat aliquam. Nunc pulvinar
-massa et mattis lacinia.
 
 \end{document}
 \endinput
