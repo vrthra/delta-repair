@@ -646,13 +646,24 @@ Let us first illustrate the limitations of the state-of-the-art \dtask method (\
 presented in Kirschner et al.~\cite{kirschner2020debugging}.
 
 \subsection{\ddmax corrections}
-We start with an observation. The \ddmax algorithm that was presented in
-Kirschner et al.~\cite[Figure 5]{kirschner2020debugging} contained two errors.
-The first is that, when $|\cfail-\dpass| = 1$ then there exists a $\Delta_i$
-that can be removed from $\cfail$. However, invoking $\ddmax_2(\cfail-\Delta_i, 2)$
-will lead to infinite recursion. Hence, we add a base case when $|\cfail-\dpass| = 1$
-(Figure~\ref{fig:ddmax}). A second issue is that the third recursive call is
-missing a reduction in grannularity.
+%We start with an observation. The \ddmax algorithm that was presented in
+%Kirschner et al.~\cite[Figure 5]{kirschner2020debugging} contained two errors.
+%The first is that, when $|\cfail-\dpass| = 1$ then there exists a $\Delta_i$
+%that can be removed from $\cfail$. However, invoking $\ddmax_2(\cfail-\Delta_i, 2)$
+%will lead to infinite recursion. This happens for inputs such as \letterboxed{1*1} for JSON.
+%Hence, we add a base case when $|\cfail-\dpass| = 1$
+%(Figure~\ref{fig:ddmax}). A second issue is that the third recursive call is
+%missing a reduction in grannularity.
+%\subsection{Updates to \ddmax definition}
+While evaluating \ddmax, we noticed two errors in the formal definition of
+\ddmax. These are noted in \Cref{fig:ddmax}. Specifically,
+(1)~\ddmax requires the base case when $|\cfail-\cpass| = 1$. If not, \ddmax can
+go into unbounded recursion on inputs such as the JSON input:
+\letterboxed{1*1}. (2)~when increasing granularity, the size of the remaining
+input should be considered rather than the size of the entire text. Not doing
+this would cause an invariant fail for inputs such as \letterboxed{\{*"":2\}}.
+
+
 
 %A major limitation of \ddmax algorithm is that it results in sub-optimal
 %repairs when the data is expected to conform to \textit{complex formats},
@@ -707,7 +718,7 @@ significant data loss, including the loss of structure and change in
 input fragment type from string to number.
 Hence, \ddmax cannot effectively repair inputs containing multiple faults.
 
-\subsection{Effect of input decomposition}
+\subsection{Effect of fragment decomposition}
 Unfortunately \ddmax can produce non-optimal results even when the errors are
 contiguous, and hence considered \emph{single} by \ddmax. The problem happens
 when the corruption in the input interacts with the fragment decomposition
@@ -753,12 +764,6 @@ Kirchner et al.~\cite[Figure 1]{kirschner2020debugging} but with an extra
 \letterboxed{*}. \ddmax repairs this input to \letterboxed{\ \ \ \ 3.45},
 resulting in loss of data and structure. % of information.
 
-%The problem here is that the successive partitions attempted by \ddmax fails to
-%isolate the failure causing fragment even though the fragment is contiguous.
-%That is, no single independent fragment is found, the removal of which results
-%in removal of the error. Hence, \ddmax keeps searching for smaller and smaller
-%fragments discarding larger and larger chunks of data.
-
 The issue arises from \ddmax's partitioning strategy, which fails to isolate
 the error-causing fragment, even when it is contiguous.
 Despite the error being localized,
@@ -800,19 +805,6 @@ data loss.
 
 Although \ddmax will have no problems maximizing any inputs \textit{if  the input processor conforms to this constraint}, we note that this can be a rather \textit{strong
 constraint in practice}.
-
-
-
-
-
-\subsection{Updates to \ddmax definition}
-While evaluating \ddmax, we noticed two cases where the formal definition of
-\ddmax was underspecified. These are noted in \Cref{fig:ddmax}. Specifically,
-(1)~\ddmax requires the base case when $|\cfail-\cpass| = 1$. If not, \ddmax can
-go into unbounded recursion on inputs such as the JSON input:
-\letterboxed{1*1}. (2)~when increasing granularity, the size of the remaining
-input should be considered rather than the size of the entire text. Not doing
-this would cause an invariant fail for inputs such as \letterboxed{\{*"":2\}}.
 
 \subsection{Repair of rich inputs with \approach}
 One advantage of \approach is that it can effectively handle inputs with
