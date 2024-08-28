@@ -470,10 +470,9 @@ which is time-consuming and error-prone.
 
 A popular alternative is automatic \dtask.
 Given a formal grammar for data records,
-grammar-based \dtask approaches such as
 \emph{error-correcting} parsers~\cite{aho1972minimum,diekmann2020dont,parr2011ll}, can
 repair nonconforming records.
-The main idea in such techniques is to generate a \emph{universal grammar}
+The key idea in error-correcting parsers is to generate a \emph{universal grammar}
 that captures \emph{all possible data-corruptions} as mutation rules
 in the base grammar.
 The different parses of the nonconforming data by such a universal grammar is
@@ -495,16 +494,15 @@ Hence, grammar-based \dtask approaches
 are suboptimal for fixing corrupt records in practice.
 
 When a formal specification of the data format is unavailable, or unreliable,
-the only option left is language-agnostic \dtask provided by \ddmax~\cite{kirschner2020debugging}
-which operates without a formal grammar.
-%Such language-agnostic \dtask methods
-%(e.g., \ddmax~\cite{kirschner2020debugging}) can repair nonconforming records without a base grammar.
-%\ddmax works similar to
-%Delta Debugging~\cite{zeller2002simplifying}, but in reverse. The idea
-%is that given a corrupt record which induces a parse error, and a way to
-%decompose the record into independent fragments (called deltas ($\delta$)), one can
-%successively minimize the parse-error inducing part of the record resulting in a
-%maximal parsing record.
+the only option left is language-agnostic \dtask provided by
+\ddmax~\cite{kirschner2020debugging} which does not require a formal grammar.
+\ddmax works similar to Delta Debugging~\cite{zeller2002simplifying},
+but in reverse.
+Given a corrupt record which induces a parse error,
+and a way to decompose the record into independent fragments
+one can successively minimize the parse-error inducing part of the
+record resulting in a maximal parsing record.
+%which operates without a formal grammar.
 While \ddmax was shown to work well in tested scenarios, it has two major limitations:
 (1) \ddmax only allows \emph{token deletion} as a repair operation, and 
 (2) it cannot repair \emph{complex data formats} (e.g., multiple faults).
@@ -672,6 +670,7 @@ with the discussion of future work in \Cref{sec:conclusion}.
 
 
 \begin{figure*}[t]
+\footnotesize
 \begin{boxedminipage}{\textwidth}
 \smallskip
 \ \begin{minipage}{0.9\textwidth}
