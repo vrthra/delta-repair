@@ -549,7 +549,7 @@ automatic \dtask using formal specifications.
 
 The key insight of this paper is that one can leverage the \emph{parse failure feedback}
 to simulate the behavior of a universal grammar and obtain a maximal data repair.
-This allows our approach \approach to leverage deletion, insertion and substitution as repair
+This allows our approach \approach to leverage not just deletion (the only operation supported by \ddmax), but also insertion and substitution as repair
 operations. % which are not allowed by \ddmax.
 As with \ddmax, we require the data processor to indicate if the given record
 is conforming to the expected format (i.e., valid).  However, when given a nonconforming record,
