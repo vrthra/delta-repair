@@ -176,7 +176,7 @@ In data processing, engineers often encounter datasets that are expected to
 conform to specific formats but contain variations due to factors such as
 human error or data corruption.
 These inconsistencies prevent standard programs from parsing the data correctly.
-Consequently, data engineers must perform \emph{input repair,} manually
+Consequently, data engineers must perform \emph{data repair,} manually
 adjusting the non-conforming data to match the required format.
 This process is time-consuming and prone to errors, particularly when
 clear formal input specifications are lacking, which is often the case as
@@ -252,11 +252,10 @@ However,
 \textit{this assumption may not hold in practice} due to several reasons.
 Firstly,
 certain data formats (e.g., CSV~\cite{taocp}, URL standard from
-WHATWG~\cite{whatwgurl}) may not have an official formal grammar specification.
+WHATWG~\cite{whatwgurl,urldisagree}) may not have an official formal grammar specification.
 Others may have numerous incompatible standards
 (e.g., markdown~\cite{gruber2004markdown}), any of which may be followed by the
-parser in question, and in many cases the parser may be non-conformant due to bugs
-or quirks,
+parser in question, and in many cases the parser may be handwritten~\cite{uncommongrammars,uncommongrammars2}, and non-conformant due to bugs or quirks,
 implementing a subtly different format than the one expected.
 Hence, grammar-based data repair approaches
 are suboptimal for fixing corrupt records in practice.
