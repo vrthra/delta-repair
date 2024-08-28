@@ -85,13 +85,13 @@
 \newcommand{\dfail}{{c'_{\scriptscriptstyle \fail}}}
 
 
-\newcommand{\approach}{\textsc{FSynth}\xspace}
+\newcommand{\approach}{\textsc{$\Delta$Repair}\xspace}
 \def\bfr{bFuzzerRepairer\xspace}
 \def\ddmin{DDMin\xspace}
 \newcommand{\ddmax}{\textit{DDMax}\xspace}
 \newcommand{\ddmaxg}{\textit{DDmaxG}\xspace}
 \newcommand{\bsimple}{\textit{bsimple}\xspace}
-\newcommand{\brepair}{\textsc{FSynth}\xspace}
+\newcommand{\drepair}{\approach}
 
 \tikzset{inlinenode/.style={draw=white,text=black,fill=light-gray,inner sep=.1em,outer sep=0em}}
 \newcommand{\inlinenode}[1]{\text{\hspace{.1em}\tikz[baseline=(n.base)]{\node[inlinenode] (n) {\strut \hspace*{.3em}#1\hspace*{.3em}};}\hspace{.1em}}}
@@ -179,18 +179,18 @@ These inconsistencies prevent standard programs from parsing the data correctly.
 Consequently, data engineers must perform \emph{data repair,} manually
 adjusting the non-conforming data to match the required format.
 This process is time-consuming and prone to errors, particularly when
-clear formal input specifications are lacking, which is often the case as
-input formats are frequently defined exclusively by their parsers.
+clear formal data format specifications are lacking, which is often the case as
+data formats are frequently defined exclusively by their parsers.
 
 In this work, we show that one can often repair the data corruption or
 conformance problems by leveraging failure feedback from parsers even in
-the absence of a formal input specification.
+the absence of a reliable data format specification.
 
-Our approach, which we call \brepair, can automatically produce repair
+Our approach, which we call \approach, can automatically produce repair
 candidates for corrupt or non-conforming input data ranked by maximal
 closeness to the original data.
 
-We evaluate \brepair on 806 (real-world) non-conforming inputs in four
+We evaluate \approach on 806 (real-world) non-conforming inputs in four
 well-known input formats, namely INI, TinyC, SExp, and cJSON.
 In our evaluation, we found that %\approach 
 \approach is highly effective and efficient in input repair: It repairs 77\% of invalid inputs %and recovers 91\% of input data, 
@@ -286,7 +286,7 @@ limitations lead to significant data loss.
 {%\scriptsize  
 \begin{tabular}{|l | l | l | l |}
 \hline
-\textbf{Examples of NonConforming}& \textbf{\ddmax} & \textbf{\brepair} & \textbf{\ddmax} \\
+\textbf{Examples of NonConforming}& \textbf{\ddmax} & \textbf{\approach} & \textbf{\ddmax} \\
 \textbf{Program Inputs} & \textbf{Repair} & \textbf{Repair} & \textbf{Limitation} \\
 \hline
 \letterboxedinTable{\{\ "name":\ "Dave"\ "age":\ 42\ \}} &
@@ -338,7 +338,7 @@ As an example, consider the invalid input in \textit{row three} of \Cref{tab:ddm
 
 This paper identifies previously unknown limitations of
 \ddmax (~\ref{tab:ddmaxlimitations}), and suggests an alternative
-approach (called \brepair) for overcoming the identified limitations.
+approach (called \approach) for overcoming the identified limitations.
 The key insight of our approach is to complete \textit{syntactic} repair of
 invalid inputs leveraging the \emph{parse failure feedback} already provided by
 many parsers.
@@ -350,24 +350,24 @@ of the repair from the original record.
 
 \begin{comment}
 For instance, consider the invalid input in \textit{row one} of \Cref{tab:ddmaxlimitations} (i.e., \letterboxed{\{\ "name":\ "Dave"\ "age":}
-\letterboxed{\ 42\ \}}) which is invalid because of a \textit{missing comma separator} between the two values in the JSON object. While \ddmax could not completely repair this input, \brepair could complete a repair via input synthesis. % owing to its input synthesis component.
+\letterboxed{\ 42\ \}}) which is invalid because of a \textit{missing comma separator} between the two values in the JSON object. While \ddmax could not completely repair this input, \approach could complete a repair via input synthesis. % owing to its input synthesis component.
 \Cref{sec:input-synthesis}
- describes the full steps of \brepair for this input.
- %Our \brepair algorithm
-Specifically, \brepair first finds the maximal parsable
+ describes the full steps of \approach for this input.
+ %Our \approach algorithm
+Specifically, \approach first finds the maximal parsable
 prefix to be \letterboxed{\{\ "name":\ "Dave"\ }, and
 determines that the \textit{parse boundary}, i.e., the
 shift from \emph{incomplete} to \emph{incorrect}
 happens at boundary %as %\\
 \letterboxed{\{\ "name":\ "Dave"\ "}. % where the parser response shifts from
-Next, \brepair applies \textit{deletion}, or \textit{insertion} of characters
+Next, \approach applies \textit{deletion}, or \textit{insertion} of characters
 in order.
 In this case, the \letterboxed{"} is deleted first, but the
 resulting input %\\
 \letterboxed{\{\ "name":\ "Dave"\ age":\ 42 \}} %is
 does not increase the
 maximum parsable prefix. %Here, we see that the maximal parse boundary remains the same.
-Hence, \brepair next
+Hence, \approach next
 attempts to insert a character,
 eventually determining that
 only space characters and
@@ -413,15 +413,15 @@ significant data loss.
 \item \textbf{Parse Failure Feedback.} We demonstrate how to leverage
 parse-failure-feedback to overcome the limitations in \ddmax for effective data repair.
 
-\item \textbf{Empirical Evaluation.} We evaluate \brepair using 806 (real-world) non-conforming
+\item \textbf{Empirical Evaluation.} We evaluate \approach using 806 (real-world) non-conforming
 records belonging to four well-known input formats (e.g., cJSON and TinyC). 
 Our evaluation results show that %given input processors that can accurately
-\textit{\brepair has a high (91\%) data recovery rate}. 
+\textit{\approach has a high (91\%) data recovery rate}. 
 It is up to 35\% more effective than \ddmax.
 
 \end{itemize}
 
-The remainder of this paper is structured as follows: \Cref{sec:rich-input-structures} highlights the limitations of the state-of-the-art input repair method (\ddmax) and illustrates how \brepair overcomes these limitations. In \Cref{sec:input-synthesis} we describe how \brepair conducts input synthesis, and \Cref{sec:brepair}  describes the \brepair algorithm. We describe our experimental setup and findings in \Cref{sec:experimental-setup} and \Cref{sec:results}. We address the limitations %and threats to the validity 
+The remainder of this paper is structured as follows: \Cref{sec:rich-input-structures} highlights the limitations of the state-of-the-art input repair method (\ddmax) and illustrates how \approach overcomes these limitations. In \Cref{sec:input-synthesis} we describe how \approach conducts input synthesis, and \Cref{sec:drepair}  describes the \approach algorithm. We describe our experimental setup and findings in \Cref{sec:experimental-setup} and \Cref{sec:results}. We address the limitations %and threats to the validity 
 of this work in \Cref{sec:threats}, and discuss related work in \Cref{sec:related_work}. Finally, we conclude this paper 
 with the discussion of future work in \Cref{sec:conclusion}. 
 
@@ -470,7 +470,7 @@ $\test(\dpass) = \pass \land n \leq |\Delta|$.\\
 \section{Rich Input Structures} %Limitations of \ddmax}
 \label{sec:rich-input-structures}
 
-Let us illustrate the limitations of the state-of-the-art input repair method (\ddmax) and how our approach (\brepair) addresses these limitations.
+Let us illustrate the limitations of the state-of-the-art input repair method (\ddmax) and how our approach (\approach) addresses these limitations.
 \Cref{fig:ddmax} provides a modified version of the lexical \ddmax algorithm presented in Kirschner et al.~\cite{kirschner2020debugging}. A major limitation of lexical \ddmax is that it results in sub-optimal repairs when the invalid input contains \textit{rich structures}, e.g., \textit{multiple faults}.
 In the following, we discuss these limitations.
 
@@ -621,18 +621,18 @@ go into unbounded recursion on inputs such as the JSON input:
 input should be considered rather than the size of the entire text. Not doing
 this would cause an invariant fail for inputs such as \letterboxed{\{*"":2\}}.
 
-\subsection{Repair of rich inputs with \brepair}
-One advantage of \brepair is that it can effectively handle inputs with
+\subsection{Repair of rich inputs with \approach}
+One advantage of \approach is that it can effectively handle inputs with
 rich structure. Consider the input to the JSON processor: \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}}.
 (For ease of explanation, let us consider only deletion as the
 operation used.) Here, the procedure is as follows:
 
 \begin{enumerate}
-\item \brepair starts by executing a binary search for the boundary where the
+\item \approach starts by executing a binary search for the boundary where the
 input prefix changes from \emph{incomplete} to \emph{incorrect}. This is
 obtained at index 10, providing the incomplete substring
 \letterboxed{\{"ABCD":[}. %*"1,2,3,4,5,6"]*\}}.
-\item \brepair then appends the next character \letterboxed{*} to the input,
+\item \approach then appends the next character \letterboxed{*} to the input,
 resulting in \letterboxed{\{"ABCD":[*} %"1,2,3,4,5,6"]*\}}.
 and observes the result. In this case, the JSON processor returns
 \emph{incorrect}.
@@ -640,7 +640,7 @@ and observes the result. In this case, the JSON processor returns
 next index is appended, resulting in
 \letterboxed{\{"ABCD":["}. %1,2,3,4,5,6"]*\}}.
 This results in JSON processor responding \emph{incomplete}.
-\item \brepair now appends the character in the next index, resulting in
+\item \approach now appends the character in the next index, resulting in
 \letterboxed{\{"ABCD":[1"} which again results in \emph{incomplete} from JSON
 processor.
 \item Proceeding in this fashion the input reaches \\
@@ -651,7 +651,7 @@ resulting in
 \letterboxed{\{"ABCD":["1,2,3,4,5,6"]\}}.
 \item The JSON processor responds with \emph{complete}.
 \end{enumerate}
-This completes the repair of the given input. This demonstrates that \brepair has no problem repairing rich inputs containing multiple errors.
+This completes the repair of the given input. This demonstrates that \approach has no problem repairing rich inputs containing multiple errors.
 
 
 \section{Input Synthesis}
@@ -675,17 +675,17 @@ missed.
 
 
 
-The \brepair algorithm on the other hand, follows in this fashion.
+The \approach algorithm on the other hand, follows in this fashion.
 \begin{enumerate}
-\item \brepair algorithm starts with the corrupted input and quickly finds the
+\item \approach algorithm starts with the corrupted input and quickly finds the
 maximal parsable prefix using a binary search: \\
 \letterboxed{\{\ "name":\ "Dave"\ }.
-\item At this point, \brepair applies \emph{deletion}, \emph{insertion}, or
+\item At this point, \approach applies \emph{deletion}, \emph{insertion}, or
 \emph{modification} of characters in order.
 In this case, the \letterboxed{"} is deleted first, resulting in: \\
 \letterboxed{\{\ "name":\ "Dave"\ age":\ 42 \}}.
 \item The JSON parser responds with \emph{incorrect} for this input.
-\item \brepair next attempts to insert a character. Say we tried to insert
+\item \approach next attempts to insert a character. Say we tried to insert
 \letterboxed{1}. This results in: \\
 \letterboxed{\{\ "name":\ "Dave"\ 1"age":\ 42 \}}.
 \item The JSON parser responds with \emph{incorrect} for this input.
@@ -696,7 +696,7 @@ inserted here, resulting in \emph{incomplete} from the JSON parser.
 \item This is accepted as a valid repair.
 \end{enumerate}
 
-That is, the ability of \brepair to synthesize characters for repair can lead
+That is, the ability of \approach to synthesize characters for repair can lead
 to more effective repairs.
 
 
@@ -713,8 +713,8 @@ to more effective repairs.
 
 
 \section{\approach}
-\label{sec:brepair}
-The main contribution of \brepair is its repertoire of repairs.
+\label{sec:drepair}
+The main contribution of \approach is its repertoire of repairs.
 The input string can be modified by \emph{deleting} any character
 (\Cref{lst:repairsdelete}), or
 \emph{inserting} a character at any index (\Cref{lst:repairsdelete}).
@@ -742,7 +742,7 @@ the character that caused the error is present at the \<boundary> value.
 That is, we know that \<inputstr[:boundary]> parses correctly. Hence, for
 deletion, we produce a string without the character at the \<boundary>.
 
-\begin{lstlisting}[caption=\brepair repairs,label={lst:repairsdelete}]
+\begin{lstlisting}[caption=\approach repairs,label={lst:repairsdelete}]
 def apply_delete(item):
   inp = item.inputstr[:item.boundary] +
       item.inputstr[item.boundary + 1:]
@@ -797,14 +797,14 @@ def binary_search(inputstr, left=0,
 \vspace{\baselineskip}
 
 
-\begin{lstlisting}[caption=\brepair initial search,label={lst:brepair}]
+\begin{lstlisting}[caption=\approach initial search,label={lst:drepair}]
 def repair(inp):
   boundary = binary_search(inp)
   return find_fixes(inp, boundary)
 \end{lstlisting}
 \vspace{\baselineskip}
 
-\Cref{lst:brepair} shows how \brepair is invoked. The input string is passed to
+\Cref{lst:drepair} shows how \drepair is invoked. The input string is passed to
 \<repair()>.
 This function does a \emph{binary search} (\Cref{lst:bsearch}) on the argument string looking for the parse boundary where the return value changes
 from \emph{incomplete} to \emph{incorrect}. That is, if \<binary\_search>
@@ -887,7 +887,7 @@ threads to the best performing ones in terms of the parse boundary by using
 
 
 
-\begin{lstlisting}[caption=\brepair repairs,label={lst:repairs}]
+\begin{lstlisting}[caption=\drepair repairs,label={lst:repairs}]
 def insert_at(item, k, i, suffix)
   v = (item.inputstr[:k] + i +
     item.inputstr[k:item.boundary] + suffix)
@@ -969,7 +969,7 @@ threads with the least number of repairs from the passed input string.
 \approach assumes the parser correctly signals
 \emph{incomplete} for incomplete inputs, \emph{incorrect} for other invalid
 inputs, and \emph{complete} if the input was valid. 
-Given this, \brepair algorithm works as follows (\Cref{fig:brepair_flowchart}):
+Given this, \drepair algorithm works as follows (\Cref{fig:brepair_flowchart}):
 
 \begin{figure}[tbp!]
 \newlength\nodedst\setlength\nodedst{.35cm}
@@ -999,19 +999,19 @@ Given this, \brepair algorithm works as follows (\Cref{fig:brepair_flowchart}):
     %TODO
 \end{tikzpicture}
 \vspace*{-0.1in}
-    \caption{Work flow of \brepair}
+    \caption{Work flow of \drepair}
     \label{fig:brepair_flowchart}
     % \vspace*{-0.1in}
 \end{figure}
 \newcommand{\refnumber}[1]{\hyperref[fig:brepair_flowchart]{Step~#1}}
 
 \begin{enumerate}
-\item \emph{Binary search.} Given any corrupt input, \brepair starts by a
+\item \emph{Binary search.} Given any corrupt input, \drepair starts by a
 binary search of the input to determine the parse boundary. This then is used
 to construct the first repair thread, with boundary set to the binary search
 result, and repairs set to empty.
 
-\item \emph{Repair.} Starting with any existing repair thread, \brepair applies
+\item \emph{Repair.} Starting with any existing repair thread, \drepair applies
 deletion and insertion repairs. A single deletion results in a single repair
 thread which is an extenion of the original repair thread.
 An insertion however, results in multiple repair threads corresponding to the
@@ -1257,7 +1257,7 @@ We examine 474 inputs that were completely repaired by %all three approaches, i.
 lexical \ddmax, syntactic \ddmax and \approach, excluding empty files (and white spaces). \Cref{tab:data-recovery-and-loss} %and \recheck{Figure X
 highlights the amount of data %loss and data
 recovered and lost % achieved 
-by each approach.\footnote{Note that due to input synthesis (i.e., insertion of input elements), \brepair may report recovering more than 100\% of the size of the original input file (e.g., 100.6\% for SExp in \Cref{tab:data-recovery-and-loss}).} %, as average over each file. %Our evaluation r
+by each approach.\footnote{Note that due to input synthesis (i.e., insertion of input elements), \drepair may report recovering more than 100\% of the size of the original input file (e.g., 100.6\% for SExp in \Cref{tab:data-recovery-and-loss}).} %, as average over each file. %Our evaluation r
 
 Results show that \textit{\approach has a very high data recovery rate}. 
 It recovered 91\% of input data, on average. 
@@ -1440,7 +1440,7 @@ Overall, we attribute the unique repair achieved by \approach to the synergistic
         \node[circ] at (anchor.north) (g3) {};
         \node[lbl,anchor=north] at (g1.south) {\ddmax};
         \node[lbl,anchor=north] at (g2.south) {\ddmaxg};
-        \node[lbl,anchor=south] at (g3.north) {\brepair};
+        \node[lbl,anchor=south] at (g3.north) {\drepair};
         \node[lbl] at ($(g1)!0.5!(g2) - (0,.4)$) {53};
         \node[lbl] at ($(g2)!0.5!(g3) + (.2,.2)$) {50};
         \node[lbl] at ($(g1)!0.5!(g3) + (-.2,.2)$) {25};
