@@ -945,7 +945,43 @@ The problem of \emph{data-repair} is as follows: Given a \emph{string} and a
 \emph{parser}, what is the least number of \emph{edits} that can be made to
 the string to make it acceptable by the \emph{parser}. If the parser is a
 \emph{conforming parser}, the \drepair algorithm can be used to
-repair the string. It has the following steps:
+repair the string. It has the following steps (visualized in \Cref{fig:brepair_flowchart}):
+
+\begin{figure}[tbp!]
+\newlength\nodedst\setlength\nodedst{.35cm}
+\newlength\ndist\setlength\ndist{.1\nodedst}
+\begin{tikzpicture}[node distance=\nodedst and 2.5\nodedst]
+    \node[blockdiagramblock] (search) {Boundary-Search)};
+    \node[blockdiagramblock,right=of search] (repair) {Apply Repairs};
+    \draw[blockdiagramarrow] (search) -- (repair); %node[simpletext,pos=.5,right,font=\scriptsize] {}; % PushPQ
+    \node[blockdiagramblock,right=of repair] (extend) {Extend Threads};
+    \draw[blockdiagramarrow] (repair) -- (extend);
+    \node[blockdiagramblock,below=of extend] (isvalid) {Valid Input?};
+    \node[simpletext,below=.3 of isvalid] (return) {\mbox{Return input}};
+    \node[blockdiagramblock,left=of isvalid] (select) {Select Threads};
+    \draw[blockdiagramarrow] (extend) -- (isvalid);
+    \draw[blockdiagramarrow] (isvalid) -- (return) node[simpletext,pos=.6,right,yshift=-.5mm] {\pass};
+    \draw[blockdiagramarrow] (isvalid) -- (select);
+    %\node[simpletext,right=.5 of isvalid.east,inner sep=1pt] (pqins1) {increase bound,\\push to PQ};
+    %\draw[blockdiagramarrow,dashed] (isvalid) -- (pqins1) node[pos=.5,above] {\pass};
+    %\node[simpletext,right=.5 of select.east,inner sep=1pt] (pqins2) {increase bound,\\push to PQ};
+    %\draw[blockdiagramarrow,dashed] (select) -- (pqins2) node[pos=.5,above] {\pass};
+    \draw[blockdiagramarrow] (select) -- (repair);
+    \pic[] at (search.south east) {numbering=1};
+    \pic[] at (isvalid.south east) {numbering=5};
+    \pic[] at (extend.south east) {numbering=3};
+    \pic[] at (repair.south east) {numbering=2};
+    \pic[] at (select.south east) {numbering=4};
+    %TODO
+\end{tikzpicture}
+\vspace*{-0.1in}
+    \caption{Work flow of \drepair}
+    \label{fig:brepair_flowchart}
+    % \vspace*{-0.1in}
+\end{figure}
+\newcommand{\refnumber}[1]{\hyperref[fig:brepair_flowchart]{Step~#1}}
+
+
 
 \begin{enumerate}
 \item \emph{Boundary search.} Given any corrupt string, \drepair starts by a
@@ -953,7 +989,7 @@ binary search of the input to determine the parse boundary. This is then used
 to construct the \emph{thread-queue} containing a single empty repair-thread,
 with the parse-boundary set to the search result.
 
-\item \emph{Repair.} Starting with any existing repair-thread, \drepair applies
+\item \emph{Apply Repair.} Starting with any existing repair-thread, \drepair applies
 either a deletion or an insertion edit on the \emph{remaining suffix}.
 \begin{itemize}
 \item A \emph{deletion} removes the next character in the \emph{remaining-suffix}.
@@ -964,12 +1000,14 @@ Let $S^{'}$ be the viable-prefix of the current repair-thread, and $c$ be the ch
 We create one repair-thread for each $c$ in the alphabet where the parser
 responds with \emph{incomplete} for $S^{'}+c$, with the new viable-prefix set to $S^{'}+c$.
 \end{itemize}
-\item \emph{Extension.} For each repair-thread that results from the previous step,
+\item \emph{Extend Threads.} For each repair-thread that results from the previous step,
 we attempt to extend the parse-boundary by adding additional characters from the
 remaining suffix. Duplicate threads (those that result in the same string) are discarded,
 keeping only those with the minimal number of repairs.
-\item \emph{Continuation.} The algorithm chooses the best repair-thread from the priority queue
-for continuation through step 2.
+\item \emph{Check Completion.} If any thread results in a \emph{complete} string, then
+we return the corresponding set of repairs.
+\item \emph{Select Threads.} The algorithm chooses the best repair-thread from the priority queue,
+and continues through step 2.
 \end{enumerate}
 
 The algorithm returns as soon as the first complete repair-thread is found that results
@@ -1321,42 +1359,6 @@ threads with the least number of repairs from the passed input string.
 \emph{incomplete} for incomplete inputs, \emph{incorrect} for other invalid
 inputs, and \emph{complete} if the input was valid. 
 Given this, \drepair algorithm works as follows (\Cref{fig:brepair_flowchart}):
-
-\begin{figure}[tbp!]
-\newlength\nodedst\setlength\nodedst{.35cm}
-\newlength\ndist\setlength\ndist{.1\nodedst}
-\begin{tikzpicture}[node distance=\nodedst and 2.5\nodedst]
-    \node[blockdiagramblock] (search) {Find parse boundary (Search)};
-    \node[blockdiagramblock,right=of search] (repair) {Apply Repairs};
-    \draw[blockdiagramarrow] (search) -- (repair); %node[simpletext,pos=.5,right,font=\scriptsize] {}; % PushPQ
-    \node[blockdiagramblock,right=of repair] (extend) {Extend Threads};
-    \draw[blockdiagramarrow] (repair) -- (extend);
-    \node[blockdiagramblock,below=of extend] (isvalid) {Valid Input?};
-    \node[simpletext,below=.3 of isvalid] (return) {\mbox{Return input}};
-    \node[blockdiagramblock,left=of isvalid] (select) {Select Threads};
-    \draw[blockdiagramarrow] (extend) -- (isvalid);
-    \draw[blockdiagramarrow] (isvalid) -- (return) node[simpletext,pos=.6,right,yshift=-.5mm] {\pass};
-    \draw[blockdiagramarrow] (isvalid) -- (select);
-    %\node[simpletext,right=.5 of isvalid.east,inner sep=1pt] (pqins1) {increase bound,\\push to PQ};
-    %\draw[blockdiagramarrow,dashed] (isvalid) -- (pqins1) node[pos=.5,above] {\pass};
-    %\node[simpletext,right=.5 of select.east,inner sep=1pt] (pqins2) {increase bound,\\push to PQ};
-    %\draw[blockdiagramarrow,dashed] (select) -- (pqins2) node[pos=.5,above] {\pass};
-    \draw[blockdiagramarrow] (select) -- (repair);
-    \pic[] at (search.south east) {numbering=1};
-    \pic[] at (isvalid.south east) {numbering=5};
-    \pic[] at (extend.south east) {numbering=3};
-    \pic[] at (repair.south east) {numbering=2};
-    \pic[] at (select.south east) {numbering=4};
-    %TODO
-\end{tikzpicture}
-\vspace*{-0.1in}
-    \caption{Work flow of \drepair}
-    \label{fig:brepair_flowchart}
-    % \vspace*{-0.1in}
-\end{figure}
-\newcommand{\refnumber}[1]{\hyperref[fig:brepair_flowchart]{Step~#1}}
-
-
 
 
 
