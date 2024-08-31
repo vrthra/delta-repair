@@ -772,11 +772,30 @@ Consequently, \ddmax continues to search for increasingly smaller fragments,
 inadvertently discarding larger portions of potentially valid data in
 the process.
 
+\subsection{Limited Ability for Correction}
+\label{sec:input-synthesis}
+
+Another major limitation of
+\ddmax is that the only operation in its toolbox is \emph{deletion} of tokens.
+Consider \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}
+Here, there is a missing quote in the key. \ddmax repair of this string will
+result in
+\letterboxed{\ \ \ \ 42}.
+The problem is that, deletion of fragments alone can lead to significant
+corruption of information. In this instance, the availability of \emph{insertion}
+could have repaired the input string to
+\letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}}. Unfortunately, because
+\ddmax is unable to insert any tokens, opportunities for repair can be
+missed.
+
+
 \subsection{Discussion}
 Why does \ddmax fail to repair these inputs? A major limitation of \ddmax is
-that it is modeled on \ddmin, which is an effective tool for minimization of
-failure inducing inputs. Given a failure inducing input, the idea of \ddmin is
-to successively partition the input into smaller and smaller chunks, remove one
+that it is modeled on \ddmin~\cite{zeller2002simplifying},
+which is an effective tool for minimization of failure inducing inputs.
+Given a failure inducing input, the idea of \ddmin is
+to successively partition the input into smaller and smaller chunks
+(a chunk is a contiguous sequence of characters), remove one
 chunk at a time and check whether the remaining chunks are sufficient to
 reproduce the failure. As this implies, a key assumption of \ddmin is that
 we can actually remove such chunks independently. That is, if a chunk does not
@@ -785,81 +804,48 @@ failure observed. Secondly, if multiple chunks independently cause
 the same failure, only one chunk will be chosen, and minimized further.
 
 The definition of \ddmax is a mirror of \ddmin. \ddmax starts with an empty
-input that is assumed to be passing. Then, it partitions the input into chunks,
-and tries to concatenate any of these chunks to the passing input, producing a
-larger passing input. If after dividing the input into \<n> chunks, none of the
-chunks could produce a passing input, it tries again by dividing the
-input into \<2n> chunks.
+input that is assumed to be passing (i.e. parsable by the parser).
+Then, it partitions the input into chunks, and tries to concatenate any of
+these chunks to the passing input,
+producing a larger passing input.
+If a particular chunk fails parsing, that chunk is partitioned further,
+identifying smaller chunks that can be concatenated to the passing input without causing the failure.
+
+%The definition of \ddmax is a mirror of \ddmin. \ddmax starts with an empty
+%string that is assumed to be passing (i.e. parsable by the parser).
+%Then, it partitions the input into chunks,
+%and tries to concatenate as any of these chunks to the passing input, producing a
+%larger passing input. Any chunk that is identified as causing the failure is
+%further minimized, until the smallest amount of data that should be deleted to
+%remove the failure is identified and removed.
+% If after dividing the input into \<n> chunks, none of the
+%chunks could produce a passing input, it tries again by dividing the
+%input into \<2n> (i.e., $2\times$ smaller) chunks.
 
 As in the case of \ddmin, the \textit{unstated assumption} here is that if a chunk was
 not responsible for the observed failure, it can be extracted independently of
 other chunks and added to the passing input fragment without changing the
 semantics. This particular \textit{assumption need not hold when we are dealing with
-inputs that have a rich structure}. That is, \letterboxed{"1,2,3,4,5"} is very
+inputs that have a complex format}. That is, \letterboxed{"1,2,3,4,5"} is \emph{semantically}
 different from \letterboxed{12345} even though a significant portion of the raw
 characters from first is preserved in the second. Further, once such a
-semantically changed fragment forms the seed of the passing fragment, due to
+semantically changed fragment \emph{forms the seed of the passing fragment}, due to
 the constraints in the input structure, the remaining fragments from the
 original will likely not combine with the seed fragment, resulting in further
 data loss.
+%That is, once a bad but passing seed fragment forms, the semantics of
 
-Although \ddmax will have no problems maximizing any inputs \textit{if  the input processor conforms to this constraint}, we note that this can be a rather \textit{strong
-constraint in practice}.
+%Although \ddmax will have no problems maximizing any inputs
+% \textit{if  the input processor conforms to this constraint}, we note that
+% this can be a rather \textit{strong constraint in practice}.
 
-\subsection{Repair of rich inputs with \approach}
-One advantage of \approach is that it can effectively handle inputs with
-rich structure. Consider the input to the JSON processor: \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}}.
-(For ease of explanation, let us consider only deletion as the
-operation used.) Here, the procedure is as follows:
+The unfortunate issue that exacerbates this problem is that \ddmax is also
+limited to only \emph{deletion} of fragments. If the corruption in the data
+is due to missing tokens (which can often occur in practice because of truncation
+of fields), the only move from \ddmax is to delete more tokens, resulting in
+data that passes the parser but is semantically incorrect.
 
-\begin{enumerate}
-\item \approach starts by executing a binary search for the boundary where the
-input prefix changes from \emph{incomplete} to \emph{incorrect}. This is
-obtained at index 10, providing the incomplete substring
-\letterboxed{\{"ABCD":[}. %*"1,2,3,4,5,6"]*\}}.
-\item \approach then appends the next character \letterboxed{*} to the input,
-resulting in \letterboxed{\{"ABCD":[*} %"1,2,3,4,5,6"]*\}}.
-and observes the result. In this case, the JSON processor returns
-\emph{incorrect}.
-\item Hence, the newly added character is discarded, and the character at the
-next index is appended, resulting in
-\letterboxed{\{"ABCD":["}. %1,2,3,4,5,6"]*\}}.
-This results in JSON processor responding \emph{incomplete}.
-\item \approach now appends the character in the next index, resulting in
-\letterboxed{\{"ABCD":[1"} which again results in \emph{incomplete} from JSON
-processor.
-\item Proceeding in this fashion the input reaches \\
-\letterboxed{\{"ABCD":["1,2,3,4,5,6"]*} %\}}.
-at which point, we again have the response \emph{incorrect} from the JSON
-processor. Hence, we discard this character, and try the next character,
-resulting in
-\letterboxed{\{"ABCD":["1,2,3,4,5,6"]\}}.
-\item The JSON processor responds with \emph{complete}.
-\end{enumerate}
-This completes the repair of the given input. This demonstrates that \approach has no problem repairing rich inputs containing multiple errors.
-
-
-\section{Input Synthesis}
-\label{sec:input-synthesis}
-
-The second major limitation of
-\ddmax is that the only operation in its toolbox is \emph{deletion} of input
-fragments. Consider\\
-\letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}
-Here, there is a missing quote in the key. \ddmax repair of this string will
-result in
-\letterboxed{\ \ \ \ 42}.
-The problem is that, deletion of fragments alone can lead to significant
-corruption of information. In this instance, the availability of \emph{insertion}
-could have repaired the input string to \\
-\letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}}. Unfortunately, because
-\ddmax is unable to synthesize any framents, opportunities for repair can be
-missed.
-
-
-
-
-
+\begin{comment}
 The \approach algorithm on the other hand, follows in this fashion.
 \begin{enumerate}
 \item \approach algorithm starts with the corrupted input and quickly finds the
@@ -883,22 +869,202 @@ inserted here, resulting in \emph{incomplete} from the JSON parser.
 
 That is, the ability of \approach to synthesize characters for repair can lead
 to more effective repairs.
+\end{comment}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-\section{\approach}
+\section{Repairing Data with \approach}
 \label{sec:drepair}
+Our approach was motivated by the following observation. Consider the output of processing
+from \<jq>, a \<JSON> processor that is often used for processing JSON data.
+On providing an input that contains the missing comma, the parser responds with an
+\emph{approximate} location of the error.
+%\begin{flushleft}
+%                                ^
+\begin{lstlisting}[xleftmargin=10pt,escapeinside={(*@}{@*)}, basicstyle=\ttfamily\small,numbers=none]
+$ echo -n '{"name": "Dave" "age":42}' | jq .
+(*@\textcolor{red}{parse error: Expected separator between values at line 1, column 21}@*)
+\end{lstlisting}
+%\end{flushleft}
+If we instead provide \<jq> with a truncated input,
+the parser responds with \<EOF> 
+ indicating that the
+%                           ^
+\begin{lstlisting}[xleftmargin=10pt,escapeinside={(*@}{@*)}, basicstyle=\ttfamily\small,numbers=none]
+$ echo -n '{"name": "Dave" ' | jq .
+(*@\textcolor{red}{parse error: Unfinished JSON term at EOF at line 1, column 16}@*)
+\end{lstlisting}
+input is incomplete,
+and further data is required to complete the input. We observed this behavior with a variety of
+parsers.
+The key insight in this paper is that we can leverage this behavior to our advantage and
+attempt to repair the input based on a \emph{minimal reliance} of the parser feedback.
+In particular, our approach \drepair only requires that the parser is able to distinguish
+between \emph{incorrect} input and \emph{incomplete} input. Given a parser that obeys this
+minimal contract, we can quickly determine the location of the error, and identify the
+\emph{minimal} edits required to fix the parser error.
+% as we demonstrate next.
+We next describe the \drepair algorithm in more detail.
+
+As our solution is modeled on \emph{error correcting parsers}~\cite{aho1972minimum},
+we define the following terms correspondingly:
+\begin{description}[labelwidth=!, labelindent=0pt]
+\item[alphabet] The set of characters that a given input string can have.
+
+\item[string] A string is an ordered sequence of alphabets.
+
+\item[edit] An edit is a single mutation. It can be either the deletion
+or insertion of a single character.
+
+\item[parser] A parser is an input processor that evaluates a string and returns
+a response indicating whether the string is \emph{accepted}, or \emph{rejected}.
+
+\item[conforming parser] A conforming parser is an \emph{parser} that 
+provides additional information on a rejected string, specifying whether
+the string is \emph{incorrect} or merely \emph{incomplete} (i.e., a suffix exists that
+will make the complete string acceptable to the parser).
+
+\item[viable-prefix] A viable prefix is a string that when passed to the conforming parser,
+ results in an \emph{incomplete} response from the parser.
+
+\item[parse-boundary] Given a string and a conforming parser, a parse boundary is the
+length of the maximal viable-prefix. To the right of the parse-boundary is the maximal
+\emph{viable-prefix} and to the left is the \emph{remaining-suffix}.
+
+\item[repair] An \emph{edit} made to the string that extends its \emph{parse-boundary}.
+
+\item[repair-thread] A \emph{repair-thread} is a sequence of \emph{repairs} made on an
+input string. A repair-thread has a single parse-boundary a corresponding
+\emph{viable-prefix}, and the \emph{remaining-suffix}.
+Similarly, every parse-boundary has associated \emph{repair-threads}.
+If no repairs has been made yet, it is an empty repair-thread.
+
+\item[thread-queue] A priority queue of \emph{repair-threads} that is sorted by the
+number of repairs applied to the viable-prefix and the parse-boundary.
+\end{description}
+
+The problem of \emph{data-repair} is as follows: Given a \emph{string} and a
+\emph{parser}, what is the least number of \emph{edits} that can be made to
+the string to make it acceptable by the \emph{parser}. If the parser is a
+\emph{conforming parser}, the \drepair algorithm can be used to
+repair the string. It has the following steps:
+
+\begin{enumerate}
+\item \emph{Boundary search.} Given any corrupt string, \drepair starts by a
+binary search of the input to determine the parse boundary. This is then used
+to construct the \emph{thread-queue} containing a single empty repair-thread,
+with the parse-boundary set to the search result.
+
+\item \emph{Repair.} Starting with any existing repair-thread, \drepair applies
+either a deletion or an insertion edit on the \emph{remaining suffix}.
+\begin{itemize}
+\item A \emph{deletion} removes the next character in the \emph{remaining-suffix}.
+This results in a new repair-thread that needs to be checked for \emph{extension} as we discuss below.
+\item An \emph{insertion} inserts a character to the beginning of the \emph{remaining-suffix}.
+All characters in the alphabet are considered for insertion.
+Let $S^{'}$ be the viable-prefix of the current repair-thread, and $c$ be the character.
+We create one repair-thread for each $c$ in the alphabet where the parser
+responds with \emph{incomplete} for $S^{'}+c$, with the new viable-prefix set to $S^{'}+c$.
+\end{itemize}
+\item \emph{Extension.} For each repair-thread that results from the previous step,
+we attempt to extend the parse-boundary by adding additional characters from the
+remaining suffix. Duplicate threads (those that result in the same string) are discarded,
+keeping only those with the minimal number of repairs.
+\item \emph{Continuation.} The algorithm chooses the best repair-thread from the priority queue
+for continuation through step 2.
+\end{enumerate}
+
+The algorithm returns as soon as the first complete repair-thread is found that results
+in a \emph{complete} string with the least number of repairs.
+However, one may also repeatedly invoke the algorithm to produce an ordered
+ranking of possible repairs to the original input.
+
+\subsection{Repair of inputs with \approach}
+For example, let us consider the following input to the JSON processor from
+Table~\ref{tab:ddmaxlimitations}:\\
+\letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}} %We follow repair threads serially for ease of explanation.
+\begin{enumerate}
+\item \approach starts by executing a binary search for the boundary where the
+input prefix changes from \emph{incomplete} to \emph{incorrect}. This is
+obtained at index 17, providing the viable-prefix
+\letterboxed{\{\ "name":\ "Dave"\ } and the remaining suffix \letterboxed{"age":\ 42\ \}}
+\item There are three possibilities for repair here. The first is to delete the next character
+\letterboxed{"} 
+from the remaining suffix. This however, does not change the parse-boundary, as the string
+\letterboxed{\{\ "name":\ "Dave"\ a} still results in \emph{incorrect} response from
+the JSON processor. The second is to insert a character. We only insert characters that will lead
+to an improvement in the parser boundary. Here, the only possibility is
+\letterboxed{,}, resulting in the string\\
+\letterboxed{\{\ "name":\ "Dave"\ ,}.
+\item Extending the parser-boundary by appending remaining characters in the
+ remaining suffix, we have \letterboxed{\{\ "name":\ "Dave"\ ,"age":\ 42\ \}},
+ which is accepted by the JSON processor.
+\end{enumerate}
+%\subsection{Repair of rich inputs with \approach}
+%One advantage of \approach is that it can effectively handle inputs with
+Here is a second example, 
+\letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}} again from Table~\ref{tab:ddmaxlimitations}.
+We only follow one repair thread for ease of explanation.
+\begin{enumerate}
+\item \approach starts by finding the parse-boundary. This is
+obtained at index 10, providing the incomplete substring
+\letterboxed{\{"ABCD":[}. %*"1,2,3,4,5,6"]*\}}.
+\item \approach then appends the next character \letterboxed{*} to the input,
+resulting in \letterboxed{\{"ABCD":[*} %"1,2,3,4,5,6"]*\}}.
+and observes the result. In this case, the JSON processor returns
+\emph{incorrect}.
+\item Hence, the newly added character is discarded, and the character at the
+next index is appended, resulting in
+\letterboxed{\{"ABCD":["}. %1,2,3,4,5,6"]*\}}.
+This results in JSON processor responding \emph{incomplete}.
+\item \approach now appends the character in the next index, resulting in
+\letterboxed{\{"ABCD":[1"} which again results in \emph{incomplete} from JSON
+processor.
+\item Proceeding in this fashion the input reaches \\
+\letterboxed{\{"ABCD":["1,2,3,4,5,6"]*} %\}}.
+at which point, we again have the response \emph{incorrect} from the JSON
+processor. Hence, we discard this character, and try the next character,
+resulting in
+\letterboxed{\{"ABCD":["1,2,3,4,5,6"]\}}.
+\item The JSON processor responds with \emph{complete}.
+\end{enumerate}
+This completes the repair of the given input with two repairs.
+This demonstrates that \approach has no problem repairing inputs
+containing multiple errors.
+
+Let us now consider two cases where \approach has counterintuitive behavior.
+Let us examine the input 
+\letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\ \}}.
+\begin{enumerate}
+\item As usual, \approach starts by finding the parse-boundary, which is at \\
+\letterboxed{\{"item":\ "Apple",\ "price":\ }, followed by the remaining suffix
+\letterboxed{***3.45\ \}}.
+ %*"1,2,3,4,5,6"]*\}}.
+\item \approach Since \letterboxed{*}
+is not a valid character to add, \approach deletes this character. Deletion of
+the two remaining characters will result in \letterboxed{\{"item":\ "Apple",\ "price":\ 3.45\ \}},
+which is accepted by the JSON processor.
+\item However, we also have possible characters that can be inserted at the first parse-boundary,
+which results in a parse-boundary extension. That is \letterboxed{"} will extend the parse-boundary
+to \\
+\letterboxed{\{"item":\ "Apple",\ "price":\ "***3.45\ \}}.
+On continuation, \drepair finds that the following result with three insertions also result
+in an accepted string.\\
+\letterboxed{\{"item":\ "Apple",\ "price":\ "***3.45\ \}"\}}.
+\end{enumerate}
+That is, as \drepair operates without human intervention, it is unable to distinguish
+the input semantics, which may demand different repairs.
+
+A final example is the input \letterboxed{"abcd":[1,2,3]\}}.
+\begin{enumerate}
+\item \approach starts by finding the parse-boundary, which is at
+\letterboxed{"abcd"}.
+\item The possible extensions are to delete \letterboxed{:} or to insert
+one of the characters at this point. Unfortunately, none of the characters
+in the alphabet can increase the parse-boundary. Hence, the only option that
+is possible is to continue to delete characters from the remaining suffix.
+This leads to the string \letterboxed{"abcd"}, which is suboptimal.
+\end{enumerate}
+
+\begin{comment}
 The main contribution of \approach is its repertoire of repairs.
 The input string can be modified by \emph{deleting} any character
 (\Cref{lst:repairsdelete}), or
@@ -1147,9 +1313,9 @@ def repair_and_extend(item):
   return [apply_delete(item)] + apply_insert(item)
 \end{lstlisting}
 \vspace{\baselineskip}
-
 The output from \<find\_fixes()> (\Cref{lst:findfixes}) is a set of repair
 threads with the least number of repairs from the passed input string.
+\end{comment}
 
 \approach assumes the parser correctly signals
 \emph{incomplete} for incomplete inputs, \emph{incorrect} for other invalid
@@ -1189,33 +1355,6 @@ Given this, \drepair algorithm works as follows (\Cref{fig:brepair_flowchart}):
     % \vspace*{-0.1in}
 \end{figure}
 \newcommand{\refnumber}[1]{\hyperref[fig:brepair_flowchart]{Step~#1}}
-
-\begin{enumerate}
-\item \emph{Binary search.} Given any corrupt input, \drepair starts by a
-binary search of the input to determine the parse boundary. This then is used
-to construct the first repair thread, with boundary set to the binary search
-result, and repairs set to empty.
-
-\item \emph{Repair.} Starting with any existing repair thread, \drepair applies
-deletion and insertion repairs. A single deletion results in a single repair
-thread which is an extenion of the original repair thread.
-An insertion however, results in multiple repair threads corresponding to the
-number of characters.
-\item \emph{Extention.} For each thread that results from repair, extend the thread
-until the new parse boundary. For threads resulting from insertion, keep only
-those threads that results in a diffrent parse boundary from the old.
-\item \emph{Selection.} We remove any redundant repair threads, and choose the best threads if a
-selection criterion is supplied.
-
-\item \emph{Final Fix.} We then iteratively choose each thread and continue making repairs
-until the parser output at the boundary changes from \emph{incomplete} to
-\emph{complete}.
-\end{enumerate}
-
-The output of the algorithm is a set of repair threads each of which fixes the
-input using a set of repairs. The repair threads are sorted in the order of
-least number of repairs required to fix the input.
-
 
 
 
