@@ -1381,8 +1381,19 @@ Given this, \drepair algorithm works as follows (\Cref{fig:brepair_flowchart}):
 As you can see from the previous section, \drepair is an effective approach to input repair, but
 has a few blind spots. In this section, we discuss how we can mitigate these blind spots.
 
+The main limitation of \drepair is that when it obtains a non \emph{incorrect}
+response from the parser, it assumes that there can be no repairs in the prefix
+thus obtained.
+However, as we saw in the previous section, this need not be the case. For example, 
+given \letterboxed{"abcd":[1,2,3]\}}, the parser returns \emph{complete} for the string
+\letterboxed{"abcd"\}}. However, as we found, a repair inserting \letterboxed{\{} in
+the beginning of the string, resulting in \letterboxed{\{"abcd":[1,2,3]\}}
+is more correct. 
 
+To allow such repairs to take place, we extend the \drepair potential candidates in the following fashion.
 
+When \drepair obtains an \emph{incorrect} response from the parser, we create repair candidates not only
+at the end of the viable-prefix, but also at all points in the viable-prefix. 
 
 
 \section{Experimental Setup}
