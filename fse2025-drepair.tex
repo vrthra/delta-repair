@@ -579,30 +579,27 @@ approach to apply not just deletion (the only operation supported by \ddmax),
 but also insertion and substitution as repair
 operations.
 
-As with \ddmax, we have a few requirements. We need (1) a way to decompose the
-record into tokens, (2) a way to identify valid tokens. However, instead of (3)
-a minimal starting sequence, which may not always be available, we only require
+The requirements of \drepair are similar to that of \ddmax. \drepair needs
+(1) a way to decompose the record into tokens, and
+(2) a way to identify valid tokens.
+Instead of a minimal valid starting sequence (3) 
+which may not always be available, \drepair requires
 the following:
 % As with \ddmax, we require the data processor to indicate if the given record
 %is conforming to the expected format (i.e., valid).  
-When given a nonconforming record,
-we \textit{require} the data processor to indicate whether the record is
-merely \emph{incomplete} (that is, the record fragment is a prefix of a conforming record)
-or is \emph{incorrect} (that is, no suffix to
-this record fragment will result in a conforming record)\footnote{This requirement is
-provided by most parsers. %,
-In the cases where parsers do not provide
-this information, it can be obtained
-by external instrumentation 
-as demonstrated by Bj\"orn et al.~\cite{mathis2019parser}, or 
-by modifying the parser to provide such failure feedback, as demonstrated in this work. 
-}. \approach leverages the parser response to predict which mutation is likely to fix the record with maximal data recovery. 
-We note that similar to \ddmax,
-satisfying the requirements for \approach does not require using a
-formal grammar for parsing, and indeed, there are several systems that
-implement handwritten parsers that satisfy \approach
-constraints~\cite{eaton2021parser}.
-%}
+When given a nonconforming record, \drepair \textit{requires} the data processor
+to indicate whether the record is merely \emph{incomplete} (that is, the record
+fragment is a prefix of a conforming record)
+or is \emph{incorrect} (that is, no suffix to this record fragment will result
+in a conforming record). We note that this feedback is provided by most parsers.
+In the cases where parsers do not provide this information, it can be obtained
+by external instrumentation as demonstrated by Bj\"orn et al.~\cite{mathis2019parser}, or 
+by modifying the parser to provide such failure feedback.
+
+%\drepair leverages the parser response to predict which mutation is likely to fix the record with maximal data recovery. 
+We note that similar to \ddmax, satisfying the requirements for \drepair does
+not require using a formal grammar for parsing, and indeed, there are several
+systems that implement handwritten parsers that satisfy \drepair constraints~\cite{eaton2021parser}.
 
 This paper makes the following
 contributions:
