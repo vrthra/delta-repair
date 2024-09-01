@@ -1433,7 +1433,12 @@ reduce the number of repair candidates.
 
 One such heuristic is to only choose those characters that allow us to extend the parsing-boundary
 beyond the current \emph{incorrect} response, or in the case of \emph{incomplete} response, to produce
-a valid string.
+a valid string. 
+
+In our empirical evaluation, we only use the simple \drepair, with no additional extensions.
+
+%\subsection{Is this a brute force approach?}
+%Given an $n$ length string that is corrupt
 
 \section{Experimental Setup}
 \label{sec:experimental-setup}
