@@ -363,30 +363,34 @@ pics/numbering/.style args={#1}{code={
 %%
 %% The abstract is a short summary of the work to be presented in the
 %% article.
+
+%This process is time-consuming and error-prone, especially when format specifications are incomplete or defined solely by their parsers.
 \begin{abstract}
-In data processing, engineers often encounter datasets that are expected to
-conform to specific formats but contain variations due to factors such as
-human error or data corruption.
-These inconsistencies prevent standard programs from parsing the data correctly.
-Consequently, data engineers must perform \emph{\dtask,} manually
-adjusting the nonconforming data to match the required format.
-This process is time-consuming and prone to errors, particularly when
-format specifications are lacking, which is often the case as
-data formats are frequently defined exclusively by their parsers.
+In data processing, engineers often encounter datasets that are expected to 
+conform to specific formats but contain variations due to factors such as human 
+error or data corruption.
+These inconsistencies prevent standard programs from processing the data correctly.
+Consequently, data engineers must perform \emph{\dtask},
+manually adjusting the nonconforming data to match the required format.
+This process is time-consuming and prone to errors,
+particularly when format specifications are lacking,
+which is often the case as data formats are 
+frequently defined exclusively by their parsers.
 
-In this work, we show that one can often repair the data corruption or
-conformance problems by leveraging failure feedback from parsers even in
-the absence of a reliable data format specification.
+In this work, we show that data corruption or conformance problems can often be 
+repaired by leveraging feedback from parsers,
+even in the absence of reliable data format specifications.
+Our approach, which we call \drepair, can automatically produce repair candidates
+for corrupt or nonconforming input data,
+ranked by their closeness to the original data.
 
-Our approach, which we call \approach, can automatically produce repair
-candidates for corrupt or nonconforming input data ranked by maximal
-closeness to the original data.
-
-We evaluate \approach on 806 (real-world) nonconforming inputs in four
-well-known input formats, namely INI, TinyC, SExp, and cJSON.
-In our evaluation, we found that %\approach 
-\approach is highly effective and efficient in input repair: It repairs 77\% of invalid inputs %and recovers 91\% of input data, 
-within four minutes. It is up to 35\% more effective than \ddmax, the previously best-known approach.
+We evaluate \drepair on 806 real-world nonconforming inputs in four
+well-known input formats: INI, TinyC, SExp, and cJSON.
+In our evaluation, we found that 
+\drepair is highly effective and efficient in input repair, repairing 77\% of 
+corrupt inputs and recovering 91\% of input data within four minutes.
+It is up to 35\% more effective in data recovery than \ddmax,
+the previously best-known approach.
 \end{abstract}
 
 %%
