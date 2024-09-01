@@ -568,7 +568,7 @@ limitations lead to significant data loss, especially when compared to
 \dtask using formal specifications.
 
 The key insight of this paper is that one can leverage the \emph{parse failure feedback}
-to simulate the behavior of a universal grammar and obtain a maximal data repair.
+to identify the possible continuations at any parse failure point.
 This allows our approach \approach to leverage not just deletion (the only operation supported by \ddmax), but also insertion and substitution as repair
 operations. % which are not allowed by \ddmax.
 As with \ddmax, we require the data processor to indicate if the given record
