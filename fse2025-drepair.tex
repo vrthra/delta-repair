@@ -485,7 +485,7 @@ the previously best-known approach.
 \label{sec:intro}
 
 Large data repositories often contain corrupted data records with unintended errors.
-These corruptioins may be introduced when data is created (by humans or buggy programs), modified
+These corruptions may be introduced when data is created (by humans or buggy programs), modified
 (by external actors), or transmitted (via flawed networks)~\cite{scaffidi2008accommodating}.
 For instance, many records are added by hand without validation, leading to
 \textit{nonconforming records}~\cite{mucslu2015preventing}. Such nonconforming
@@ -501,8 +501,8 @@ may often use different delimiters.
 Even for comparatively rigid formats such as XML, there is no guarantee
 that a data record can be processed by a given parser because the parser may
 be nonconforming, implementing only a subset of the format~\cite{xmlconformance}.
-These problems lead to records that cannot be processed by their
-intended programs or consumed by end-users (e.g., data-engineers).
+These problems lead to records that cannot be processed by their intended
+programs or used by data engineers.
 
 Given such nonconforming records that are \emph{almost} but \emph{not quite}
 parsable, developers are saddled with the task of \textit{\dtask}.
@@ -526,10 +526,8 @@ penalized by the number of mutation rule applications, and the parse with the
 lowest penalty is chosen as the best parse.
 The limitation of this approach is that this approach is only workable when
 a formal grammar is available.
-However,
-this assumption may not hold in practice due to several reasons.
-Firstly,
-certain data formats (e.g., CSV~\cite{taocp},
+However, this assumption may not hold in practice.
+Firstly, certain data formats (e.g., CSV~\cite{taocp},
 URL standard from WHATWG~\cite{whatwgurl,urldisagree}, markdown~\cite{gruber2004markdown})
 may not have an official formal grammar specification, or may
 have numerous incompatible standards
@@ -595,11 +593,10 @@ contributions:
 \item \textbf{Identifying \ddmax Limitations.} We identify and demonstrate problems with
 the state-of-the-art language agnostic \ddmax algorithm, which can result in
 significant data loss.
-\item \textbf{Universal Data Repair.} We demonstrate how to leverage
-parse-failure-feedback 
-%to overcome the limitations in \ddmax 
-for effective data repair using each mutation operations: deletion insertion.
-
+\item \textbf{Relaxed Requirements.} We describe how to relax the
+\emph{empty passing configuration} constraint in \ddmax by leveraging parse-failure feedback.
+\item \textbf{Universal Data Repair.}
+We demonstrate effective \dtask using both deletions and insertions.
 \item \textbf{Empirical Evaluation.} We evaluate \approach using 806 (real-world) nonconforming
 records belonging to four well-known input formats (e.g., cJSON and TinyC). 
 Our results show that
