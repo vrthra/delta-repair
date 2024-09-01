@@ -559,22 +559,30 @@ lexical \ddmax~\cite{kirschner2020debugging} which does not require a formal gra
 From here on, we will use the term \emph{\ddmax} to refer to \emph{lexical} \ddmax}.
 \ddmax works similar to Delta Debugging~\cite{zeller2002simplifying},
 but in reverse.
-Given a corrupt record which induces a parse error, and the following prerequisites:
-(1) a way to decompose the record into independent tokens ($\delta$s),
-(2) a way to identify valid inputs, and
-(3) a starting minimal subsequence of the input that is valid, and the assurance
-that if a $\delta$ does not contribute to the corruption, it can be merged to
-the valid minimal input for a larger \emph{valid value}.
-\ddmax thus successively identifies the $\delta$s that when inserted into the 
-minimal valid subsequence, avoids triggering the error, producing larger valid inputs.
-This procedure isolates and discards the parse-error
-inducing part of the record resulting in a valid record with minimal data loss.
+It requires:
+%Given a corrupt record which induces a parse error,
+(1) A way to identify valid inputs,
+(2) A starting minimal subsequence of the input that is \emph{valid}, and 
+(3) The ability to add fragments ($\delta$s) to this input resulting in larger
+\emph{valid inputs}.
+Given these prerequisites and a corrupt record that induces a parse error, 
+\ddmax works as follows:
+(1) It successively identifies $\delta$s that, when inserted into the minimal valid subsequence, avoid triggering the error.
+(2) This process produces increasingly larger valid inputs.
+(3) By doing so, it isolates and discards the parse-error inducing part of the record with minimal data loss.
+
+%The result is a valid record with minimal data loss.
+%\ddmax successively identifies the $\delta$s that when inserted into the 
+%minimal valid subsequence, avoids triggering the error, producing larger valid inputs.
+%This procedure isolates and discards the parse-error
+%inducing part of the record resulting in a valid record with minimal data loss.
 %which operates without a formal grammar.
 While \ddmax was shown to work well in tested scenarios,
 it has three major limitations:
-(1) \ddmax only allows \emph{token deletion} as a repair operation, 
-(2) it cannot repair \emph{complex corruptions} containing multiple faults, and
-(3) it requires the availability of a \emph{valid empty record} to start from.
+(1) \ddmax only allows skipping $\delta$s (fragment \emph{deletion}) as a repair operation, 
+(2) it cannot repair certain kinds of \emph{complex corruptions} containing multiple faults, and
+(3) it requires the availability of a \emph{valid empty record} to start from,
+and valid records as way-points to the maximally valid record.
 These limitations prevent \ddmax from obtaining a maximal data repair in
 several instances, resulting in severe data loss.
 Table~\ref{tab:ddmaxlimitations} presents examples where these
@@ -589,11 +597,10 @@ approach to apply not just deletion (the only operation supported by \ddmax),
 but also insertion and substitution as repair
 operations.
 
-The requirements of \drepair are similar to that of \ddmax. \drepair needs
-(1) a way to decompose the record into tokens, and
-(2) a way to identify valid inputs.
-(3) Instead of a minimal valid starting sequence, and the existence of
-independent $\delta$s which may not always be available, \drepair requires
+The requirements of \drepair are similar to that of \ddmax. \drepair also requires
+(1) A way to identify valid inputs.
+However, instead of a (2) minimal valid starting sequence, and the (3) existence
+of $\delta$s producing valid inputs, which may not always be available, \drepair requires
 the following:
 % As with \ddmax, we require the data processor to indicate if the given record
 %is conforming to the expected format (i.e., valid).  
