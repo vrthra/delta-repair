@@ -795,6 +795,35 @@ could have repaired the input string to
 \ddmax is unable to insert any tokens, opportunities for repair can be
 missed.
 
+\subsection{Other limitations of \ddmax}
+A final limitation of \ddmax is that it assumes that there exist a
+\emph{valid passing configuration} that can be progressively \emph{extended}
+to form the final
+solution that is closest to the original input~\cite[Sec. 3.2]{kirschner2020debugging}.
+This particular assumption may not be warranted in many real-world scenarios.
+For example, consider a parser for date-time. It expects strings that follow
+the format \texttt{YYYY-MM-DDTHH:MM:SSZ}. 
+
+Given corrupt inputs such as
+\letterboxed{X2024-07-23T12:34:56Z},
+\letterboxed{1925X-09-13T10:14:16Z}, and
+\letterboxed{1999-12-20T12:34:56ZX},
+there is no ideal \emph{empty date} that \ddmax can start from, that is applicable
+to all inputs even though the repair only requires deletion of characters (\letterboxed{X} here).
+%Furthermore, as we noted previously, the more common corruption is due to missing tokens
+
+% Given a corrupt input such as
+%\texttt{24-07-23T12:34:56Z}, there is no \emph{passing configuration} that
+%\ddmax can start from.
+
+%Given an example input:
+%\texttt{2024-07-23T12:34:56Z}, the parser will reject it because the month is
+%not valid. However, the parser will accept \texttt{2024-07-23T12:34:56Z} as a
+%valid date-time. In this case, the original input is not a valid date-time,
+%and hence, there is no valid passing configuration that can be extended to
+%form the final solution.
+
+
 
 \subsection{Discussion}
 Why does \ddmax fail to repair these inputs? A major limitation of \ddmax is
