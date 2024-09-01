@@ -533,7 +533,8 @@ Rich Structure\\
 
 When a formal specification of the data format is unavailable, or unreliable,
 the only option left is language-agnostic \dtask provided by
-\ddmax~\cite{kirschner2020debugging} which does not require a formal grammar.
+lexical \ddmax~\cite{kirschner2020debugging} which does not require a formal grammar\footnote{
+From here on, we will use the term \emph{\ddmax} to refer to \emph{lexical} \ddmax}.
 \ddmax works similar to Delta Debugging~\cite{zeller2002simplifying},
 but in reverse.
 Given a corrupt record which induces a parse error,
