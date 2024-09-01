@@ -232,6 +232,13 @@ pics/numbering/.style args={#1}{code={
     \fcolorbox{white}{light-gray}{\texttt{\strut\@ii}}%
   }%
 }
+\newcommand\letterboxedC[2]{%
+\setlength{\fboxsep}{0pt}%
+  \@tfor\@ii:=#2\do{%
+    \fcolorbox{white}{#1}{\texttt{\strut\@ii}}%
+  }%
+}
+
 
 \newcommand\letterboxedinTable[1]{%
 \setlength{\fboxsep}{0pt}%
@@ -937,6 +944,9 @@ input string. A repair-thread has a single parse-boundary a corresponding
 Similarly, every parse-boundary has associated \emph{repair-threads}.
 If no repairs has been made yet, it is an empty repair-thread.
 
+\item[repair-distance] The minimal number of repairs required to transform the corrupt
+string to a complete string (also called \emph{edit-distance}).
+
 \item[thread-queue] A priority queue of \emph{repair-threads} that is sorted by the
 number of repairs applied to the viable-prefix and the parse-boundary.
 \end{description}
@@ -1091,7 +1101,7 @@ in an accepted string.\\
 That is, as \drepair operates without human intervention, it is unable to distinguish
 the input semantics, which may demand different repairs.
 
-A final example is the input \letterboxed{"abcd":[1,2,3]\}}.
+Another example is the input \letterboxed{"abcd":[1,2,3]\}}.
 \begin{enumerate}
 \item \approach starts by finding the parse-boundary, which is at
 \letterboxed{"abcd"}.
@@ -1102,6 +1112,18 @@ is possible is to continue to delete characters from the remaining suffix.
 This leads to the string \letterboxed{"abcd"}, which is suboptimal.
 \end{enumerate}
 
+A final example is the input \letterboxed{"[1,2,3,4]}.
+\begin{enumerate}
+\item \approach starts by finding the parse-boundary, which is at
+\letterboxed{"[1,2,3,4]}.
+\item The possible extension here is to append a character \letterboxed{"},
+leading to the string \letterboxed{"[1,2,3,4]"}.
+%to the end of the input.
+\end{enumerate}
+That is, it ignores the possibility of deletion of the first character as the
+correction even though that can lead to a single edit distance repair.
+
+We next discuss possible mitigation strategies to address these issues.
 \begin{comment}
 The main contribution of \approach is its repertoire of repairs.
 The input string can be modified by \emph{deleting} any character
@@ -1353,13 +1375,13 @@ def repair_and_extend(item):
 \vspace{\baselineskip}
 The output from \<find\_fixes()> (\Cref{lst:findfixes}) is a set of repair
 threads with the least number of repairs from the passed input string.
-\end{comment}
 
 \approach assumes the parser correctly signals
 \emph{incomplete} for incomplete inputs, \emph{incorrect} for other invalid
 inputs, and \emph{complete} if the input was valid. 
 Given this, \drepair algorithm works as follows (\Cref{fig:brepair_flowchart}):
 
+\end{comment}
 
 
 \begin{table}[!tbp]\centering
@@ -1378,23 +1400,40 @@ Given this, \drepair algorithm works as follows (\Cref{fig:brepair_flowchart}):
 \end{table}
 
 \subsection*{Extended \drepair}
-As you can see from the previous section, \drepair is an effective approach to input repair, but
-has a few blind spots. In this section, we discuss how we can mitigate these blind spots.
+%\drepair is an effective approach to input repair, but has a few blind spots.
+%In this section, we discuss how we can mitigate these blind spots.
 
 The main limitation of \drepair is that when it obtains a non \emph{incorrect}
 response from the parser, it assumes that there can be no repairs in the prefix
 thus obtained.
 However, as we saw in the previous section, this need not be the case. For example, 
 given \letterboxed{"abcd":[1,2,3]\}}, the parser returns \emph{complete} for the string
-\letterboxed{"abcd"\}}. However, as we found, a repair inserting \letterboxed{\{} in
+\letterboxed{"abcd"}. However, as we found, a repair inserting \letterboxed{\{} in
 the beginning of the string, resulting in \letterboxed{\{"abcd":[1,2,3]\}}
-is more correct. 
-
+may be more correct, and lead to more data recovery. 
 To allow such repairs to take place, we extend the \drepair potential candidates in the following fashion.
 
 When \drepair obtains an \emph{incorrect} response from the parser, we create repair candidates not only
-at the end of the viable-prefix, but also at all points in the viable-prefix. 
+at the end of the viable-prefix, but also at all points in the viable-prefix. That is, given
+the corrupt string, \letterboxed{"abcd":[1,2,3]\}}, when we obtain \emph{incorrect} with \letterboxed{"abcd":},
+all the following locations are candidate locations for inserts;
+\begin{enumerate*}
+\item \letterboxedC{red}{\ }\letterboxed{"abcd":[1,2,3]}
+\item \letterboxed{"}\letterboxedC{red}{\ }\letterboxed{abcd":}
+\item \letterboxed{"a}\letterboxedC{red}{\ }\letterboxed{bcd":}
+\item \letterboxed{"ab}\letterboxedC{red}{\ }\letterboxed{cd":}
+\item \letterboxed{"abc}\letterboxedC{red}{\ }\letterboxed{d":}
+\item \letterboxed{"abcd}\letterboxedC{red}{\ }\letterboxed{":}
+\item \letterboxed{"abcd"}\letterboxedC{red}{\ }\letterboxed{:}
+\end{enumerate*}.
+Similarly, each character in the current prefix becomes a potential candidate for deletion.
+The problem with this approach is that it may lead to numerous repair candidates, with each
+location potentially having multiple candidates. Hence, heuristic strategies are needed to
+reduce the number of repair candidates.
 
+One such heuristic is to only choose those characters that allow us to extend the parsing-boundary
+beyond the current \emph{incorrect} response, or in the case of \emph{incomplete} response, to produce
+a valid string.
 
 \section{Experimental Setup}
 \label{sec:experimental-setup}
