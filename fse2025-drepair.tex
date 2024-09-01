@@ -878,8 +878,14 @@ data loss.
 The unfortunate issue that exacerbates this problem is that \ddmax is also
 limited to only \emph{deletion} of fragments. If the corruption in the data
 is due to missing tokens (which can often occur in practice because of truncation
-of fields), the only move from \ddmax is to delete more tokens, resulting in
-data that passes the parser but is semantically incorrect.
+of fields, 
+%for e.g.  \letterboxed{24-07-23T12:34:56Z},), 
+the only move from \ddmax is to delete more tokens, resulting in
+data that passes the parser but is semantically incorrect. In common cases such
+as  date and time, \ddmax cannot even attempt to repair the input because (1) there
+is no ideal \emph{empty date} and (2) in common cases of corruption as
+\letterboxed{20240723T12:34:56Z}, insertion of characters is required to complete
+the required format.
 
 \begin{comment}
 The \approach algorithm on the other hand, follows in this fashion.
