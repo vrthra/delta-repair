@@ -597,13 +597,12 @@ approach to apply not just deletion (the only operation supported by \ddmax),
 but also insertion and substitution as repair
 operations.
 
-The requirements of \drepair are similar to that of \ddmax. \drepair also requires
-(1) A way to identify valid inputs.
-However, instead of a (2) minimal valid starting sequence, and the (3) existence
-of $\delta$s producing valid inputs, which may not always be available, \drepair requires
+The requirements of \drepair are similar to that of \ddmax. \drepair also has the
+requirement (1) of \ddmax, that is, a way to identify valid inputs.
+However, instead of the requirement (2) of \ddmax (i.e., a minimal valid
+starting sequence), and the requirement (3), (i.e., the existence of $\delta$s
+producing valid inputs, which may not always be available), \drepair requires
 the following:
-% As with \ddmax, we require the data processor to indicate if the given record
-%is conforming to the expected format (i.e., valid).  
 When given a nonconforming record, \drepair \textit{requires} the data processor
 to indicate whether the record is merely \emph{incomplete} (that is, the record
 fragment is a prefix of a conforming record)
