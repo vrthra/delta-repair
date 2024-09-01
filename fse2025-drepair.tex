@@ -2113,7 +2113,9 @@ Unlike \approach which aims to fix an invalid input, these schemes need an input
 
 \section{Conclusion}
 \label{sec:conclusion}
-This paper presents \approach, an input repair approach that employs input synthesis and lightweight failure feedback (i.e., incomplete and (in)correct checks) to repair invalid inputs. Our approach is black-box, does not require program analysis or an input grammar. We evaluate the data recovery, repair effectiveness, and efficiency of our approach, in comparison to the state-of-the-art methods. We show that \approach has a very high data recovery rate, it recovered 91\% of input data. 
+This paper presents \approach, an input repair approach that employs input synthesis and lightweight parser feedback (i.e., incomplete and (in)correct checks) to repair invalid inputs. 
+%Our approach is black-box, does not require program analysis or an input grammar. 
+We evaluate the data recovery, repair effectiveness, and efficiency of our approach, in comparison to the state-of-the-art methods. We show that \approach has a very high data recovery rate, it recovered 91\% of input data. 
 It is also very effective and efficient in input repair---it completes the repair of about four in five invalid inputs (77\%) within four minutes. Furthermore, we demonstrate that our approach is up to 35\% more effective than the best 
 best baseline---(syntactic) \ddmax, without using an input grammar. In summary, this work demonstrates that combining lightweight failure feedback and input synthesis are important for the effective repair of invalid inputs, especially in the absence of an input specification 
 and program analysis.
@@ -2123,7 +2125,7 @@ We provide our implementation, experimental data and results for easy replicatio
 
 
  \begin{center}
- \textbf{\url{https://tinyurl.com/fsynth}}
+   \textbf{anonymous} %\url{https://tinyurl.com/fsynth}}
  \end{center}
 
 
