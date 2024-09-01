@@ -504,9 +504,12 @@ CSVs and similar data formats often differ between applications of the same
 company~\cite{taocp}, and formats such as date and time from different sources
 may often use different delimiters.
 
-Even for comparatively rigid formats such as XML, there is no guarantee
-that a data record can be processed by a given parser because the parser may
-be nonconforming, implementing only a subset of the format~\cite{xmlconformance}.
+Even for rigid formats like XML, there's no guarantee
+that a data record can be processed by a given parser, as the parser may
+implement only a subset of the format~\cite{xmlconformance}.
+%Even for comparatively rigid formats such as XML, there is no guarantee
+%that a data record can be processed by a given parser because the parser may
+%be nonconforming, implementing only a subset of the format~\cite{xmlconformance}.
 These problems lead to records that cannot be processed by their intended
 programs or used by data engineers.
 
@@ -520,7 +523,9 @@ and developers often have to either purge such records~\cite{hernandez1998real},
 or \emph{manually} repair nonconforming parts of such records~\cite{kirschner2020debugging},
 which is time-consuming and error-prone.
 
-A popular alternative is \emph{automatic \dtask}.
+To address these challenges, researchers have developed \emph{automatic \dtask}
+techniques.
+%A popular alternative is \emph{automatic \dtask}.
 Given a formal grammar for data records,
 \emph{error-correcting} parsers~\cite{aho1972minimum,diekmann2020dont,parr2011ll}, can
 repair nonconforming records.
@@ -530,9 +535,12 @@ in the base grammar.
 The different parses of the nonconforming data by such a universal grammar is
 penalized by the number of mutation rule applications, and the parse with the
 lowest penalty is chosen as the best parse.
-The limitation of this approach is that this approach is only workable when
-a formal grammar is available.
-However, this assumption may not hold in practice.
+The limitation of this approach is that it is only workable
+when a formal grammar is available,
+which may not always be the case in practice.
+%The limitation of this approach is that this approach is only workable when
+%a formal grammar is available.
+%However, this assumption may not hold in practice.
 Firstly, certain data formats (e.g., CSV~\cite{taocp},
 URL standard from WHATWG~\cite{whatwgurl,urldisagree}, markdown~\cite{gruber2004markdown})
 may not have an official formal grammar specification, or may
@@ -604,9 +612,9 @@ systems that implement handwritten parsers that satisfy \drepair constraints~\ci
 This paper makes the following
 contributions:
 \begin{itemize}
-\item \textbf{Identifying \ddmax Limitations.} We identify and demonstrate problems with
-the state-of-the-art language agnostic \ddmax algorithm, which can result in
-significant data loss.
+\item \textbf{Identifying \ddmax Limitations.}
+We identify and demonstrate limitations of 
+the state-of-the-art language-agnostic \ddmax algorithm, which can result in significant data loss.
 \item \textbf{Relaxed Requirements.} We describe how to relax the
 \emph{empty passing configuration} constraint in \ddmax by leveraging parse-failure feedback.
 \item \textbf{Universal Data Repair.}
