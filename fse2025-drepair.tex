@@ -579,8 +579,13 @@ approach to apply not just deletion (the only operation supported by \ddmax),
 but also insertion and substitution as repair
 operations.
 
-As with \ddmax, we require the data processor to indicate if the given record
-is conforming to the expected format (i.e., valid).  However, when given a nonconforming record,
+As with \ddmax, we have a few requirements. We need (1) a way to decompose the
+record into tokens, (2) a way to identify valid tokens. However, instead of (3)
+a minimal starting sequence, which may not always be available, we only require
+the following:
+% As with \ddmax, we require the data processor to indicate if the given record
+%is conforming to the expected format (i.e., valid).  
+When given a nonconforming record,
 we \textit{require} the data processor to indicate whether the record is
 merely \emph{incomplete} (that is, the record fragment is a prefix of a conforming record)
 or is \emph{incorrect} (that is, no suffix to
