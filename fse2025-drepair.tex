@@ -547,18 +547,16 @@ From here on, we will use the term \emph{\ddmax} to refer to \emph{lexical} \ddm
 but in reverse.
 Given a corrupt record which induces a parse error,
 and a way to decompose the record into independent tokens ($\delta$s)
-one can successively minimize the parse-error inducing part of the
-record resulting in a maximal parsing record.
+\ddmax successively minimizes the parse-error inducing part of the
+record resulting in a smaller but valid record.
 %which operates without a formal grammar.
-While \ddmax was shown to work well in tested scenarios, it has two major limitations:
-(1) \ddmax only allows \emph{token deletion} as a repair operation, and 
-(2) it cannot repair \emph{complex corruptions} containing multiple faults.
+While \ddmax was shown to work well in tested scenarios,
+it has three major limitations:
+(1) \ddmax only allows \emph{token deletion} as a repair operation, 
+(2) it cannot repair \emph{complex corruptions} containing multiple faults, and
+(3) it requires the availability of a common \emph{empty passing record} to start from.
 These limitations prevent \ddmax from obtaining a maximal data repair in
 several instances, resulting in severe data loss.
-%Notably, two major \ddmax limitations include its
-%(1) \textit{limited repair operation} (only deletion), and
-%(2) inability to completely repair \textit{complex data formats}
-%(e.g., multiple faults) due to inherent assumptions.
 Table~\ref{tab:ddmaxlimitations} presents three examples where these
 limitations lead to significant data loss, especially when compared to
 automatic \dtask using formal specifications.
