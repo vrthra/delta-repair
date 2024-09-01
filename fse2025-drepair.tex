@@ -551,12 +551,13 @@ lexical \ddmax~\cite{kirschner2020debugging} which does not require a formal gra
 From here on, we will use the term \emph{\ddmax} to refer to \emph{lexical} \ddmax}.
 \ddmax works similar to Delta Debugging~\cite{zeller2002simplifying},
 but in reverse.
-Given a corrupt record which induces a parse error,
-and (1) a way to decompose the record into independent tokens ($\delta$s),
+Given a corrupt record which induces a parse error, and the following prerequisites:
+(1) a way to decompose the record into independent tokens ($\delta$s),
 (2) a way to identify valid inputs, and
 (3) a starting minimal subsequence of the input that is valid
-\ddmax successively concatenates parts of the input that when added, does
-not induce an error. This procedure isolates and removes the parse-error
+\ddmax successively identifies input fragments that when inserted into the 
+minimal valid subsequence, avoids triggering the error.
+This procedure isolates and discards the parse-error
 inducing part of the record resulting in a valid record with minimal data loss.
 %which operates without a formal grammar.
 While \ddmax was shown to work well in tested scenarios,
