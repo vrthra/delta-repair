@@ -562,9 +562,11 @@ but in reverse.
 Given a corrupt record which induces a parse error, and the following prerequisites:
 (1) a way to decompose the record into independent tokens ($\delta$s),
 (2) a way to identify valid inputs, and
-(3) a starting minimal subsequence of the input that is valid
-\ddmax successively identifies input fragments that when inserted into the 
-minimal valid subsequence, avoids triggering the error.
+(3) a starting minimal subsequence of the input that is valid, and the assurance
+that if a $\delta$ does not contribute to the corruption, it can be merged to
+the valid minimal input for a larger \emph{valid value}.
+\ddmax thus successively identifies the $\delta$s that when inserted into the 
+minimal valid subsequence, avoids triggering the error, producing larger valid inputs.
 This procedure isolates and discards the parse-error
 inducing part of the record resulting in a valid record with minimal data loss.
 %which operates without a formal grammar.
