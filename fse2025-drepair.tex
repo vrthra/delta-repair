@@ -569,10 +569,12 @@ limitations lead to significant data loss, especially when compared to
 
 The central idea in this paper is that many parsers will return a \emph{parse-failure
 feedback} that contains crucial information about why the parse failed, and one
-can leverage this feedback to identify the possible \emph{continuations} that
-can avoid such failure.
-This allows our approach \approach to leverage not just deletion (the only operation supported by \ddmax), but also insertion and substitution as repair
-operations. % which are not allowed by \ddmax.
+can leverage this feedback to identify the possible repairs that
+can avoid such failure. Leveraging the parse-failure feedback allows our
+approach to apply not just deletion (the only operation supported by \ddmax),
+but also insertion and substitution as repair
+operations.
+
 As with \ddmax, we require the data processor to indicate if the given record
 is conforming to the expected format (i.e., valid).  However, when given a nonconforming record,
 we \textit{require} the data processor to indicate whether the record is
