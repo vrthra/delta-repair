@@ -1206,13 +1206,13 @@ We next discuss possible mitigation strategies to address these issues.
 %In this section, we discuss how we can mitigate these blind spots.
 
 When \drepair obtains an \Rincomplete or \Rvalid
-response from the parser, it assumes that there can be no repairs in the prefix
+response from the parser, it assumes that there can be no repairs in the viable-prefix
 thus obtained.
 However, as we saw in the previous section, this need not be the case. For example, 
-given \letterboxed{"abcd":[1,2,3]\}}, the parser returns \emph{complete} for the string
+given \letterboxed{"abcd":[1,2,3]\}}, the parser returns \Rvalid for the string
 \letterboxed{"abcd"}. However, as we found, a repair inserting \letterboxed{\{} in
 the beginning of the string, resulting in \letterboxed{\{"abcd":[1,2,3]\}}
-may be more correct, and lead to more data recovery. 
+may be more correct, and lead to more data recovery.
 To allow such repairs to take place, we extend the \drepair potential candidates in the following fashion.
 
 When \drepair obtains an \emph{incorrect} response from the parser, we create repair-candidates not only
