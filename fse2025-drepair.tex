@@ -278,6 +278,26 @@ pics/numbering/.style args={#1}{code={
 
 
 \usepackage{filecontents}
+
+
+\begin{filecontents*}{subjectprograms.tex}
+\begin{table}[!tbp]\centering
+\caption{Subject programs used in the evaluation}
+\begin{tabular}{|l | r | l | l | l | l |}
+\hline
+\textbf{Name} & \textbf{LOC} & \textbf{Lang.} & \textbf{1{st} Commit} & \textbf{Last Commit} \\
+\hline
+\textbf{INI} & 382 & C & Jul 2009 & Jan 2022\\
+\textbf{cJSON} & 3062 & C & Aug 2009 & Jan 2022\\
+\textbf{SExpParser} & 656 & C & Sep 2016 & Sep 2016\\
+\textbf{TinyC} & 375 & C & 2001 & Apr 2018\\
+\hline
+\end{tabular}
+\label{tab:subjectprograms}
+\end{table}
+\end{filecontents*}
+%--
+
 \begin{filecontents*}{ddmaxlimitations.tex}
 \begin{table*}\centering
 
@@ -1272,24 +1292,10 @@ How effective is \approach in fixing invalid inputs? Is it as effective as the s
 %\item[RQ5: Quality of Repairs.] How does the quality of the repaired files compare for each approach?
 \end{description}
 
-
-\begin{table}[!tbp]\centering
-\caption{Subject programs used in the evaluation}
-\begin{tabular}{|l | r | l | l | l | l |}
-\hline
-\textbf{Name} & \textbf{LOC} & \textbf{Lang.} & \textbf{1{st} Commit} & \textbf{Last Commit} \\
-\hline
-\textbf{INI} & 382 & C & Jul 2009 & Jan 2022\\
-\textbf{cJSON} & 3062 & C & Aug 2009 & Jan 2022\\
-\textbf{SExpParser} & 656 & C & Sep 2016 & Sep 2016\\
-\textbf{TinyC} & 375 & C & 2001 & Apr 2018\\
-\hline
-\end{tabular}
-\label{tab:subject-programs}
-\end{table}
+\input{subjectprograms.tex}
 
 \subsection{Subject Programs} %As subjects w
-We used four input formats and their corresponding programs. These are INI (INI), JSON (cJSON), S-Expressions (SExpParser) and TinyC (TinyC). Each program is moderately large (between 375 LOC to 3062 LOC), relatively mature (6 to 21 years old), and written in \<C>. Further details are provided in \Cref{tab:subject-programs}.
+We used four input formats and their corresponding programs. These are INI (INI), JSON (cJSON), S-Expressions (SExpParser) and TinyC (TinyC). Each program is moderately large (between 375 LOC to 3062 LOC), relatively mature (6 to 21 years old), and written in \<C>. Further details are provided in \Cref{tab:subjectprograms}.
 
 \subsection{Test Inputs} 
 \Cref{tab:input-details} provides details of the number of
@@ -1369,7 +1375,7 @@ namely \textit{lexical \ddmax} and \textit{syntactic \ddmax}.
 
 %We implemented the test infrastructure in about 12k LOC of Java code, \approach was implemented in 765 lines of Java code.
 %We also slightly modify subject programs %ubject programs needed to be modified slightly 
-%to provide the required incompleteness feedback (\textit{see} \Cref{tab:subject-programs}).
+%to provide the required incompleteness feedback (\textit{see} \Cref{tab:subjectprograms}).
 All experiments were conducted
 on an ASRock X470D4U with six physical CPU cores and 32GB of RAM, with an AMD Ryzen 5600X @ 3.70GHz, 12~virtual cores, running Debian GNU/Linux.
 
