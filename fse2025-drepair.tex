@@ -1361,14 +1361,14 @@ In this work, we compare the performance of \approach to the following
 techniques:
 \begin{description}[wide]
 \item[\textbf{(1) Baseline:}] The built-in error-recovery technique of the subject programs.
- % In this work,  \recheck{we compare the effectiveness of the subject program to that of \approach (\textit{see} RQ1)}. Specifically, we measure the effectiveness of the built-in error recovery feature of the program by measuring the number of invalid input files that could be processed as valid inputs by a subject program without inducing a program failure, crash or timeout. In our evaluation, we compare the number of such repairs to that of \approach.
 
 \item[\textbf{(2) ANTLR:}] This is the inbuilt error recovery strategy of the ANTLR parser generator when equipped with an input grammar specifying the allowed input structure~\cite[Automatic Error Recovery Strategy]{parr2013definitive}.
-  %In this work, we compare the number of invalid inputs that could be processed by \textbf{ANTLR} to the number of repairs performed by \approach (\textit{see} RQ1).
-\item[\textbf{(3) \ddmax:}] Kirschner et al.~\cite{kirschner2020debugging} proposed %This refers to the
-two variants of the maximizing variant of the delta debugging algorithm (called \ddmax), %proposed by ,
-namely \textit{lexical \ddmax} and \textit{syntactic \ddmax}.
-%For all research questions in this work, we compare the performance of \approach to both \textit{lexical} and \textit{syntactic} \ddmax, since \ddmax is the current best performing state-of-the-art input repair method.
+
+\item[\textbf{(3) Lexical \ddmax:}] This is the language agnostic version described by Kirschner et al.~\cite{kirschner2020debugging}
+
+\item[\textbf{(4) Syntactic \ddmax:}] This version of \ddmax relies on a grammar which is used to parse the
+  input first. It operates on the parse tree. This was also described by Kirschner et al.~\cite{kirschner2020debugging}.
+
 \end{description}
 
 
@@ -1472,7 +1472,7 @@ Baseline   27     6        0            0
 ANTLR      133    69       96           46
 Lex.ddmax  201    132      131          114
 Syn.ddmax  201    144      149          120
-FSynth     191    158      121          154
+DRepair     191    158      121          154
     }\effectivenessdata
 \begin{minipage}{.45\textwidth}
 \begin{tikzpicture}
