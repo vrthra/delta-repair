@@ -1361,7 +1361,7 @@ techniques:
 \item[\textbf{(3) \ddmax:}] Kirschner et al.~\cite{kirschner2020debugging} proposed %This refers to the
 two variants of the maximizing variant of the delta debugging algorithm (called \ddmax), %proposed by ,
 namely \textit{lexical \ddmax} and \textit{syntactic \ddmax}.
-    %For all research questions in this work, we compare the performance of \approach to both \textit{lexical} and \textit{syntactic} \ddmax, since \ddmax is the current best performing state-of-the-art input repair method.
+%For all research questions in this work, we compare the performance of \approach to both \textit{lexical} and \textit{syntactic} \ddmax, since \ddmax is the current best performing state-of-the-art input repair method.
 \end{description}
 
 
@@ -1383,18 +1383,6 @@ As repair techniques, we employ \emph{Baseline}, %(the built-in error recovery s
 All experiments were conducted within a timeout of four minutes per input, for each repair technique. % file.
 \revise{
 The maximum time budget was empirically determined in our preliminary experiments to ensure a balanced evaluation for all techniques. We found that four minutes is a sufficient time budget to evaluate all techniques on most inputs. It is also a reasonable maximum repair time for an end-user. In our experiments, a longer timeout did not result in a significant increase in repairs for all techniques.}
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 \section{Experimental Results}
@@ -1432,14 +1420,9 @@ of \approach over the best baseline which are significant (i.e., greater than fi
 
 
 \subsection{RQ1 Data Recovery and Data Loss} 
-Let us investigate the amount of data recovered and lost by \approach), in comparison to
-the best-performing state-of-the-art method (\ddmax). 
+We investigate the amount of data recovered and lost by \approach, in comparison to
+the best-performing state-of-the-art method, \ddmax. 
 
-
-
-
-
-\vspace{\baselineskip}
 \noindent
 \textbf{\textit{Data Recovery:}} 
 We examine 474 inputs that were completely repaired by %all three approaches, i.e., 
