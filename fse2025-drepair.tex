@@ -686,29 +686,13 @@ Let us first illustrate the limitations of the state-of-the-art \dtask method (\
 presented in Kirschner et al.~\cite{kirschner2020debugging}.
 
 \subsection{\ddmax corrections}
-%We start with an observation. The \ddmax algorithm that was presented in
-%Kirschner et al.~\cite[Figure 5]{kirschner2020debugging} contained two errors.
-%The first is that, when $|\cfail-\dpass| = 1$ then there exists a $\Delta_i$
-%that can be removed from $\cfail$. However, invoking $\ddmax_2(\cfail-\Delta_i, 2)$
-%will lead to infinite recursion. This happens for inputs such as \letterboxed{1*1} for JSON.
-%Hence, we add a base case when $|\cfail-\dpass| = 1$
-%(Figure~\ref{fig:ddmax}). A second issue is that the third recursive call is
-%missing a reduction in grannularity.
-%\subsection{Updates to \ddmax definition}
 While evaluating \ddmax, we noticed two errors in the formal definition of
 \ddmax. These are noted in \Cref{fig:ddmax}. Specifically,
 (1)~\ddmax requires the base case when $|\cfail-\cpass| = 1$. If not, \ddmax can
 go into unbounded recursion on inputs such as the JSON input:
 \letterboxed{1*1}. (2)~when increasing granularity, the size of the remaining
 input should be considered rather than the size of the entire text. Not doing
-this would cause an invariant fail for inputs such as \letterboxed{\{*"":2\}}.
-
-
-
-%A major limitation of \ddmax algorithm is that it results in sub-optimal
-%repairs when the data is expected to conform to \textit{complex formats},
-%and the corruption is not simple (i.e., \textit{multiple faults}).
-%In the following, we discuss these limitations.
+this would cause an invariant fail for JSON inputs such as \letterboxed{\{*"":2\}}.
 
 \subsection{Limitations due to multiple faults}
 A pattern of failure of \ddmax occurs when \ddmax is given an input with
