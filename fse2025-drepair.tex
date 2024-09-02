@@ -988,7 +988,7 @@ will make the complete string acceptable to the parser.
 \item[viable-prefix] A viable prefix is a string that when passed to the conforming parser,
  results in \Rincomplete or \Rvalid response from the parser.
 
-\item[parse-boundary] Given a string and a conforming parser, a parse boundary is the
+\item[parse-boundary] Given a string and a conforming parser, a parse-boundary is the
 length of the maximal viable-prefix. To the right of the parse-boundary is the maximal
 \emph{viable-prefix} and to the left is the \emph{remaining-suffix}.
 
@@ -1055,7 +1055,7 @@ repair the string. It has the following steps (visualized in \Cref{fig:brepair_f
 
 \begin{enumerate}
 \item \emph{Boundary search.} Given any corrupt string, \drepair starts by a
-binary search of the input to determine the parse boundary. This is then used
+binary search of the input to determine the parse-boundary. This is then used
 to construct the \emph{thread-queue} containing a single empty repair-thread,
 with the parse-boundary set to the search result.
 
@@ -1090,15 +1090,15 @@ Table~\ref{tab:ddmaxlimitations}:\\
 \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}} %We follow repair threads serially for ease of explanation.
 \begin{enumerate}
 \item \approach starts by executing a binary search for the boundary where the
-input prefix changes from \emph{incomplete} to \emph{incorrect}. This is
-obtained at index 17, providing the viable-prefix
+input prefix changes from \Rincomplete to \Rincorrect. This is
+obtained at index 17, providing the viable-prefix\\
 \letterboxed{\{\ "name":\ "Dave"\ } and the remaining suffix \letterboxed{"age":\ 42\ \}}
 \item There are three possibilities for repair here. The first is to delete the next character
 \letterboxed{"} 
 from the remaining suffix. This however, does not change the parse-boundary, as the string
-\letterboxed{\{\ "name":\ "Dave"\ a} still results in \emph{incorrect} response from
+\letterboxed{\{\ "name":\ "Dave"\ a} still results in \Rincorrect response from
 the JSON processor. The second is to insert a character. We only insert characters that will lead
-to an improvement in the parser boundary. Here, the only possibility is
+to an improvement in the parse-boundary. Here, the only possibility is
 \letterboxed{,}, resulting in the string\\
 \letterboxed{\{\ "name":\ "Dave"\ ,}.
 \item Extending the parser-boundary by appending remaining characters in the
@@ -1686,7 +1686,7 @@ is much higher %lower
 than that of syntactic and lexical \ddmax. 
 This result is %ese findings are
 due to the %can be explained
-number of program runs required by \approach, especially due to its additional repair operation (input synthesis) and its extra oracle checks (incompleteness and parser boundary).
+number of program runs required by \approach, especially due to its additional repair operation (input synthesis) and its extra oracle checks (incompleteness and parse-boundary).
 \approach is reasonably efficient, similar to \ddmax, the number of program runs 
 is its main performance bottleneck. %of \approach.  % as well as \ddmax. %all three approaches. % to the
 
