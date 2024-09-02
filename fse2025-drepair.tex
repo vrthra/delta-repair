@@ -1364,7 +1364,9 @@ techniques:
   error correction in the subject programs. That is, we look at the number of
   inputs that were accepted by a subject program as valid inputs.
 
-\item[\textbf{(2) ANTLR:}] This is the inbuilt error recovery strategy of the ANTLR parser generator when equipped with an input grammar specifying the allowed input structure~\cite[Automatic Error Recovery Strategy]{parr2013definitive}.
+\item[\textbf{(2) ANTLR:}] The number of invalid inputs which are repaired
+by ANTLR inbuilt error recovery strategy~\cite{parr2013definitive}, allowing the
+input to be accepted even under errors.
 
 \item[\textbf{(3) Lexical \ddmax:}] This is the language agnostic version described by Kirschner et al.~\cite{kirschner2020debugging}
 
