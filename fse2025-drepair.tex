@@ -1078,7 +1078,7 @@ keeping only those with the minimal number of repairs.
 \item \emph{Check Candidates.} If any thread results in a
 \emph{repair-candidate}, then we return the candidate.
 \item \emph{Select Threads.} The algorithm chooses the best repair-thread from the priority queue,
-and continues through step 2.
+and continues through step 2. The ordering is based on the maximum data recovered so far from the original string.
 \end{enumerate}
 
 The algorithm returns as soon as the first repair-candidate is found.
