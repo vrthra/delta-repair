@@ -262,7 +262,7 @@ pics/numbering/.style args={#1}{code={
 
 
 \usepackage{filecontents}
-\begin{filecontents*}{table1.tex}
+\begin{filecontents*}{ddmaxlimitations.tex}
 \begin{table*}\centering
 
 \caption{\ddmax vs. \approach: examples showing limitations of \ddmax and the strengths of \approach}
@@ -552,7 +552,7 @@ implementing a subtly different format than the one specified.
 Hence, grammar-based \dtask approaches
 are suboptimal for fixing corrupt records in practice.
 
-\input{table1.tex}
+\input{ddmaxlimitations.tex}
 
 When a formal specification of the data format is unavailable or unreliable,
 the only viable approach is language-agnostic \dtask, as provided by lexical
@@ -561,13 +561,13 @@ the only viable approach is language-agnostic \dtask, as provided by lexical
 we will refer to \emph{lexical} \ddmax simply as \ddmax}.
 
 \ddmax operates similarly to Delta Debugging~\cite{zeller2002simplifying}, but
-in reverse. It requires three key components: (1) a method to identify valid
+in reverse. It requires three key components: (1) a parser to identify valid
 inputs, (2) a starting minimal subsequence of the input that is \emph{valid},
 and (3) the ability to add fragments ($\delta$s) to this input, resulting in
 larger \emph{valid} inputs. Given these prerequisites and a corrupt record that
 induces a parse error, \ddmax works as follows: (1) It identifies $\delta$s
 that, when inserted into the minimal valid subsequence, avoid triggering the
-error. (2) This process generates increasingly larger valid inputs. (3) By
+parse error. (2) This process generates increasingly larger valid inputs. (3) By
 isolating and removing the part of the record causing the parse error, \ddmax
 minimizes data loss.
 
@@ -579,7 +579,7 @@ repairing complex corruptions involving multiple faults. (3) It requires a
 \emph{valid empty record} to start from, as well as valid records as waypoints
 to the maximally valid record. These constraints hinder \ddmax's ability to
 achieve maximal data repair, often leading to considerable data loss.
-Table~\ref{tab} illustrates examples where these limitations result in severe
+Table~\ref{tab:ddmaxlimitations} illustrates examples where these limitations result in severe
 data loss, particularly when compared to \dtask using formal specifications.
 
 To address these shortcomings, this paper introduces \drepair, which leverages
