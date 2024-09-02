@@ -281,11 +281,11 @@ pics/numbering/.style args={#1}{code={
 \begin{filecontents*}{ddmaxlimitations.tex}
 \begin{table*}\centering
 
-\caption{\ddmax vs. \approach: examples showing limitations of \ddmax and the strengths of \approach}
+\caption{\ddmax vs. \drepair: examples showing limitations of \ddmax and the strengths of \drepair}
 {%\scriptsize  
 \begin{tabular}{|l | l | l | l |}
 \hline
-\textbf{Examples of Nonconforming}& \textbf{\ddmax} & \textbf{\approach} & \textbf{\ddmax} \\
+\textbf{Examples of Nonconforming}& \textbf{\ddmax} & \textbf{\drepair} & \textbf{\ddmax} \\
 \textbf{JSON Inputs} & \textbf{Result} & \textbf{Result} & \textbf{Limitation} \\
 \hline
 \letterboxedinTable{\{\ "name":\ "Dave"\ "age":\ 42\ \}} &
@@ -631,10 +631,10 @@ the state-of-the-art language-agnostic \ddmax algorithm, which can result in sig
 \emph{empty passing configuration} and \emph{valid waypoints} constraints in \ddmax by leveraging parse-failure feedback.
 \item \textbf{Universal Data Repair.}
 We demonstrate effective \dtask using both deletions and insertions.
-\item \textbf{Empirical Evaluation.} We evaluate \approach using 806 (real-world) nonconforming
+\item \textbf{Empirical Evaluation.} We evaluate \drepair using 806 (real-world) nonconforming
 records belonging to four well-known input formats (e.g., cJSON and TinyC). 
 Our results show that
-\textit{\approach has a high (91\%) data recovery rate}. 
+\textit{\drepair has a high (91\%) data recovery rate}. 
 It is up to 35\% more effective than \ddmax.
 
 \end{itemize}
@@ -642,9 +642,8 @@ It is up to 35\% more effective than \ddmax.
 The remainder of this paper is structured as follows: 
 \Cref{sec:ddmaxlimitations} highlights the limitations of the 
 state-of-the-art input repair method (\ddmax).
-%we describe how \approach conducts input synthesis, and 
 \Cref{sec:drepair}  
-describes the \approach algorithm. We describe our experimental setup and 
+describes the \drepair algorithm. We describe our experimental setup and 
 findings in \Cref{sec:experimental-setup} and \Cref{sec:results}. We address 
 the limitations of this work in \Cref{sec:threats}, and discuss related work in
 \Cref{sec:relatedwork}. Finally, we conclude this paper 
@@ -697,7 +696,7 @@ for JSON input \letterboxed{\{*"":2\}}.
 \section{Limitations of \ddmax}
 \label{sec:ddmaxlimitations}
 Let us first illustrate the limitations of the state-of-the-art \dtask method (\ddmax)
- and how our approach (\approach) addresses these limitations.
+ and how our approach (\drepair) addresses these limitations.
 \Cref{fig:ddmax} provides the \ddmax algorithm
 presented in Kirschner et al.~\cite{kirschner2020debugging}.
 
@@ -909,17 +908,17 @@ the required format.
 \end{comment}
 %=======
 \begin{comment}
-The \approach algorithm on the other hand, follows in this fashion.
+The \drepair algorithm on the other hand, follows in this fashion.
 \begin{enumerate}
-\item \approach algorithm starts with the corrupted input and quickly finds the
+\item \drepair algorithm starts with the corrupted input and quickly finds the
 maximal parsable prefix using a binary search: \\
 \letterboxed{\{\ "name":\ "Dave"\ }.
-\item At this point, \approach applies \emph{deletion}, \emph{insertion}, or
+\item At this point, \drepair applies \emph{deletion}, \emph{insertion}, or
 \emph{modification} of characters in order.
 In this case, the \letterboxed{"} is deleted first, resulting in: \\
 \letterboxed{\{\ "name":\ "Dave"\ age":\ 42 \}}.
 \item The JSON parser responds with \emph{incorrect} for this input.
-\item \approach next attempts to insert a character. Say we tried to insert
+\item \drepair next attempts to insert a character. Say we tried to insert
 \letterboxed{1}. This results in: \\
 \letterboxed{\{\ "name":\ "Dave"\ 1"age":\ 42 \}}.
 \item The JSON parser responds with \emph{incorrect} for this input.
