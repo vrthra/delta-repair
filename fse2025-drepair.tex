@@ -704,28 +704,28 @@ non-contiguous. The operation of \ddmax (\Cref{fig:ddmax}) proceeds as follows:
 [labelwidth=!, labelindent=20pt]
 \item The operation starts with $\ddmax_2(\emptyset, 2)$
 \item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply
-\item Can we increase to complement?:\\
+\item Can we increase to complement?\\
 $\cfail - \Delta_1$= \letterboxed{]+} \fail \\
 $\cfail - \Delta_2$= \letterboxed{[*} \fail \\
-\item Can we increase to subset?:\\
+\item Can we increase to subset?\\
 $\emptyset \cup \Delta_1$=\letterboxed{[*} \fail \\
 $\emptyset \cup \Delta_2$= \letterboxed{]+} \fail \\
-\item Can we increase granularity?: $n < |\cfail-\dpass|$ which is $2 < |\cfail-\emptyset|$ \pass \\
+\item Can we increase granularity? $n < |\cfail-\dpass|$ which is $2 < |\cfail-\emptyset|$ \pass \\
   Hence the next iteration is:
   $\ddmax_2\bigl(\emptyset, 4)\bigr) $
 \item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply.
-\item Increase to complement:\\
+\item Can we increase to complement?\\
 $\cfail - \Delta_1$= \letterboxed{*]+} \fail \\
 $\cfail - \Delta_2$= \letterboxed{[]+} \fail \\
 $\cfail - \Delta_3$= \letterboxed{[*+} \fail \\
 $\cfail - \Delta_4$= \letterboxed{[*]} \fail \\
-\item Increase to subset:\\
+\item Can we increase to subset?\\
 $\emptyset \cup \Delta_1$=\letterboxed{[} \fail \\
 $\emptyset \cup \Delta_2$=\letterboxed{*} \fail \\
 $\emptyset \cup \Delta_3$=\letterboxed{]} \fail \\
 $\emptyset \cup \Delta_4$=\letterboxed{+} \fail \\
-\item Increase granularity: $4 < 4$ \fail \\
-\item The solution is $\emptyset$. 
+\item Can we increase granularity? $4 < 4$ \fail \\
+\item The solution is $\emptyset$.
 
 \end{enumerate}
 
