@@ -587,9 +587,10 @@ Given these prerequisites and a corrupt record that induces a parse error,
 %which operates without a formal grammar.
 While \ddmax was shown to work well in tested scenarios,
 it has three major limitations:
-(1) \ddmax only allows skipping $\delta$s (fragment \emph{deletion}) as a repair operation, 
-(2) it cannot repair certain kinds of \emph{complex corruptions} containing multiple faults, and
-(3) it requires the availability of a \emph{valid empty record} to start from,
+(1) \ddmax only allows skipping $\delta$s (fragment \emph{deletion}) as a repair operation, which
+is non-optimal because corrupt records often \emph{lack data} rather than having extra data that prevent parsing.
+(2) It cannot repair certain kinds of \emph{complex corruptions} containing multiple faults, and
+(3) It requires the availability of a \emph{valid empty record} to start from,
 and valid records as way-points to the maximally valid record.
 These limitations prevent \ddmax from obtaining a maximal data repair in
 several instances, resulting in severe data loss.
