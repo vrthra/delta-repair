@@ -1213,12 +1213,12 @@ However, as we saw in the previous section, this need not be the case. For examp
 given \letterboxed{"abcd":[1,2,3]\}}, the parser returns \Rvalid for the string
 \letterboxed{"abcd"}. However, as we found, a repair inserting \letterboxed{\{} in
 the beginning of the string, resulting in \letterboxed{\{"abcd":[1,2,3]\}}
-may be more correct, and lead to more data recovery.
+can lead to more data recovery.
 To allow such repairs to take place, we extend the \drepair potential candidates in the following fashion.
 
-When \drepair obtains an \emph{incorrect} response from the parser, we create repair-candidates not only
+When \drepair obtains an \Rincorrect response from the parser, we create repair-candidates not only
 at the end of the viable-prefix, but also at all points in the viable-prefix. That is, given
-the corrupt string, \letterboxed{"abcd":[1,2,3]\}}, when we obtain \emph{incorrect} with \letterboxed{"abcd":},
+the corrupt string, \letterboxed{"abcd":[1,2,3]\}}, when we obtain \Rincorrect with \letterboxed{"abcd":},
 all the following locations are candidate locations for inserts;
 \begin{enumerate*}
 \item \letterboxedC{red}{\ }\letterboxed{"abcd":[1,2,3]}
@@ -1235,7 +1235,7 @@ location potentially having multiple candidates. Hence, heuristic strategies are
 reduce the number of repair-candidates.
 
 One such heuristic is to only choose those characters that allow us to extend the parsing-boundary
-beyond the current \emph{incorrect} response, or in the case of \emph{incomplete} response, to produce
+beyond the current \Rincorrect response, or in the case of \Rincomplete response, to produce
 a valid string. 
 
 In our empirical evaluation, we only use the simple \drepair, with no additional extensions.
