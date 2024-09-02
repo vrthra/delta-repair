@@ -1287,8 +1287,9 @@ How effective is \approach in fixing invalid inputs? Is it as effective as the s
 \item[RQ3: Efficiency.] What is the efficiency (runtime) of
 \approach? Is it as efficient as the state-of-the-art techniques?
 
-\item[RQ4: Perfect Repair.] How many files are repaired prefectly by
-\approach? How does the number of perfect repairs compare to the state-of-the-art methods?
+% TODO -- commenting it out. This does not seem like a valid criteria.
+%\item[RQ4: Perfect Repair.] How many files are repaired prefectly by
+%\approach? How does the number of perfect repairs compare to the state-of-the-art methods?
 
 %\item[RQ5: Quality of Repairs.] How does the quality of the repaired files compare for each approach?
 \end{description}
@@ -1714,6 +1715,7 @@ are in \textbf{bold}. %, second-best time performance is in \textit{italics}
 \label{tab:efficiency}
 \end{table}
 
+\begin{comment}
 \subsection{RQ4 Perfect Repair.}
 \revise{In this research question, we would like to evaluate the number of files that have been repaired perfectly by each approach, that is - the repaired file is exactly the same file as the file before it was mutated.
 Since this obviously limits the number of files we can use in the evaluation to the artificially mutated files, the total number of files is smaller in this section of the experiments.}
@@ -1762,6 +1764,7 @@ This might be due to the fact that \ddmaxg needs to parse and un-parse all input
 \vspace{-0.4cm}
 \label{fig:perfectlyrepairedvenndiagram}
 \end{figure}
+\end{comment}
 
 %\subsection{RQ5 Quality of Repaired Files}
 %\todo{EZ: Write RQ5}
