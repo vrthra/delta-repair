@@ -446,7 +446,7 @@ frequently defined exclusively by their parsers.
 In this work, we show that data corruption or conformance problems can often be 
 repaired by leveraging feedback from parsers,
 even in the absence of reliable data format specifications.
-Our approach, which we call \drepair, can automatically produce repair candidates
+Our approach, which we call \drepair, can automatically produce repair-candidates
 for corrupt or nonconforming input data,
 ranked by their closeness to the original data.
 
@@ -1005,8 +1005,8 @@ A repair thread becomes a \emph{repair-candidate} when the repaired string
 elicits the \Rvalid response from the parser.
 
 \item[repair-distance] The minimal number of repairs required to transform the corrupt
-string to the repair candidate (also called \emph{edit-distance}). The larger the
-repair-distance of a repair candidate, the larger its distance from the original data.
+string to the repair-candidate (also called \emph{edit-distance}). The larger the
+repair-distance of a repair-candidate, the larger its distance from the original data.
 
 \item[thread-queue] A priority queue of \emph{repair-threads} that is sorted by the
 number of repairs applied to the viable-prefix and the parse-boundary.
@@ -1075,16 +1075,15 @@ responds with \emph{incomplete} for $S^{'}+c$, with the new viable-prefix set to
 we attempt to extend the parse-boundary by adding additional characters from the
 remaining suffix. Duplicate threads (those that result in the same string) are discarded,
 keeping only those with the minimal number of repairs.
-\item \emph{Check Completion.} If any thread results in a \emph{complete} string, then
-we return the corresponding set of repairs.
+\item \emph{Check Completion.} If any thread results in a
+\emph{repair-candidate}, then we return the candidate.
 \item \emph{Select Threads.} The algorithm chooses the best repair-thread from the priority queue,
 and continues through step 2.
 \end{enumerate}
 
-The algorithm returns as soon as the first complete repair-thread is found that results
-in a \emph{complete} string with the least number of repairs.
+The algorithm returns as soon as the first repair-candidate is found.
 However, one may also repeatedly invoke the algorithm to produce an ordered
-ranking of possible repairs to the original input.
+ranking of further repair-candidates.
 
 \subsection{Repair of inputs with \approach}
 For example, let us consider the following input to the JSON processor from
@@ -1215,7 +1214,7 @@ the beginning of the string, resulting in \letterboxed{\{"abcd":[1,2,3]\}}
 may be more correct, and lead to more data recovery. 
 To allow such repairs to take place, we extend the \drepair potential candidates in the following fashion.
 
-When \drepair obtains an \emph{incorrect} response from the parser, we create repair candidates not only
+When \drepair obtains an \emph{incorrect} response from the parser, we create repair-candidates not only
 at the end of the viable-prefix, but also at all points in the viable-prefix. That is, given
 the corrupt string, \letterboxed{"abcd":[1,2,3]\}}, when we obtain \emph{incorrect} with \letterboxed{"abcd":},
 all the following locations are candidate locations for inserts;
@@ -1229,9 +1228,9 @@ all the following locations are candidate locations for inserts;
 \item \letterboxed{"abcd"}\letterboxedC{red}{\ }\letterboxed{:}
 \end{enumerate*}.
 Similarly, each character in the current prefix becomes a potential candidate for deletion.
-The problem with this approach is that it may lead to numerous repair candidates, with each
+The problem with this approach is that it may lead to numerous repair-candidates, with each
 location potentially having multiple candidates. Hence, heuristic strategies are needed to
-reduce the number of repair candidates.
+reduce the number of repair-candidates.
 
 One such heuristic is to only choose those characters that allow us to extend the parsing-boundary
 beyond the current \emph{incorrect} response, or in the case of \emph{incomplete} response, to produce
@@ -1240,11 +1239,11 @@ a valid string.
 In our empirical evaluation, we only use the simple \drepair, with no additional extensions.
 
 \subsection{Postprocessing}
-\drepair can generate multiple repair candidates, only one of which may be
+\drepair can generate multiple repair-candidates, only one of which may be
 acceptable. For example, while \drepair may generate both
 \<\{"item": "Apple", "price": "***3.45 \}"\}> as well as \<\{"item": "Apple", "price": "***3.45 \}"\}>,
 only one may be correct. Hence, we provide a ranked list
-of repair candidates (ordered by repair-distance) to the user, and rely on
+of repair-candidates (ordered by repair-distance) to the user, and rely on
 user-defined post-processing to identify the best candidate.
 
 Similarly,
@@ -1791,7 +1790,7 @@ Our approach (\approach) and empirical evaluations may be limited by the followi
 \subsection{Limited to Data Repair} The repair produced by our approach aim to ensure maximal data recovery, but it does not ensure that the intended user information is preserved. Hence, \approach is limited to repair of the input data, but not the intended information. 
 
 
-\subsection{Input Constraints and Semantics} \approach does not address concerns about recovering or preserving the input constraints or intended semantics of the input data. For instance, repairing an invalid checksum or hash requires such information, and \approach will be limited for this use cases. However, it would provide repair candidates that allow end-users to debug such semantic issues. 
+\subsection{Input Constraints and Semantics} \approach does not address concerns about recovering or preserving the input constraints or intended semantics of the input data. For instance, repairing an invalid checksum or hash requires such information, and \approach will be limited for this use cases. However, it would provide repair-candidates that allow end-users to debug such semantic issues. 
 \revise{
 In addition, inputs with significant semantic corruption may not be effectively repaired by FSynth. Even though FSynth is effective in fixing structural parts of invalid inputs, when the corruption is in the semantic part, the missing data becomes difficult to recover. Examples include corrupted numbers in calculations, and dates.}
 
@@ -1802,10 +1801,10 @@ Secondly, the repair via synthesis operation %(i.e., insertion) % operation)
 of our approach poses the risk of introducing input elements with unintended semantic consequences. 
 Specifically, insertion operations may lead %cause further 
 to data corruption and information distortion. To mitigate this threat, \approach provides several valid candidate repairs ranked by the edit distance 
-of each repair candidate from the original input. %to %.
+of each repair-candidate from the original input. %to %.
 Hence, we 
 encourage end-users to select the best semantically-fit repair from the 
-potential repair candidates provided by \approach. 
+potential repair-candidates provided by \approach. 
 
 
 \done{Do you talk about the risk of input synthesis (which may be perceived as greater than the risk of input deletion) somewhere? A small lexical change may have large semantical consequences -- AZ}
