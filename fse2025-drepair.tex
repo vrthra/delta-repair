@@ -1060,7 +1060,7 @@ to construct the \emph{thread-queue} containing a single empty repair-thread,
 with the parse-boundary set to the search result.
 
 \item \emph{Apply Repair.} Starting with any existing repair-thread, \drepair applies
-either a deletion or an insertion edit on the \emph{remaining suffix}.
+either a deletion or an insertion edit on the \emph{remaining-suffix}.
 \begin{itemize}
 \item A \emph{deletion} removes the next character in the \emph{remaining-suffix}.
 This results in a new repair-thread that needs to be checked for \emph{extension} as we discuss below.
@@ -1072,7 +1072,7 @@ responds with \emph{incomplete} for $S^{'}+c$, with the new viable-prefix set to
 \end{itemize}
 \item \emph{Extend Threads.} For each repair-thread that results from the previous step,
 we attempt to extend the parse-boundary by adding additional characters from the
-remaining suffix. Duplicate threads (those that result in the same string) are discarded,
+remaining-suffix. Duplicate threads (those that result in the same string) are discarded,
 keeping only those with the minimal number of repairs.
 \item \emph{Check Candidates.} If any thread results in a
 \emph{repair-candidate}, then we return the candidate.
@@ -1092,17 +1092,17 @@ Table~\ref{tab:ddmaxlimitations}:\\
 \item \approach starts by executing a binary search for the boundary where the
 input prefix changes from \Rincomplete to \Rincorrect. This is
 obtained at index 17, providing the viable-prefix\\
-\letterboxed{\{\ "name":\ "Dave"\ } and the remaining suffix \letterboxed{"age":\ 42\ \}}
+\letterboxed{\{\ "name":\ "Dave"\ } and the remaining-suffix \letterboxed{"age":\ 42\ \}}
 \item There are three possibilities for repair here. The first is to delete the next character
 \letterboxed{"} 
-from the remaining suffix. This however, does not change the parse-boundary, as the string
+from the remaining-suffix. This however, does not change the parse-boundary, as the string
 \letterboxed{\{\ "name":\ "Dave"\ a} still results in \Rincorrect response from
 the JSON processor. The second is to insert a character. We only insert characters that will lead
 to an improvement in the parse-boundary. Here, the only possibility is
 \letterboxed{,}, resulting in the string\\
 \letterboxed{\{\ "name":\ "Dave"\ ,}.
 \item Extending the parser-boundary by appending remaining characters in the
- remaining suffix, we have \letterboxed{\{\ "name":\ "Dave"\ ,"age":\ 42\ \}},
+ remaining-suffix, we have \letterboxed{\{\ "name":\ "Dave"\ ,"age":\ 42\ \}},
  which is accepted by the JSON processor.
 \end{enumerate}
 %\subsection{Repair of rich inputs with \approach}
@@ -1142,7 +1142,7 @@ Let us examine the input
 \letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\ \}}.
 \begin{enumerate}
 \item As usual, \approach starts by finding the parse-boundary, which is at \\
-\letterboxed{\{"item":\ "Apple",\ "price":\ }, followed by the remaining suffix
+\letterboxed{\{"item":\ "Apple",\ "price":\ }, followed by the remaining-suffix
 \letterboxed{***3.45\ \}}.
  %*"1,2,3,4,5,6"]*\}}.
 \item \approach Since \letterboxed{*}
@@ -1167,7 +1167,7 @@ Another example is the input \letterboxed{"abcd":[1,2,3]\}}.
 \item The possible extensions are to delete \letterboxed{:} or to insert
 one of the characters at this point. Unfortunately, none of the characters
 in the alphabet can increase the parse-boundary. Hence, the only option that
-is possible is to continue to delete characters from the remaining suffix.
+is possible is to continue to delete characters from the remaining-suffix.
 This leads to the string \letterboxed{"abcd"}, which is suboptimal.
 \end{enumerate}
 
