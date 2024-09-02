@@ -623,8 +623,15 @@ It is up to 35\% more effective than \ddmax.
 
 \end{itemize}
 
-The remainder of this paper is structured as follows: \Cref{sec:rich-input-structures} highlights the limitations of the state-of-the-art input repair method (\ddmax) and illustrates how \approach overcomes these limitations. In \Cref{sec:input-synthesis} we describe how \approach conducts input synthesis, and \Cref{sec:drepair}  describes the \approach algorithm. We describe our experimental setup and findings in \Cref{sec:experimental-setup} and \Cref{sec:results}. We address the limitations %and threats to the validity 
-of this work in \Cref{sec:threats}, and discuss related work in \Cref{sec:related_work}. Finally, we conclude this paper 
+The remainder of this paper is structured as follows: 
+\Cref{sec:ddmaxlimitations} highlights the limitations of the 
+state-of-the-art input repair method (\ddmax).
+%we describe how \approach conducts input synthesis, and 
+\Cref{sec:drepair}  
+describes the \approach algorithm. We describe our experimental setup and 
+findings in \Cref{sec:experimental-setup} and \Cref{sec:results}. We address 
+the limitations of this work in \Cref{sec:threats}, and discuss related work in
+\Cref{sec:relatedwork}. Finally, we conclude this paper 
 with the discussion of future work in \Cref{sec:conclusion}. 
 
 
@@ -671,7 +678,7 @@ $\test(\dpass) = \pass \land n \leq |\Delta|$.\\
 \end{figure*}
 
 \section{Limitations of \ddmax}
-\label{sec:rich-input-structures}
+\label{sec:ddmaxlimitations}
 
 Let us first illustrate the limitations of the state-of-the-art \dtask method (\ddmax)
  and how our approach (\approach) addresses these limitations.
@@ -2078,7 +2085,7 @@ potential repair candidates provided by \approach.
 
 
 \section{Related Work}
-\label{sec:related_work}
+\label{sec:relatedwork}
 
 Let us discuss the state-of-the-art input repair approaches and how they compare to \approach. 
 
