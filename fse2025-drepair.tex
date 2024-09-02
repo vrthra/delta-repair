@@ -1026,9 +1026,12 @@ input string. A repair-thread has a single parse-boundary a corresponding
 \emph{viable-prefix}, and the \emph{remaining-suffix}.
 Similarly, every parse-boundary has associated \emph{repair-threads}.
 If no repairs has been made yet, it is an empty repair-thread.
+A repair thread becomes a \emph{repair-candidate} when the repaired string
+elicits the \emph{valid} response from the parser.
 
 \item[repair-distance] The minimal number of repairs required to transform the corrupt
-string to a complete string (also called \emph{edit-distance}).
+string to a complete string (also called \emph{edit-distance}). The larger the
+repair-distance of a repair candidate, the larger its distance from the original data.
 
 \item[thread-queue] A priority queue of \emph{repair-threads} that is sorted by the
 number of repairs applied to the viable-prefix and the parse-boundary.
