@@ -1103,7 +1103,7 @@ to an improvement in the parse-boundary. Here, the only possibility is
 \letterboxed{\{\ "name":\ "Dave"\ ,}.
 \item Extending the parser-boundary by appending remaining characters in the
  remaining-suffix, we have \letterboxed{\{\ "name":\ "Dave"\ ,"age":\ 42\ \}},
- which is accepted by the JSON processor.
+  and the response \Rvalid from the JSON processor.
 \end{enumerate}
 %\subsection{Repair of rich inputs with \approach}
 %One advantage of \approach is that it can effectively handle inputs with
@@ -1112,26 +1112,26 @@ Here is a second example,
 We only follow one repair thread for ease of explanation.
 \begin{enumerate}
 \item \approach starts by finding the parse-boundary. This is
-obtained at index 10, providing the incomplete substring
-\letterboxed{\{"ABCD":[}. %*"1,2,3,4,5,6"]*\}}.
+obtained at index 9, providing the viable-prefix
+    \letterboxed{\{"ABCD":[} and remaining-suffix \letterboxed{*"1,2,3,4,5,6"]*\}}.
 \item \approach then appends the next character \letterboxed{*} to the input,
 resulting in \letterboxed{\{"ABCD":[*} %"1,2,3,4,5,6"]*\}}.
 and observes the result. In this case, the JSON processor returns
-\emph{incorrect}.
+\Rincorrect.
 \item Hence, the newly added character is discarded, and the character at the
 next index is appended, resulting in
 \letterboxed{\{"ABCD":["}. %1,2,3,4,5,6"]*\}}.
-This results in JSON processor responding \emph{incomplete}.
+This results in JSON processor responding \Rincomplete.
 \item \approach now appends the character in the next index, resulting in
-\letterboxed{\{"ABCD":[1"} which again results in \emph{incomplete} from JSON
+\letterboxed{\{"ABCD":[1"} which again results in \Rincomplete from JSON
 processor.
 \item Proceeding in this fashion the input reaches \\
 \letterboxed{\{"ABCD":["1,2,3,4,5,6"]*} %\}}.
-at which point, we again have the response \emph{incorrect} from the JSON
+at which point, we again have the response \Rincorrect from the JSON
 processor. Hence, we discard this character, and try the next character,
 resulting in
 \letterboxed{\{"ABCD":["1,2,3,4,5,6"]\}}.
-\item The JSON processor responds with \emph{complete}.
+\item The JSON processor responds with \Rvalid.
 \end{enumerate}
 This completes the repair of the given input with two repairs.
 This demonstrates that \approach has no problem repairing inputs
@@ -1141,7 +1141,7 @@ Let us now consider two cases where \approach has counterintuitive behavior.
 Let us examine the input 
 \letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\ \}}.
 \begin{enumerate}
-\item As usual, \approach starts by finding the parse-boundary, which is at \\
+\item As usual, \approach starts by finding the parse-boundary, and the viable-prefix which is \\
 \letterboxed{\{"item":\ "Apple",\ "price":\ }, followed by the remaining-suffix
 \letterboxed{***3.45\ \}}.
  %*"1,2,3,4,5,6"]*\}}.
@@ -1162,7 +1162,7 @@ the input semantics, which may demand different repairs.
 
 Another example is the input \letterboxed{"abcd":[1,2,3]\}}.
 \begin{enumerate}
-\item \approach starts by finding the parse-boundary, which is at
+\item \approach starts by finding the parse-boundary and the corresponding viable-prefix, which is
 \letterboxed{"abcd"}.
 \item The possible extensions are to delete \letterboxed{:} or to insert
 one of the characters at this point. Unfortunately, none of the characters
@@ -1171,16 +1171,18 @@ is possible is to continue to delete characters from the remaining-suffix.
 This leads to the string \letterboxed{"abcd"}, which is suboptimal.
 \end{enumerate}
 
+That is, \drepair can also result in suboptimal repairs.
+
 A final example is the input \letterboxed{"[1,2,3,4]}.
 \begin{enumerate}
-\item \approach starts by finding the parse-boundary, which is at
+\item \approach starts by finding the parse-boundary and the corresponding viable-prefix, which is
 \letterboxed{"[1,2,3,4]}.
 \item The possible extension here is to append a character \letterboxed{"},
 leading to the string \letterboxed{"[1,2,3,4]"}.
 %to the end of the input.
 \end{enumerate}
 That is, it ignores the possibility of deletion of the first character as the
-correction even though that can lead to a single edit distance repair.
+correction even though that can lead to an optimal repair-candidate.
 
 We next discuss possible mitigation strategies to address these issues.
 
