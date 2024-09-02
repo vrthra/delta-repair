@@ -1027,7 +1027,7 @@ repair the string. It has the following steps (visualized in \Cref{fig:brepair_f
     \draw[blockdiagramarrow] (search) -- (repair); %node[simpletext,pos=.5,right,font=\scriptsize] {}; % PushPQ
     \node[blockdiagramblock,right=of repair] (extend) {Extend Threads};
     \draw[blockdiagramarrow] (repair) -- (extend);
-    \node[blockdiagramblock,below=of extend] (isvalid) {Valid Input?};
+    \node[blockdiagramblock,below=of extend] (isvalid) {Check Candidates};
     \node[simpletext,below=.3 of isvalid] (return) {\mbox{Return input}};
     \node[blockdiagramblock,left=of isvalid] (select) {Select Threads};
     \draw[blockdiagramarrow] (extend) -- (isvalid);
@@ -1075,7 +1075,7 @@ responds with \emph{incomplete} for $S^{'}+c$, with the new viable-prefix set to
 we attempt to extend the parse-boundary by adding additional characters from the
 remaining suffix. Duplicate threads (those that result in the same string) are discarded,
 keeping only those with the minimal number of repairs.
-\item \emph{Check Completion.} If any thread results in a
+\item \emph{Check Candidates.} If any thread results in a
 \emph{repair-candidate}, then we return the candidate.
 \item \emph{Select Threads.} The algorithm chooses the best repair-thread from the priority queue,
 and continues through step 2.
