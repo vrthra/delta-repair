@@ -515,9 +515,6 @@ may often use different delimiters.
 Even for rigid formats like XML, there's no guarantee
 that a data record can be processed by a given parser, as the parser may
 implement only a subset of the format~\cite{xmlconformance}.
-%Even for comparatively rigid formats such as XML, there is no guarantee
-%that a data record can be processed by a given parser because the parser may
-%be nonconforming, implementing only a subset of the format~\cite{xmlconformance}.
 These problems lead to records that cannot be processed by their intended
 programs or used by data engineers.
 
@@ -557,55 +554,52 @@ are suboptimal for fixing corrupt records in practice.
 
 \input{table1.tex}
 
-When a formal specification of the data format is unavailable, or unreliable,
-the only option left is language-agnostic \dtask provided by
-lexical \ddmax~\cite{kirschner2020debugging} which does not require a formal grammar\footnote{
-From here on, we will use the term \emph{\ddmax} to refer to \emph{lexical} \ddmax}.
-\ddmax operates similarly to Delta Debugging~\cite{zeller2002simplifying} but 
-in reverse. It requires: (1) a method to identify valid inputs, (2) a starting 
-minimal subsequence of the input that is \emph{valid}, and (3) the ability to 
-add fragments ($\delta$s) to this input, resulting in larger \emph{valid 
-inputs}. Given these prerequisites and a corrupt record that induces a parse 
-error, \ddmax identifies $\delta$s that, when 
-inserted into the minimal valid subsequence, avoid triggering the error.
-This process generates increasingly larger valid inputs, and in doing so, it 
-isolates and removes the part of the record causing the parse error, with 
-minimal data loss.
+When a formal specification of the data format is unavailable or unreliable,
+the only viable approach is language-agnostic \dtask, as provided by lexical
+\ddmax~\cite{kirschner2020debugging}. Unlike grammar-dependent methods, lexical
+\ddmax does not require a formal grammar specification\footnote{From here on,
+we will refer to \emph{lexical} \ddmax simply as \ddmax}.
 
-While \ddmax has proven effective in certain scenarios, it has three major 
-limitations: (1) \ddmax only allows fragment deletion ($\delta$s) as a repair 
-operation, which is suboptimal because corrupt records often \emph{lack data} 
-rather than contain extra data preventing parsing. (2) It cannot repair complex 
-corruptions involving multiple faults. (3) It requires a \emph{valid empty 
-record} to start from and \emph{valid records as waypoints} to the maximally
-valid record. These limitations hinder \ddmax's ability to achieve maximal data 
-repair in several cases, leading to significant data loss.
+\ddmax operates similarly to Delta Debugging~\cite{zeller2002simplifying}, but
+in reverse. It requires three key components: (1) a method to identify valid
+inputs, (2) a starting minimal subsequence of the input that is \emph{valid},
+and (3) the ability to add fragments ($\delta$s) to this input, resulting in
+larger \emph{valid} inputs. Given these prerequisites and a corrupt record that
+induces a parse error, \ddmax works as follows: (1) It identifies $\delta$s
+that, when inserted into the minimal valid subsequence, avoid triggering the
+error. (2) This process generates increasingly larger valid inputs. (3) By
+isolating and removing the part of the record causing the parse error, \ddmax
+minimizes data loss.
+
+While \ddmax has proven effective in certain scenarios, it faces significant
+limitations: (1) \ddmax only allows for fragment deletion ($\delta$s) as a
+repair operation, which is suboptimal because corrupt records often \emph{lack
+data} rather than contain extra data preventing parsing. (2) It struggles with
+repairing complex corruptions involving multiple faults. (3) It requires a
+\emph{valid empty record} to start from, as well as valid records as waypoints
+to the maximally valid record. These constraints hinder \ddmax's ability to
+achieve maximal data repair, often leading to considerable data loss.
 Table~\ref{tab} illustrates examples where these limitations result in severe
 data loss, particularly when compared to \dtask using formal specifications.
 
-The central idea of this paper is that many parsers return
-\emph{parse-failure feedback} containing crucial information about why parsing
-failed. This feedback can be leveraged to identify possible repairs that prevent
-such failures. By using parse-failure feedback, our approach supports not only 
-\emph{deletion} (as \ddmax does) but also \emph{insertion} and
-\emph{substitution} as repair operations.
+To address these shortcomings, this paper introduces \drepair, which leverages
+the \emph{parse-failure feedback} that many parsers provide. This feedback
+often contains crucial information about why the parse failed, which can be
+used to guide the repair process. Unlike \ddmax, \drepair supports not only
+deletion but also insertion and substitution as repair operations, allowing for
+a more comprehensive and effective data repair process.
 
-The requirements for \drepair are similar to those of \ddmax. Like \ddmax, 
-\drepair requires (1) a way to identify valid inputs. However, instead of 
-requiring a minimal valid starting sequence (requirement 2 of \ddmax) and the 
-existence of $\delta$s producing valid inputs (requirement 3 of \ddmax, which 
-may not always be available), \drepair requires the following: When given a 
-nonconforming record, \drepair \textit{requires} the data processor to indicate 
-whether the record is merely \emph{incomplete} (i.e., the record fragment is a 
-prefix of a conforming record) or \emph{incorrect} (i.e., no suffix to this 
-record fragment will result in a conforming record). 
-Given parsers that conform to this requirement, \drepair can produce repairs
-that result in maximal data-recovery, and minimal data-loss compared to \ddmax.
-
-We note that most parsers provide the requisite feedback.
-In cases where such a feedback is not reliably obtained, it can be obtained
-through external instrumentation as demonstrated by
-Björn et al.~\cite{mathis2019parser}.
+\drepair shares some requirements with \ddmax, such as the need to identify
+valid inputs. However, it differs in two critical ways: instead of requiring a
+minimal valid starting sequence and the existence of $\delta$s producing valid
+inputs (which may not always be available), \drepair necessitates that the data
+processor indicate whether a given nonconforming record is \emph{incomplete}
+(i.e., the record fragment is a prefix of a conforming record) or
+\emph{incorrect} (i.e., no suffix to this record fragment will result in a
+conforming record). This feedback is typically provided by most parsers, and
+when it is not, it can be obtained through external instrumentation or by
+modifying the parser to provide such feedback, as demonstrated by Björn et
+al.~\cite{mathis2019parser}.
 
 %We also emphasize that similar to \ddmax, satisfying the requirements for
 %\drepair does not require using a formal grammar for parsing, and indeed, there are several
