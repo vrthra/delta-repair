@@ -993,7 +993,8 @@ will make the complete string acceptable to the parser.
 length of the maximal viable-prefix. To the right of the parse-boundary is the maximal
 \emph{viable-prefix} and to the left is the \emph{remaining-suffix}.
 
-\item[repair] An \emph{edit} made to the string that extends its \emph{parse-boundary}.
+\item[repair] An \emph{edit} made to the string that extends its \emph{parse-boundary}
+  or reduces the \emph{remaining-suffix}.
 
 \item[repair-thread] A \emph{repair-thread} is a sequence of \emph{repairs} made on an
 input string. A repair-thread has a single parse-boundary, a corresponding
@@ -1012,7 +1013,7 @@ number of repairs applied to the viable-prefix and the parse-boundary.
 \end{description}
 
 The problem of \emph{data-repair} is as follows: Given a \emph{string} and a
-\emph{parser}, what is the least number of \emph{edits} that can be made to
+\emph{parser}, find the least number of \emph{repairs} that can be made to
 the string to make it acceptable by the \emph{parser}. If the parser is a
 \emph{conforming parser}, the \drepair algorithm can be used to
 repair the string. It has the following steps (visualized in \Cref{fig:brepair_flowchart}):
@@ -1021,7 +1022,7 @@ repair the string. It has the following steps (visualized in \Cref{fig:brepair_f
 \newlength\nodedst\setlength\nodedst{.35cm}
 \newlength\ndist\setlength\ndist{.1\nodedst}
 \begin{tikzpicture}[node distance=\nodedst and 2.5\nodedst]
-    \node[blockdiagramblock] (search) {Boundary-Search)};
+    \node[blockdiagramblock] (search) {Boundary-Search};
     \node[blockdiagramblock,right=of search] (repair) {Apply Repairs};
     \draw[blockdiagramarrow] (search) -- (repair); %node[simpletext,pos=.5,right,font=\scriptsize] {}; % PushPQ
     \node[blockdiagramblock,right=of repair] (extend) {Extend Threads};
