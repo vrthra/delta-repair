@@ -1268,7 +1268,9 @@ our empirical investigation.
 
 \subsection{Research Questions} 
 We investigate the \textit{data recovery} (RQ1), \textit{effectiveness} (RQ2), 
-and \textit{efficiency} (RQ3) of our approach using several well-designed experiments. %For each experiment, w
+%and 
+\textit{efficiency} (RQ3),
+and \textit{perfect repair effectiveness} (RQ4) of our approach using several well-designed experiments. %For each experiment, w
 We also examine how \approach compares to four state-of-the-art techniques, 
 namely the built-in repair of the programs (\textit{baseline}), error-recovery of \textit{ANTLR}, as well as 
 lexical \ddmax and syntactic 
@@ -1288,8 +1290,8 @@ How effective is \approach in fixing invalid inputs? Is it as effective as the s
 \approach? Is it as efficient as the state-of-the-art techniques?
 
 % TODO -- commenting it out. This does not seem like a valid criteria.
-%\item[RQ4: Perfect Repair.] How many files are repaired prefectly by
-%\approach? How does the number of perfect repairs compare to the state-of-the-art methods?
+\item[RQ4: Perfect Repair.] How many files are repaired prefectly by
+\approach? How does the number of perfect repairs compare to the state-of-the-art methods?
 
 %\item[RQ5: Quality of Repairs.] How does the quality of the repaired files compare for each approach?
 \end{description}
@@ -1618,6 +1620,9 @@ Overall, we attribute the unique repair achieved by \approach to the synergistic
 
 \begin{figure}[!tbp]
 \centering
+\caption{\centering
+Venn Diagram showing the number of invalid inputs repaired (solely) by a (combinations of) technique(s) %, or the combination of approaches
+}
 \begin{minipage}[b]{0.45\textwidth}
     \centering
     \begin{tikzpicture}[circ/.style={draw=black,line width=1pt,fill=none,shape=circle,minimum width=2.5cm,minimum height=2.5cm},lbl/.style={font=\bfseries}]
@@ -1638,8 +1643,6 @@ Overall, we attribute the unique repair achieved by \approach to the synergistic
     \end{tikzpicture}
 \end{minipage}
 \vspace{-0.4cm}
-\caption{Venn Diagram showing the number of invalid inputs repaired (solely) by a (combinations of) technique(s) %, or the combination of approaches
-}
 \label{fig:repair-complementarity}
 \end{figure}
 
@@ -1715,21 +1718,47 @@ are in \textbf{bold}. %, second-best time performance is in \textit{italics}
 \label{tab:efficiency}
 \end{table}
 
-\begin{comment}
-\subsection{RQ4 Perfect Repair.}
-\revise{In this research question, we would like to evaluate the number of files that have been repaired perfectly by each approach, that is - the repaired file is exactly the same file as the file before it was mutated.
+%\begin{comment
+\subsection{RQ4 Perfect Repair}
+\revise{In this research question, we examine the number of files that have been repaired perfectly by each approach, that is - the repaired file is exactly the same file as the original file before it was mutated.
 Since this obviously limits the number of files we can use in the evaluation to the artificially mutated files, the total number of files is smaller in this section of the experiments.}
 
 \revise{We report the number of repaired files in \cref{tab:perfectrepairs}.
-The total number of perfectly repaired files for \approach (49) is slightly (X\%) higher than for \ddmax (42), while \ddmaxg did not manage to perfectly repair any file at all.
-This might be due to the fact that \ddmaxg needs to parse and un-parse all input files to work on the parse tree instead of the characters, which introduces noise by changing whitespaces and line breaks in the files.
+The total number of perfectly repaired files for \approach (49) is (17\%) higher than for \ddmax (42), while \ddmaxg did not manage to perfectly repair any file at all. We attribute this 
+%This might be due 
+to the fact that \ddmaxg needs to parse and un-parse all input files to work on the parse tree instead of the characters, which introduces noise, e.g.,  by changing whitespaces and line breaks in the files.
 }
 
-\revise{If we take a look at the overlap of files that could be repaired perfectly by \approach and \ddmax (\cref{fig:perfectlyrepairedvenndiagram}), we notice that there were more (X\%) files that could only be repaired by \approach (13) than \ddmax (6) which showcases the ability of \approach to repair files that are difficult to repair for \ddmax.
+\revise{
+We also inspect the files that were repaired solely by \approach, \ddmax 
+% \textit{only}
+or both 
+%, as well as the 
+%If we take a look at the 
+%overlap of files that could be perfectly repaired  by both 
+approaches (\cref{fig:perfectlyrepairedvenndiagram}).  We found that 
+\approach \textit{solely} repaired 
+twice (2.17X) as many input files
+as 
+% in comparison to 
+\ddmax: 
+\autoref{fig:perfectlyrepairedvenndiagram} shows that 
+13 input files were perfectly repaired by \approach  \textit{solely},  in comparison to six (6) input files for \ddmax  \textit{solely}. 
+Meanwhile,  36 input files were perfectly repaired by both methods. 
+Overall,  these results showcase the ability of \approach to repair files that are difficult to repair for \ddmax.
 }
+
+\begin{result}
+\approach completed (17\%) more perfect repairs than \ddmax. It solely completed twice (2x) as many perfect repairs 
+%exclusively 
+%in comparison to 
+as \ddmax (13 vs.  6 perfect repairs). 
+%:
+%While \approach completed 13 repairs, 
+\end{result}
 
 \begin{table}[!tbp]\centering
-\caption{Number of perfectly repaired files for \approach in comparison to \ddmax and \ddmaxg
+\caption{Number of \textit{perfectly} repaired files for \approach in comparison to \ddmax and \ddmaxg
 }
 \begin{tabular}{|l |  r  r  r  r | r |}
 \hline
@@ -1745,7 +1774,9 @@ This might be due to the fact that \ddmaxg needs to parse and un-parse all input
 \end{table}
 
 \begin{figure}[!tbp]\centering
-\caption{Venn Diagram showing the overlap of files that could be perfectly repaired by \approach vs. \ddmax
+\caption{\centering Venn Diagram showing the 
+%overlap of 
+files that were \textit{perfectly} repaired (\textit{solely}) by \approach,  \ddmax or both approaches. 
 }
 \centering
 \begin{minipage}[b]{0.45\textwidth}
@@ -1756,15 +1787,15 @@ This might be due to the fact that \ddmaxg needs to parse and un-parse all input
         \node[circ] at (anchor.south east) (g2) {};
         \node[lbl,anchor=north] at (g1.south) {\strut\ddmax};
         \node[lbl,anchor=north] at (g2.south) {\strut\approach};
-        \node[lbl] at ($(g1)!0.5!(g2) - (0,.1)$) {6};
-        \node[lbl] at ($(g1.center) - (.2,.1)$) {36};
+        \node[lbl] at ($(g1)!0.5!(g2) - (0,.1)$) {36};
+        \node[lbl] at ($(g1.center) - (.2,.1)$) {6};
         \node[lbl] at ($(g2.center) - (-.2,.1)$) {13};
     \end{tikzpicture}
 \end{minipage}
 \vspace{-0.4cm}
 \label{fig:perfectlyrepairedvenndiagram}
 \end{figure}
-\end{comment}
+%\end{comment}
 
 %\subsection{RQ5 Quality of Repaired Files}
 %\todo{EZ: Write RQ5}
