@@ -1812,7 +1812,7 @@ To mitigate this threat, we have employed four well-known input formats with var
 \subsection{Internal Validity} This concerns the \textit{correctness} of our implementation and evaluation, especially if we have correctly implemented \approach and the baselines. We mitigate this threat by testing our implementation of all approaches on small and simple test inputs to ensure the they behave as described. 
 
 
-\subsection{Construct Validity} This concerns the test oracle and failure feedback employed in our evaluation. To ensure all subjects provide the expected \textit{incomplete} and \textit{(in)correct} feedback, we tested the programs on sample invalid inputs and modified the subject program, if needed. 
+\subsection{Construct Validity} This concerns the test oracle and parse-failure feedback employed in our evaluation. To ensure all subjects provide the expected \textit{incomplete} and \textit{(in)correct} feedback, we tested the programs on sample invalid inputs and modified the subject program, if needed. 
 
 
 \section{Limitations}
@@ -1855,12 +1855,12 @@ A few techniques have been proposed to analyze input data without program analys
 
 
 \subsection{White and Grey-box Input Repair} Some techniques employ program analysis to fix invalid inputs. As an example, \emph{docovery}~\cite{docovery:ase14} applies symbolic execution to change broken inputs to take error-free paths in the subject program. Similarly, Ammann and Knight~\cite{data_diversity} proposed a method to transform invalid inputs into valid inputs by analyzing the region of the input causing the fault and changing those regions to avoid the fault. Unlike these methods, \approach 
-is black-box, it relies on the failure feedback of the subject program. 
+is black-box, it relies on the parse-failure feedback of the subject program. 
 
 
 \subsection{Constraint-based Input Repair} %via Constraint Learning:} 
 These approaches automatically learn input constraints then enforce the learned constraints to repair invalid inputs~\cite{hussain2010dynamic, Demsky:2006:IED:1146238.1146266} 
-These constraints are often extracted from valid inputs~\cite{Long:2012:AIR:2337223.2337233, Rinard:2007:LCZ:1297027.1297072}, specified with predicates~\cite{elkarablieh2008juzi}, model-based systems~\cite{Demsky:2003:ADR:949343.949314}, goal-directed reasoning~\cite{1553560}, dynamic symbolic execution~\cite{hussain2010dynamic} or invariants~\cite{Demsky:2006:IED:1146238.1146266}. For instance, \emph{S-DAGs}~\cite{scheffczyk2004s} enforce constraints on invalid inputs in a semi-automatic way. Unlike these approaches, \approach does not learn input constraints, it employs input synthesis and failure feedback to fix invalid inputs. 
+These constraints are often extracted from valid inputs~\cite{Long:2012:AIR:2337223.2337233, Rinard:2007:LCZ:1297027.1297072}, specified with predicates~\cite{elkarablieh2008juzi}, model-based systems~\cite{Demsky:2003:ADR:949343.949314}, goal-directed reasoning~\cite{1553560}, dynamic symbolic execution~\cite{hussain2010dynamic} or invariants~\cite{Demsky:2006:IED:1146238.1146266}. For instance, \emph{S-DAGs}~\cite{scheffczyk2004s} enforce constraints on invalid inputs in a semi-automatic way. Unlike these approaches, \approach does not learn input constraints, it employs input synthesis and parse-failure feedback to fix invalid inputs. 
 
 
 \subsection{Parser-directed Input Repair} %:}
@@ -1875,11 +1875,11 @@ Unlike \approach which aims to fix an invalid input, these schemes need an input
 
 \section{Conclusion}
 \label{sec:conclusion}
-This paper presents \approach, an input repair approach that employs input synthesis and lightweight parser feedback (i.e., incomplete and (in)correct checks) to repair invalid inputs. 
+This paper presents \approach, an input repair approach that employs input synthesis and parse-failure feedback (i.e., incomplete and (in)correct checks) to repair invalid inputs. 
 %Our approach is black-box, does not require program analysis or an input grammar. 
 We evaluate the data recovery, repair effectiveness, and efficiency of our approach, in comparison to the state-of-the-art methods. We show that \approach has a very high data recovery rate, it recovered 91\% of input data. 
 It is also very effective and efficient in input repair---it completes the repair of about four in five invalid inputs (77\%) within four minutes. Furthermore, we demonstrate that our approach is up to 35\% more effective than the best 
-best baseline---(syntactic) \ddmax, without using an input grammar. In summary, this work demonstrates that combining lightweight failure feedback and input synthesis are important for the effective repair of invalid inputs, especially in the absence of an input specification 
+best baseline---(syntactic) \ddmax, without using an input grammar. In summary, this work demonstrates that combining parse-failure feedback and input synthesis are important for the effective repair of invalid inputs, especially in the absence of an input specification 
 and program analysis.
 In the future, we plan to investigate how to improve the performance of our approach by learning input semantics and constraints.
 
