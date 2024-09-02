@@ -1073,7 +1073,8 @@ responds with \emph{incomplete} for $S^{'}+c$, with the new viable-prefix set to
 \item \emph{Extend Threads.} For each repair-thread that results from the previous step,
 we attempt to extend the parse-boundary by adding additional characters from the
 remaining-suffix. Duplicate threads (those that result in the same string) are discarded,
-keeping only those with the minimal number of repairs.
+keeping only those with the minimal number of repairs. A response of \Rvalid is
+treated same as \Rincomplete if the remaining-suffix is non-empty.
 \item \emph{Check Candidates.} If any thread results in a
 \emph{repair-candidate}, then we return the candidate.
 \item \emph{Select Threads.} The algorithm chooses the best repair-thread from the priority queue,
