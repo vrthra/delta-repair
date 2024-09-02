@@ -1409,7 +1409,7 @@ of \approach over the best baseline which are significant (i.e., greater than fi
 \textbf{Lex. \ddmax} & 81\%  & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% & 18.0 & {10.2} &	61.6 &	\textbf{6.2} & 7.5 \\			
 \textbf{Syn. \ddmax} & 74\%  &  70.6\% & 81.5\%  & 97.0\%	& 47.0\% & 119.6 &  258.1 & 82.7 &	76.6 &	33.3 \\	
 \hline
-\textbf{\approach} & \textbf{91\%}  &  \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100.6\%} & \textbf{82.1\%} & \textbf{10.6}  & \textbf{9.5} &	\textbf{28.7} &	7.4 & \textbf{1.6} \\
+\textbf{\approach} & \textbf{91\%}  &  \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100\%} & \textbf{82.1\%} & \textbf{10.6}  & \textbf{9.5} &	\textbf{28.7} &	7.4 & \textbf{1.6} \\
 \hline
 \textbf{Impr. over Lex.} & 12\% &  0.1\%	& \textbf{19.8\%}	& 1.4\%	& \textbf{72.1\%} & \textbf{70\%} &  \textbf{8\%} & \textbf{115\%} & -16\% & \textbf{357\%} \\
 \textbf{Impr. over Syn.} & \textbf{23\%}  &  \textbf{21.6\%} 	& \textbf{20.8\%}	& 3.7\%	& \textbf{74.7\% }  & \textbf{1030\%} & \textbf{2629\%} &	\textbf{188\%} & \textbf{936\%} &\textbf{ 1930\%} \\
@@ -1429,7 +1429,10 @@ We examine 474 inputs that were completely repaired by %all three approaches, i.
 lexical \ddmax, syntactic \ddmax and \approach, excluding empty files (and white spaces). \Cref{tab:data-recovery-and-loss} %and \recheck{Figure X
 highlights the amount of data %loss and data
 recovered and lost % achieved 
-by each approach.\footnote{Note that due to input synthesis (i.e., insertion of input elements), \drepair may report recovering more than 100\% of the size of the original input file (e.g., 100.6\% for SExp in \Cref{tab:data-recovery-and-loss}).} %, as average over each file. %Our evaluation r
+by each approach.
+%\footnote{Note that due to input synthesis (i.e., insertion of input elements), \drepair may report recovering more than 100\% of the size of the original input file (e.g., 100.6\% for SExp in \Cref{tab:data-recovery-and-loss}).
+% NOTE: we should not be looking at the size of the string, but how much of the original data survived.
+%} %, as average over each file. %Our evaluation r
 
 Results show that \textit{\approach has a very high data recovery rate}. 
 It recovered 91\% of input data, on average. 
