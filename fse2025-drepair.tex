@@ -1522,24 +1522,15 @@ user-defined post-processing to identify the best candidate.
 
 Similarly,
 \drepair can synthesize tokens that lets the parse continue, and hence produce
-valid records. However, tokens thus produced are actually semantically invalid.
+valid records. However, tokens thus produced are do not hold semantic information.
 Hence, during post-processing, we replace synthesized data with semantic content
 with placeholders as provided by the user.
-
-%\subsection{Is this a brute force approach?}
-%Given an $n$ length string that is corrupt
 
 \section{Experimental Setup}
 \label{sec:experimental-setup}
 
-
-
-This section describes the experimental setup of this work.
-
-
-
-
-
+How good is \drepair compared to the state-of-the-art? This section describes
+our empirical investigation.
 
 \subsection{Research Questions} 
 We investigate the \textit{data recovery} (RQ1), \textit{effectiveness} (RQ2), 
