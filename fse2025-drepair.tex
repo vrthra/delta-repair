@@ -1187,21 +1187,6 @@ correction even though that can lead to an optimal repair-candidate.
 
 We next discuss possible mitigation strategies to address these issues.
 
-\begin{table}[!tbp]\centering
-\caption{Subject programs used in the evaluation}
-\begin{tabular}{|l | r | l | l | l | l |}
-\hline
-\textbf{Name} & \textbf{LOC} & \textbf{Lang.} & \textbf{1{st} Commit} & \textbf{Last Commit} \\
-\hline
-\textbf{INI} & 382 & C & Jul 2009 & Jan 2022\\
-\textbf{cJSON} & 3062 & C & Aug 2009 & Jan 2022\\
-\textbf{SExpParser} & 656 & C & Sep 2016 & Sep 2016\\
-\textbf{TinyC} & 375 & C & 2001 & Apr 2018\\
-\hline
-\end{tabular}
-\label{tab:subject-programs}
-\end{table}
-
 \subsection*{Extended \drepair}
 %\drepair is an effective approach to input repair, but has a few blind spots.
 %In this section, we discuss how we can mitigate these blind spots.
@@ -1287,6 +1272,21 @@ How effective is \approach in fixing invalid inputs? Is it as effective as the s
 %\item[RQ5: Quality of Repairs.] How does the quality of the repaired files compare for each approach?
 \end{description}
 
+
+\begin{table}[!tbp]\centering
+\caption{Subject programs used in the evaluation}
+\begin{tabular}{|l | r | l | l | l | l |}
+\hline
+\textbf{Name} & \textbf{LOC} & \textbf{Lang.} & \textbf{1{st} Commit} & \textbf{Last Commit} \\
+\hline
+\textbf{INI} & 382 & C & Jul 2009 & Jan 2022\\
+\textbf{cJSON} & 3062 & C & Aug 2009 & Jan 2022\\
+\textbf{SExpParser} & 656 & C & Sep 2016 & Sep 2016\\
+\textbf{TinyC} & 375 & C & 2001 & Apr 2018\\
+\hline
+\end{tabular}
+\label{tab:subject-programs}
+\end{table}
 
 \subsection{Subject Programs} %As subjects w
 We used four input formats and their corresponding programs. These are INI (INI), JSON (cJSON), S-Expressions (SExpParser) and TinyC (TinyC). Each program is moderately large (between 375 LOC to 3062 LOC), relatively mature (6 to 21 years old), and written in \<C>. Further details are provided in \Cref{tab:subject-programs}.
