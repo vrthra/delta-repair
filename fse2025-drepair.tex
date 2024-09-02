@@ -1450,8 +1450,7 @@ by each approach.
 
 Results show that \textit{\approach has a very high data recovery rate}. 
 It recovered 91\% of input data, on average. 
-This is 23\% more than the most effective baseline (syntactic \ddmax). For all input formats, \approach recovered up to (75\%) more data than both variants of \ddmax. Consider TinyC, where \approach recovered up to 75\% more input data than \ddmax (\textit{see} \Cref{tab:data-recovery-and-loss}). These results show that \approach is more effective in recovering valid input data 
-than \ddmax.
+This is 23\% more than the most effective baseline competitor--lexical \ddmax. For all input formats, \approach recovered up to (75\%) more data than both variants of \ddmax. Consider TinyC, where \approach recovered up to 75\% more input data than \ddmax (\textit{see} \Cref{tab:data-recovery-and-loss}). These results show that \approach is more effective in recovering valid input data than both lexical and syntactic \ddmax.
 
 \vspace{\baselineskip}
 \noindent
@@ -1459,13 +1458,14 @@ than \ddmax.
 327 completely repaired inputs %by all three approaches which %(321) inputs that
 where edit distance could be computed within a threshold of 750 edit distances (about 30 seconds).
 
-We found that \textit{\approach achieves a low data loss of about 11 edit distances, on average},  which is \textit{up to 10 times lower than (syntactic) \ddmax}. \Cref{tab:data-recovery-and-loss} shows that 
-for almost all input formats, \approach achieved a lower data loss than syntactic and lexical \ddmax (except for SExp). This better  performance is attributed to the lightweight failure feedback of \approach, which allows it to distinguish between incomplete and incorrect input fragments.
+We found that \textit{\approach achieves a low data loss of an average 10.6 edit distances},
+which is \textit{1.7 times lower than lexical \ddmax}. \Cref{tab:data-recovery-and-loss} shows that 
+for almost all input formats, \approach achieved a lower data loss than syntactic and lexical \ddmax (except for SExp). This better  performance is attributed to the parse-failure feedback of \approach, which allows it to distinguish between incomplete and incorrect input fragments.
 
 \begin{result}
 \approach has a high data recovery rate (91\%, on average).  
 In addition, the data 
-loss of \approach is up to 26 times (26X) lower than that of \ddmax (e.g., INI).
+loss of \approach is up to 26 times (26$\times$) lower than that of \ddmax (e.g., INI).
 \end{result}
 
 
@@ -1737,7 +1737,7 @@ or both
 %overlap of files that could be perfectly repaired  by both 
 approaches (\cref{fig:perfectlyrepairedvenndiagram}).  We found that 
 \approach \textit{solely} repaired 
-twice (2.17X) as many input files
+twice (2.17$\times$) as many input files
 as 
 % in comparison to 
 \ddmax: 
@@ -1748,7 +1748,7 @@ Overall,  these results showcase the ability of \approach to repair files that a
 }
 
 \begin{result}
-\approach completed (17\%) more perfect repairs than \ddmax. It solely completed twice (2x) as many perfect repairs 
+\approach completed (17\%) more perfect repairs than \ddmax. It solely completed twice (2$\times$) as many perfect repairs 
 %exclusively 
 %in comparison to 
 as \ddmax (13 vs.  6 perfect repairs). 
