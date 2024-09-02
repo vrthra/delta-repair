@@ -173,11 +173,27 @@
 \newcommand{\ddmin}{\textit{ddmin}\xspace}
 \newcommand{\test}{\textit{test}\xspace}
 
+\definecolor{nontermcolor}{rgb}{0.4, 0.05, 0.0} % dark orange
+\definecolor{absnontermcolor}{rgb}{0.4, 0.5, 0.0} % light green
+\definecolor{evokcolor}{rgb}{0.8, 0.05, 0.1}    % orange
+\definecolor{incorrectcolor}{rgb}{0.5, 0.0, 0.13}
+\definecolor{incompletecolor}{rgb}{0.0, 0.0, 0.55}
+%\definecolor{incompletecolor}{rgb}{0.12, 0.3, 0.17}
+\definecolor{validcolor}{rgb}{0.33, 0.42, 0.18} %  {0.0, 0.28, 0.67}
+%\definecolor{retcolor}{rgb}{0.43, 0.21, 0.1}
+\definecolor{retcolor}{rgb}{0.65, 0.16, 0.16}
+\definecolor{ipatterncolor}{rgb}{0.0, 0.5, 0.4} % cyan?
+\definecolor{termcolor}{rgb}{0.0, 0.05, 0.4}    % dark blue
+\definecolor{regexcolor}{rgb}{0.1, 0.3, 0.1}    % dark green
+
 
 \def\Rincomplete{\texttt{\color{incompletecolor}\textbf{$\vartriangleright$}}\xspace}
 %\def\Rincorrect{\texttt{\color{incorrectcolor}\textbf{$\ntriangleright$}}\xspace}
 \def\Rincorrect{\texttt{\color{incorrectcolor}\textbf{$\ntriangleright$}}\xspace}
 \def\Rvalid{\texttt{\color{validcolor}\textbf{$\checkmark$}}\xspace}
+\def\Rreject{\texttt{\color{validcolor}\textbf{$\times$}}\xspace}
+
+%\newcommand{\cmark}{\ding{51}}%
 
 
 
@@ -914,31 +930,32 @@ inserted here, resulting in \emph{incomplete} from the JSON parser.
 \item This is accepted as a valid repair.
 \end{enumerate}
 
-That is, the ability of \approach to synthesize characters for repair can lead
+That is, the ability of \drepair to synthesize characters for repair can lead
 to more effective repairs.
 \end{comment}
 
-\section{Repairing Data with \approach}
+\section{Repairing Data with \drepair}
 \label{sec:drepair}
-Our approach was motivated by the following observation. Consider the output of processing
+Our approach was motivated by the following observation.
+Consider the output of processing
 from \<jq>, a \<JSON> processor that is often used for processing JSON data.
-On providing an input that contains the missing comma, the parser responds with an
-\emph{approximate} location of the error.
 %\begin{flushleft}
 %                                ^
 \begin{lstlisting}[xleftmargin=10pt,escapeinside={(*@}{@*)}, basicstyle=\ttfamily\small,numbers=none]
 $ echo -n '{"name": "Dave" "age":42}' | jq .
 (*@\textcolor{red}{parse error: Expected separator between values at line 1, column 21}@*)
 \end{lstlisting}
+On providing an input that contains the missing comma, the parser responds with an
+\emph{approximate} location of the error.
 %\end{flushleft}
 If we instead provide \<jq> with a truncated input,
 the parser responds with \<EOF> 
- indicating that the
 %                           ^
 \begin{lstlisting}[xleftmargin=10pt,escapeinside={(*@}{@*)}, basicstyle=\ttfamily\small,numbers=none]
 $ echo -n '{"name": "Dave" ' | jq .
 (*@\textcolor{red}{parse error: Unfinished JSON term at EOF at line 1, column 16}@*)
 \end{lstlisting}
+indicating that the
 input is incomplete,
 and further data is required to complete the input. We observed this behavior with a variety of
 parsers.
@@ -962,15 +979,15 @@ we define the following terms correspondingly:
 or insertion of a single character.
 
 \item[parser] A parser is an input processor that evaluates a string and returns
-a response indicating whether the string is \emph{accepted}, or \emph{rejected}.
+a response indicating whether the string is \emph{accepted} (\Rvalid), or \emph{rejected} (\Rreject).
 
 \item[conforming parser] A conforming parser is an \emph{parser} that 
-provides additional information on a rejected string, specifying whether
-the string is \emph{incorrect} or merely \emph{incomplete} (i.e., a suffix exists that
-will make the complete string acceptable to the parser).
+instead of just rejecting the string, specifies whether
+    the string is \emph{incorrect} (\Rincorrect) or merely \emph{incomplete} (\Rincomplete), that is, a suffix exists that
+will make the complete string acceptable to the parser.
 
 \item[viable-prefix] A viable prefix is a string that when passed to the conforming parser,
- results in an \emph{incomplete} response from the parser.
+ results in \Rincomplete or \Rvalid response from the parser.
 
 \item[parse-boundary] Given a string and a conforming parser, a parse boundary is the
 length of the maximal viable-prefix. To the right of the parse-boundary is the maximal
@@ -979,15 +996,15 @@ length of the maximal viable-prefix. To the right of the parse-boundary is the m
 \item[repair] An \emph{edit} made to the string that extends its \emph{parse-boundary}.
 
 \item[repair-thread] A \emph{repair-thread} is a sequence of \emph{repairs} made on an
-input string. A repair-thread has a single parse-boundary a corresponding
+input string. A repair-thread has a single parse-boundary, a corresponding
 \emph{viable-prefix}, and the \emph{remaining-suffix}.
 Similarly, every parse-boundary has associated \emph{repair-threads}.
 If no repairs has been made yet, it is an empty repair-thread.
 A repair thread becomes a \emph{repair-candidate} when the repaired string
-elicits the \emph{valid} response from the parser.
+elicits the \Rvalid response from the parser.
 
 \item[repair-distance] The minimal number of repairs required to transform the corrupt
-string to a complete string (also called \emph{edit-distance}). The larger the
+string to the repair candidate (also called \emph{edit-distance}). The larger the
 repair-distance of a repair candidate, the larger its distance from the original data.
 
 \item[thread-queue] A priority queue of \emph{repair-threads} that is sorted by the
