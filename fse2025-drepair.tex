@@ -1287,8 +1287,9 @@ How effective is \approach in fixing invalid inputs? Is it as effective as the s
 \item[RQ3: Efficiency.] What is the efficiency (runtime) of
 \approach? Is it as efficient as the state-of-the-art techniques?
 
-\item[RQ4: Perfect Repair.] How many files are repaired prefectly by
-\approach? How does the number of perfect repairs compare to the state-of-the-art methods?
+% TODO -- commenting it out. This does not seem like a valid criteria.
+%\item[RQ4: Perfect Repair.] How many files are repaired prefectly by
+%\approach? How does the number of perfect repairs compare to the state-of-the-art methods?
 
 %\item[RQ5: Quality of Repairs.] How does the quality of the repaired files compare for each approach?
 \end{description}
@@ -1360,15 +1361,19 @@ Inputs}
 In this work, we compare the performance of \approach to the following
 techniques:
 \begin{description}[wide]
-\item[\textbf{(1) Baseline:}] The built-in error-recovery technique of the subject programs.
- % In this work,  \recheck{we compare the effectiveness of the subject program to that of \approach (\textit{see} RQ1)}. Specifically, we measure the effectiveness of the built-in error recovery feature of the program by measuring the number of invalid input files that could be processed as valid inputs by a subject program without inducing a program failure, crash or timeout. In our evaluation, we compare the number of such repairs to that of \approach.
+\item[\textbf{(1) Baseline:}] We use the built in
+  error correction in the subject programs. That is, we look at the number of
+  inputs that were accepted by a subject program as valid inputs.
 
-\item[\textbf{(2) ANTLR:}] This is the inbuilt error recovery strategy of the ANTLR parser generator when equipped with an input grammar specifying the allowed input structure~\cite[Automatic Error Recovery Strategy]{parr2013definitive}.
-  %In this work, we compare the number of invalid inputs that could be processed by \textbf{ANTLR} to the number of repairs performed by \approach (\textit{see} RQ1).
-\item[\textbf{(3) \ddmax:}] Kirschner et al.~\cite{kirschner2020debugging} proposed %This refers to the
-two variants of the maximizing variant of the delta debugging algorithm (called \ddmax), %proposed by ,
-namely \textit{lexical \ddmax} and \textit{syntactic \ddmax}.
-%For all research questions in this work, we compare the performance of \approach to both \textit{lexical} and \textit{syntactic} \ddmax, since \ddmax is the current best performing state-of-the-art input repair method.
+\item[\textbf{(2) ANTLR:}] The number of invalid inputs which are repaired
+by ANTLR inbuilt error recovery strategy~\cite{parr2013definitive}, allowing the
+input to be accepted even under errors.
+
+\item[\textbf{(3) Lexical \ddmax:}] This is the language agnostic \ddmax described by Kirschner et al.~\cite{kirschner2020debugging}
+
+\item[\textbf{(4) Syntactic \ddmax:}] This version of \ddmax relies on a grammar which is used to parse the
+  input first. It operates on the parse tree. This was also described by Kirschner et al.~\cite{kirschner2020debugging}.
+
 \end{description}
 
 
@@ -1472,7 +1477,7 @@ Baseline   27     6        0            0
 ANTLR      133    69       96           46
 Lex.ddmax  201    132      131          114
 Syn.ddmax  201    144      149          120
-FSynth     191    158      121          154
+DRepair     191    158      121          154
     }\effectivenessdata
 \begin{minipage}{.45\textwidth}
 \begin{tikzpicture}
@@ -1710,6 +1715,7 @@ are in \textbf{bold}. %, second-best time performance is in \textit{italics}
 \label{tab:efficiency}
 \end{table}
 
+\begin{comment}
 \subsection{RQ4 Perfect Repair.}
 \revise{In this research question, we would like to evaluate the number of files that have been repaired perfectly by each approach, that is - the repaired file is exactly the same file as the file before it was mutated.
 Since this obviously limits the number of files we can use in the evaluation to the artificially mutated files, the total number of files is smaller in this section of the experiments.}
@@ -1758,6 +1764,7 @@ This might be due to the fact that \ddmaxg needs to parse and un-parse all input
 \vspace{-0.4cm}
 \label{fig:perfectlyrepairedvenndiagram}
 \end{figure}
+\end{comment}
 
 %\subsection{RQ5 Quality of Repaired Files}
 %\todo{EZ: Write RQ5}
