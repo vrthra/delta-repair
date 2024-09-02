@@ -737,10 +737,10 @@ Here, \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}} contains two distinct
 corruptions.
 As in the previous case, \ddmax attempts to fix this input by dividing it into
 smaller and smaller fragments, none of which isolates an error that when
-removed, results in the solution \letterboxed{123456} with %which clearly has suffered
+removed. This results in the solution \letterboxed{123456} with
 significant data loss, including the loss of structure and change in
 input fragment type from string to number.
-Hence, \ddmax cannot effectively repair inputs containing multiple faults.
+Hence, \ddmax cannot effectively repair such inputs containing multiple faults.
 
 \subsection{Effect of fragment decomposition}
 Unfortunately \ddmax can produce non-optimal results even when the errors are
@@ -755,27 +755,27 @@ The operation of \ddmax (\Cref{fig:ddmax}) is as follows:
 \begin{enumerate}
 \item The operation starts with $\ddmax_2(\emptyset, 2)$
 \item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply
-\item Increase to complement:\\
+\item Can we increase to complement?\\
 $\cfail - \Delta_1$= \letterboxed{+]} \fail \\
 $\cfail - \Delta_2$= \letterboxed{[*} \fail \\
-\item Increase to subset:\\
+\item Can we increase to subset?\\
 $\emptyset \cup \Delta_1$=\letterboxed{[*} \fail \\
 $\emptyset \cup \Delta_2$= \letterboxed{+]} \fail \\
-\item Increase granularity: $n < |\cfail-\dpass|$ which is $2 < |\cfail-\emptyset|$ \pass \\
+\item Can we increase granularity? $n < |\cfail-\dpass|$ which is $2 < |\cfail-\emptyset|$ \pass \\
   Hence the next iteration is:
   $\ddmax_2\bigl(\emptyset, 4)\bigr) $
 \item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply.
-\item Increase to complement:\\
+\item Can we increase to complement?\\
 $\cfail - \Delta_1$= \letterboxed{*+]} \fail \\
 $\cfail - \Delta_2$= \letterboxed{[+]} \fail \\
 $\cfail - \Delta_3$= \letterboxed{[*]} \fail \\
 $\cfail - \Delta_4$= \letterboxed{[*+} \fail \\
-\item Increase to subset:\\
+\item Can we increase to subset?\\
 $\emptyset \cup \Delta_1$=\letterboxed{[} \fail \\
 $\emptyset \cup \Delta_2$=\letterboxed{*} \fail \\
 $\emptyset \cup \Delta_3$=\letterboxed{+} \fail \\
 $\emptyset \cup \Delta_4$=\letterboxed{]} \fail \\
-\item Increase granularity: $4 < 4$ \fail\\
+\item Can we increase granularity? $4 < 4$ \fail\\
 \item The solution is $\emptyset$.
 \end{enumerate}
 
