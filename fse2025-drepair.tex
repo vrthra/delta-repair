@@ -1472,7 +1472,7 @@ Baseline   27     6        0            0
 ANTLR      133    69       96           46
 Lex.ddmax  201    132      131          114
 Syn.ddmax  201    144      149          120
-FSynth     191    158      121          154
+\drepair     191    158      121          154
     }\effectivenessdata
 \begin{minipage}{.45\textwidth}
 \begin{tikzpicture}
@@ -1786,7 +1786,7 @@ Our approach (\approach) and empirical evaluations may be limited by the followi
 
 \subsection{Input Constraints and Semantics} \approach does not address concerns about recovering or preserving the input constraints or intended semantics of the input data. For instance, repairing an invalid checksum or hash requires such information, and \approach will be limited for this use cases. However, it would provide repair-candidates that allow end-users to debug such semantic issues. 
 \revise{
-In addition, inputs with significant semantic corruption may not be effectively repaired by FSynth. Even though FSynth is effective in fixing structural parts of invalid inputs, when the corruption is in the semantic part, the missing data becomes difficult to recover. Examples include corrupted numbers in calculations, and dates.}
+In addition, inputs with significant semantic corruption may not be effectively repaired by \drepair. Even though \drepair is effective in fixing structural parts of invalid inputs, when the corruption is in the semantic part, the missing data becomes difficult to recover. Examples include corrupted numbers in calculations, and dates.}
 
 
 \subsection{Repair via Input Synthesis} 
