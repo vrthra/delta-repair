@@ -1084,12 +1084,12 @@ repair the string. It has the following steps:
 \begin{algorithmic}[1]
 
   \Function{BoundarySearch}{array, parser, left=0, right=len(array)}
-    \If{ \Call{parser}{array} $= \Rincomplete $}
+    \If{ \Call{parser}{array} $\in \{ \Rincomplete, \Rvalid\} $} % $= \Rincomplete $}
         \State \Return right
     \EndIf
     \While{left < right - 1}
         \State middle $\gets$ (left + right) // 2
-        \If{ \Call{parser}{array[:middle]} $= \Rincomplete $}
+        \If{ \Call{parser}{array[:middle]} $\in \{ \Rincomplete, \Rvalid\} $}  %$= \Rincomplete $}
             \State left $\gets$ middle
         \Else
             \State right $\gets$ middle
