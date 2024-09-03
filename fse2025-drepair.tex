@@ -1081,9 +1081,9 @@ repair the string. It has the following steps (visualized in \Cref{fig:brepair_f
 
 \begin{enumerate}
 \item \emph{Boundary search.} Given any corrupt string, \drepair starts by a
-binary search of the input to determine the parse-boundary. This is then used
-to construct the \emph{thread-queue} containing a single empty repair-thread,
-with the parse-boundary set to the search result. The search is described in \Cref{alg:drepair}.
+  search of the input to determine the parse-boundary (\Cref{alg:drepair}).
+This is then used to construct the \emph{thread-queue} containing a single empty repair-thread,
+with the parse-boundary set to the search result.
 
 \item \emph{Apply Repair.} Starting with any existing repair-thread, \drepair applies
 either a deletion or an insertion edit on the \emph{remaining-suffix}.
