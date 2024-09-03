@@ -1144,7 +1144,7 @@ treated same as \Rincomplete if the remaining-suffix is non-empty.
     \While{pq $ \neq \emptyset $ }
         \State (string, boundary, fixes) $\gets$ \Call{top}{pq}
         \State deletes $\gets$ \{(boundary, $\emptyset$)\}
-        \State inserts $\gets$ \{(boundary, c) $\,|\, c \in \alpha,$ \Call{parser}{string[:boundary]+c} = \Rincomplete\}
+        \State inserts $\gets$ \{(boundary, c) $\,|\, c \in \alpha,$ \Call{parser}{string[:boundary]+c} $\in$ \{ \Rincomplete, \Rvalid \}\}
 
         \For{fix \textbf{in} deletes $\cup$ inserts}
             \State new\_string $\gets$ \Call{ApplyFixes}{string, fixes + [fix]}
