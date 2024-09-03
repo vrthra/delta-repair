@@ -1051,7 +1051,7 @@ repair the string. It has the following steps:
 %     \node[blockdiagramblock] (search) {Boundary-Search};
 %     \node[blockdiagramblock,right=of search] (repair) {Apply Repairs};
 %     \draw[blockdiagramarrow] (search) -- (repair); %node[simpletext,pos=.5,right,font=\scriptsize] {}; % PushPQ
-%     \node[blockdiagramblock,right=of repair] (extend) {Extend Threads};
+%     \node[blockdiagramblock,right=of repair] (extend) {Extend Boundary};
 %     \draw[blockdiagramarrow] (repair) -- (extend);
 %     \node[blockdiagramblock,below=of extend] (isvalid) {Check Candidates};
 %     \node[simpletext,below=.3 of isvalid] (return) {\mbox{Return input}};
@@ -1119,15 +1119,16 @@ Let $S^{'}$ be the viable-prefix of the current repair-thread, and $c$ be the ch
 We create one repair-thread for each $c$ in the alphabet where the parser
 responds with \emph{incomplete} for $S^{'}+c$, with the new viable-prefix set to $S^{'}+c$.
 \end{itemize}
-\item \emph{Extend Threads.} For each repair-thread that results from the previous step,
+\item \emph{Extend Boundary.} For each repair-thread that results from the previous step,
 we attempt to extend the parse-boundary by adding additional characters from the
-remaining-suffix. Duplicate threads (those that result in the same string) are discarded,
-keeping only those with the minimal number of repairs. A response of \Rvalid is
-treated same as \Rincomplete if the remaining-suffix is non-empty.
+remaining-suffix.
 \item \emph{Check Candidates.} If any thread results in a
 \emph{repair-candidate}, then we return the candidate.
 \item \emph{Select Threads.} The algorithm chooses the best repair-thread from the priority queue,
 and continues through step 2. The ordering is based on the maximum data recovered so far from the original string.
+Duplicate threads (those that result in the same string) are discarded,
+keeping only those with the minimal number of repairs. A response of \Rvalid is
+treated same as \Rincomplete if the remaining-suffix is non-empty.
 \end{enumerate}
 
 \begin{algorithm}[t]
@@ -1138,7 +1139,7 @@ and continues through step 2. The ordering is based on the maximum data recovere
 \Function{DRepair}{string, parser}
     \State boundary $\gets$ \Call{BoundarySearch}{string, parser}
     \State pq $\gets$ \Call{PriorityQueue}{}
-    \State \Call{add}{(pq, string, boundary, $\emptyset$)}
+    \State \Call{add}{pq, (string, boundary, $\emptyset$)}
 
     \While{pq $ \neq \emptyset $ }
         \State (string, boundary, fixes) $\gets$ \Call{top}{pq}
@@ -1149,11 +1150,11 @@ and continues through step 2. The ordering is based on the maximum data recovere
             \State new\_string $\gets$ \Call{ApplyFixes}{string, fixes + [fix]}
             \State new\_boundary $\gets$ \Call{BinarySearch}{new\_string, parser, boundary}
 
-            \If{\Call{parser}{new\_string[:new\_boundary]} = \Rvalid}
+            \If{\Call{parser}{new\_string[:new\_boundary]} $=$ \Rvalid $\wedge$ string[new\_boundary:] $=\emptyset$ }
                 \State \Return new\_string
             \EndIf
 
-            \State \Call{add}{(pq, new\_string, new\_boundary, fixes + [fix])}
+            \State \Call{add}{pq, (string, new\_boundary, fixes + [fix])}
         \EndFor
     \EndWhile
     \State \Return $\emptyset$
