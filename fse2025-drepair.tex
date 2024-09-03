@@ -1895,23 +1895,6 @@ files that were \textit{perfectly} repaired (\textit{solely}) by \approach,  \dd
 
 %\subsection{RQ5 Quality of Repaired Files}
 %\todo{EZ: Write RQ5}
-
-\section{Threats to Validity}
-\label{sec:threats}
-
-%\todo{EZ: Add Rich Feedback Oracle problem to threats (the approach very much relies on reliable oracles and even one small faulty feedback might make the whole input unrepairable)}
-
-\subsection{External Validity} This refers to the \textit{generalizability} of our approach, i.e., 
-the threat that \approach may not generalize to other programs and input formats. 
-To mitigate this threat, we have employed four well-known input formats with varying complexity, their corresponding programs also have  varying sizes (375 to 3062 LOC) and maturity (6 to 21 years old). 
-
-
-\subsection{Internal Validity} This concerns the \textit{correctness} of our implementation and evaluation, especially if we have correctly implemented \approach and the baselines. We mitigate this threat by testing our implementation of all approaches on small and simple test inputs to ensure the they behave as described. 
-
-
-\subsection{Construct Validity} This concerns the test oracle and parse-failure feedback employed in our evaluation. To ensure all subjects provide the expected \textit{incomplete} and \textit{(in)correct} feedback, we tested the programs on sample invalid inputs and modified the subject program, if needed. 
-
-
 \section{Limitations}
 Our approach (\approach) and empirical evaluations may be limited by the following: % validity threats:
 
@@ -1971,6 +1954,21 @@ This refers to the input repair schemes of parsers, interpreters and compilers~\
 These techniques employ operations such as insertion, deletion and replacement of symbols~\cite{anderson1981locally, cerecke2003locally, anderson1983assessment}, extending forward or backwards from a parser error~\cite{burke1982practical, mauney1982forward}, or more general methods of recovery and diagnosis~\cite{krawczyk1980error, aho1972minimum}. 
 In this work, we compare \approach to the recovery scheme of the ANTLR parser generator~\cite{parr2011ll} which leverages the input grammar to guide input repair. %Compared to \approach, t
 Unlike \approach which aims to fix an invalid input, these schemes need an input grammar, and aim to ensure the compiler does not halt while parsing. 
+
+
+
+\section{Threats to Validity}
+\label{sec:threats}
+
+\noindent\textbf{External Validity.} This refers to the \textit{generalizability} of our approach, i.e., 
+the threat that \approach may not generalize to other programs and input formats. 
+To mitigate this threat, we have employed four well-known input formats with varying complexity, their corresponding programs also have  varying sizes (375 to 3062 LOC) and maturity (6 to 21 years old). 
+
+
+\noindent\textbf{Internal Validity} This concerns the \textit{correctness} of our implementation and evaluation, especially if we have correctly implemented \approach and the baselines. We mitigate this threat by testing our implementation of all approaches on small and simple test inputs to ensure the they behave as described. 
+
+
+\noindent\textbf{Construct Validity} This concerns the test oracle and parse-failure feedback employed in our evaluation. To ensure all subjects provide the expected \textit{incomplete} and \textit{(in)correct} feedback, we tested the programs on sample invalid inputs and modified the subject program, if needed. 
 
 
 
