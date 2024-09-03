@@ -1987,13 +1987,14 @@ To mitigate this threat, we have employed four well-known input formats with var
 
 \section{Conclusion}
 \label{sec:conclusion}
-This paper presents \approach, an input repair approach that employs input synthesis and parse-failure feedback (i.e., incomplete and (in)correct checks) to repair invalid inputs. 
+This paper presents \drepair, a \dtask approach that leverages parse-failure feedback to repair corrupt data.
 %Our approach is black-box, does not require program analysis or an input grammar. 
-We evaluate the data recovery, repair effectiveness, and efficiency of our approach, in comparison to the state-of-the-art methods. We show that \approach has a very high data recovery rate, it recovered 91\% of input data. 
-It is also very effective and efficient in input repair---it completes the repair of about four in five invalid inputs (77\%) within four minutes. Furthermore, we demonstrate that our approach is up to 35\% more effective than the best 
-best baseline---(syntactic) \ddmax, without using an input grammar. In summary, this work demonstrates that combining parse-failure feedback and input synthesis are important for the effective repair of invalid inputs, especially in the absence of an input specification 
-and program analysis.
-In the future, we plan to investigate how to improve the performance of our approach by learning input semantics and constraints.
+We evaluate the data recovery, repair effectiveness, and efficiency of our approach, in comparison to the state-of-the-art methods. We show that \approach has a high data recovery rate---it recovered 91\% of corrupt data. 
+It is also effective and efficient in data-repair---it completes the repair of about four in five invalid records (77\%) within four minutes. Furthermore, we demonstrate that our approach is up to 35\% more effective than the best 
+best baseline---(syntactic) \ddmax, without using a data-format specification.
+%In summary, this work demonstrates that combining parse-failure feedback and input synthesis are important for the effective repair of invalid inputs, especially in the absence of an input specification 
+%and program analysis.
+%In the future, we plan to investigate how to improve the performance of our approach by learning input semantics and constraints.
 
 We provide our implementation, experimental data and results for review:
 
