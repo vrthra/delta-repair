@@ -737,7 +737,9 @@ presented in Kirschner et al.~\cite{kirschner2020debugging}.
 \subsection{\ddmax corrections}
 While evaluating \ddmax, we noticed two errors in the formal definition of
 \ddmax. These are noted in \Cref{fig:ddmax}. Specifically,
-(1)~\ddmax requires the base case when $|\cfail-\cpass| = 1$. If not, \ddmax can
+(1)~\ddmax requires the base case when $|\cfail-\cpass| = 1$, where \cfail is
+the failing configuration, and \cpass the passing configuration.
+If not, \ddmax can
 go into unbounded recursion on inputs such as the JSON input:
 \letterboxed{1*1}. (2)~when increasing granularity, the size of the remaining
 input should be considered rather than the size of the entire text. Not doing
