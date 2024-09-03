@@ -1972,17 +1972,19 @@ Unlike \approach which aims to fix an invalid input, these schemes need an input
 \label{sec:threats}
 
 \noindent\textbf{External Validity.} This refers to the \textit{generalizability} of our approach, i.e., 
-the threat that \approach may not generalize to other programs and input formats. 
+the threat that \approach may not generalize to other programs and data formats. 
 To mitigate this threat, we have employed four well-known input formats with varying complexity, their corresponding programs also have  varying sizes (375 to 3062 LOC) and maturity (6 to 21 years old). 
 
+\noindent\textbf{Internal Validity.} This concerns the \textit{correctness} of our implementation and evaluation, especially if we have correctly implemented \approach and the baselines. We mitigate this threat by testing our implementation of all approaches on small and simple test inputs to ensure the they behave as described. 
 
-\noindent\textbf{Internal Validity} This concerns the \textit{correctness} of our implementation and evaluation, especially if we have correctly implemented \approach and the baselines. We mitigate this threat by testing our implementation of all approaches on small and simple test inputs to ensure the they behave as described. 
-
-
-\noindent\textbf{Construct Validity} This concerns the test oracle and parse-failure feedback employed in our evaluation. To ensure all subjects provide the expected \textit{incomplete} and \textit{(in)correct} feedback, we tested the programs on sample invalid inputs and modified the subject program, if needed. 
-
-
-
+\noindent\textbf{Construct Validity.} 
+%This concerns the degree to which a
+%test or measurement tool actually measures the theoretical concept or construct
+%it's designed to assess. In our case, 
+Does the data-recovery metrics presented
+represent actual data recovered? While the characters may have been recovered,
+its semantic information may have been lost. This is a threat to our evaluation.
+We have mitigated this threat by evaluating the amount of perfect repair accomplished.
 
 
 \section{Conclusion}
