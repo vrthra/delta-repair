@@ -154,6 +154,7 @@
 \usepackage{cleveref}
 \usepackage{boxedminipage}
 \usepackage[inline]{enumitem}
+\usepackage[normalem]{ulem}
 
 \newenvironment{result}{\begin{framed}\centering\it}{\end{framed}}
 
@@ -252,13 +253,16 @@ pics/numbering/.style args={#1}{code={
     \node[draw=black,shape=circle,fill=white,text=black,font=\ttfamily\scriptsize,inner sep=1pt,text width=8pt,align=center,outer sep=0] (-number) {#1};
 }}}
 
-\definecolor{light-gray}{gray}{0.87}
+\definecolor{light-gray}{gray}{0.77}
 \makeatletter
 
 \newcommand\letterboxed[1]{%
 \setlength{\fboxsep}{0pt}%
   \@tfor\@ii:=#1\do{%
-    \fcolorbox{white}{light-gray}{\texttt{\strut\@ii}}%
+    \fcolorbox{light-gray}{white}%
+    %\uline
+    %\uline
+    {\texttt{\strut\@ii}}%
   }%
 }
 \newcommand\letterboxedC[2]{%
