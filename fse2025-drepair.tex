@@ -1041,47 +1041,70 @@ The problem of \emph{data-repair} is as follows: Given a \emph{string} and a
 \emph{parser}, find the least number of \emph{repairs} that can be made to
 the string to make it acceptable by the \emph{parser}. If the parser is a
 \emph{conforming parser}, the \drepair algorithm can be used to
-repair the string. It has the following steps (visualized in \Cref{fig:brepair_flowchart}):
+repair the string. It has the following steps: 
+%(visualized in \Cref{fig:brepair_flowchart}):
 
-\begin{figure}[tbp!]
-\newlength\nodedst\setlength\nodedst{.35cm}
-\newlength\ndist\setlength\ndist{.1\nodedst}
-\begin{tikzpicture}[node distance=\nodedst and 2.5\nodedst]
-    \node[blockdiagramblock] (search) {Boundary-Search};
-    \node[blockdiagramblock,right=of search] (repair) {Apply Repairs};
-    \draw[blockdiagramarrow] (search) -- (repair); %node[simpletext,pos=.5,right,font=\scriptsize] {}; % PushPQ
-    \node[blockdiagramblock,right=of repair] (extend) {Extend Threads};
-    \draw[blockdiagramarrow] (repair) -- (extend);
-    \node[blockdiagramblock,below=of extend] (isvalid) {Check Candidates};
-    \node[simpletext,below=.3 of isvalid] (return) {\mbox{Return input}};
-    \node[blockdiagramblock,left=of isvalid] (select) {Select Threads};
-    \draw[blockdiagramarrow] (extend) -- (isvalid);
-    \draw[blockdiagramarrow] (isvalid) -- (return) node[simpletext,pos=.6,right,yshift=-.5mm] {\pass};
-    \draw[blockdiagramarrow] (isvalid) -- (select);
-    %\node[simpletext,right=.5 of isvalid.east,inner sep=1pt] (pqins1) {increase bound,\\push to PQ};
-    %\draw[blockdiagramarrow,dashed] (isvalid) -- (pqins1) node[pos=.5,above] {\pass};
-    %\node[simpletext,right=.5 of select.east,inner sep=1pt] (pqins2) {increase bound,\\push to PQ};
-    %\draw[blockdiagramarrow,dashed] (select) -- (pqins2) node[pos=.5,above] {\pass};
-    \draw[blockdiagramarrow] (select) -- (repair);
-    \pic[] at (search.south east) {numbering=1};
-    \pic[] at (isvalid.south east) {numbering=5};
-    \pic[] at (extend.south east) {numbering=3};
-    \pic[] at (repair.south east) {numbering=2};
-    \pic[] at (select.south east) {numbering=4};
-    %TODO
-\end{tikzpicture}
-\vspace*{-0.1in}
-    \caption{Work flow of \drepair}
-    \label{fig:brepair_flowchart}
-    % \vspace*{-0.1in}
-\end{figure}
-\newcommand{\refnumber}[1]{\hyperref[fig:brepair_flowchart]{Step~#1}}
+% \begin{figure}[tbp!]
+% \newlength\nodedst\setlength\nodedst{.35cm}
+% \newlength\ndist\setlength\ndist{.1\nodedst}
+% \begin{tikzpicture}[node distance=\nodedst and 2.5\nodedst]
+%     \node[blockdiagramblock] (search) {Boundary-Search};
+%     \node[blockdiagramblock,right=of search] (repair) {Apply Repairs};
+%     \draw[blockdiagramarrow] (search) -- (repair); %node[simpletext,pos=.5,right,font=\scriptsize] {}; % PushPQ
+%     \node[blockdiagramblock,right=of repair] (extend) {Extend Threads};
+%     \draw[blockdiagramarrow] (repair) -- (extend);
+%     \node[blockdiagramblock,below=of extend] (isvalid) {Check Candidates};
+%     \node[simpletext,below=.3 of isvalid] (return) {\mbox{Return input}};
+%     \node[blockdiagramblock,left=of isvalid] (select) {Select Threads};
+%     \draw[blockdiagramarrow] (extend) -- (isvalid);
+%     \draw[blockdiagramarrow] (isvalid) -- (return) node[simpletext,pos=.6,right,yshift=-.5mm] {\pass};
+%     \draw[blockdiagramarrow] (isvalid) -- (select);
+%     %\node[simpletext,right=.5 of isvalid.east,inner sep=1pt] (pqins1) {increase bound,\\push to PQ};
+%     %\draw[blockdiagramarrow,dashed] (isvalid) -- (pqins1) node[pos=.5,above] {\pass};
+%     %\node[simpletext,right=.5 of select.east,inner sep=1pt] (pqins2) {increase bound,\\push to PQ};
+%     %\draw[blockdiagramarrow,dashed] (select) -- (pqins2) node[pos=.5,above] {\pass};
+%     \draw[blockdiagramarrow] (select) -- (repair);
+%     \pic[] at (search.south east) {numbering=1};
+%     \pic[] at (isvalid.south east) {numbering=5};
+%     \pic[] at (extend.south east) {numbering=3};
+%     \pic[] at (repair.south east) {numbering=2};
+%     \pic[] at (select.south east) {numbering=4};
+%     %TODO
+% \end{tikzpicture}
+% \vspace*{-0.1in}
+%     \caption{Work flow of \drepair}
+%     \label{fig:brepair_flowchart}
+%     % \vspace*{-0.1in}
+% \end{figure}
+% \newcommand{\refnumber}[1]{\hyperref[fig:brepair_flowchart]{Step~#1}}
+
+\begin{algorithm}[t]
+\caption{Boundary search for \drepair}
+\label{alg:bsearch}
+\begin{algorithmic}[1]
+
+  \Function{BoundarySearch}{array, parser, left=0, right=len(array)}
+    \If{ \Call{parser}{array} $= \Rincomplete $}
+        \State \Return right
+    \EndIf
+    \While{left < right - 1}
+        \State middle $\gets$ (left + right) // 2
+        \If{ \Call{parser}{array[:middle]} $= \Rincomplete $}
+            \State left $\gets$ middle
+        \Else
+            \State right $\gets$ middle
+        \EndIf
+    \EndWhile
+    \State \Return left
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
 
 
 
 \begin{enumerate}
 \item \emph{Boundary search.} Given any corrupt string, \drepair starts by a
-  search of the input to determine the parse-boundary (\Cref{alg:drepair}).
+  search of the input to determine the parse-boundary (\Cref{alg:bsearch}).
 This is then used to construct the \emph{thread-queue} containing a single empty repair-thread,
 with the parse-boundary set to the search result.
 
@@ -1106,27 +1129,6 @@ treated same as \Rincomplete if the remaining-suffix is non-empty.
 \item \emph{Select Threads.} The algorithm chooses the best repair-thread from the priority queue,
 and continues through step 2. The ordering is based on the maximum data recovered so far from the original string.
 \end{enumerate}
-\begin{algorithm}[t]
-\caption{Boundary search for \drepair}
-\label{alg:drepair}
-\begin{algorithmic}[1]
-
-  \Function{BoundarySearch}{array, parser, left=0, right=len(array)}
-    \If{ \Call{parser}{array} $= \Rincomplete $}
-        \State \Return right
-    \EndIf
-    \While{left < right - 1}
-        \State middle $\gets$ (left + right) // 2
-        \If{ \Call{parser}{array[:middle]} $= \Rincomplete $}
-            \State left $\gets$ middle
-        \Else
-            \State right $\gets$ middle
-        \EndIf
-    \EndWhile
-    \State \Return left
-\EndFunction
-\end{algorithmic}
-\end{algorithm}
 
 \begin{algorithm}[b]
 \caption{\drepair Algorithm}
@@ -1159,100 +1161,6 @@ and continues through step 2. The ordering is based on the maximum data recovere
 
 \end{algorithmic}
 \end{algorithm}
-
-% \begin{algorithm}[H]
-% \caption{Repair Algorithm using \drepair}
-% \label{alg:drepair1}
-% \begin{algorithmic}[1]
-% 
-% \Procedure{Boundary Search}{corrupt\_string}
-%     \State Perform binary search on the input to determine the parse-boundary
-%     \State Initialize thread-queue with a single empty repair-thread
-%     \State Set parse-boundary to the search result
-% \EndProcedure
-% 
-% \Procedure{Apply Repair}{repair\_thread}
-%     \For{each existing repair-thread}
-%         \State Apply either a deletion or an insertion on the remaining-suffix
-%         \State \textbf{Deletion:} Remove the next character in the remaining-suffix
-%         \State Create new repair-thread and check for extension
-%         \State \textbf{Insertion:} Insert a character at the beginning of the remaining-suffix
-%         \For{each character $c$ in the alphabet}
-%             \State Let $S^{'}$ be the viable-prefix of the current repair-thread
-%             \If{parser responds with \emph{incomplete} for $S^{'}+c$}
-%                 \State Create a new repair-thread with viable-prefix $S^{'}+c$
-%             \EndIf
-%         \EndFor
-%     \EndFor
-% \EndProcedure
-% 
-% \Procedure{Extend Threads}{}
-%     \For{each repair-thread from Apply Repair}
-%         \State Attempt to extend the parse-boundary by adding characters from remaining-suffix
-%         \State Discard duplicate threads, keep those with minimal repairs
-%         \State Treat \Rvalid as \Rincomplete if remaining-suffix is non-empty
-%     \EndFor
-% \EndProcedure
-% 
-% \Procedure{Check Candidates}{}
-%     \If{any thread results in a repair-candidate}
-%         \State Return the candidate
-%     \EndIf
-% \EndProcedure
-% 
-% \Procedure{Select Threads}{}
-%     \State Choose the best repair-thread from the priority queue
-%     \State Continue from \textit{Apply Repair}
-%     \State Ordering is based on maximum data recovered so far
-% \EndProcedure
-% 
-% \end{algorithmic}
-% \end{algorithm}
-
-
-% \begin{algorithm}[H]
-% \caption{Repair Algorithm using \drepair}
-% \label{alg:drepair}
-% \begin{algorithmic}[1]
-% 
-% \STATE \textbf{Procedure: Boundary Search} (corrupt\_string)
-%     \STATE Perform binary search on the input to determine the parse-boundary
-%     \STATE Initialize thread-queue with a single empty repair-thread
-%     \STATE Set parse-boundary to the search result
-% 
-% \STATE \textbf{Procedure: Apply Repair} (repair\_thread)
-%     \FOR{each existing repair-thread}
-%         \STATE Apply either a deletion or an insertion on the remaining-suffix
-%         \STATE \textbf{Deletion:} Remove the next character in the remaining-suffix
-%         \STATE Create new repair-thread and check for extension
-%         \STATE \textbf{Insertion:} Insert a character at the beginning of the remaining-suffix
-%         \FOR{each character $c$ in the alphabet}
-%             \STATE Let $S^{'}$ be the viable-prefix of the current repair-thread
-%             \IF{parser responds with \emph{incomplete} for $S^{'}+c$}
-%                 \STATE Create a new repair-thread with viable-prefix $S^{'}+c$
-%             \ENDIF
-%         \ENDFOR
-%     \ENDFOR
-% 
-% \STATE \textbf{Procedure: Extend Threads}
-%     \FOR{each repair-thread from Apply Repair}
-%         \STATE Attempt to extend the parse-boundary by adding characters from remaining-suffix
-%         \STATE Discard duplicate threads, keep those with minimal repairs
-%         \STATE Treat \Rvalid as \Rincomplete if remaining-suffix is non-empty
-%     \ENDFOR
-% 
-% \STATE \textbf{Procedure: Check Candidates}
-%     \IF{any thread results in a repair-candidate}
-%         \STATE Return the candidate
-%     \ENDIF
-% 
-% \STATE \textbf{Procedure: Select Threads}
-%     \STATE Choose the best repair-thread from the priority queue
-%     \STATE Continue from \textit{Apply Repair}
-%     \STATE Ordering is based on maximum data recovered so far
-% 
-% \end{algorithmic}
-% \end{algorithm}
 
 
 The algorithm returns as soon as the first repair-candidate is found.
