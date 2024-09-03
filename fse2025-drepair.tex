@@ -1112,12 +1112,12 @@ and continues through step 2. The ordering is based on the maximum data recovere
 \begin{algorithmic}[1]
 
   \Function{BoundarySearch}{array, parser, left=0, right=len(array)}
-    \If{ \Call{parser}{array} $\in \{\Rvalid, \Rincomplete\} $}
+    \If{ \Call{parser}{array} $= \Rincomplete $}
         \State \Return right
     \EndIf
     \While{left < right - 1}
         \State middle $\gets$ (left + right) // 2
-        \If{ \Call{parser}{array[:middle] $\in \{\Rvalid, \Rincomplete\} $}}
+        \If{ \Call{parser}{array[:middle]} $= \Rincomplete $}
             \State left $\gets$ middle
         \Else
             \State right $\gets$ middle
