@@ -1644,7 +1644,7 @@ the \textit{combination of failure feedback and input synthesis} is vital for th
 
 \begin{result}
 \approach is 
-effective in repairing invalid input files: %, and more effective than the state-of-the-art.
+effective in input repair. %, and more effective than the state-of-the-art.
 It repaired four out of five (77\% of) invalid inputs and repaired 8\% more invalid inputs than the best language-agnostic method (lexical \ddmax). %baseline.
 \end{result}
 \done{8\% is not much, and only on average, too. This may not be the best opener, although the later results (specifically data loss) are impressive. -- AZ}
@@ -1776,25 +1776,6 @@ analysis time.
 reports the efficiency of all three approaches. % approach compared to ddmax. %the state-of-the-art methods.
 
 
-\textit{\approach is considerably efficient in input repair: It is reasonably fast, it takes about 10 seconds to repair an invalid input, on average}. However, it is about five times slower than \ddmax (two to three seconds, on average). 
-\Cref{tab:efficiency} %} %  and Table/Figure X show}
-shows %the %Inspecting
-that the execution time
-of \approach %syntactic ddmax
-is much higher %lower
-than that of syntactic and lexical \ddmax. 
-This result is %ese findings are
-due to the %can be explained
-number of program runs required by \approach, especially due to its additional repair operation (input synthesis) and its extra oracle checks (incompleteness and parse-boundary).
-\approach is reasonably efficient, similar to \ddmax, the number of program runs 
-is its main performance bottleneck. %of \approach.  % as well as \ddmax. %all three approaches. % to the
-
-\begin{result}
-\approach is reasonably fast (10 seconds), but it 
-is 5$\times$ slower than \ddmax because it requires
-additional operations and oracle checks. 
-\end{result}
-
 \begin{table}[!tbp]\centering
 \caption{Efficiency of \approach vs. \ddmax, lowest runtime and smaller number of program runs %and significant \% improvement in efficiency
 are in \textbf{bold}. %, second-best time performance is in \textit{italics}
@@ -1813,6 +1794,25 @@ are in \textbf{bold}. %, second-best time performance is in \textit{italics}
 \end{tabular}
 \label{tab:efficiency}
 \end{table}
+
+\textit{\approach is considerably efficient in input repair: It is reasonably fast, it takes about 10 seconds to repair an invalid input, on average}. However, it is about five times slower than \ddmax (two to three seconds, on average). 
+\Cref{tab:efficiency} %} %  and Table/Figure X show}
+shows %the %Inspecting
+that the execution time
+of \approach %syntactic ddmax
+is much higher %lower
+than that of syntactic and lexical \ddmax. 
+This result is %ese findings are
+due to the %can be explained
+number of program runs required by \approach, especially due to its additional repair operation (input synthesis) and its extra oracle checks (incompleteness and parse-boundary).
+\approach is reasonably efficient, similar to \ddmax, the number of program runs 
+is its main performance bottleneck. %of \approach.  % as well as \ddmax. %all three approaches. % to the
+
+\begin{result}
+\approach is reasonably fast (10 seconds), but it 
+is 5$\times$ slower than \ddmax.
+  %because it requires additional operations and oracle checks. 
+\end{result}
 
 \subsection{RQ4 Perfect Repair.}
 \revise{In this research question, we would like to evaluate the number of files that have been repaired perfectly by each approach, that is - the repaired file is exactly the same file as the file before it was mutated.
@@ -1995,7 +1995,7 @@ best baseline---(syntactic) \ddmax, without using an input grammar. In summary, 
 and program analysis.
 In the future, we plan to investigate how to improve the performance of our approach by learning input semantics and constraints.
 
-We provide our implementation, experimental data and results for easy replication, scrutiny and reuse:
+We provide our implementation, experimental data and results for review:
 
 
  \begin{center}
