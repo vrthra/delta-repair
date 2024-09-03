@@ -1083,7 +1083,7 @@ repair the string. It has the following steps (visualized in \Cref{fig:brepair_f
 \item \emph{Boundary search.} Given any corrupt string, \drepair starts by a
 binary search of the input to determine the parse-boundary. This is then used
 to construct the \emph{thread-queue} containing a single empty repair-thread,
-with the parse-boundary set to the search result.
+with the parse-boundary set to the search result. The search is described in \Cref{alg:drepair}.
 
 \item \emph{Apply Repair.} Starting with any existing repair-thread, \drepair applies
 either a deletion or an insertion edit on the \emph{remaining-suffix}.
@@ -1106,54 +1106,76 @@ treated same as \Rincomplete if the remaining-suffix is non-empty.
 \item \emph{Select Threads.} The algorithm chooses the best repair-thread from the priority queue,
 and continues through step 2. The ordering is based on the maximum data recovered so far from the original string.
 \end{enumerate}
-\begin{algorithm}[H]
-\caption{Repair Algorithm using \drepair}
+\begin{algorithm}[t]
+\caption{Boundary search for \drepair}
 \label{alg:drepair}
 \begin{algorithmic}[1]
 
-\Procedure{Boundary Search}{corrupt\_string}
-    \State Perform binary search on the input to determine the parse-boundary
-    \State Initialize thread-queue with a single empty repair-thread
-    \State Set parse-boundary to the search result
-\EndProcedure
-
-\Procedure{Apply Repair}{repair\_thread}
-    \For{each existing repair-thread}
-        \State Apply either a deletion or an insertion on the remaining-suffix
-        \State \textbf{Deletion:} Remove the next character in the remaining-suffix
-        \State Create new repair-thread and check for extension
-        \State \textbf{Insertion:} Insert a character at the beginning of the remaining-suffix
-        \For{each character $c$ in the alphabet}
-            \State Let $S^{'}$ be the viable-prefix of the current repair-thread
-            \If{parser responds with \emph{incomplete} for $S^{'}+c$}
-                \State Create a new repair-thread with viable-prefix $S^{'}+c$
-            \EndIf
-        \EndFor
-    \EndFor
-\EndProcedure
-
-\Procedure{Extend Threads}{}
-    \For{each repair-thread from Apply Repair}
-        \State Attempt to extend the parse-boundary by adding characters from remaining-suffix
-        \State Discard duplicate threads, keep those with minimal repairs
-        \State Treat \Rvalid as \Rincomplete if remaining-suffix is non-empty
-    \EndFor
-\EndProcedure
-
-\Procedure{Check Candidates}{}
-    \If{any thread results in a repair-candidate}
-        \State Return the candidate
+  \Function{BoundarySearch}{array, parser, left=0, right=len(array)}
+    \If{ \Call{parser}{array} $\in \{\Rvalid, \Rincomplete\} $}
+        \State \Return right
     \EndIf
-\EndProcedure
-
-\Procedure{Select Threads}{}
-    \State Choose the best repair-thread from the priority queue
-    \State Continue from \textit{Apply Repair}
-    \State Ordering is based on maximum data recovered so far
-\EndProcedure
-
+    \While{left < right - 1}
+        \State middle $\gets$ (left + right) // 2
+        \If{ \Call{parser}{array[:middle] $\in \{\Rvalid, \Rincomplete\} $}}
+            \State left $\gets$ middle
+        \Else
+            \State right $\gets$ middle
+        \EndIf
+    \EndWhile
+    \State \Return left
+\EndFunction
 \end{algorithmic}
 \end{algorithm}
+
+% \begin{algorithm}[H]
+% \caption{Repair Algorithm using \drepair}
+% \label{alg:drepair1}
+% \begin{algorithmic}[1]
+% 
+% \Procedure{Boundary Search}{corrupt\_string}
+%     \State Perform binary search on the input to determine the parse-boundary
+%     \State Initialize thread-queue with a single empty repair-thread
+%     \State Set parse-boundary to the search result
+% \EndProcedure
+% 
+% \Procedure{Apply Repair}{repair\_thread}
+%     \For{each existing repair-thread}
+%         \State Apply either a deletion or an insertion on the remaining-suffix
+%         \State \textbf{Deletion:} Remove the next character in the remaining-suffix
+%         \State Create new repair-thread and check for extension
+%         \State \textbf{Insertion:} Insert a character at the beginning of the remaining-suffix
+%         \For{each character $c$ in the alphabet}
+%             \State Let $S^{'}$ be the viable-prefix of the current repair-thread
+%             \If{parser responds with \emph{incomplete} for $S^{'}+c$}
+%                 \State Create a new repair-thread with viable-prefix $S^{'}+c$
+%             \EndIf
+%         \EndFor
+%     \EndFor
+% \EndProcedure
+% 
+% \Procedure{Extend Threads}{}
+%     \For{each repair-thread from Apply Repair}
+%         \State Attempt to extend the parse-boundary by adding characters from remaining-suffix
+%         \State Discard duplicate threads, keep those with minimal repairs
+%         \State Treat \Rvalid as \Rincomplete if remaining-suffix is non-empty
+%     \EndFor
+% \EndProcedure
+% 
+% \Procedure{Check Candidates}{}
+%     \If{any thread results in a repair-candidate}
+%         \State Return the candidate
+%     \EndIf
+% \EndProcedure
+% 
+% \Procedure{Select Threads}{}
+%     \State Choose the best repair-thread from the priority queue
+%     \State Continue from \textit{Apply Repair}
+%     \State Ordering is based on maximum data recovered so far
+% \EndProcedure
+% 
+% \end{algorithmic}
+% \end{algorithm}
 
 
 % \begin{algorithm}[H]
