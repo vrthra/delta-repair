@@ -1027,7 +1027,7 @@ input string. A repair-thread has a single parse-boundary, a corresponding
 Similarly, every parse-boundary has associated \emph{repair-threads}.
 If no repairs has been made yet, it is an empty repair-thread.
 A repair thread becomes a \emph{repair-candidate} when the repaired string
-elicits the \Rvalid response from the parser.
+elicits the \Rvalid response from the parser, and there is no remaining-suffix.
 
 \item[repair-distance] The minimal number of repairs required to transform the corrupt
 string to the repair-candidate (also called \emph{edit-distance}). The larger the
