@@ -1141,13 +1141,13 @@ and continues through step 2. The ordering is based on the maximum data recovere
     \While{pq $ \neq \emptyset $ }
         \State (string, boundary, fixes) $\gets$ \Call{top}{pq}
         \State deletes $\gets$ \{(boundary, $\emptyset$)\}
-        \State inserts $\gets$ \{(boundary, c) $\,|\, c \in \alpha$\}
+        \State inserts $\gets$ \{(boundary, c) $\,|\, c \in \alpha,$ \Call{parser}{string[:boundary]+c} = \Rincomplete\}
 
         \For{fix \textbf{in} deletes $\cup$ inserts}
             \State new\_string $\gets$ \Call{ApplyFixes}{string, fixes + [fix]}
             \State new\_boundary $\gets$ \Call{BinarySearch}{new\_string, parser, boundary}
 
-            \If{\Call{parser}{new\_string, new\_boundary} = \Rvalid}
+            \If{\Call{parser}{new\_string[:new\_boundary]} = \Rvalid}
                 \State \Return new\_string
             \EndIf
 
