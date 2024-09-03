@@ -1128,6 +1128,37 @@ and continues through step 2. The ordering is based on the maximum data recovere
 \end{algorithmic}
 \end{algorithm}
 
+\begin{algorithm}[b]
+\caption{\drepair Algorithm}
+\label{alg:drepair}
+\begin{algorithmic}[1]
+
+\Function{DRepair}{string, parser}
+    \State boundary $\gets$ \Call{BoundarySearch}{string, parser}
+    \State pq $\gets$ \Call{PriorityQueue}{}
+    \State \Call{add}{(pq, string, boundary, $\emptyset$)}
+
+    \While{pq $ \neq \emptyset $ }
+        \State (string, boundary, fixes) $\gets$ \Call{top}{pq}
+        \State dfix $\gets$ (boundary, string[boundary], 'delete')
+        \State ifixes $\gets$ [(boundary, c, 'insert') for c in alphabet]
+
+        \For{fix \textbf{in} [dfix] + ifixes}
+            \State new\_string $\gets$ \Call{ApplyFixes}{string, fixes + [fix]}
+            \State new\_boundary $\gets$ \Call{BinarySearch}{new\_string, parser, boundary}
+
+            \If{\Call{parser}{new\_string, new\_boundary} == valid}
+                \State \Return new\_string
+            \EndIf
+
+            \State \Call{add}{(pq, new\_string, new\_boundary, fixes + [fix])}
+        \EndFor
+    \EndWhile
+\EndFunction
+
+\end{algorithmic}
+\end{algorithm}
+
 % \begin{algorithm}[H]
 % \caption{Repair Algorithm using \drepair}
 % \label{alg:drepair1}
