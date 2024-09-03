@@ -167,6 +167,7 @@
 
 \renewcommand{\done}[1]{} % comment to see responses.
 
+
 \IfFileExists{SUBMIT}{
 \renewcommand{\todo}[1]{}
 \renewcommand{\done}[1]{}
@@ -197,10 +198,15 @@
 %\def\Rincorrect{\texttt{\color{incorrectcolor}\textbf{$\ntriangleright$}}\xspace}
 \def\Rincorrect{\texttt{\color{incorrectcolor}\textbf{$\ntriangleright$}}\xspace}
 \def\Rvalid{\texttt{\color{validcolor}\textbf{$\checkmark$}}\xspace}
-\def\Rreject{\texttt{\color{validcolor}\textbf{$\times$}}\xspace}
+\def\Rreject{\texttt{\color{incorrectcolor}\textbf{$\times$}}\xspace}
 
 %\newcommand{\cmark}{\ding{51}}%
 
+
+\renewcommand{\tablename}{Tab.}
+\renewcommand{\figurename}{Fig.}
+%\renewcommand{\algorithmname}{Alg.}
+\renewcommand{\listalgorithmname}{Alg.}
 
 
 \usepackage{pifont}
@@ -735,14 +741,14 @@ Let us first illustrate the limitations of the state-of-the-art \dtask method (\
 presented in Kirschner et al.~\cite{kirschner2020debugging}.
 
 \subsection{\ddmax corrections}
-While evaluating \ddmax, we noticed two errors in the formal definition of
-\ddmax. These are noted in \Cref{fig:ddmax}. Specifically,
-(1)~\ddmax requires the base case when $|\cfail-\cpass| = 1$, where \cfail is
-the failing configuration, and \cpass the passing configuration.
-If not, \ddmax can
-go into unbounded recursion on inputs such as the JSON input:
+We noticed two errors in the formal definition of
+\ddmax (see \Cref{fig:ddmax}). Specifically,
+(1)~\ddmax requires the base case when $|\cfail-\cpass| = 1$, where $\cfail$ is
+the failing configuration, and $\cpass$ the passing configuration.
+If not, \ddmax goes
+into unbounded recursion on inputs such as the JSON input:
 \letterboxed{1*1}. (2)~when increasing granularity, the size of the remaining
-input should be considered rather than the size of the entire text. Not doing
+input should be considered instead of the entire text. Not doing
 this would cause an invariant fail for JSON inputs such as \letterboxed{\{*"":2\}}.
 
 \subsection{Limitations due to multiple faults}
@@ -757,10 +763,10 @@ non-contiguous. The operation of \ddmax (\Cref{fig:ddmax}) proceeds as follows:
 \item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply
 \item Can we increase to complement?\\
 $\cfail - \Delta_1$= \letterboxed{]+} \fail \\
-$\cfail - \Delta_2$= \letterboxed{[*} \fail \\
+$\cfail - \Delta_2$= \letterboxed{[*} \fail
 \item Can we increase to subset?\\
 $\emptyset \cup \Delta_1$=\letterboxed{[*} \fail \\
-$\emptyset \cup \Delta_2$= \letterboxed{]+} \fail \\
+$\emptyset \cup \Delta_2$= \letterboxed{]+} \fail
 \item Can we increase granularity? $n < |\cfail-\dpass|$ which is $2 < |\cfail-\emptyset|$ \pass \\
   Hence the next iteration is:
   $\ddmax_2\bigl(\emptyset, 4)\bigr) $
@@ -769,13 +775,13 @@ $\emptyset \cup \Delta_2$= \letterboxed{]+} \fail \\
 $\cfail - \Delta_1$= \letterboxed{*]+} \fail \\
 $\cfail - \Delta_2$= \letterboxed{[]+} \fail \\
 $\cfail - \Delta_3$= \letterboxed{[*+} \fail \\
-$\cfail - \Delta_4$= \letterboxed{[*]} \fail \\
+$\cfail - \Delta_4$= \letterboxed{[*]} \fail
 \item Can we increase to subset?\\
 $\emptyset \cup \Delta_1$=\letterboxed{[} \fail \\
 $\emptyset \cup \Delta_2$=\letterboxed{*} \fail \\
 $\emptyset \cup \Delta_3$=\letterboxed{]} \fail \\
-$\emptyset \cup \Delta_4$=\letterboxed{+} \fail \\
-\item Can we increase granularity? $4 < 4$ \fail \\
+$\emptyset \cup \Delta_4$=\letterboxed{+} \fail
+\item Can we increase granularity? $4 < 4$ \fail
 \item The solution is $\emptyset$.
 
 \end{enumerate}
@@ -808,10 +814,10 @@ The operation of \ddmax (\Cref{fig:ddmax}) is as follows:
 \item  $|\cfail - \emptyset| \ne 1$. Hence, the base case does not apply
 \item Can we increase to complement?\\
 $\cfail - \Delta_1$= \letterboxed{+]} \fail \\
-$\cfail - \Delta_2$= \letterboxed{[*} \fail \\
+$\cfail - \Delta_2$= \letterboxed{[*} \fail
 \item Can we increase to subset?\\
 $\emptyset \cup \Delta_1$=\letterboxed{[*} \fail \\
-$\emptyset \cup \Delta_2$= \letterboxed{+]} \fail \\
+$\emptyset \cup \Delta_2$= \letterboxed{+]} \fail
 \item Can we increase granularity? $n < |\cfail-\dpass|$ which is $2 < |\cfail-\emptyset|$ \pass \\
   Hence the next iteration is:
   $\ddmax_2\bigl(\emptyset, 4)\bigr) $
@@ -820,13 +826,13 @@ $\emptyset \cup \Delta_2$= \letterboxed{+]} \fail \\
 $\cfail - \Delta_1$= \letterboxed{*+]} \fail \\
 $\cfail - \Delta_2$= \letterboxed{[+]} \fail \\
 $\cfail - \Delta_3$= \letterboxed{[*]} \fail \\
-$\cfail - \Delta_4$= \letterboxed{[*+} \fail \\
+$\cfail - \Delta_4$= \letterboxed{[*+} \fail
 \item Can we increase to subset?\\
 $\emptyset \cup \Delta_1$=\letterboxed{[} \fail \\
 $\emptyset \cup \Delta_2$=\letterboxed{*} \fail \\
 $\emptyset \cup \Delta_3$=\letterboxed{+} \fail \\
-$\emptyset \cup \Delta_4$=\letterboxed{]} \fail \\
-\item Can we increase granularity? $4 < 4$ \fail\\
+$\emptyset \cup \Delta_4$=\letterboxed{]} \fail
+\item Can we increase granularity? $4 < 4$ \fail
 \item The solution is $\emptyset$.
 \end{enumerate}
 
@@ -835,7 +841,7 @@ As in the previous case, the data loss can be severe.
 Consider
 \letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\ \}} in
 \Cref{tab:ddmaxlimitations} which is similar to
-Kirchner et al.~\cite[Figure 1]{kirschner2020debugging} but with an extra
+Kirchner et al.~\cite[Fig. 1]{kirschner2020debugging} but with an extra
 \letterboxed{*}. \ddmax repairs this input to \letterboxed{\ \ \ \ 3.45},
 resulting in loss of data and structure. % of information.
 
@@ -1001,10 +1007,10 @@ between \emph{incorrect} input and \emph{incomplete} input. Given a parser that 
 minimal contract, we can quickly determine the location of the error, and identify the
 \emph{minimal} edits required to fix the parser error.
 % as we demonstrate next.
-We next describe the \drepair algorithm in more detail.
 
-As our solution is modeled on \emph{error correcting parsers}~\cite{aho1972minimum},
-we define the following terms correspondingly:
+We next describe the \drepair algorithm in detail.
+%As our solution is modeled on \emph{error correcting parsers}~\cite{aho1972minimum},
+The following terms are used in our definition: % correspondingly:
 \begin{description}[labelwidth=!, labelindent=0pt]
 \item[alphabet] The set of characters that a given input string can have.
 
@@ -1299,13 +1305,13 @@ at the end of the viable-prefix, but also at all points in the viable-prefix. Th
 the corrupt string, \letterboxed{"abcd":[1,2,3]\}}, when we obtain \Rincorrect with \letterboxed{"abcd":},
 all the following locations are candidate locations for inserts;
 \begin{enumerate*}
-\item \letterboxedC{red}{\ }\letterboxed{"abcd":[1,2,3]}
-\item \letterboxed{"}\letterboxedC{red}{\ }\letterboxed{abcd":}
-\item \letterboxed{"a}\letterboxedC{red}{\ }\letterboxed{bcd":}
-\item \letterboxed{"ab}\letterboxedC{red}{\ }\letterboxed{cd":}
-\item \letterboxed{"abc}\letterboxedC{red}{\ }\letterboxed{d":}
-\item \letterboxed{"abcd}\letterboxedC{red}{\ }\letterboxed{":}
-\item \letterboxed{"abcd"}\letterboxedC{red}{\ }\letterboxed{:}
+  \item \letterboxedC{red}{\uline{\,}}\letterboxed{"abcd":[1,2,3]}
+  \item \letterboxed{"}\letterboxedC{red}{\uline{\,}}\letterboxed{abcd":}
+  \item \letterboxed{"a}\letterboxedC{red}{\uline{\,}}\letterboxed{bcd":}
+  \item \letterboxed{"ab}\letterboxedC{red}{\uline{\,}}\letterboxed{cd":}
+  \item \letterboxed{"abc}\letterboxedC{red}{\uline{\,}}\letterboxed{d":}
+  \item \letterboxed{"abcd}\letterboxedC{red}{\uline{\,}}\letterboxed{":}
+  \item \letterboxed{"abcd"}\letterboxedC{red}{\uline{\,}}\letterboxed{:}
 \end{enumerate*}.
 Similarly, each character in the current prefix becomes a potential candidate for deletion.
 The problem with this approach is that it may lead to numerous repair-candidates, with each
