@@ -1915,31 +1915,37 @@ To mitigate this threat, we have employed four well-known input formats with var
 \section{Limitations}
 Our approach (\approach) and empirical evaluations may be limited by the following: % validity threats:
 
-\subsection{Limited to Data Repair} The repair produced by our approach aim to ensure maximal data recovery, but it does not ensure that the intended user information is preserved. Hence, \approach is limited to repair of the input data, but not the intended information. 
+\noindent\textbf{Limited data-repair.} As with \ddmax, \drepair only attempts
+to recover as much data as possible from a corrupt record. This means that there
+is a chance of spurious interpretation of existing data (in the case of \ddmax)
+and also incorporating spurious data (in the case of \drepair), either of which
+may have unintended semantic consequences. While this is
+worked around to some extent by means of a post processing step, with user
+supplied validators, there is no guarantee that the end result is exactly same
+as the non-corrupted version. That is, both \ddmax and \drepair runs the risk
+of further data-corruption and information distortion, and the end-users should
+select the best semantically-fit repair from the repair-candidates provided by
+\drepair.
 
+\noindent\textbf{Inability to work with constraints.} \drepair has problems when
+the parser is not conforming. For example, repairing an invalid checksum or hash
+requires extra constraints that are hard to supply in a conforming parser,
+and \drepair will be of limited use. However, it could still provide
+repair-candidates that allow end-users to debug such semantic issues. 
+%\revise{
+%In addition, inputs with significant semantic corruption may not be effectively repaired by \drepair. Even though \drepair is effective in fixing structural parts of invalid inputs, when the corruption is in the semantic part, the missing data becomes difficult to recover. Examples include corrupted numbers in calculations, and dates.}
 
-\subsection{Input Constraints and Semantics} \approach does not address concerns about recovering or preserving the input constraints or intended semantics of the input data. For instance, repairing an invalid checksum or hash requires such information, and \approach will be limited for this use cases. However, it would provide repair-candidates that allow end-users to debug such semantic issues. 
-\revise{
-In addition, inputs with significant semantic corruption may not be effectively repaired by \drepair. Even though \drepair is effective in fixing structural parts of invalid inputs, when the corruption is in the semantic part, the missing data becomes difficult to recover. Examples include corrupted numbers in calculations, and dates.}
-
-
-\subsection{Repair via Input Synthesis} 
-\revise{Firstly, the repair via synthesis approach of \approach is exhaustive, thus it can quickly become computationally expensive.} 
-Secondly, the repair via synthesis operation %(i.e., insertion) % operation) 
-of our approach poses the risk of introducing input elements with unintended semantic consequences. 
-Specifically, insertion operations may lead %cause further 
-to data corruption and information distortion. To mitigate this threat, \approach provides several valid candidate repairs ranked by the edit distance 
-of each repair-candidate from the original input. %to %.
-Hence, we 
-encourage end-users to select the best semantically-fit repair from the 
-potential repair-candidates provided by \approach. 
-
-
-\done{Do you talk about the risk of input synthesis (which may be perceived as greater than the risk of input deletion) somewhere? A small lexical change may have large semantical consequences -- AZ}
-
-
-
-
+\noindent\textbf{Corruptions that do not introduce immediate parse-errors.}
+Certain kinds of data corruption does not introduce a parse-error immediately.
+For example, consider the SExp string \letterboxed{((()))}. A possible corruption
+is to introduce a quote, resulting in say \letterboxed{(((')))}.
+However, \drepair is unable to correctly identify the error because it will
+only find \Rincomplete on the corrupted string, and will attempt to fix this
+by appending more data to the string. Another problem is that \drepair can take
+a long time to even find a repair because it needs to produce three close
+parenthesis, as noted by Mathis et al~\cite{mathis2019parser}.
+We note that, while this is a limitation, this can be worked around by limiting
+\drepair repairs to deletions if this behaviour is expected.
 
 
 \section{Related Work}
