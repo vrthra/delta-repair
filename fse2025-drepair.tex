@@ -1845,15 +1845,17 @@ as lexical \ddmax.
 
 
 \noindent\textbf{RQ3: How fast is \dtask compared to the state-of-the-art?}
+The runtime of all three approaches is tabulated in \Cref{tab:efficiency}.
+From the table, syntactic \ddmax is the fastest, and achieves an average runtime
+of 2 seconds. It also accomplishes the data-repair with 2000 program runs on
+average. In comparison, \drepair is about five times slower than the syntactic
+\ddmax, and three times slower than lexical \ddmax.
 
-\approach is considerably efficient in input repair: It is reasonably fast, it takes about 10 seconds to repair an invalid input, on average.
-However, it is about five times slower than \ddmax (two to three seconds, on average). 
-\Cref{tab:efficiency}
-shows that the execution time of \drepair
-is much higher than that of syntactic and lexical \ddmax. 
-This result is due to the number of program runs required by \approach, especially due to its additional repair operation (input synthesis) and its extra oracle checks (incompleteness and parse-boundary).
-\approach is reasonably efficient, similar to \ddmax, the number of program runs 
-is its main performance bottleneck. %of \approach.  % as well as \ddmax. %all three approaches. % to the
+The main reason for the extra time requirement is due to the additional
+insert repair option. For each insert repair, \drepair needs to check each
+character in the alphabet, which can be costly in formats with a large number
+of alphabets. While \drepair is comparitively slow, we note that an average
+runtime of 10 seconds is well within practicality for \dtask.
 
 \begin{result}
 While \drepair is slower than \ddmax, it's average runtime is 10 seconds, which
