@@ -1046,6 +1046,16 @@ could have repaired the input string to
 \ddmax is unable to insert any tokens, opportunities for repair can be
 missed.
 
+\subsection{Single repair-candidate}
+Consider the following corrupted data \letterboxed{["A",[1,2]"]}.
+Given \emph{deletion} there are two possible repair candidates here:
+(1) \letterboxed{["A,[1,2]"]} and
+(2) \letterboxed{["A",[1,2]]}. Either may be the correct one. However,
+\ddmax is constrained to always choose just one of the canidates, and the
+choice depends exclusively on which fragment was tested first.
+This means that \ddmax cannot rely on a post-processing intelligent
+selector such as an end-user or an automatic validator even if one is provided.
+
 \subsection{Other limitations of \ddmax}
 A final limitation of \ddmax is that it assumes that there exist a
 \emph{valid passing configuration} that can be progressively \emph{extended}
@@ -1526,6 +1536,7 @@ Similarly,
 complete valid records. However, tokens thus produced are do not hold semantic information.
 Hence, during post-processing, we expect to replace synthesized data with
 semantic content with placeholders as provided by the user.
+%Postprocessing is necessarilty program and data specific.
 
 \section{Evaluation}
 \label{sec:evaluation}
