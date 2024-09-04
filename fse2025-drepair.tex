@@ -1816,6 +1816,34 @@ closest competitor lexical \ddmax on average.
 competitor.
 \end{result}
 
+\noindent\emph{Perfect repair:} While the data recovery metrics can provide us
+with some intuition on quality of data repair, one may still wonder. Does the
+data-repair actually \emph{correctly repair} the corruption? Given that we have
+data that we introduce corruption synthetically, this is something we can
+investigate.
+We evaluate the number of files that have been repaired perfectly by
+each approach, that is, the repaired file is \emph{exactly the same} as the file
+before it was corrupted.
+We only use the syntheticly corrupted records in this
+experiment.
+
+We report the number of repaired files in \cref{tab:perfectrepairs}.
+The total number of perfectly repaired files for \drepair is 17\%
+higher than for lexical \ddmax. Surprisingly syntactic \ddmax did not
+result in any perfect repair.
+
+We also investigate the files that were repaired solely by \drepair, \ddmax 
+or both approaches. These are given in \Cref{fig:perfectlyrepairedvenndiagram}.
+From the figure, 36 files were perfectly repaired by both \drepair and lexical \ddmax.
+We found that \drepair \emph{solely} repaired 2.17$\times$ as many input files
+as lexical \ddmax.
+
+\begin{result}
+\approach completed 17\% more perfect repairs than \ddmax. It solely completed 2$\times$ as many perfect repairs 
+as lexical \ddmax. 
+\end{result}
+
+
 \noindent\textbf{RQ3: How fast is \dtask compared to the state-of-the-art?}
 
 \approach is considerably efficient in input repair: It is reasonably fast, it takes about 10 seconds to repair an invalid input, on average.
@@ -1831,44 +1859,6 @@ is its main performance bottleneck. %of \approach.  % as well as \ddmax. %all th
 \approach is reasonably fast (10 seconds), but it 
 is 5$\times$ slower than \ddmax.
   %because it requires additional operations and oracle checks. 
-\end{result}
-
-\subsection{RQ4 Perfect Repair.}
-\revise{In this research question, we would like to evaluate the number of files that have been repaired perfectly by each approach, that is - the repaired file is exactly the same file as the file before it was mutated.
-Since this obviously limits the number of files we can use in the evaluation to the artificially mutated files, the total number of files is smaller in this section of the experiments.}
-
-\revise{We report the number of repaired files in \cref{tab:perfectrepairs}.
-The total number of perfectly repaired files for \approach (49) is (17\%) higher than for \ddmax (42), while \ddmaxg did not manage to perfectly repair any file at all. We attribute this 
-%This might be due 
-to the fact that \ddmaxg needs to parse and un-parse all input files to work on the parse tree instead of the characters, which introduces noise, e.g.,  by changing whitespaces and line breaks in the files.
-}
-
-\revise{
-We also inspect the files that were repaired solely by \approach, \ddmax 
-% \textit{only}
-or both 
-%, as well as the 
-%If we take a look at the 
-%overlap of files that could be perfectly repaired  by both 
-approaches (\cref{fig:perfectlyrepairedvenndiagram}).  We found that 
-\approach \textit{solely} repaired 
-twice (2.17$\times$) as many input files
-as 
-% in comparison to 
-\ddmax: 
-\autoref{fig:perfectlyrepairedvenndiagram} shows that 
-13 input files were perfectly repaired by \approach  \textit{solely},  in comparison to six (6) input files for \ddmax  \textit{solely}. 
-Meanwhile,  36 input files were perfectly repaired by both methods. 
-Overall,  these results showcase the ability of \approach to repair files that are difficult to repair for \ddmax.
-}
-
-\begin{result}
-\approach completed (17\%) more perfect repairs than \ddmax. It solely completed twice (2$\times$) as many perfect repairs 
-%exclusively 
-%in comparison to 
-as \ddmax (13 vs.  6 perfect repairs). 
-%:
-%While \approach completed 13 repairs, 
 \end{result}
 
 \begin{table}[!tbp]\centering
