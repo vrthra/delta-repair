@@ -1111,14 +1111,24 @@ repair the string. It has the following steps:
 % \newcommand{\refnumber}[1]{\hyperref[fig:brepair_flowchart]{Step~#1}}
 
 \begin{algorithm}[t]
+  \footnotesize
 \caption{Boundary search for \drepair}
 \label{alg:bsearch}
 \begin{algorithmic}[1]
 
-  \Function{BoundarySearch}{array, parser, left=0, right=len(array)}
-    \If{ \Call{parser}{array} $\in \{ \Rincomplete, \Rvalid\} $} % $= \Rincomplete $}
+  \Function{BoundarySearch}{array, parser, left=0}
+    \State bound $\gets$ \Call{len}{array}
+
+    \State right $\gets$ 1
+    \While{right < bound $\wedge$ \Call{parser}{array[:right]} $\notin$ \{ \Rincomplete, \Rvalid\} }
+        \State left $\gets$ right
+        \State right $\gets$ \Call{min}{right * 2, bound}
+    \EndWhile
+
+    \If{ \Call{parser}{array[:right]} $\in \{ \Rincomplete, \Rvalid\} $} % $= \Rincomplete $}
         \State \Return right
     \EndIf
+
     \While{left < right - 1}
         \State middle $\gets$ (left + right) // 2
         \If{ \Call{parser}{array[:middle]} $\in \{ \Rincomplete, \Rvalid\} $}  %$= \Rincomplete $}
@@ -1164,6 +1174,7 @@ treated same as \Rincomplete if the remaining-suffix is non-empty.
 \end{enumerate}
 
 \begin{algorithm}[t]
+  \footnotesize
 \caption{\drepair Algorithm}
 \label{alg:drepair}
 \begin{algorithmic}[1]
