@@ -1491,7 +1491,7 @@ To allow such repairs to take place, we extend the \drepair potential candidates
 When \drepair obtains an \Rincorrect response from the parser, we create repair-candidates not only
 at the end of the viable-prefix, but also at all points in the viable-prefix. That is, given
 the corrupt string, \letterboxed{"abcd":[1,2,3]\}}, when we obtain \Rincorrect with \letterboxed{"abcd":},
-all the following locations are candidate locations for inserts;
+all the following locations indicated by red cursors are candidate locations for inserts;
 \begin{enumerate*}
   \item \letterboxedC{red}{\uline{\,}}\letterboxed{"abcd":[1,2,3]}
   \item \letterboxed{"}\letterboxedC{red}{\uline{\,}}\letterboxed{abcd":}
@@ -1501,16 +1501,17 @@ all the following locations are candidate locations for inserts;
   \item \letterboxed{"abcd}\letterboxedC{red}{\uline{\,}}\letterboxed{":}
   \item \letterboxed{"abcd"}\letterboxedC{red}{\uline{\,}}\letterboxed{:}
 \end{enumerate*}.
-Similarly, each character in the current prefix becomes a potential candidate for deletion.
+Similarly, each character next to the red cursor becomes a potential candidate for deletion.
 The problem with this approach is that it may lead to numerous repair-candidates, with each
-location potentially having multiple candidates. Hence, heuristic strategies are needed to
-reduce the number of repair-candidates.
-
-One such heuristic is to only choose those characters that allow us to extend the parsing-boundary
-beyond the current \Rincorrect response, or in the case of \Rincomplete response, to produce
-a valid string. 
-
-In our empirical evaluation, we only use the simple \drepair, with no additional extensions.
+location potentially having multiple candidates. That is, if we have $n$ alphabets in the language,
+then each location can at worst produce $n+1$ candidates, and a viable-prefix of length $l$ can
+result in $l\times (n+1)$ candidates. Hence, heuristic strategies are needed to
+reduce the number of repair-candidates. Such heuristics may be program or data specific.
+%One such heuristic is to only choose those characters that allow us to extend the parsing-boundary
+%beyond the current \Rincorrect response, or in the case of \Rincomplete response, to produce
+%a valid string. 
+In our current empirical evaluation, we only use the simple \drepair, with no additional extensions.
+However, additional heuristics will be one of the possible directions of further research.
 
 \subsection{Postprocessing}
 \drepair can generate multiple repair-candidates, only one of which may be
