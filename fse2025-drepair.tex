@@ -411,7 +411,7 @@ The best data repair in bold.}
 
 \begin{filecontents*}{.datarecovery.tex}
 \begin{table*}[!tbp]\centering
-\caption{Data Recovery (file size difference) of \approach vs
+\caption{Data Recovery (percentage of original data remaining) of \approach vs
 lexical \ddmax and syntactic \ddmax. 
 The highest data recovery and lowest data loss are in bold.}
 \begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
@@ -1830,7 +1830,7 @@ it overlooks a crucial aspect of data recovery: how much of the original
 data survives in the repaired record.
 
 We analyzed 474 fully repaired inputs from lexical \ddmax, syntactic \ddmax, and
-\drepair, excluding empty files and whitespace, as shown in \Cref{tab:datarecovery}.
+\drepair, and computed the amount of original data that survived in the repaired version. This is given in \Cref{tab:datarecovery}.
 
 The results indicate that \drepair recovered an average of 91\% of the input
 data, which is 23\% more than the best baseline competitor, lexical \ddmax.
