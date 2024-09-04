@@ -1973,13 +1973,8 @@ repair-candidates that allow end-users to debug such semantic issues.
 
 \noindent\textbf{Corruptions that do not introduce immediate parse-errors.}
 Certain kinds of data corruption does not introduce a parse-error immediately.
-For example, consider the SExp string \letterboxed{((()))}. A possible corruption
-is to introduce a quote, resulting in say \letterboxed{(((')))}.
-However, \drepair is unable to correctly identify the error because it will
-only find \Rincomplete on the corrupted string, and will attempt to fix this
-by appending more data to the string. Another problem is that \drepair can take
-a long time to even find a repair because it needs to produce three close
-parenthesis, as noted by Mathis et al~\cite{mathis2019parser}.
+An example of this issue is the SExp string \letterboxed{(((')))} as we discussed
+previously.
 We note that, while this is a limitation, this can be worked around by limiting
 \drepair repairs to deletions if this behaviour is expected.
 
