@@ -1352,7 +1352,7 @@ treated same as \Rincomplete if the remaining-suffix is non-empty.
 
         \For{fix \textbf{in} deletes $\cup$ inserts}
             \State new\_string $\gets$ \Call{ApplyFixes}{string, fixes + [fix]}
-            \State new\_boundary $\gets$ \Call{BinarySearch}{new\_string, parser, boundary}
+            \State new\_boundary $\gets$ \Call{BoundarySearch}{new\_string, parser, boundary}
 
             \If{\Call{parser}{new\_string[:new\_boundary]} $=$ \Rvalid $\wedge$ string[new\_boundary:] $=\emptyset$ }
                 \State \Return new\_string
