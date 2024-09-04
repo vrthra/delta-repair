@@ -2027,26 +2027,27 @@ We have mitigated this threat by evaluating the amount of perfect repair accompl
 
 \section{Conclusion}
 \label{sec:conclusion}
-This paper presents \drepair, a \dtask approach that leverages parse-failure feedback to repair corrupt data.
-%Our approach is black-box, does not require program analysis or an input grammar. 
-We evaluate the data recovery, repair effectiveness, and efficiency of our approach, in comparison to the state-of-the-art methods. We show that \approach has a high data recovery rate---it recovered 91\% of corrupt data. 
-It is also effective and efficient in data-repair---it completes the repair of about four in five invalid records (77\%) within four minutes. Furthermore, we demonstrate that our approach is up to 35\% more effective than the best 
-best baseline---(syntactic) \ddmax, without using a data-format specification.
-%In summary, this work demonstrates that combining parse-failure feedback and input synthesis are important for the effective repair of invalid inputs, especially in the absence of an input specification 
-%and program analysis.
-%In the future, we plan to investigate how to improve the performance of our approach by learning input semantics and constraints.
+
+This paper presents \drepair, a novel format-agnostic \dtask approach that
+leverages parse-failure feedback to repair corrupt data.
+
+Through extensive evaluation on both synthetic and real-world
+datasets, we demonstrated that \drepair achieves significantly higher repair
+quality and data recovery rates compared to state-of-the-art techniques,
+including lexical and syntactic \ddmax and ANTLR. Specifically, \drepair
+delivered 17\% more perfect repairs,
+1.7x higher-quality repairs,
+and recovered 23\% more valid data on average.
+
+While \drepair requires slightly more time to complete repairs, with an average
+runtime of about 10 seconds per repair, this is a practical trade-off given the
+improvements in repair accuracy and data recovery.
 
 We provide our implementation, experimental data and results for review:
 
-
- \begin{center}
+\begin{center}
    \textbf{\url{https://anonymous.4open.science/r/drepair-C865/}} %\url{https://tinyurl.com/fsynth}}
- \end{center}
-
-
-
-
-
+\end{center}
 
 
 \bibliographystyle{ACM-Reference-Format}
