@@ -1845,31 +1845,32 @@ Additionally, \drepair demonstrates a higher data recovery rate, recovering 12\%
 more data on average than its nearest competitor.
 \end{result}
 
-\noindent\emph{Perfect repair:} While the data recovery metrics can provide us
-with some intuition on quality of data repair, one may still wonder. Does the
-data-repair actually \emph{correctly repair} the corruption? Given that we have
-data that we introduce corruption synthetically, this is something we can
-investigate.
-We evaluate the number of files that have been repaired perfectly by
-each approach, that is, the repaired file is \emph{exactly the same} as the file
-before it was corrupted.
-We only use the syntheticly corrupted records in this
-experiment.
+\noindent\emph{Perfect repair:} While data recovery metrics offer some insight
+into the quality of repairs, the key question remains: does the repair fully and
+accurately restore the corrupted data?
+Since we introduced the corruptions synthetically, we can directly investigate
+this.
 
-We report the number of repaired files in \cref{tab:perfectrepairs}.
-The total number of perfectly repaired files for \drepair is 17\%
-higher than for lexical \ddmax. Surprisingly syntactic \ddmax did not
-result in any perfect repair.
+We evaluated the number of files perfectly repaired by each approach, meaning
+the repaired file is \emph{identical} to its state before corruption.
+This experiment used only synthetically corrupted records.
 
-We also investigate the files that were repaired solely by \drepair, \ddmax 
-or both approaches. These are given in \Cref{fig:perfectlyrepairedvenndiagram}.
-From the figure, 36 files were perfectly repaired by both \drepair and lexical \ddmax.
-We found that \drepair \emph{solely} repaired 2.17$\times$ as many input files
-as lexical \ddmax.
+As shown in in \cref{tab:perfectrepairs},
+\drepair achieved 17\% more perfect repairs than lexical \ddmax.
+Interestingly, syntactic \ddmax did not produce any perfect repairs.
+We found that this is because the parsing process normalizes tokens such
+as whitespace, and otherwise ignores certain tokens. That is, serializing
+a parse tree does not reliably produce the original data record in many cases.
+
+We also analyzed files that were exclusively repaired by \drepair, \ddmax, or
+both, as illustrated in \Cref{fig:perfectlyrepairedvenndiagram}.
+The figure shows that 36 files were perfectly repaired by both \drepair and
+lexical \ddmax.
+Notably, \drepair repaired 2.17$\times$ more files than lexical \ddmax on its own.
 
 \begin{result}
-\approach completed 17\% more perfect repairs than \ddmax. It solely completed 2$\times$ as many perfect repairs 
-as lexical \ddmax. 
+\drepair completed 17\% more perfect repairs than lexical \ddmax and
+repaired 2.17$\times$ as many files as lexical \ddmax exclusively.
 \end{result}
 
 
