@@ -1816,36 +1816,33 @@ and 10\% of the inputs could only be repaired by \drepair.
 \end{result}
 
 \noindent\textbf{RQ2: What is the average number of repair steps required for \dtask by \drepair?}
-\Cref{tab:datarepairquality} shows the repair effectiveness achieved by each technique.
-To do this, we compute the Levenshtein distance between repaired and invalid files using
-327 completely repaired inputs.
-%where edit distance could be computed within a threshold of 750 edit distances (about 30 seconds).
-We found that \drepair achieves a low edit-distance of an 10.6 edits on average,
-which is \emph{1.7$\times$ lesser} than lexical \ddmax.
+\Cref{tab:datarepairquality} presents the repair effectiveness of each technique.
+We calculated the Levenshtein distance between repaired and corrupt files
+from 327 fully repaired files.
+\drepair achieved an average of 10.6 edits, which is \emph{1.7$\times$ fewer} than lexical \ddmax,
+which is the next best.
 
 \input{.datarecovery.tex}
 \noindent\emph{Data Recovery:}
-While edit-distance is a useful measure to evaluate the repair quality, it
-misses an important aspect of recovery. Given a corrupt record, the quality of
-repair shold also be judged by how much of the originally present data survives
-in the repaired data. 
+While edit-distance is a useful metric for evaluating repair quality,
+it overlooks a crucial aspect of data recovery: how much of the original
+data survives in the repaired record.
 
-We examine 474 inputs that were completely repaired by lexical \ddmax,
-syntactic \ddmax and \drepair,
-excluding empty files and white spaces. This is what we present in \Cref{tab:datarecovery}.
+We analyzed 474 fully repaired inputs from lexical \ddmax, syntactic \ddmax, and
+\drepair, excluding empty files and whitespace, as shown in \Cref{tab:datarecovery}.
 
-Results show that \drepair recovered 91\% of input data, on average.
-This is 23\% more than the most effective baseline competitor--lexical \ddmax.
-For all input formats, \drepair recovered up to 75\% more data than both
-variants of \ddmax.
-These results show that \approach is more effective in recovering valid data
-than both lexical and syntactic \ddmax.
+The results indicate that \drepair recovered an average of 91\% of the input
+data, which is 23\% more than the best baseline competitor, lexical \ddmax.
+Across all input formats, \drepair recovered up to 75\% more data than both
+\ddmax variants.
+These findings demonstrate that \drepair is more effective at recovering valid
+data compared to both lexical and syntactic \ddmax.
 
 \begin{result}
-\drepair achieves high quality data repairs, which is 1.7$\times$ better than its
-closest competitor lexical \ddmax on average.
-\drepair also has a high data recovery rate, and is 12\% better than its closest
-competitor.
+\drepair achieves significantly better repair quality, requiring 1.7$\times$
+fewer edits than its closest competitor, lexical \ddmax.
+Additionally, \drepair demonstrates a higher data recovery rate, recovering 12\%
+more data on average than its nearest competitor.
 \end{result}
 
 \noindent\emph{Perfect repair:} While the data recovery metrics can provide us
