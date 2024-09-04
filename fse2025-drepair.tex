@@ -648,32 +648,32 @@ Require valid \\
 
 %This process is time-consuming and error-prone, especially when format specifications are incomplete or defined solely by their parsers.
 \begin{abstract}
-In data processing, engineers often encounter datasets that are expected to 
-conform to specific formats but contain variations due to factors such as human 
-error or data corruption.
-These inconsistencies prevent standard programs from processing the data correctly.
-Consequently, data engineers must perform \emph{\dtask},
-manually adjusting the nonconforming data to match the required format.
-This process is time-consuming and prone to errors,
-particularly when format specifications are lacking,
-which is often the case as data formats are 
-frequently defined exclusively by their parsers.
+In data processing, engineers often work with datasets expected to conform to 
+specific formats, but variations due to factors like human error or data 
+corruption can cause inconsistencies. These inconsistencies prevent standard 
+programs from processing the data correctly. As a result, data engineers must 
+perform \emph{\dtask}, manually adjusting nonconforming data to match the 
+required format. This process is time-consuming and error-prone, particularly 
+when formal format specifications are unavailable, as data formats are often 
+implicitly defined by their parsers.
 
-In this work, we show that data corruption or conformance problems can often be 
-repaired by leveraging feedback from parsers,
-even in the absence of reliable data format specifications.
-Our approach, which we call \drepair, can automatically produce repair-candidates
-for corrupt or nonconforming input data,
-ranked by their closeness to the original data.
+In this paper, we introduce \drepair, a novel approach for automatic data 
+repair that does not require predefined format specifications. \drepair adopts 
+a format-agnostic strategy, relying solely on parser feedback, making it a 
+versatile solution capable of repairing even ad-hoc or informally specified 
+data formats. We evaluate \drepair's performance against state-of-the-art 
+techniques, including lexical and syntactic \ddmax, and ANTLR, using both 
+synthetic and real-world datasets.
 
-We evaluate \drepair on 806 real-world nonconforming inputs in four
-well-known input formats: INI, TinyC, SExp, and cJSON.
-In our evaluation, we found that 
-\drepair is highly effective and efficient in input repair, repairing 77\% of 
-corrupt inputs and recovering 91\% of input data within four minutes.
-It is up to 35\% more effective in data recovery than \ddmax,
-the previously best-known approach.
-  \todo{@Ezekiel, Check: We need to specify both syntactic and lexical variants here.}
+Our results show that \drepair achieves 17\% more perfect repairs,
+delivers 1.7x higher-quality repairs, and recovers 23\% more valid data on
+average against the next best solution.
+Although slightly slower, with an average runtime of 10 seconds, \drepair
+provides a practical and highly effective solution, significantly
+improving data recovery and repair quality.
+
+This work expands the possibilities for automated data repair, offering a
+flexible alternative to format-dependent approaches.
 \end{abstract}
 
 %%
