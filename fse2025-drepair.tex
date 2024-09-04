@@ -337,7 +337,7 @@ are in \textbf{bold}. %, second-best time performance is in \textit{italics}
 \hline
 \textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & 121  &  \textbf{154} \\
 \hline
-\textbf{Improvement} &  2\%  & $-$5\% & \textbf{10\%} & $-$19\% & \textbf{28\%} \\
+  \textbf{Improvement} &  \textbf{2\%}  & $-$5\% & \textbf{10\%} & $-$19\% & \textbf{28\%} \\
 \hline
 \end{tabular}
 \label{tab:effectivenessgrammar}
@@ -1645,11 +1645,6 @@ differs between the \emph{corrupt input} and the \emph{repaired input}.
 \end{itemize}
 \end{comment}
 
-\input{.effectivenessnogrammar.tex}
-\input{.effectivenessgrammar.tex}
-\input{.datarepairquality.tex}
-\input{.efficiency.tex}
-
 \subsection{Platform}
 All experiments were conducted
 on an ASRock X470D4U with six physical CPU cores and 32GB of RAM, with an AMD Ryzen 5600X @ 3.70GHz, 12~virtual cores, running Debian GNU/Linux.
@@ -1661,6 +1656,9 @@ We found that four minutes is a sufficient time budget to evaluate all
 techniques on most inputs, and a longer timeout did not result in a
 significant increase in repairs for all techniques. Hence, we used four
 minutes as the timeout for repair.
+
+\input{.effectivenessnogrammar.tex}
+\input{.effectivenessgrammar.tex}
 
 \section{Results}
 \label{sec:results}
@@ -1682,15 +1680,8 @@ For a balanced evaluation, we analyse a set of 480 invalid inputs
 that were completely repaired by all three approaches within the four minutes timeout.
 \Cref{tab:efficiency}
 reports the efficiency of all three approaches.
-
-
-\section{Discussion}
-\label{sec:discussion}
-\noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
-In this experiment, we measure the total number of files repaired by \drepair in
-comparison to both \emph{format-agnostic} (\Cref{tab:effectivenessnogrammar})
-and \emph{format-aware} (\Cref{tab:effectivenessgrammar}) \dtask techniques. 
-It is also visualized in \Cref{fig:effectiveness}.
+\input{.datarepairquality.tex}
+\input{.efficiency.tex}
 \begin{figure}[!tbp]\centering
 \centering
 \pgfplotstableread{
@@ -1729,28 +1720,54 @@ DRepair     191    158      121          154
 \caption{Number of files repaired by each approach}
 \label{fig:effectiveness}
 \end{figure}
-\drepair is effective in repairing corrupt records. Overall, it repaired 77\% of corrupt data (624 out of 806).
-Looking into details, \drepair performed better than syntactic \ddmax (the state-of-the-art) for cJSON, and TinyC,
-while it performed slightly worse for SExp. Our analysis of SExp files
+
+
+\section{Discussion}
+\label{sec:discussion}
+\noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
+This experiment compares the number of files repaired by \drepair with both
+\emph{format-agnostic} (\Cref{tab:effectivenessnogrammar})
+and \emph{format-aware} (\Cref{tab:effectivenessgrammar}) techniques.
+%In this experiment, we measure the total number of files repaired by \drepair in
+%comparison to both \emph{format-agnostic} 
+%and \emph{format-aware}  \dtask techniques. 
+These results are visualized in \Cref{fig:effectiveness}.
+%\drepair is effective in repairing corrupt records. 
+Overall, \drepair repaired 77\% of corrupt data (624 out of 806).
+Notably, \drepair performed better than syntactic \ddmax (next best)
+for cJSON, and TinyC, while it performed slightly worse for SExp.
+Our analysis of SExp files
 highlights a limitation of \drepair---if the corruption does not trigger a parse
 error immediately, the effectiveness naive \drepair suffers.
 
 For example, consider the SExp record \letterboxed{((()))}.
-A possible corruption---introducing a quote---can result in \letterboxed{(((')))}.
-However, \drepair is unable to correctly identify the error because it will
-only find \Rincomplete on the corrupted string, and will attempt to fix this
-by appending more data to the string. Another problem is that \drepair can take
-a long time to even find a repair because it needs to produce three close
-parenthesis, as noted by Mathis et al~\cite{mathis2019parser}.
+Introducing a quote--a possible corruption---can result in \letterboxed{(((')))}.
+However, \drepair is unable to correctly identify the error because
+feeding \letterboxed{(((')))} to the parser results in \Rincomplete.
+Hence, \drepair will attempt to fix this corruption by appending
+more characters to the record. This induces the next problem:
+Given \letterboxed{(((')))}, it now needs to generate three close
+parenthesis before the parser returns \Rvalid.
+Assuming say $n$ characters in the alphabet, and assuming
+that any of the characters is a possible continuation, only one out of
+$n^3$ repair threads would produce \letterboxed{)))} in the next three
+insertions. Tracking these many repair threads affects the runtime of the
+algorithm, and leads to a timeout.
+
 We note that, while this is a limitation, this can be worked around by
 enabling the extended \drepair at the cost of a much higher runtime or
-limiting \drepair repairs to deletions at the cost of a smaller repertoire
-of repairs. We observed a similar behavior in INI. In cJSON and TinyC, however,
+limiting \drepair repairs to \emph{deletions} at the cost of a smaller
+repertoire of repairs.
+
+In INI also, we find a similar issue, with corruptions not immediately signaling
+a parse-error.
+In cJSON and TinyC, however,
 \drepair performed much better than its competitors with up to 35\% improvement
 against lexical \ddmax and 28\% improvement over syntactic \ddmax.
 
 We note that \drepair outperforms even the \emph{format-aware} \dtask approaches
-despite zero knowledge of the format.
+in overall performance despite zero knowledge of the format
+(\Cref{tab:effectivenessgrammar}).
 
 \begin{figure}[!tbp]
 \centering
@@ -1779,8 +1796,11 @@ Venn Diagram showing the number of invalid inputs repaired (solely) by a (combin
 \label{fig:repaircomplementarity}
 \end{figure}
 
-\noindent\emph{Unique repairs:} We further investigated whether some records can
-be \emph{solely} repaired by a single approach, or solely missed by an approach.
+\noindent\emph{Unique repairs:} 
+To gain deeper insights into the behavior of the \drepair and \ddmax algorithms,
+we examined whether certain corruptions could be repaired \emph{exclusively} by one
+algorithm and identified cases where specific records could not be repaired by
+some algorithms, while all others successfully repaired them.
 Our findings are presented in \Cref{fig:repaircomplementarity}.
 
 We found that about 10\% of records could only be repaired by \drepair,
