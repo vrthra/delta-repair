@@ -1,6 +1,7 @@
 all: fse2025-drepair.pdf
 
 %.pdf: %.tex %.bib
+	rm .*.tex
 	latexmk -pdf $*.tex
 
 submission:

@@ -203,10 +203,10 @@
 %\newcommand{\cmark}{\ding{51}}%
 
 
-\renewcommand{\tablename}{Tab.}
-\renewcommand{\figurename}{Fig.}
+%\renewcommand{\tablename}{Tab.}
+%\renewcommand{\figurename}{Fig.}
 %\renewcommand{\algorithmname}{Alg.}
-\renewcommand{\listalgorithmname}{Alg.}
+%\renewcommand{\listalgorithmname}{Alg.}
 
 
 \usepackage{pifont}
@@ -298,8 +298,170 @@ pics/numbering/.style args={#1}{code={
 
 \usepackage{filecontents}
 
-\begin{filecontents*}{subjectprograms.tex}
+\begin{filecontents*}{.efficiency.tex}
 \begin{table}[!tbp]\centering
+\caption{Efficiency of \approach vs. \ddmax, lowest runtime and smaller number of program runs %and significant \% improvement in efficiency
+are in \textbf{bold}. %, second-best time performance is in \textit{italics}
+}
+\begin{tabular}{|l |  r  r | r  r |}
+\hline
+&  \multicolumn{2}{c|}{\textbf{Runtime (s)}} & \multicolumn{2}{c|}{\textbf{\#Prog. Runs}}  \\
+\textbf{Techniques} %& \textbf{Inputs}
+&  \textbf{Avg.}  & \textbf{Total} & \textbf{Avg.}  & \textbf{Total} \\
+\hline
+\textbf{Lex. \ddmax} & 3.4 & 1653 & 3260 & 1564781 \\
+\textbf{Syn. \ddmax} & \textbf{2.0} & \textbf{982}  & \textbf{2075}  & \textbf{995802}  \\
+\hline
+\textbf{\approach} &  10.2 & 4938  & 11537 & 5537601  \\
+\hline
+\end{tabular}
+\label{tab:efficiency}
+\end{table}
+\end{filecontents*}
+
+
+\begin{filecontents*}{.effectivenessgrammar.tex}
+\begin{table}[!tbp]
+\centering
+  \caption{Number of repaired corrupt records \textbf{data-format aware} repair approaches.
+  The highest number of repaired inputs are in bold. The \textbf{Improvement} is the difference between \drepair and syntactic \ddmax.
+  }
+\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\hline
+&  \multicolumn{5}{c|}{\textbf{Number of Repaired Inputs}}  \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
+\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+\textbf{ANTLR} & 344 (43\%) & 133 & 69 & 96 &  46   \\
+\textbf{Syntactic \ddmax} & 614 (76\%) & \textbf{201}  & 144  & \textbf{149}  & 120  \\ 	
+\hline
+\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & 121  &  \textbf{154} \\
+\hline
+\textbf{Improvement} &  2\%  & $-$5\% & \textbf{10\%} & $-$19\% & \textbf{28\%} \\
+\hline
+\end{tabular}
+\label{tab:effectivenessgrammar}
+\end{table}
+\end{filecontents*}
+
+\begin{filecontents*}{.effectivenessnogrammar.tex}
+\begin{table}[!tbp]
+\centering
+\caption{Number of repaired corrupt records for \textbf{format-agnostic} \dtask approaches.
+  The highest number of repaired inputs are in bold. The \textbf{Improvement} is the difference between \drepair and lexical \ddmax.}
+%\begin{tabular}{|l | c | r  r  r  r |}
+\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\hline
+&  \multicolumn{5}{c|}{\textbf{Number of Repaired Inputs}}  \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
+\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+\textbf{Baseline}   & 33 (4\%) & 27	 & 6 &	0	& 0\\
+\textbf{Lexical \ddmax} & 578 (72\%) & \textbf{201}  & 132  & \textbf{131} & 114  \\ 		
+\hline	
+\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & 121  & \textbf{154} \\
+\hline
+\textbf{Improvement} &  \textbf{8\%}  & $-$5\% & \textbf{20\%} & $-$8\% & \textbf{35\%} \\
+\hline
+\end{tabular}
+\label{tab:effectivenessnogrammar}
+\end{table}
+
+\end{filecontents*}
+
+
+\begin{filecontents*}{.datarepairquality.tex}
+\begin{table}[!tbp]
+\caption{Repair effectiveness (Levenshtein distance) between corrupt data and repaired data. 
+The best data repair in bold.}
+\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+%\begin{tabular}{|l | c |  r  r  r  r  | c |  r  r  r  r |}
+\hline
+ &  \multicolumn{5}{c|}{\textbf{Average Repair Distance}}  \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} &   \multicolumn{4}{c|}{\textbf{Input Format}}  \\
+\textbf{Techniques} & \textbf{Average}  & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+\textbf{Lex. \ddmax} & 18.0 & {10.2} &  61.6 &  \textbf{6.2} & 7.5 \\
+\textbf{Syn. \ddmax} & 119.6 &  258.1 & 82.7 &  76.6 &  33.3 \\
+\hline
+\textbf{\approach} & \textbf{10.6}  & \textbf{9.5} &  \textbf{28.7} & 7.4 & \textbf{1.6} \\
+\hline
+\textbf{Impr. over Lex. \ddmax} & \textbf{1.7$\times$} & \textbf{1.1$\times$} & \textbf{2.1$\times$} & 0.8$\times$ & \textbf{4.7$\times$} \\
+\textbf{Impr. over Syn. \ddmax} & \textbf{11.3$\times$} & \textbf{27.2$\times$} & \textbf{2.9$\times$} & \textbf{10.4$\times$} &\textbf{20.8$\times$} \\
+\hline
+\end{tabular}
+% \hline
+%  &  \multicolumn{5}{c|}{\textbf{\% Data Recovered by Approach}} &  \multicolumn{5}{c|}{\textbf{Average Data Loss }}  \\
+% &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
+% \textbf{Techniques} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+% \hline
+% \textbf{Lex. \ddmax} & 81\%  & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% & 18.0 & {10.2} &	61.6 &	\textbf{6.2} & 7.5 \\			
+% \textbf{Syn. \ddmax} & 74\%  &  70.6\% & 81.5\%  & 97.0\%	& 47.0\% & 119.6 &  258.1 & 82.7 &	76.6 &	33.3 \\	
+% \hline
+% \textbf{\approach} & \textbf{91\%}  &  \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100\%} & \textbf{82.1\%} & \textbf{10.6}  & \textbf{9.5} &	\textbf{28.7} &	7.4 & \textbf{1.6} \\
+% \hline
+% \textbf{Impr. over Lex.} & 12\% &  0.1\%	& \textbf{19.8\%}	& 1.4\%	& \textbf{72.1\%} & \textbf{70\%} &  \textbf{8\%} & \textbf{115\%} & -16\% & \textbf{357\%} \\
+% \textbf{Impr. over Syn.} & \textbf{23\%}  &  \textbf{21.6\%} 	& \textbf{20.8\%}	& 3.7\%	& \textbf{74.7\% }  & \textbf{1030\%} & \textbf{2629\%} &	\textbf{188\%} & \textbf{936\%} &\textbf{ 1930\%} \\
+% \hline
+% \end{tabular}
+\label{tab:datarepairquality}
+\end{table}
+\end{filecontents*}
+
+
+\begin{filecontents*}{.datarecovery.tex}
+\begin{table*}[!tbp]\centering
+\caption{Data Recovery (file size difference) of \approach vs
+lexical (Lex.) \ddmax and syntactic (Syn.) \ddmax. 
+The highest data recovery and lowest data loss are in bold, percentage improvement (Impr.) %or reduction (red.) 
+of \approach over the best baseline which are significant (i.e., greater than five percent ($>$5\%)) are also in bold.
+}
+\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\hline
+ &  \multicolumn{5}{c|}{\textbf{\% Data Recovered by Approach}} \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
+\textbf{Techniques} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+\textbf{Lex. \ddmax} & 81\%  & 85.8\% & 82.2\%   & 99.2\% & 47.7\% \\
+\textbf{Syn. \ddmax} & 74\%  &  70.6\% & 81.5\%  & 97.0\% & 47.0\% \\
+\hline
+\textbf{\approach} & \textbf{91\%}  &  \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100\%} & \textbf{82.1\%} \\
+\hline
+\textbf{Impr. over Lex.} & 12\% &  0.1\%  & \textbf{19.8\%} & 1.4\% & \textbf{72.1\%} \\
+\textbf{Impr. over Syn.} & \textbf{23\%}  &  \textbf{21.6\%}  & \textbf{20.8\%} & 3.7\% & \textbf{74.7\% }  \\
+\hline
+\end{tabular}
+\label{tab:datarecovery}
+\end{table*}
+
+
+\end{filecontents*}
+
+
+\begin{filecontents*}{inputdetails.tex}
+\begin{table}[!tbp]\centering
+\caption{Details of Invalid 
+Inputs}
+%\begin{tabular}{|l | r | r | r | r |}
+  \begin{tabular}{|p{4cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+\hline
+&  \multicolumn{4}{c|}{\textbf{Number of Invalid Inputs}}  \\
+\textbf{Type of Invalid Inputs} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
+\hline
+\textbf{Real-World Inputs} & 101 & 107 & 50 & 148 \\
+\textbf{Single Mutation} & 50 & 50 & 50 & 50 \\
+\textbf{Multiple Mutations} & 50 & 50 & 50 & 50 \\
+\hline
+\textbf{Total } (806) & 201 & 207 & 150 & 248 \\
+\hline
+\end{tabular}
+\label{tab:inputdetails}
+\end{table}
+\end{filecontents*}
+
+
+\begin{filecontents*}{subjectprograms.tex}
+\begin{table}[H]\centering
 \caption{Subject programs used in the evaluation}
 %\begin{tabular}{|l|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
 \begin{tabular}{|p{4cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
@@ -699,10 +861,11 @@ The remainder of this paper is structured as follows:
 \Cref{sec:ddmaxlimitations} highlights the limitations of the 
 state-of-the-art input repair method (\ddmax).
 \Cref{sec:drepair}  
-describes the \drepair algorithm. We describe our experimental setup and 
-findings in \Cref{sec:experimental-setup} and \Cref{sec:results}. We address 
-the limitations of this work in \Cref{sec:threats}, and discuss related work in
-\Cref{sec:relatedwork}. Finally, we conclude this paper 
+describes the \drepair algorithm. We describe our research questions in
+\Cref{sec:evaluation}, and provide results in \Cref{sec:results}
+We further discuss the implications of this work in \Cref{sec:discussion},
+related work in \Cref{sec:relatedwork}, and threats in \Cref{sec:threats}.
+Finally, we conclude this paper 
 with the discussion of future work in \Cref{sec:conclusion}. 
 
 
@@ -1111,7 +1274,7 @@ repair the string. It has the following steps:
 % \newcommand{\refnumber}[1]{\hyperref[fig:brepair_flowchart]{Step~#1}}
 
 \begin{algorithm}[t]
-  \footnotesize
+%  \footnotesize
 \caption{Boundary search for \drepair}
 \label{alg:bsearch}
 \begin{algorithmic}[1]
@@ -1174,7 +1337,7 @@ treated same as \Rincomplete if the remaining-suffix is non-empty.
 \end{enumerate}
 
 \begin{algorithm}[t]
-  \footnotesize
+  %\footnotesize
 \caption{\drepair Algorithm}
 \label{alg:drepair}
 \begin{algorithmic}[1]
@@ -1365,62 +1528,90 @@ complete valid records. However, tokens thus produced are do not hold semantic i
 Hence, during post-processing, we replace synthesized data with semantic content
 with placeholders as provided by the user.
 
-\section{Experimental Setup}
-\label{sec:experimental-setup}
+\section{Evaluation}
+\label{sec:evaluation}
+Where does \drepair stand compared to the state-of-the-art? In this section, we
+propose the following research questions which are designed to investigate the
+effectiveness of \drepair in multiple dimensions.
 
-How good is \drepair compared to the state-of-the-art? This section describes
-our empirical investigation.
+\subsection{Research Questions}
+What is the effectiveness of \drepair as compared to the state-of-the-art?
+The first dimension in \dtask is that it should result in repaired data records.
+Hence, we ask:
 
-\subsection{Research Questions} 
-We investigate the \textit{data recovery} (RQ1), \textit{effectiveness} (RQ2), 
-%and 
-\textit{efficiency} (RQ3),
-and \textit{perfect repair effectiveness} (RQ4) of our approach using several well-designed experiments. %For each experiment, w
-We also examine how \approach compares to four state-of-the-art techniques, 
-namely the built-in repair of the programs (\textit{baseline}), error-recovery of \textit{ANTLR}, as well as 
-lexical \ddmax and syntactic 
-\ddmax. Specifically, we pose the following research questions:
+\noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?} Answering this
+question allows us to understand whether \drepair can form an alternative to the
+state-of-the-art for \drepair.
 
-\begin{description}[labelwidth=!, labelindent=15pt]
+The second dimension of effectiveness of \dtask is the \emph{quality of repair}.
+A repair-candidate is high quality if the number of repairs needed is small,
+when compared to another repair-candidate with a larger number of steps.
+Hence, we ask:
 
-\item[RQ1: Data Recovery and Data Loss.]
-How much input data is recovered by \approach, and how much data is lost? %s is incurred?  
-Does \approach recover as much data as 
-the state-of-the-art methods?
+\noindent\textbf{RQ2: What is the average number of repair steps required for \dtask by \drepair?}
+Answering this question allows us to understand the quality of repairs
+performed by \drepair.
 
-  \item[RQ2: Effectiveness.]  %\& Efficiency:}
-How effective is \approach in fixing invalid inputs? Is it as effective as the state-of-the-art methods?
+While effectiveness is important, one should also be concerned about efficiency.
+That is, while it is expected that a more intelligent algorithm may take more
+runtime, it should be within practical bounds. Hence, the third research
+question concerns the efficiency of the approach.
 
-\item[RQ3: Efficiency.] What is the efficiency (runtime) of
-\approach? Is it as efficient as the state-of-the-art techniques?
+\noindent\textbf{RQ3: How fast is \dtask compared to the state-of-the-art?}
+Answering this question allows us to evaluate the practicality of \drepair.
 
-% TODO -- commenting it out. This does not seem like a valid criteria.
-\item[RQ4: Perfect Repair.] How many files are repaired prefectly by
-\approach? How does the number of perfect repairs compare to the state-of-the-art methods?
-
-%\item[RQ5: Quality of Repairs.] How does the quality of the repaired files compare for each approach?
-\end{description}
-
-\input{subjectprograms.tex}
 
 \subsection{Subject Programs} %As subjects w
-We used four input formats and their corresponding programs. These are INI (INI), JSON (cJSON), S-Expressions (SExpParser) and TinyC (TinyC). Each program is moderately large (between 375 LOC to 3062 LOC), relatively mature (6 to 21 years old), and written in \<C>. Further details are provided in \Cref{tab:subjectprograms}.
+\input{subjectprograms.tex}
+We used four data formats and their corresponding programs (\Cref{tab:subjectprograms}). These are INI (INI), JSON (cJSON), S-Expressions (SExpParser) and TinyC (TinyC). Each program is moderately large (between 375 LOC to 3062 LOC), relatively mature (6 to 21 years old), and written in \<C>.
 
-\subsection{Test Inputs} 
-\Cref{tab:input-details} provides details of the number of
-real-world invalid inputs and mutated invalid inputs employed in our experiment.
-We evaluate our approach using 806 invalid input files. %.
-As test inputs, we crawled a large corpus of valid and invalid real-world files
-from GitHub using the GitHub crawling API~\cite{githubapi}. 
-In addition to real invalid inputs, for each format, we introduced a set of 100 artificially mutated (invalid) files
+\subsection{Test Data} 
+\input{inputdetails.tex}
+
+We evaluate our approach using 806 corrupt files.
+For our empirical-evaluation, we use one data-record per file. Hence, we use
+the terms \emph{file}, \emph{record}, and \emph{input} interchangeably in our evaluation.
+However, note that many real world formats can have multiple records per file.
+As test data, we crawled a large corpus of real-world files
+from GitHub~\cite{githubapi}, from which we identified corrupt files. 
+In addition to such real but corrupt data, for each format,
+we also introduced a set of 100 artificially corrupted files
 from 50 randomly selected valid real-world files.
-Half of those mutated files contain a single mutated byte and the other half
+Half of these corrupted files contain a single mutated byte and the other half
 contains multiple (two to 16) mutated bytes.
-Each mutation can either be a byte-flip, an insertion or a deletion to 
-resemble real-world corruptions as close as possible
-(e.g., bit rot on hard disks or transmission errors in network protocols).
+Each mutation was randomly chosen to be either be a byte-flip, an insertion or a
+deletion to resemble real-world corruptions such as bit-rot on hard disks,
+transmission errors in network protocols, and human entry error.
+\Cref{tab:inputdetails} provides the details.
+%of the number of real-world corrupt data and artificially synthesized corrupt data employed in our experiment.
+
+\subsection{Baseline}
+In this work, we compare the performance of \drepair to the following
+techniques as baseline:
+\begin{description}[wide]
+\item[\textbf{(1) Basic:}] We leverage the built in
+  error correction in the subject programs.
+  That is, we look at the number of files that were accepted by a
+  subject program even though the file was corrupted.
+
+\item[\textbf{(2) Lexical \ddmax:}] This is the language agnostic \ddmax described by Kirschner et al.~\cite{kirschner2020debugging}
+\end{description}
+
+Beyond these format-agnostic repair methods, we also compare our approach to
+the following methods which require the data-format specification.
+
+\begin{description}[wide]
+\item[\textbf{(3) ANTLR:}] The number of invalid inputs which are repaired
+by ANTLR inbuilt error recovery strategy~\cite{parr2013definitive}, allowing the
+input to be accepted even under errors.
 
 
+\item[\textbf{(4) Syntactic \ddmax:}] This version of \ddmax relies on a grammar which is used to parse the
+  input first. It operates on the parse tree. This was also described by Kirschner et al.~\cite{kirschner2020debugging}.
+
+\end{description}
+
+\begin{comment}
 \subsection{Metrics and Measures} We employ the following metrics and measures to evaluate repair quality: 
 
 \begin{itemize}
@@ -1442,145 +1633,59 @@ differs between the \emph{corrupt input} and the \emph{repaired input}.
 \item[(e.)]  \textit{Number of Program Runs:} To evaluate efficiency, we track the number of times the parser is executed by each approach. 
 
 \end{itemize}
+\end{comment}
 
-
-
-\begin{table}[!tbp]\centering
-\caption{Details of Invalid 
-Inputs}
-%\begin{tabular}{|l | r | r | r | r |}
-  \begin{tabular}{|p{4cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
-\hline
-&  \multicolumn{4}{c|}{\textbf{Number of Invalid Inputs}}  \\
-\textbf{Type of Invalid Inputs} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-\hline
-\textbf{Real-World Inputs} & 101 & 107 & 50 & 148 \\
-\textbf{Single Mutation} & 50 & 50 & 50 & 50 \\
-\textbf{Multiple Mutations} & 50 & 50 & 50 & 50 \\
-\hline
-\textbf{Total } (806) & 201 & 207 & 150 & 248 \\
-\hline
-\end{tabular}
-\label{tab:input-details}
-\end{table}
-
-\subsection{State-of-the-art Methods}
-In this work, we compare the performance of \approach to the following
-techniques:
-\begin{description}[wide]
-\item[\textbf{(1) Baseline:}] We use the built in
-  error correction in the subject programs. That is, we look at the number of
-  inputs that were accepted by a subject program as valid inputs.
-
-\item[\textbf{(2) ANTLR:}] The number of invalid inputs which are repaired
-by ANTLR inbuilt error recovery strategy~\cite{parr2013definitive}, allowing the
-input to be accepted even under errors.
-
-\item[\textbf{(3) Lexical \ddmax:}] This is the language agnostic \ddmax described by Kirschner et al.~\cite{kirschner2020debugging}
-
-\item[\textbf{(4) Syntactic \ddmax:}] This version of \ddmax relies on a grammar which is used to parse the
-  input first. It operates on the parse tree. This was also described by Kirschner et al.~\cite{kirschner2020debugging}.
-
-\end{description}
-
+\input{.effectivenessnogrammar.tex}
+\input{.effectivenessgrammar.tex}
+\input{.datarepairquality.tex}
+\input{.efficiency.tex}
 
 \subsection{Platform}
-
-%We implemented the test infrastructure in about 12k LOC of Java code, \approach was implemented in 765 lines of Java code.
-%We also slightly modify subject programs %ubject programs needed to be modified slightly 
-%to provide the required incompleteness feedback (\textit{see} \Cref{tab:subjectprograms}).
 All experiments were conducted
 on an ASRock X470D4U with six physical CPU cores and 32GB of RAM, with an AMD Ryzen 5600X @ 3.70GHz, 12~virtual cores, running Debian GNU/Linux.
 
 
 \subsection{Research Protocol}
-We first collect a large corpus of  real-world files which we split into a set of (50) valid files and invalid files. We create additional mutated invalid files by injecting single and up to 16 multiple mutations (random insertions, deletions and byte-flips) into the valid files  
-(\Cref{tab:input-details}).
-Then, we run each repair technique on each file and collect the required data, i.e. the run time, number of oracle runs, Levenshtein distance and repair status of each file.
-As repair techniques, we employ \emph{Baseline}, %(the built-in error recovery strategy of the subject program), the error recovery strategy of 
-\emph{ANTLR}, lexical \ddmax, syntactic \ddmax and \approach.
-All experiments were conducted within a timeout of four minutes per input, for each repair technique. % file.
-\revise{
-The maximum time budget was empirically determined in our preliminary experiments to ensure a balanced evaluation for all techniques. We found that four minutes is a sufficient time budget to evaluate all techniques on most inputs. It is also a reasonable maximum repair time for an end-user. In our experiments, a longer timeout did not result in a significant increase in repairs for all techniques.}
+We run each repair technique on each file and collect the repair metrics.
+We found that four minutes is a sufficient time budget to evaluate all
+techniques on most inputs, and a longer timeout did not result in a
+significant increase in repairs for all techniques. Hence, we used four
+minutes as the timeout for repair.
 
-
-\section{Experimental Results}
+\section{Results}
 \label{sec:results}
-This section discusses the %findings %
-results %and findings 
-of our experiments. %mpirical evaluations.
+This section describes the findings of our empirical evaluation.
+
+\noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
+The repair effectiveness for format-agnostic (i.e., without the knowledge of specification)
+methods is tabulated in \Cref{tab:effectivenessnogrammar}.
+For completeness, we also tabulate the repair effectiveness of \drepair against
+format aware methods (i.e., those that only work when the data-format specification is given)
+in \Cref{tab:effectivenessgrammar}.
+
+\noindent\textbf{RQ2: What is the average number of repair steps required for \dtask by \drepair?}
+The repair quality in terms of repairs required for the best repair-candidate is
+tabulated in \Cref{tab:datarepairquality}.
+
+\noindent\textbf{RQ3: How fast is \dtask compared to the state-of-the-art?}
+For a balanced evaluation, we analyse a set of 480 invalid inputs
+that were completely repaired by all three approaches within the four minutes timeout.
+\Cref{tab:efficiency}
+reports the efficiency of all three approaches.
 
 
-
-\begin{table*}[!tbp]\centering
-\caption{Data Recovery (file size difference) and Data Loss  (Levenshtein distance) of \approach vs. %the best-performing state-of-the-art methods, i.e. 
-lexical (Lex.) \ddmax and syntactic (Syn.) \ddmax. 
-The highest data recovery and lowest data loss are in bold, percentage improvement (Impr.) %or reduction (red.) 
-of \approach over the best baseline which are significant (i.e., greater than five percent ($>$5\%)) are also in bold.
-}
-\footnotesize
-\begin{tabular}{|l | c |  r  r  r  r  | c |  r  r  r  r |}
-\hline
- &  \multicolumn{5}{c|}{\textbf{\% Data Recovered by Approach}} &  \multicolumn{5}{c|}{\textbf{Average Data Loss }}  \\
-&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
-\textbf{Techniques} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-\hline
-\textbf{Lex. \ddmax} & 81\%  & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% & 18.0 & {10.2} &	61.6 &	\textbf{6.2} & 7.5 \\			
-\textbf{Syn. \ddmax} & 74\%  &  70.6\% & 81.5\%  & 97.0\%	& 47.0\% & 119.6 &  258.1 & 82.7 &	76.6 &	33.3 \\	
-\hline
-\textbf{\approach} & \textbf{91\%}  &  \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100\%} & \textbf{82.1\%} & \textbf{10.6}  & \textbf{9.5} &	\textbf{28.7} &	7.4 & \textbf{1.6} \\
-\hline
-\textbf{Impr. over Lex.} & 12\% &  0.1\%	& \textbf{19.8\%}	& 1.4\%	& \textbf{72.1\%} & \textbf{70\%} &  \textbf{8\%} & \textbf{115\%} & -16\% & \textbf{357\%} \\
-\textbf{Impr. over Syn.} & \textbf{23\%}  &  \textbf{21.6\%} 	& \textbf{20.8\%}	& 3.7\%	& \textbf{74.7\% }  & \textbf{1030\%} & \textbf{2629\%} &	\textbf{188\%} & \textbf{936\%} &\textbf{ 1930\%} \\
-\hline
-\end{tabular}
-\label{tab:data-recovery-and-loss}
-\end{table*}
-
-
-\subsection{RQ1 Data Recovery and Data Loss} 
-We investigate the amount of data recovered and lost by \approach, in comparison to
-the best-performing state-of-the-art method, \ddmax. 
-
-\noindent
-\textbf{\textit{Data Recovery:}} 
-We examine 474 inputs that were completely repaired by %all three approaches, i.e., 
-lexical \ddmax, syntactic \ddmax and \approach, excluding empty files (and white spaces). \Cref{tab:data-recovery-and-loss} %and \recheck{Figure X
-highlights the amount of data %loss and data
-recovered and lost % achieved 
-by each approach.
-%\footnote{Note that due to input synthesis (i.e., insertion of input elements), \drepair may report recovering more than 100\% of the size of the original input file (e.g., 100.6\% for SExp in \Cref{tab:data-recovery-and-loss}).
-% NOTE: we should not be looking at the size of the string, but how much of the original data survived.
-%} %, as average over each file. %Our evaluation r
-
-Results show that \textit{\approach has a very high data recovery rate}. 
-It recovered 91\% of input data, on average. 
-This is 23\% more than the most effective baseline competitor--lexical \ddmax. For all input formats, \approach recovered up to (75\%) more data than both variants of \ddmax. Consider TinyC, where \approach recovered up to 75\% more input data than \ddmax (\textit{see} \Cref{tab:data-recovery-and-loss}). These results show that \approach is more effective in recovering valid input data than both lexical and syntactic \ddmax.
-
-\vspace{\baselineskip}
-\noindent
-\textbf{\textit{Data Loss:}} To measure data loss, we compute the Levenshtein distance between repaired and invalid files using %Meanwhile, %For a balanced and tractable evaluation of data loss,
-327 completely repaired inputs %by all three approaches which %(321) inputs that
-where edit distance could be computed within a threshold of 750 edit distances (about 30 seconds).
-
-We found that \textit{\approach achieves a low data loss of an average 10.6 edit distances},
-which is \textit{1.7 times lower than lexical \ddmax}. \Cref{tab:data-recovery-and-loss} shows that 
-for almost all input formats, \approach achieved a lower data loss than syntactic and lexical \ddmax (except for SExp). This better  performance is attributed to the parse-failure feedback of \approach, which allows it to distinguish between incomplete and incorrect input fragments.
-
-\begin{result}
-\approach has a high data recovery rate (91\%, on average).  
-In addition, the data 
-loss of \approach is up to 26 times (26$\times$) lower than that of \ddmax (e.g., INI).
-\end{result}
-
-
-
-
+\section{Discussion}
+\label{sec:discussion}
+\noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
+In this experiment, we measure the total number of files repaired by \drepair in
+comparison to both \emph{format-agnostic} (\Cref{tab:effectivenessnogrammar})
+and \emph{format-aware} (\Cref{tab:effectivenessgrammar}) \dtask techniques. 
+It is also visualized in \Cref{fig:effectiveness}.
 \begin{figure}[!tbp]\centering
 \centering
 \pgfplotstableread{
 Label      INI    cJSON    SExpParser   TinyC
-Baseline   27     6        0            0
+Basic   27     6        0            0
 ANTLR      133    69       96           46
 Lex.ddmax  201    132      131          114
 Syn.ddmax  201    144      149          120
@@ -1614,101 +1719,32 @@ DRepair     191    158      121          154
 \caption{Number of files repaired by each approach}
 \label{fig:effectiveness}
 \end{figure}
+\drepair is effective in repairing corrupt records. Overall, it repaired 77\% of corrupt data (624 out of 806).
+Looking into details, \drepair performed better than syntactic \ddmax (the state-of-the-art) for cJSON, and TinyC,
+while it performed slightly worse for SExp. Our analysis of SExp files
+highlights a limitation of \drepair---if the corruption does not trigger a parse
+error immediately, the effectiveness naive \drepair suffers.
 
-\subsection{RQ2 Effectiveness} 
-In this experiment,
-we measure the total number of files repaired by our approach. In addition, we compare 
-the 
-effectiveness of \approach to 
-four state-of-the-art methods containing 
-both \textit{language-agnostic input repair} approaches and \textit{grammar-based input repair} techniques. 
-\autoref{fig:effectiveness} shows the effectiveness of \approach versus the state-of-the-art methods. 
-\textit{Language-agnostic input repair} approaches include the built-in error-recovery of the subject program (called \textit{baseline}) and 
-\textit{lexical \ddmax} (\textit{see}  \Cref{tab:effectiveness-no-grammar}). 
-For comparison to \textit{grammar-based input repair methods}, we employ the built-in error-recovery strategy of the \textit{ANTLR} parser generator, and \textit{syntactic \ddmax}  (\textit{see}  \Cref{tab:effectiveness-grammar}). 
- 
+For example, consider the SExp record \letterboxed{((()))}.
+A possible corruption---introducing a quote---can result in \letterboxed{(((')))}.
+However, \drepair is unable to correctly identify the error because it will
+only find \Rincomplete on the corrupted string, and will attempt to fix this
+by appending more data to the string. Another problem is that \drepair can take
+a long time to even find a repair because it needs to produce three close
+parenthesis, as noted by Mathis et al~\cite{mathis2019parser}.
+We note that, while this is a limitation, this can be worked around by
+enabling the extended \drepair at the cost of a much higher runtime or
+limiting \drepair repairs to deletions at the cost of a smaller repertoire
+of repairs.
 
-
-\vspace{\baselineskip}
-\noindent 
-\textbf{\textit{Repair Effectiveness:}} %In our evaluation, %we found that
-\textit{Our approach %(\approach) 
-is %very 
-effective in repairing invalid inputs, it repaired almost four out of every five invalid input within a four minute timeout}, i.e., % \approach repaired 
-about 77\% (624 out of 806) of invalid inputs. 
-\autoref{fig:effectiveness} further shows the effectiveness of \approach, in comparison to the baselines.  
-In comparison to language-agnostic approaches, %our 
-\approach is \textit{up to 18 times more effective than the built-in error recovery strategy of the subject programs (33 vs. 624 repairs)}, and % \approach is 
-up to 35\% more effective than the best performing language-agnostic approach for certain input formats (cJSON and TinyC). Overall, 
-\Cref{tab:effectiveness-no-grammar} shows that \approach repairs eight percent more inputs than the best language-agnostic repair technique (i.e., lexical \ddmax). 
-Additionally, results show that %e found that 
-\approach outperforms the %best performing 
-grammar-based input repair approaches by up to 28\%. 
-Despite zero knowledge of the input format, 
-\Cref{tab:effectiveness-grammar}
-shows that %for most (three out of four) input formats, 
-our approach outperformed the grammar-based input repair approaches: \approach is almost twice as effective as the error-recovery strategy of ANTLR (\textit{see} \Cref{tab:effectiveness-grammar}), and 
-slightly (2\%) more effective than the best-performing grammar-based approach (i.e., syntactic \ddmax). %We believe tT
-The effectiveness of syntactic \ddmax is due to its knowledge of the input grammar. 
-These results suggest that %(a) \approach is highly effective in repairing invalid input files, (b) our approach more effective than the baselines, and (c)
-the \textit{combination of failure feedback and input synthesis} is vital for the effective repair of invalid inputs. 
+We note that \drepair outperforms even the \emph{format-aware} \dtask approaches
+despite zero knowledge of the format. 
 
 \begin{result}
-\approach is 
-effective in input repair. %, and more effective than the state-of-the-art.
-It repaired four out of five (77\% of) invalid inputs and repaired 8\% more invalid inputs than the best language-agnostic method (lexical \ddmax). %baseline.
+\approach is more effective than both format-aware and format-agnostic \dtask methods.
+It repaired 77\% of corrupt records which was 8\% more than lexical \ddmax, its closest competitor.
 \end{result}
 \done{8\% is not much, and only on average, too. This may not be the best opener, although the later results (specifically data loss) are impressive. -- AZ}
-
-
-
-
-\begin{table}[!tbp]\centering
-\caption{Number of Repaired Inputs within a four minute timeout for \approach vs. Language-agnostic state-of-the-art, i.e., lexical \ddmax and  baseline. The highest number of repaired inputs are in bold, as well as significant percentage improvement (Improv.) of \approach over the best baseline greater than five percent ($>$5\%). }
-%\begin{tabular}{|l | c | r  r  r  r |}
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
-\hline
-&  \multicolumn{5}{c|}{\textbf{Number of Repaired Inputs}}  \\
-&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
-\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-\hline
-\textbf{Baseline}   & 33 (4\%) & 27	 & 6 &	0	& 0\\
-\textbf{Lex. \ddmax} & 578 (72\%) & \textbf{201}  & 132  & \textbf{131} & 114  \\ 		
-\hline	
-\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & 121  & \textbf{154} \\
-\hline
-\textbf{Improv.} &  \textbf{8\%}  & $-$5\% & \textbf{20\%} & $-$8\% & \textbf{35\%} \\
-\hline
-\end{tabular}
-\label{tab:effectiveness-no-grammar}
-\end{table}
-
-
-\begin{table}[!tbp]\centering
-\caption{Number of Repaired Invalid Inputs within a four minute timeout for \approach vs. Grammar-based input repair approaches, i.e.,  ANTLR and Syntactic \ddmax. The highest number of repaired inputs are in bold, as well as significant percentage improvement (Improv.) of \approach over the best baseline greater than five percent ($>$5\%). }
-%\begin{tabular}{|l | c | r  r  r  r |}
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
-\hline
-&  \multicolumn{5}{c|}{\textbf{Number of Repaired Inputs}}  \\
-&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Input Format}}  \\
-\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-\hline
-\textbf{ANTLR} & 344 (43\%) & 133 & 69 & 96 &  46   \\
-\textbf{Syn. \ddmax} & 614 (76\%) & \textbf{201}  & 144  & \textbf{149}  & 120  \\ 	
-\hline
-\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & 121  &  \textbf{154} \\
-\hline
-\textbf{Improv.} &  2\%  & $-$5\% & \textbf{10\%} & $-$19\% & \textbf{28\%} \\
-\hline
-\end{tabular}
-\label{tab:effectiveness-grammar}
-\end{table}
-
-
-
-
-
-
 
 \noindent \textbf{\textit{Complementarity to \ddmax:}} We further inspect the unique repairs achieved by each approach %, in order 
 to understand the complementarity of our approach to the state-of-the-art methods. In this experiment, we inspect the number of unique repairs achieved \textit{solely} by a single approach (e.g., \textit{only} \approach), or two or more approaches (e.g., all approaches). 
@@ -1773,38 +1809,48 @@ as much as \ddmax.
 
 
 
+
+
+
+%-----------------------------------------------
+
+\noindent
+\textbf{\textit{Data Recovery:}} 
+We examine 474 inputs that were completely repaired by %all three approaches, i.e., 
+lexical \ddmax, syntactic \ddmax and \approach, excluding empty files (and white spaces). \Cref{tab:datarecovery} %and \recheck{Figure X
+highlights the amount of data %loss and data
+recovered and lost % achieved 
+by each approach.
+%\footnote{Note that due to input synthesis (i.e., insertion of input elements), \drepair may report recovering more than 100\% of the size of the original input file (e.g., 100.6\% for SExp in \Cref{tab:datarecovery}).
+% NOTE: we should not be looking at the size of the string, but how much of the original data survived.
+%} %, as average over each file. %Our evaluation r
+
+Results show that \textit{\approach has a very high data recovery rate}. 
+It recovered 91\% of input data, on average. 
+This is 23\% more than the most effective baseline competitor--lexical \ddmax. For all input formats, \approach recovered up to (75\%) more data than both variants of \ddmax. Consider TinyC, where \approach recovered up to 75\% more input data than \ddmax (\textit{see} \Cref{tab:datarecovery}). These results show that \approach is more effective in recovering valid input data than both lexical and syntactic \ddmax.
+
+\vspace{\baselineskip}
+\noindent
+\textbf{\textit{Data Loss:}} To measure data loss, we compute the Levenshtein distance between repaired and invalid files using %Meanwhile, %For a balanced and tractable evaluation of data loss,
+327 completely repaired inputs %by all three approaches which %(321) inputs that
+where edit distance could be computed within a threshold of 750 edit distances (about 30 seconds).
+
+We found that \textit{\approach achieves a low data loss of an average 10.6 edit distances},
+which is \textit{1.7 times lower than lexical \ddmax}. \Cref{tab:datarecovery} shows that 
+for almost all input formats, \approach achieved a lower data loss than syntactic and lexical \ddmax (except for SExp). This better  performance is attributed to the parse-failure feedback of \approach, which allows it to distinguish between incomplete and incorrect input fragments.
+
+\begin{result}
+\approach has a high data recovery rate (91\%, on average).  
+In addition, the data 
+loss of \approach is up to 26 times (26$\times$) lower than that of \ddmax (e.g., INI).
+\end{result}
+
+
+
+
+\input{.datarecovery.tex}
+
 \subsection{RQ3 Efficiency} %\todo{fix to new evaluation results}
-Let us evaluate the time performance of our approach.
-For a balanced evaluation, we
-analyse a set of 480 invalid inputs % files
-that were completely repaired by all three approaches within %, in less than
-the four minutes timeout, %. % (120,000ms).
-without %accounting for
-data collection and % or 
-experimental
-analysis time.
-\Cref{tab:efficiency} %and figure X}
-reports the efficiency of all three approaches. % approach compared to ddmax. %the state-of-the-art methods.
-
-
-\begin{table}[!tbp]\centering
-\caption{Efficiency of \approach vs. \ddmax, lowest runtime and smaller number of program runs %and significant \% improvement in efficiency
-are in \textbf{bold}. %, second-best time performance is in \textit{italics}
-}
-\begin{tabular}{|l |  r  r | r  r |}
-\hline
-&  \multicolumn{2}{c|}{\textbf{Runtime (s)}} & \multicolumn{2}{c|}{\textbf{\#Prog. Runs}}  \\
-\textbf{Techniques} %& \textbf{Inputs}
-&  \textbf{Avg.}  & \textbf{Total} & \textbf{Avg.}  & \textbf{Total} \\
-\hline
-\textbf{Lex. \ddmax} & 3.4 & 1653 & 3260 & 1564781 \\
-\textbf{Syn. \ddmax} & \textbf{2.0} & \textbf{982}  & \textbf{2075}  & \textbf{995802}  \\
-\hline
-\textbf{\approach} &  10.2 & 4938  & 11537 & 5537601  \\
-\hline
-\end{tabular}
-\label{tab:efficiency}
-\end{table}
 
 \textit{\approach is considerably efficient in input repair: It is reasonably fast, it takes about 10 seconds to repair an invalid input, on average}. However, it is about five times slower than \ddmax (two to three seconds, on average). 
 \Cref{tab:efficiency} %} %  and Table/Figure X show}
@@ -1906,7 +1952,6 @@ files that were \textit{perfectly} repaired (\textit{solely}) by \approach,  \dd
 
 %\subsection{RQ5 Quality of Repaired Files}
 %\todo{EZ: Write RQ5}
-\section{Discussion}
 Our evaluation shows that \drepair is able to outperform 
 \dtask even while significantly relaxing the constraints placed on the parser.
 That is, while \ddmax requires an empty valid input to start from, and the
