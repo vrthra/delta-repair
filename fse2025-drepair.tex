@@ -1875,22 +1875,25 @@ repaired 2.17$\times$ as many files as lexical \ddmax exclusively.
 
 
 \noindent\textbf{RQ3: How fast is \dtask compared to the state-of-the-art?}
-The runtime of all three approaches is tabulated in \Cref{tab:efficiency}.
-From the table, syntactic \ddmax is the fastest, and achieves an average runtime
-of 2 seconds. It also accomplishes the data-repair with 2000 program runs on
-average. In comparison, \drepair is about five times slower than the syntactic
-\ddmax, and three times slower than lexical \ddmax.
+The runtime of all three approaches is shown in \Cref{tab:efficiency}.
+Syntactic \ddmax is the fastest, with an average runtime of 2 seconds and
+requiring around 2000 program runs per repair.
+In comparison, \drepair is approximately five times slower than syntactic
+\ddmax and three times slower than lexical \ddmax.
 
-The main reason for the extra time requirement is due to the additional
-insert repair option. For each insert repair, \drepair needs to check each
-character in the alphabet, which can be costly in formats with a large number
-of alphabets. While \drepair is comparitively slow, we note that an average
-runtime of 10 seconds is well within practicality for \dtask.
+The primary reason for the increased runtime in \drepair is the additional
+insert repair operation, where each character in the alphabet needs to be
+checked. This process can be time-consuming, especially in formats with
+large alphabets.
+Despite being slower, \drepair's average runtime of 10 seconds remains practical
+for \dtask.
 
 \begin{result}
-While \drepair is slower than \ddmax, it's average runtime is 10 seconds, which
-is practical for \dtask.
+Although \drepair is slower than \ddmax, its average runtime of 10 seconds is
+still practical for \dtask.
 \end{result}
+
+
 
 \begin{table}[!tbp]\centering
 \caption{Number of \textit{perfectly} repaired files for \approach in comparison to \ddmax and \ddmaxg
