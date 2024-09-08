@@ -1550,12 +1550,12 @@ techniques. The results are tabulated in \Cref{tab:effectiveness}.
 %and \emph{\formatdependent}  \dtask techniques. 
 %These results are visualized in \Cref{fig:effectiveness}.
 %\drepair is effective in repairing corrupt records. 
-Overall, \drepair repaired 95\% of corrupt data (624 out of 656).
+Overall, \drepair repaired 77\% of corrupt data (503 out of 656).
 Notably, \drepair performed better than syntactic \ddmax (next best)
-for cJSON, and TinyC, while it performed slightly worse for SExp.
-Our analysis of SExp files
-highlights a limitation of \drepair---if the corruption does not trigger a parse
-error immediately, the effectiveness naive \drepair suffers.
+for cJSON, and TinyC, while it performed slightly worse for INI.
+%Our analysis of INI repaired files highlights a limitation of
+%\drepair---if the corruption does not trigger a parse
+%error immediately, the effectiveness naive \drepair suffers.
 
 %\input{.effectivenessnogrammar.tex}
 
@@ -1675,33 +1675,27 @@ are in \textbf{bold}. %, second-best time performance is in \textit{italics}
 \end{table}
 %\end{filecontents*}
 
+% For example, consider the JSON nested list \letterboxed{[[[]]]}.
+% Introducing a quote--a possible corruption---can result in \letterboxed{[[["]]]}.
+% However, \drepair is unable to correctly identify the error because
+% feeding \letterboxed{[[["]]]} to the parser results in \Rincomplete.
+% Hence, \drepair will attempt to fix this corruption by appending
+% more characters to the record. This induces the next problem:
+% Given \letterboxed{[[["]]]}, it now needs to generate three close
+% parenthesis before the parser returns \Rvalid.
+% Assuming say $n$ characters in the alphabet, and assuming
+% that any of the characters is a possible continuation, only one out of
+% $n^3$ repair threads would produce \letterboxed{)))} in the next three
+% insertions. Tracking these many repair threads affects the runtime of the
+% algorithm, and leads to a timeout.
+% 
+% We note that, while this is a limitation, this can be worked around by
+% enabling the extended \drepair at the cost of a much higher runtime or
+% limiting \drepair repairs to \emph{deletions} at the cost of a smaller
+% repertoire of repairs.
 
-
-
-For example, consider the SExp record \letterboxed{((()))}.
-Introducing a quote--a possible corruption---can result in \letterboxed{(((')))}.
-However, \drepair is unable to correctly identify the error because
-feeding \letterboxed{(((')))} to the parser results in \Rincomplete.
-Hence, \drepair will attempt to fix this corruption by appending
-more characters to the record. This induces the next problem:
-Given \letterboxed{(((')))}, it now needs to generate three close
-parenthesis before the parser returns \Rvalid.
-Assuming say $n$ characters in the alphabet, and assuming
-that any of the characters is a possible continuation, only one out of
-$n^3$ repair threads would produce \letterboxed{)))} in the next three
-insertions. Tracking these many repair threads affects the runtime of the
-algorithm, and leads to a timeout.
-
-We note that, while this is a limitation, this can be worked around by
-enabling the extended \drepair at the cost of a much higher runtime or
-limiting \drepair repairs to \emph{deletions} at the cost of a smaller
-repertoire of repairs.
-
-In INI also, we find a similar issue, with corruptions not immediately signaling
-a parse-error.
-In cJSON and TinyC, however,
-\drepair performed much better than its competitors with up to 35\% improvement
-against lexical \ddmax and 28\% improvement over syntactic \ddmax.
+%In INI also, we find a similar issue, with corruptions not immediately signaling
+%a parse-error.
 
 We note that \drepair outperforms even the \emph{\formatdependent} \dtask approaches
 in overall performance despite zero knowledge of the format
@@ -1734,32 +1728,31 @@ Venn Diagram showing the number of invalid inputs repaired (solely) by a (combin
 \label{fig:repaircomplementarity}
 \end{figure}
 
-\noindent\emph{Unique repairs:} 
-To gain deeper insights into the behavior of the \drepair and \ddmax algorithms,
-we examined whether certain corruptions could be repaired \emph{exclusively} by one
-algorithm and identified cases where specific records could not be repaired by
-some algorithms, while all others successfully repaired them.
-Our findings are presented in \Cref{fig:repaircomplementarity}.
-
-We found that about 10\% of records could only be repaired by \drepair,
-in comparison to 2\% for lexical \ddmax, and 4\% for syntactic \ddmax.
-Overall, we find that a hybrid approach combining all three could perform
-slightly better (6\%) than \drepair.
+% \noindent\emph{Unique repairs:} 
+% To gain deeper insights into the behavior of the \drepair and \ddmax algorithms,
+% we examined whether certain corruptions could be repaired \emph{exclusively} by one
+% algorithm and identified cases where specific records could not be repaired by
+% some algorithms, while all others successfully repaired them.
+% Our findings are presented in \Cref{fig:repaircomplementarity}.
+% 
+% We found that about 10\% of records could only be repaired by \drepair,
+% in comparison to 2\% for lexical \ddmax, and 4\% for syntactic \ddmax.
+% Overall, we find that a hybrid approach combining all three could perform
+% slightly better (6\%) than \drepair.
 
 
 \begin{result}
-\drepair is more effective than both lexical and syntactic \ddmax.
-It repaired 8\% more records than lexical \ddmax (closest),
-and 10\% of the inputs could only be repaired by \drepair.
+\drepair repairs more records than both lexical and syntactic \ddmax.
+It repaired 9\% more records than lexical \ddmax (closest), and was
+up to 35\% better than lexical \ddmax for TinyC.
 \end{result}
 
-\noindent\textbf{RQ2: What is the average number of repair steps required for \dtask by \drepair?}
+\noindent\textbf{RQ2: What is the quality of \dtask by \drepair and its competitors?}
 % \noindent\textbf{RQ2: What is the average number of repair steps required for \dtask by \drepair?}
 % The repair quality in terms of repairs required for the best repair-candidate is
 % tabulated in \Cref{tab:datarepairquality}. Note neither Basic nor ANTLR
 % result in actual data-repair, but error-recovery. Hence, we only tabulate the
 % repairs from \ddmax variants.
-%
 \Cref{tab:datarepairquality} presents the repair effectiveness of each technique.
 We calculated the Levenshtein distance between repaired and corrupt files
 from 327 fully repaired files.
