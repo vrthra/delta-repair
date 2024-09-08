@@ -666,7 +666,7 @@ the state-of-the-art language-agnostic \ddmax algorithm, which can result in sig
 \emph{empty passing configuration} and \emph{valid waypoints} constraints in \ddmax by leveraging parse-failure feedback.
 \item \textbf{Universal Data Repair.}
 We demonstrate effective \dtask using both deletions and insertions.
-\item \textbf{Empirical Evaluation.} We evaluate \drepair using 806 (real-world) nonconforming
+\item \textbf{Empirical Evaluation.} We evaluate \drepair using 656 (real-world) nonconforming
 records belonging to four well-known input formats (e.g., cJSON and TinyC). 
 Our results show that
 \textit{\drepair has a high (91\%) data recovery rate}. 
@@ -1497,81 +1497,6 @@ is available.
   tree thus obtained for data-repair.
   This was also described by Kirschner et al.~\cite{kirschner2020debugging}.
 \end{description}
-%\input{.effectivenessnogrammar.tex}
-
-%\begin{filecontents*}{.effectivenessnogrammar.tex}
-\begin{table}[!tbp]
-\centering
-  \caption{Repaired corrupt records. The \textbf{Improvement} is the difference between \drepair and \ddmax.}
-%\begin{subtable}{\textwidth}
-%\centering
-%  \caption{For \textbf{\formatfree} \dtask approaches.}
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
-\hline
-&  \multicolumn{4}{c|}{\textbf{Number of Repaired Records}}  \\
-&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{3}{c|}{\textbf{Data Format}}  \\
-\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
-\hline
-\textbf{Basic}   & 33 (4\%) & 27	 & 6 &	0\\
-\textbf{Lexical \ddmax} & 578 (72\%) & \textbf{201}  & 132  & 114  \\ 		
-% \hline	
-% \textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & \textbf{154} \\
-% \hline
-% \textbf{Improvement} &  \textbf{8\%}  & $-$5\% & \textbf{20\%} & \textbf{35\%} \\
-% \hline
-% \end{tabular}
-% \label{tab:effectivenessnogrammar}
-% \end{subtable}
-% \vspace{1cm}
-% \begin{subtable}{\textwidth}
-% \centering
-%   \caption{For \textbf{\formatdependent} repair approaches.}
-% \begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
-% \hline
-% &  \multicolumn{4}{c|}{\textbf{Number of Repaired Records}}  \\
-% &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{3}{c|}{\textbf{Data Format}}  \\
-% \textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
-\hline
-\textbf{ANTLR} & 344 (43\%) & 133 & 69 & 46   \\
-\textbf{Syntactic \ddmax} & 614 (76\%) & \textbf{201}  & 144  & 120  \\ 	
-\hline
-\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & \textbf{154} \\
-\hline
- \textbf{Impr. over Lex. \ddmax} &  \textbf{8\%}  & $-$5\% & \textbf{20\%} & \textbf{35\%} \\
-% \hline
-  \textbf{Impr. over Syn. \ddmax} &  \textbf{2\%}  & $-$5\% & \textbf{10\%} & \textbf{28\%} \\
-\hline
-\end{tabular}
-\label{tab:effectiveness}
-%\end{subtable}
-\end{table}
-%\end{filecontents*}
-
-%\input{.effectivenessgrammar.tex}
-
-\begin{comment}
-\subsection{Metrics and Measures} We employ the following metrics and measures to evaluate repair quality: 
-
-\begin{itemize}
-
-\item[(a.)] \textit{Number of Repaired Inputs:} We count the number of files repaired before
-a four minute timeout for each repair method.
- %of the tested repair programs.
- 
-\item[(b.)]  \textit{File Size Difference:} To determine the amount of data recovered by each approach, 
-we evaluate the difference in \emph{file size} of
-the \emph{recovered inputs} and the original
-\emph{valid input}. %. This measurement tracks the effectiveness of 
-
-\item[(c.)]  \textit{Edit Distance:} This is measured as the number of characters that
-differs between the \emph{corrupt input} and the \emph{repaired input}.
-
-\item[(d.)]  \textit{Runtime} is the time taken for input repair for each method.
-
-\item[(e.)]  \textit{Number of Program Runs:} To evaluate efficiency, we track the number of times the parser is executed by each approach. 
-
-\end{itemize}
-\end{comment}
 
 \subsection{Platform}
 All experiments were conducted
@@ -1625,12 +1550,47 @@ techniques. The results are tabulated in \Cref{tab:effectiveness}.
 %and \emph{\formatdependent}  \dtask techniques. 
 %These results are visualized in \Cref{fig:effectiveness}.
 %\drepair is effective in repairing corrupt records. 
-Overall, \drepair repaired 77\% of corrupt data (624 out of 806).
+Overall, \drepair repaired 95\% of corrupt data (624 out of 656).
 Notably, \drepair performed better than syntactic \ddmax (next best)
 for cJSON, and TinyC, while it performed slightly worse for SExp.
 Our analysis of SExp files
 highlights a limitation of \drepair---if the corruption does not trigger a parse
 error immediately, the effectiveness naive \drepair suffers.
+
+%\input{.effectivenessnogrammar.tex}
+
+%\begin{filecontents*}{.effectivenessnogrammar.tex}
+\begin{table}[!tbp]
+\centering
+  \caption{Repaired corrupt records. The \textbf{Improvement} is the difference between \drepair and \ddmax.}
+%\begin{subtable}{\textwidth}
+%\centering
+%  \caption{For \textbf{\formatfree} \dtask approaches.}
+\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\hline
+&  \multicolumn{4}{c|}{\textbf{Number of Repaired Records}}  \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{3}{c|}{\textbf{Data Format}}  \\
+\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
+\hline
+\textbf{Basic}   & 33 (5\%) & 27	 & 6 &	0\\
+\textbf{Lexical \ddmax} & 447 (68\%) & \textbf{201}  & 132  & 114  \\ 		
+\hline
+\textbf{ANTLR} & 248 (38\%) & 133 & 69 & 46   \\
+\textbf{Syntactic \ddmax} & 465 (71\%) & \textbf{201}  & 144  & 120  \\ 	
+\hline
+\textbf{\approach}  & \textbf{503} (\textbf{77\%}) & 191 & \textbf{158}  & \textbf{154} \\
+\hline
+ \textbf{Impr. over Lex. \ddmax} &  \textbf{9\%}  & $-$5\% & \textbf{20\%} & \textbf{35\%} \\
+% \hline
+  \textbf{Impr. over Syn. \ddmax} &  \textbf{6\%}  & $-$5\% & \textbf{10\%} & \textbf{28\%} \\
+\hline
+\end{tabular}
+\label{tab:effectiveness}
+%\end{subtable}
+\end{table}
+%\end{filecontents*}
+
+%\input{.effectivenessgrammar.tex}
 
 % \begin{figure}[!tbp]\centering
 % \centering
@@ -1670,8 +1630,8 @@ error immediately, the effectiveness naive \drepair suffers.
 % \end{figure}
 
 \begin{table}[!tbp]
-\caption{Repair effectiveness (Levenshtein distance) between corrupt data and repaired data. 
-The best data repair in bold.}
+\caption{Repair effectiveness (Levenshtein distance) between corrupt data and repaired data.}
+%The best data repair in bold.}
 \begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
 \hline
  &  \multicolumn{4}{c|}{\textbf{Average Repair Distance}}  \\
