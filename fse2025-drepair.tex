@@ -1436,7 +1436,7 @@ In addition to such real but corrupt data, for each format,
 we also introduced a set of 100 artificially corrupted files
 from 50 randomly selected valid real-world files.
 Half of these corrupted files contain a single mutated byte and the other half
-contains multiple (two to 16) mutated bytes.
+contains multiple (2 to 16) mutated bytes.
 Each mutation was randomly chosen to be either be a byte-flip, an insertion or a
 deletion to resemble real-world corruptions such as bit-rot on hard disks,
 transmission errors in network protocols, and human entry error.
@@ -1478,7 +1478,7 @@ input to be accepted even under errors.
   \caption{For \textbf{format-agnostic} \dtask approaches.}
 \begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
 \hline
-&  \multicolumn{4}{c|}{\textbf{Number of Repaired Inputs}}  \\
+&  \multicolumn{4}{c|}{\textbf{Number of Repaired Records}}  \\
 &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{3}{c|}{\textbf{Data Format}}  \\
 \textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
 \hline
@@ -1500,7 +1500,7 @@ input to be accepted even under errors.
   \caption{For \textbf{format aware} repair approaches.}
 \begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
 \hline
-&  \multicolumn{4}{c|}{\textbf{Number of Repaired Inputs}}  \\
+&  \multicolumn{4}{c|}{\textbf{Number of Repaired Records}}  \\
 &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{3}{c|}{\textbf{Data Format}}  \\
 \textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
 \hline
