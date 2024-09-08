@@ -1716,13 +1716,103 @@ between the corrupt record and the repaired record. This is given in
 \drepair achieved an average of 13.2 edits, which is \emph{2$\times$ fewer} than
 lexical \ddmax, which is the next best.
 
-\noindent\emph{Data Recovery:}
-While edit-distance is a useful metric for evaluating repair quality,
-it overlooks a crucial aspect of data recovery: how much of the original
-data survives in the repaired record.
 
-We analyzed 474 fully repaired inputs from lexical \ddmax, syntactic \ddmax, and
-\drepair, and computed the amount of original data that survived in the repaired version. This is given in \Cref{tab:datarecovery}.
+\noindent\textbf{Detailed Evaluation of Repair Quality:}
+While measuring the edit-distance from corrupted data to repaired data is a
+reasonable measure of quality of repair, it overlooks an important facet
+of data-repair. That is, in most circumstances, a corrupt data record is likely
+to have originated from an intact one, and the repair quality should be judged
+not just by the number of operations it took to make the data-record valid, but
+also by the how close the repaired data is to the original data.
+
+While edit-distance is a useful metric for evaluating repair quality,
+it overlooks a crucial aspect of data recovery: The repaired record
+should be as close as possible to the original record.
+To evaluate this, we start with the synthetically corrupted records.
+To ensure that we evaluate similar data, we choose single character
+corruptions.
+
+The edit distance between intact records and their repairs from the competing
+techniques are given in 
+\Cref{tab:invalidtorepaired}.
+% bRepair INI 							1	8.38	7.64	0.32	0.44	0.18
+% bRepair JSON							1	6.69	6.81	0.30	4.44	4.48
+% bRepair TinyC							1	0.96	1.42	0.16	0.62	0.94
+% 
+% 
+% DDMax	INI								1	9.12	8.48	0.32	2.26	2.08
+% DDMax	JSON							1	24.74	24.52	0.3		24.42	24.4
+% DDMax	TinyC							1	2.94	3.16	0.16	2.94	3.16
+% 
+% DDMaxG	INI								1	293.24	293.02	0.32	262.9	262.84
+% DDMaxG	JSON							1	183.08	183.18	0.3		183.02	183.06
+% DDMaxG	TinyC							1	38.12	38.2	0.16	11.38	11.38
+% 
+% Antlr	INI								1	287.66	287.26	0.32	256.18	256.04
+% Antlr	JSON							1	127.22	127.3	0.3		126.58	126.62
+% Antlr	TinyC							1	40.48	40.44	0.16	0.24	0.2
+
+\begin{table}[!tbp]
+\centering
+\caption{Distance from valid to repaired 1 character corruption}
+\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\hline
+\textbf{Techniques} & \textbf{INI} & \textbf{JSON} & \textbf{TinyC} & \textbf{Average} \\
+\hline
+Antlr & 287.66 & 127.22 & 40.48 & 151.79 \\
+Lex. \ddmax & 9.12 & 24.74 & 2.94 & 12.27 \\
+Syn. \ddmax & 293.24 & 183.08 & 38.12 & 171.48 \\
+\drepair & 8.38 & 6.69 & 0.96 & 5.34 \\
+\hline
+\end{tabular}
+\label{tab:validtorepaired}
+\end{table}
+
+\begin{table}[!tbp]
+\centering
+\caption{Distance from invalid to repaired 1 character corruption}
+%\begin{tabular}{|p{4cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\hline
+\textbf{Techniques} & \textbf{INI} & \textbf{JSON} & \textbf{TinyC} & \textbf{Average} \\
+\hline
+Antlr & 287.26 & 127.30 & 40.44 & 151.67 \\
+Lex. \ddmax & 8.48 & 24.52 & 3.16 & 12.05 \\
+Syn. \ddmax & 293.02 & 183.18 & 38.20 & 171.47 \\
+\drepair & 7.64 & 6.81 & 1.42 & 5.29 \\
+\hline
+\end{tabular}
+\label{tab:invalidtorepaired}
+\end{table}
+
+However, this may not be the whole story. We also capture the distance
+from corrupted to repaired in \Cref{tab:invalidtorepaired}
+
+%To fully understand why this has happened,
+
+
+% %\begin{filecontents*}{.datarecovery.tex}
+% \begin{table*}[!tbp]\centering
+% \caption{Quality of repair as edit-distance between intact and repaired records}
+% \begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+% \hline
+%  &  \multicolumn{4}{c|}{\textbf{\% Data Recovered by Approach}} \\
+% &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{3}{c|}{\textbf{Data Format}}  \\
+% \textbf{Techniques} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
+% \hline
+% \textbf{Lexical \ddmax} & 81\%  & 85.8\% & 82.2\%   & 47.7\% \\
+% \textbf{Syntactic \ddmax} & 74\%  &  70.6\% & 81.5\%  & 47.0\% \\
+% \hline
+% \textbf{\approach} & \textbf{91\%}  &  \textbf{85.9\%} & \textbf{98.5\%} & \textbf{82.1\%} \\
+% \hline
+% \textbf{Impr. over Lex. \ddmax} & 12\% &  0.1\%  & \textbf{19.8\%} & \textbf{72.1\%} \\
+% \textbf{Impr. over Syn. \ddmax} & \textbf{23\%}  &  \textbf{21.6\%}  & \textbf{20.8\%} & \textbf{74.7\% }  \\
+% \hline
+% \end{tabular}
+% \label{tab:datarecovery}
+% \end{table*}
+% %\end{filecontents*}
+
 
 The results indicate that \drepair recovered an average of 91\% of the input
 data, which is 23\% more than the best baseline competitor, lexical \ddmax.
@@ -1737,81 +1827,36 @@ fewer edits than its closest competitor, lexical \ddmax.
 Additionally, \drepair demonstrates a higher data recovery rate, recovering 12\%
 more data on average than its nearest competitor.
 \end{result}
-%\begin{filecontents*}{.efficiency.tex}
-\begin{table}[!tbp]\centering
-\caption{Efficiency of \approach vs. \ddmax. 
-%  lowest runtime and smaller number of program runs %and significant \% improvement in efficiency
-%are in \textbf{bold}. %, second-best time performance is in \textit{italics}
-}
-\begin{tabular}{|l | r | r |}
-\hline
-%&  \multicolumn{2}{c|}{\textbf{Runtime (s)}} & \multicolumn{2}{c|}{\textbf{\#Prog. Runs}}  \\
-\textbf{Techniques} %& \textbf{Inputs}
-&  \textbf{Avg. Runtime}  & \textbf{Avg. Runs}  \\
-\hline
-\textbf{Lex. \ddmax} & 3.4 & 3260 \\
-\textbf{Syn. \ddmax} & \textbf{2.0} & \textbf{2075}  \\
-\textbf{\approach} &  10.2 & 11537 \\
-\hline
-\end{tabular}
-\label{tab:efficiency}
-\end{table}
-%\end{filecontents*}
 
-\begin{figure}[!tbp]
-\centering
-\caption{\centering
-Venn Diagram showing the number of invalid inputs repaired (solely) by a (combinations of) technique(s) %, or the combination of approaches
-}
-\begin{minipage}[b]{0.45\textwidth}
-    \centering
-    \begin{tikzpicture}[circ/.style={draw=black,line width=1pt,fill=none,shape=circle,minimum width=2.5cm,minimum height=2.5cm},lbl/.style={font=\bfseries}]
-        \node[draw=none,minimum width=1.5cm,minimum height=1.29904cm,inner sep=0,outer sep=0] at (0,0) (anchor) {};
-        \node[circ] at (anchor.south west) (g1) {};
-        \node[circ] at (anchor.south east) (g2) {};
-        \node[circ] at (anchor.north) (g3) {};
-        \node[lbl,anchor=north] at (g1.south) {\ddmax};
-        \node[lbl,anchor=north] at (g2.south) {\ddmaxg};
-        \node[lbl,anchor=south] at (g3.north) {\drepair};
-        \node[lbl] at ($(g1)!0.5!(g2) - (0,.4)$) {53};
-        \node[lbl] at ($(g2)!0.5!(g3) + (.2,.2)$) {50};
-        \node[lbl] at ($(g1)!0.5!(g3) + (-.2,.2)$) {25};
-        \node[lbl] at ($(anchor.center) - (0,.2)$) {488};
-        \node[lbl] at ($(g1.center) - (.2,.1)$) {12};
-        \node[lbl] at ($(g2.center) - (-.2,.1)$) {23};
-        \node[lbl] at ($(g3.center) + (0,.2)$) {61};
-    \end{tikzpicture}
-\end{minipage}
-\label{fig:repaircomplementarity}
-\end{figure}
+% \begin{figure}[!tbp]
+% \centering
+% \caption{\centering
+% Venn Diagram showing the number of invalid inputs repaired (solely) by a (combinations of) technique(s) %, or the combination of approaches
+% }
+% \begin{minipage}[b]{0.45\textwidth}
+%     \centering
+%     \begin{tikzpicture}[circ/.style={draw=black,line width=1pt,fill=none,shape=circle,minimum width=2.5cm,minimum height=2.5cm},lbl/.style={font=\bfseries}]
+%         \node[draw=none,minimum width=1.5cm,minimum height=1.29904cm,inner sep=0,outer sep=0] at (0,0) (anchor) {};
+%         \node[circ] at (anchor.south west) (g1) {};
+%         \node[circ] at (anchor.south east) (g2) {};
+%         \node[circ] at (anchor.north) (g3) {};
+%         \node[lbl,anchor=north] at (g1.south) {\ddmax};
+%         \node[lbl,anchor=north] at (g2.south) {\ddmaxg};
+%         \node[lbl,anchor=south] at (g3.north) {\drepair};
+%         \node[lbl] at ($(g1)!0.5!(g2) - (0,.4)$) {53};
+%         \node[lbl] at ($(g2)!0.5!(g3) + (.2,.2)$) {50};
+%         \node[lbl] at ($(g1)!0.5!(g3) + (-.2,.2)$) {25};
+%         \node[lbl] at ($(anchor.center) - (0,.2)$) {488};
+%         \node[lbl] at ($(g1.center) - (.2,.1)$) {12};
+%         \node[lbl] at ($(g2.center) - (-.2,.1)$) {23};
+%         \node[lbl] at ($(g3.center) + (0,.2)$) {61};
+%     \end{tikzpicture}
+% \end{minipage}
+% \label{fig:repaircomplementarity}
+% \end{figure}
 
 
 %\input{.datarecovery.tex}
-
-%\begin{filecontents*}{.datarecovery.tex}
-\begin{table*}[!tbp]\centering
-\caption{Data Recovery (percentage of original data remaining) of \approach vs
-lexical \ddmax and syntactic \ddmax. 
-The highest data recovery and lowest data loss are in bold.}
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
-\hline
- &  \multicolumn{4}{c|}{\textbf{\% Data Recovered by Approach}} \\
-&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{3}{c|}{\textbf{Data Format}}  \\
-\textbf{Techniques} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
-\hline
-\textbf{Lexical \ddmax} & 81\%  & 85.8\% & 82.2\%   & 47.7\% \\
-\textbf{Syntactic \ddmax} & 74\%  &  70.6\% & 81.5\%  & 47.0\% \\
-\hline
-\textbf{\approach} & \textbf{91\%}  &  \textbf{85.9\%} & \textbf{98.5\%} & \textbf{82.1\%} \\
-\hline
-\textbf{Impr. over Lex. \ddmax} & 12\% &  0.1\%  & \textbf{19.8\%} & \textbf{72.1\%} \\
-\textbf{Impr. over Syn. \ddmax} & \textbf{23\%}  &  \textbf{21.6\%}  & \textbf{20.8\%} & \textbf{74.7\% }  \\
-\hline
-\end{tabular}
-\label{tab:datarecovery}
-\end{table*}
-%\end{filecontents*}
-
 
 \noindent\emph{Perfect repair:} While data recovery metrics offer some insight
 into the quality of repairs, the key question remains: does the repair fully and
@@ -1914,6 +1959,28 @@ That is, while \ddmax requires an empty valid input to start from, and the
 existence of valid waypoints allowing one to construct a path to the final
 repair fragment by fragment, \drepair only requires the parser to tell us when
 the parse-error was encountered, and its kind.
+
+
+%\begin{filecontents*}{.efficiency.tex}
+\begin{table}[!tbp]\centering
+\caption{Efficiency of \approach vs. \ddmax. 
+%  lowest runtime and smaller number of program runs %and significant \% improvement in efficiency
+%are in \textbf{bold}. %, second-best time performance is in \textit{italics}
+}
+\begin{tabular}{|l | r | r |}
+\hline
+%&  \multicolumn{2}{c|}{\textbf{Runtime (s)}} & \multicolumn{2}{c|}{\textbf{\#Prog. Runs}}  \\
+\textbf{Techniques} %& \textbf{Inputs}
+&  \textbf{Avg. Runtime}  & \textbf{Avg. Runs}  \\
+\hline
+\textbf{Lex. \ddmax} & 3.4 & 3260 \\
+\textbf{Syn. \ddmax} & \textbf{2.0} & \textbf{2075}  \\
+\textbf{\approach} &  10.2 & 11537 \\
+\hline
+\end{tabular}
+\label{tab:efficiency}
+\end{table}
+%\end{filecontents*}
 
 \subsection{Limitations of \drepair}
 While \drepair is an improvement over the state of the art, it still has
