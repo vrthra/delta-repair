@@ -1517,7 +1517,7 @@ minutes as the timeout for repair.
 &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{3}{c|}{\textbf{Data Format}}  \\
 \textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
 \hline
-\textbf{Baseline}   & 33 (4\%) & 27	 & 6 &	0\\
+\textbf{Basic}   & 33 (4\%) & 27	 & 6 &	0\\
 \textbf{Lexical \ddmax} & 578 (72\%) & \textbf{201}  & 132  & 114  \\ 		
 \hline	
 \textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & \textbf{154} \\
@@ -1571,7 +1571,7 @@ The repair quality in terms of repairs required for the best repair-candidate is
 tabulated in \Cref{tab:datarepairquality}.
 
 \noindent\textbf{RQ3: How fast is \dtask compared to the state-of-the-art?}
-For a balanced evaluation, we analyse a set of 480 invalid inputs
+For a balanced evaluation, we analyse a set of 330 invalid inputs
 that were completely repaired by all three approaches within the four minutes timeout.
 \Cref{tab:efficiency}
 reports the efficiency of all three approaches.
@@ -1607,16 +1607,15 @@ The best data repair in bold.}
 \caption{Efficiency of \approach vs. \ddmax, lowest runtime and smaller number of program runs %and significant \% improvement in efficiency
 are in \textbf{bold}. %, second-best time performance is in \textit{italics}
 }
-\begin{tabular}{|l |  r  r | r  r |}
+\begin{tabular}{|l | r | r |}
 \hline
-&  \multicolumn{2}{c|}{\textbf{Runtime (s)}} & \multicolumn{2}{c|}{\textbf{\#Prog. Runs}}  \\
+%&  \multicolumn{2}{c|}{\textbf{Runtime (s)}} & \multicolumn{2}{c|}{\textbf{\#Prog. Runs}}  \\
 \textbf{Techniques} %& \textbf{Inputs}
-&  \textbf{Avg.}  & \textbf{Total} & \textbf{Avg.}  & \textbf{Total} \\
+&  \textbf{Avg. Runtime}  & \textbf{Avg. Runs}  \\
 \hline
-\textbf{Lex. \ddmax} & 3.4 & 1653 & 3260 & 1564781 \\
-\textbf{Syn. \ddmax} & \textbf{2.0} & \textbf{982}  & \textbf{2075}  & \textbf{995802}  \\
-\hline
-\textbf{\approach} &  10.2 & 4938  & 11537 & 5537601  \\
+\textbf{Lex. \ddmax} & 3.4 & 3260 \\
+\textbf{Syn. \ddmax} & \textbf{2.0} & \textbf{2075}  \\
+\textbf{\approach} &  10.2 & 11537 \\
 \hline
 \end{tabular}
 \label{tab:efficiency}
