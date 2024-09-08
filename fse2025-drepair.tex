@@ -1963,11 +1963,21 @@ of further data-corruption and information distortion, and the end-users should
 select the best semantically-fit repair from the repair-candidates provided by
 \drepair.
 
-\noindent\textbf{Inability to work with constraints.} \drepair has problems when
-the parser is not conforming. For example, repairing an invalid checksum or hash
-requires extra constraints that are hard to supply in a conforming parser,
-and \drepair will be of limited use. However, it could still provide
-repair-candidates that allow end-users to debug such semantic issues. 
+\noindent\textbf{Requirement for robust conforming parsers.}
+When the parser is not conforming (i.e., does not provide \Rincomplete and \Rincorrect feedback), \drepair is unable to rely on the
+guidance provided by the parser feedback. In such cases, \drepair can
+still repair those parts of the format that is conforming to the feedback
+requirements.
+
+\noindent\textbf{Inability to work with context-sensitive constraints.} 
+Some formats such as binary files require the format specification to be
+context sensitive. That is, they require the content-length to be specified
+before the content. For such formats, \drepair is of limited use.
+
+Furthermore,  some formats may require checksums or hash values. Repairing
+such extra constraints that are beyond context-free is impossible with
+\drepair (and its competitors).
+
 %\revise{
 %In addition, inputs with significant semantic corruption may not be effectively repaired by \drepair. Even though \drepair is effective in fixing structural parts of invalid inputs, when the corruption is in the semantic part, the missing data becomes difficult to recover. Examples include corrupted numbers in calculations, and dates.}
 
