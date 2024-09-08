@@ -1988,6 +1988,12 @@ previously.
 We note that, while this is a limitation, this can be worked around by limiting
 \drepair repairs to deletions if this behaviour is expected.
 
+\noindent\textbf{Performs better when there are constraints on the data-format}
+\drepair performs better when the data format is complex and has strict constraints (e.g., cJSON and TinyC).
+Conversely, it performs poorly when the format is simple, and has
+limited constraints (e.g., INI). This is because \drepair is able to prune
+potential continuations of repair-threads early on for formats with
+more constraints.
 
 \section{Related Work}
 \label{sec:relatedwork}
