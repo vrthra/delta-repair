@@ -1911,7 +1911,23 @@ We evaluated the number of files perfectly repaired by each approach, meaning
 the repaired file is \emph{identical} to its state before corruption.
 This experiment used only synthetically corrupted records.
 
-As shown in in \cref{tab:perfectrepairs},
+\begin{table}[!tbp]\centering
+\caption{Number of \textit{perfectly} repaired files for \approach in comparison to \ddmax and \ddmaxg
+}
+\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\hline
+\textbf{Techniques}&  \textbf{INI}&\textbf{cJSON} &\textbf{TinyC}&\textbf{Total}  \\
+\hline
+\textbf{Lex. \ddmax}  & 1 & 14 & 18 & 33 \\
+\textbf{Syn. \ddmaxg} & 0 & 1  & 0  & 1  \\
+\hline
+\textbf{\approach} &  1 & 21  & 26 & 48  \\
+\hline
+\end{tabular}
+\label{tab:perfectrepairs}
+\end{table}
+
+As shown in in \Cref{tab:perfectrepairs},
 \drepair achieved 17\% more perfect repairs than lexical \ddmax.
 Interestingly, syntactic \ddmax did not produce any perfect repairs.
 We found that this is because the parsing process normalizes tokens such
@@ -1953,22 +1969,6 @@ for \dtask.
 Although \drepair is slower than \ddmax, its average runtime of 10 seconds is
 still practical for \dtask.
 \end{result}
-
-\begin{table}[!tbp]\centering
-\caption{Number of \textit{perfectly} repaired files for \approach in comparison to \ddmax and \ddmaxg
-}
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
-\hline
-\textbf{Techniques}&  \textbf{INI}&\textbf{cJSON} &\textbf{TinyC}&\textbf{Total}  \\
-\hline
-\textbf{Lex. \ddmax}  & 1 & 14 & 18 & 33 \\
-\textbf{Syn. \ddmaxg} & 0 & 1  & 0  & 1  \\
-\hline
-\textbf{\approach} &  1 & 21  & 26 & 48  \\
-\hline
-\end{tabular}
-\label{tab:perfectrepairs}
-\end{table}
 
 % \begin{figure}[!tbp]\centering
 % \caption{\centering Venn Diagram showing the 
