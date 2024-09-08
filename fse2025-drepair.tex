@@ -1920,6 +1920,7 @@ This experiment used only synthetically corrupted records.
 \hline
 \textbf{Techniques}&  \textbf{INI}&\textbf{cJSON} &\textbf{TinyC}&\textbf{Total}  \\
 \hline
+\textbf{Antlr}  & 0 & 21 & 0 & 21 \\
 \textbf{Lex. \ddmax}  & 1 & 14 & 18 & 33 \\
 \textbf{Syn. \ddmaxg} & 0 & 1  & 0  & 1  \\
 \hline
@@ -1930,11 +1931,7 @@ This experiment used only synthetically corrupted records.
 \end{table}
 
 As shown in in \Cref{tab:perfectrepairs},
-\drepair achieved 17\% more perfect repairs than lexical \ddmax.
-Interestingly, syntactic \ddmax did not produce any perfect repairs.
-We found that this is because the parsing process normalizes tokens such
-as whitespace, and otherwise ignores certain tokens. That is, serializing
-a parse tree does not reliably produce the original data record in many cases.
+\drepair achieved 31\% more perfect repairs than lexical \ddmax.
 
 % We also analyzed files that were exclusively repaired by \drepair, \ddmax, or
 % both, as illustrated in \Cref{fig:perfectlyrepairedvenndiagram}.
