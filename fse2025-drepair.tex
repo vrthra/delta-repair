@@ -1371,7 +1371,7 @@ program. If the program does not accept the data, then the entire record
 is lost.
 Hence, we ask:
 
-\noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
+\noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair and its competitors?}
 To answer this question, we consider both real-world as well as synthetically
 introduced corruptions, and check how many of the corrupt records can be
 recovered.
@@ -1383,7 +1383,7 @@ A repair-candidate is high quality if the number of repairs needed is small,
 when compared to another repair-candidate with a larger number of steps.
 Hence, we ask:
 
-\noindent\textbf{RQ2: What is the average number of repair steps required for \dtask by \drepair?}
+\noindent\textbf{RQ2: What is the quality of \dtask by \drepair and its competitors?}
 Answering this question allows us to understand the quality of repairs
 performed by \drepair.
 
@@ -1392,13 +1392,13 @@ That is, while it is expected that a more intelligent algorithm may take more
 runtime, it should be within practical bounds. Hence, the third research
 question concerns the efficiency of the approach.
 
-\noindent\textbf{RQ3: How fast is \dtask compared to the state-of-the-art?}
+\noindent\textbf{RQ3: How fast is \drepair compared to the state-of-the-art?}
 Answering this question allows us to evaluate the practicality of \drepair.
 
 
 \subsection{Subject Programs} %As subjects w
 %\begin{filecontents*}{subjectprograms.tex}
-\begin{table}[H]\centering
+\begin{table}[!tbp]\centering
 \caption{Subject programs used in the evaluation}
 \begin{tabular}{|p{4cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
 \hline
@@ -1417,25 +1417,6 @@ Answering this question allows us to evaluate the practicality of \drepair.
 We used three data formats and their corresponding programs (\Cref{tab:subjectprograms}). These are INI (INI), JSON (cJSON), and TinyC (TinyC). Each program is moderately large (between 300 LOC to 3000 LOC), relatively mature (7 to 14 years of development), and written in \<C>.
 
 \subsection{Test Data} 
-%\input{inputdetails.tex}
-%\begin{filecontents*}{inputdetails.tex}
-\begin{table}[!tbp]\centering
-\caption{Details of Corrupt Files}
-\begin{tabular}{|p{4cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
-\hline
-&  \multicolumn{3}{c|}{\textbf{Number of Corrupt Files}}  \\
-\textbf{Type of Corrupt File} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
-\hline
-\textbf{Real-World Files} & 101 & 107 & 148 \\
-\textbf{Single Mutation} & 50 & 50    & 50 \\
-\textbf{Multiple Mutations} & 50 & 50 & 50 \\
-\hline
-\textbf{Total } (656) & 201 & 207    & 248 \\
-\hline
-\end{tabular}
-\label{tab:inputdetails}
-\end{table}
-%\end{filecontents*}
 
 % 806 - SExp  (150) = 656
 We evaluate our approach using 656 corrupt files.
@@ -1455,6 +1436,26 @@ Each mutation was randomly chosen to be either be a byte-flip, an insertion or a
 deletion to resemble real-world corruptions such as bit-rot on hard disks,
 transmission errors in network protocols, and human entry error.
 \Cref{tab:inputdetails} provides the details.
+
+%\input{inputdetails.tex}
+%\begin{filecontents*}{inputdetails.tex}
+\begin{table}[!tbp]\centering
+\caption{Details of Corrupt Files}
+\begin{tabular}{|p{4cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+\hline
+&  \multicolumn{3}{c|}{\textbf{Number of Corrupt Files}}  \\
+\textbf{Type of Corrupt File} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
+\hline
+\textbf{Real-World Files} & 101 & 107 & 148 \\
+\textbf{Single Mutation} & 50 & 50    & 50 \\
+\textbf{Multiple Mutations} & 50 & 50 & 50 \\
+\hline
+\textbf{Total } (656) & 201 & 207    & 248 \\
+\hline
+\end{tabular}
+\label{tab:inputdetails}
+\end{table}
+%\end{filecontents*}
 
 \subsection{Baseline Comparisons}
 In this work, we compare the performance of \drepair to several repair
