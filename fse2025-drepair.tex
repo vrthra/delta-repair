@@ -1364,13 +1364,19 @@ propose the following research questions which are designed to investigate the
 effectiveness of \drepair in multiple dimensions.
 
 \subsection{Research Questions}
-What is the effectiveness of \drepair as compared to the state-of-the-art?
-The first dimension in \dtask is that it should result in repaired data records.
+% What is the effectiveness of \drepair as compared to the state-of-the-art?
+The primary dimension in \dtask is whether the data can be recovered at all.
+That is, it should result in repaired data records which are accepted by the
+program. If the program does not accept the data, then the entire record
+is lost.
 Hence, we ask:
 
-\noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?} Answering this
-question allows us to understand whether \drepair can form an alternative to the
-state-of-the-art for \drepair.
+\noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
+To answer this question, we consider both real-world as well as synthetically
+introduced corruptions, and check how many of the corrupt records can be
+recovered.
+% Answering this question allows us to understand whether
+%\drepair can form an alternative to the state-of-the-art techniques.
 
 The second dimension of effectiveness of \dtask is the \emph{quality of repair}.
 A repair-candidate is high quality if the number of repairs needed is small,
