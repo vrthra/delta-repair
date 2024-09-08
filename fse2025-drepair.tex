@@ -1432,9 +1432,11 @@ the terms \emph{file}, and \emph{record}, interchangeably in our evaluation.
 However, note that many real world formats can have multiple records per file.
 As test data, we crawled a large corpus of real-world files
 from GitHub~\cite{githubapi}, from which we identified corrupt files. 
-In addition to such real but corrupt data, for each format,
-we also introduced a set of 100 artificially corrupted files
-from 50 randomly selected valid real-world files.
+
+While the real-world corrupted data provides a useful metric for comparison,
+we do not know what the intact (non-corrupt) data should be. Hence,
+for each format, we also introduced a set of 100 artificially corrupted
+files from 50 randomly selected valid real-world files.
 Half of these corrupted files contain a single mutated byte and the other half
 contains multiple (2 to 16) mutated bytes.
 Each mutation was randomly chosen to be either be a byte-flip, an insertion or a
@@ -1576,15 +1578,16 @@ minutes as the timeout for repair.
 This section describes the findings of our empirical evaluation.
 
 \noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
-The repair effectiveness for format-agnostic (i.e., without the knowledge of specification)
-methods is tabulated in \Cref{tab:effectiveness}.
-For completeness, we also tabulate the repair effectiveness of \drepair against
-format aware methods (i.e., those that only work when the data-format specification is given)
-in \Cref{tab:effectiveness}.
+The repair effectiveness for format-agnostic
+(i.e., without the knowledge of specification) and format-based
+(i.e., those that only work when the data-format specification is given)
+methods are tabulated in \Cref{tab:effectiveness}, and compared against \drepair.
 
 \noindent\textbf{RQ2: What is the average number of repair steps required for \dtask by \drepair?}
 The repair quality in terms of repairs required for the best repair-candidate is
-tabulated in \Cref{tab:datarepairquality}.
+tabulated in \Cref{tab:datarepairquality}. Note neither Basic nor ANTLR
+result in actual data-repair, but error-recovery. Hence, we only tabulate the
+repairs from \ddmax variants.
 
 \noindent\textbf{RQ3: How fast is \dtask compared to the state-of-the-art?}
 For a balanced evaluation, we analyse a set of 330 invalid inputs
