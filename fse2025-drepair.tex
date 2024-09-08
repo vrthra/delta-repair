@@ -1789,6 +1789,24 @@ However, this may not be the whole story. We also capture the distance
 from corrupted to repaired in \Cref{tab:invalidtorepaired}
 
 %To fully understand why this has happened,
+How much does the \emph{insertion} operation matter? To evaluate that, let us
+consider
+
+\begin{table}[h]
+\centering
+\caption{Count of deletions from valid to repaired}
+\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\hline
+\textbf{Technique} & \textbf{INI} & \textbf{JSON} & \textbf{TinyC} & \textbf{Average} \\
+\hline
+Antlr & 256.18 & 126.58 & 0.24 & 127.67 \\
+DDMax & 2.26 & 24.42 & 2.94 & 9.87 \\
+DDMaxG & 262.90 & 183.02 & 11.38 & 152.43 \\
+bRepair & 0.44 & 4.44 & 0.62 & 1.83 \\
+\hline
+\end{tabular}
+\label{tab:delops}
+\end{table}
 
 
 % %\begin{filecontents*}{.datarecovery.tex}
