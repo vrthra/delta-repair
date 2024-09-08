@@ -1488,9 +1488,9 @@ is available.
 \begin{table}[!tbp]
 \centering
   \caption{Repaired corrupt records. The \textbf{Improvement} is the difference between \drepair and \ddmax.}
-\begin{subtable}{\textwidth}
-\centering
-  \caption{For \textbf{format-agnostic} \dtask approaches.}
+%\begin{subtable}{\textwidth}
+%\centering
+%  \caption{For \textbf{format-agnostic} \dtask approaches.}
 \begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
 \hline
 &  \multicolumn{4}{c|}{\textbf{Number of Repaired Records}}  \\
@@ -1499,36 +1499,36 @@ is available.
 \hline
 \textbf{Basic}   & 33 (4\%) & 27	 & 6 &	0\\
 \textbf{Lexical \ddmax} & 578 (72\%) & \textbf{201}  & 132  & 114  \\ 		
-\hline	
-\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & \textbf{154} \\
-\hline
-\textbf{Improvement} &  \textbf{8\%}  & $-$5\% & \textbf{20\%} & \textbf{35\%} \\
-\hline
-\end{tabular}
-\label{tab:effectivenessnogrammar}
-\end{subtable}
-\vspace{1cm}
-%\end{filecontents*}
-%\begin{filecontents*}{.effectivenessgrammar.tex}
-\begin{subtable}{\textwidth}
-\centering
-  \caption{For \textbf{format aware} repair approaches.}
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
-\hline
-&  \multicolumn{4}{c|}{\textbf{Number of Repaired Records}}  \\
-&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{3}{c|}{\textbf{Data Format}}  \\
-\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
+% \hline	
+% \textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & \textbf{154} \\
+% \hline
+% \textbf{Improvement} &  \textbf{8\%}  & $-$5\% & \textbf{20\%} & \textbf{35\%} \\
+% \hline
+% \end{tabular}
+% \label{tab:effectivenessnogrammar}
+% \end{subtable}
+% \vspace{1cm}
+% \begin{subtable}{\textwidth}
+% \centering
+%   \caption{For \textbf{format aware} repair approaches.}
+% \begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+% \hline
+% &  \multicolumn{4}{c|}{\textbf{Number of Repaired Records}}  \\
+% &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{3}{c|}{\textbf{Data Format}}  \\
+% \textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
 \hline
 \textbf{ANTLR} & 344 (43\%) & 133 & 69 & 46   \\
 \textbf{Syntactic \ddmax} & 614 (76\%) & \textbf{201}  & 144  & 120  \\ 	
 \hline
 \textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & \textbf{154} \\
 \hline
-  \textbf{Improvement} &  \textbf{2\%}  & $-$5\% & \textbf{10\%} & \textbf{28\%} \\
+ \textbf{Impr. over Lex. \ddmax} &  \textbf{8\%}  & $-$5\% & \textbf{20\%} & \textbf{35\%} \\
+% \hline
+  \textbf{Impr. over Syn. \ddmax} &  \textbf{2\%}  & $-$5\% & \textbf{10\%} & \textbf{28\%} \\
 \hline
 \end{tabular}
 \label{tab:effectivenessgrammar}
-\end{subtable}
+%\end{subtable}
 \end{table}
 %\end{filecontents*}
 
