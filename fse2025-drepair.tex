@@ -298,198 +298,9 @@ pics/numbering/.style args={#1}{code={
 
 \usepackage{filecontents}
 
-\begin{filecontents*}{.efficiency.tex}
-\begin{table}[!tbp]\centering
-\caption{Efficiency of \approach vs. \ddmax, lowest runtime and smaller number of program runs %and significant \% improvement in efficiency
-are in \textbf{bold}. %, second-best time performance is in \textit{italics}
-}
-\begin{tabular}{|l |  r  r | r  r |}
-\hline
-&  \multicolumn{2}{c|}{\textbf{Runtime (s)}} & \multicolumn{2}{c|}{\textbf{\#Prog. Runs}}  \\
-\textbf{Techniques} %& \textbf{Inputs}
-&  \textbf{Avg.}  & \textbf{Total} & \textbf{Avg.}  & \textbf{Total} \\
-\hline
-\textbf{Lex. \ddmax} & 3.4 & 1653 & 3260 & 1564781 \\
-\textbf{Syn. \ddmax} & \textbf{2.0} & \textbf{982}  & \textbf{2075}  & \textbf{995802}  \\
-\hline
-\textbf{\approach} &  10.2 & 4938  & 11537 & 5537601  \\
-\hline
-\end{tabular}
-\label{tab:efficiency}
-\end{table}
-\end{filecontents*}
 
 
-\begin{filecontents*}{.effectivenessgrammar.tex}
-\begin{table}[!tbp]
-\centering
-  \caption{Number of repaired corrupt records \textbf{data-format aware} repair approaches.
-  The highest number of repaired inputs are in bold. The \textbf{Improvement} is the difference between \drepair and syntactic \ddmax.
-  }
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
-\hline
-&  \multicolumn{5}{c|}{\textbf{Number of Repaired Inputs}}  \\
-&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Data Format}}  \\
-\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-\hline
-\textbf{ANTLR} & 344 (43\%) & 133 & 69 & 96 &  46   \\
-\textbf{Syntactic \ddmax} & 614 (76\%) & \textbf{201}  & 144  & \textbf{149}  & 120  \\ 	
-\hline
-\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & 121  &  \textbf{154} \\
-\hline
-  \textbf{Improvement} &  \textbf{2\%}  & $-$5\% & \textbf{10\%} & $-$19\% & \textbf{28\%} \\
-\hline
-\end{tabular}
-\label{tab:effectivenessgrammar}
-\end{table}
-\end{filecontents*}
 
-\begin{filecontents*}{.effectivenessnogrammar.tex}
-\begin{table}[!tbp]
-\centering
-\caption{Number of repaired corrupt records for \textbf{format-agnostic} \dtask approaches.
-  The highest number of repaired inputs are in bold. The \textbf{Improvement} is the difference between \drepair and lexical \ddmax.}
-%\begin{tabular}{|l | c | r  r  r  r |}
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
-\hline
-&  \multicolumn{5}{c|}{\textbf{Number of Repaired Inputs}}  \\
-&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Data Format}}  \\
-\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-\hline
-\textbf{Baseline}   & 33 (4\%) & 27	 & 6 &	0	& 0\\
-\textbf{Lexical \ddmax} & 578 (72\%) & \textbf{201}  & 132  & \textbf{131} & 114  \\ 		
-\hline	
-\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & 121  & \textbf{154} \\
-\hline
-\textbf{Improvement} &  \textbf{8\%}  & $-$5\% & \textbf{20\%} & $-$8\% & \textbf{35\%} \\
-\hline
-\end{tabular}
-\label{tab:effectivenessnogrammar}
-\end{table}
-
-\end{filecontents*}
-
-
-\begin{filecontents*}{.datarepairquality.tex}
-\begin{table}[!tbp]
-\caption{Repair effectiveness (Levenshtein distance) between corrupt data and repaired data. 
-The best data repair in bold.}
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
-%\begin{tabular}{|l | c |  r  r  r  r  | c |  r  r  r  r |}
-\hline
- &  \multicolumn{5}{c|}{\textbf{Average Repair Distance}}  \\
-&  \multicolumn{1}{c|}{\textbf{ALL}} &   \multicolumn{4}{c|}{\textbf{Data Format}}  \\
-\textbf{Techniques} & \textbf{Average}  & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-\hline
-\textbf{Lex. \ddmax} & 18.0 & {10.2} &  61.6 &  \textbf{6.2} & 7.5 \\
-\textbf{Syn. \ddmax} & 119.6 &  258.1 & 82.7 &  76.6 &  33.3 \\
-\hline
-\textbf{\approach} & \textbf{10.6}  & \textbf{9.5} &  \textbf{28.7} & 7.4 & \textbf{1.6} \\
-\hline
-\textbf{Impr. over Lex. \ddmax} & \textbf{1.7$\times$} & \textbf{1.1$\times$} & \textbf{2.1$\times$} & 0.8$\times$ & \textbf{4.7$\times$} \\
-\textbf{Impr. over Syn. \ddmax} & \textbf{11.3$\times$} & \textbf{27.2$\times$} & \textbf{2.9$\times$} & \textbf{10.4$\times$} &\textbf{20.8$\times$} \\
-\hline
-\end{tabular}
-% \hline
-%  &  \multicolumn{5}{c|}{\textbf{\% Data Recovered by Approach}} &  \multicolumn{5}{c|}{\textbf{Average Data Loss }}  \\
-% &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Data Format}}  &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Data Format}}  \\
-% \textbf{Techniques} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-% \hline
-% \textbf{Lex. \ddmax} & 81\%  & 85.8\% & 82.2\%	 & 99.2\%	& 47.7\% & 18.0 & {10.2} &	61.6 &	\textbf{6.2} & 7.5 \\			
-% \textbf{Syn. \ddmax} & 74\%  &  70.6\% & 81.5\%  & 97.0\%	& 47.0\% & 119.6 &  258.1 & 82.7 &	76.6 &	33.3 \\	
-% \hline
-% \textbf{\approach} & \textbf{91\%}  &  \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100\%} & \textbf{82.1\%} & \textbf{10.6}  & \textbf{9.5} &	\textbf{28.7} &	7.4 & \textbf{1.6} \\
-% \hline
-% \textbf{Impr. over Lex.} & 12\% &  0.1\%	& \textbf{19.8\%}	& 1.4\%	& \textbf{72.1\%} & \textbf{70\%} &  \textbf{8\%} & \textbf{115\%} & -16\% & \textbf{357\%} \\
-% \textbf{Impr. over Syn.} & \textbf{23\%}  &  \textbf{21.6\%} 	& \textbf{20.8\%}	& 3.7\%	& \textbf{74.7\% }  & \textbf{1030\%} & \textbf{2629\%} &	\textbf{188\%} & \textbf{936\%} &\textbf{ 1930\%} \\
-% \hline
-% \end{tabular}
-\label{tab:datarepairquality}
-\end{table}
-\end{filecontents*}
-
-
-\begin{filecontents*}{.datarecovery.tex}
-\begin{table*}[!tbp]\centering
-\caption{Data Recovery (percentage of original data remaining) of \approach vs
-lexical \ddmax and syntactic \ddmax. 
-The highest data recovery and lowest data loss are in bold.}
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
-\hline
- &  \multicolumn{5}{c|}{\textbf{\% Data Recovered by Approach}} \\
-&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{4}{c|}{\textbf{Data Format}}  \\
-\textbf{Techniques} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-\hline
-\textbf{Lexical \ddmax} & 81\%  & 85.8\% & 82.2\%   & 99.2\% & 47.7\% \\
-\textbf{Syntactic \ddmax} & 74\%  &  70.6\% & 81.5\%  & 97.0\% & 47.0\% \\
-\hline
-\textbf{\approach} & \textbf{91\%}  &  \textbf{85.9\%} & \textbf{98.5\%} & \textbf{100\%} & \textbf{82.1\%} \\
-\hline
-\textbf{Impr. over Lex. \ddmax} & 12\% &  0.1\%  & \textbf{19.8\%} & 1.4\% & \textbf{72.1\%} \\
-\textbf{Impr. over Syn. \ddmax} & \textbf{23\%}  &  \textbf{21.6\%}  & \textbf{20.8\%} & 3.7\% & \textbf{74.7\% }  \\
-\hline
-\end{tabular}
-\label{tab:datarecovery}
-\end{table*}
-
-
-\end{filecontents*}
-
-
-\begin{filecontents*}{inputdetails.tex}
-\begin{table}[!tbp]\centering
-\caption{Details of Invalid 
-Inputs}
-%\begin{tabular}{|l | r | r | r | r |}
-  \begin{tabular}{|p{4cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
-\hline
-&  \multicolumn{4}{c|}{\textbf{Number of Invalid Inputs}}  \\
-\textbf{Type of Invalid Inputs} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-\hline
-\textbf{Real-World Inputs} & 101 & 107 & 50 & 148 \\
-\textbf{Single Mutation} & 50 & 50 & 50 & 50 \\
-\textbf{Multiple Mutations} & 50 & 50 & 50 & 50 \\
-\hline
-\textbf{Total } (806) & 201 & 207 & 150 & 248 \\
-\hline
-\end{tabular}
-\label{tab:inputdetails}
-\end{table}
-\end{filecontents*}
-
-
-\begin{filecontents*}{subjectprograms.tex}
-\begin{table}[H]\centering
-\caption{Subject programs used in the evaluation}
-%\begin{tabular}{|l|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
-\begin{tabular}{|p{4cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
-%\begin{tabular}{|l | r | l | l | l | l |}
-\hline
-\textbf{} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
-\hline
-\textbf{LOC} & 382 & 3062 & 656& 375\\
-\textbf{Lang.} & C & C & C & C \\
-\textbf{1st Commit} & 2009 & 2009 & 2016 & 2011\\
-\textbf{Last Commit} & 2022 & 2022 & 2016 & 2018\\
-\hline
-\end{tabular}
-\label{tab:subjectprograms}
-\end{table}
-%\begin{table}[!tbp]\centering
-%\caption{Subject programs used in the evaluation}
-%\begin{tabular}{|l | r | l | l | l | l |}
-%\hline
-%\textbf{Name} & \textbf{LOC} & \textbf{Lang.} & \textbf{1{st} Commit} & \textbf{Last Commit} \\
-%\hline
-%\textbf{INI} & 382 & C & Jul 2009 & Jan 2022\\
-%\textbf{cJSON} & 3062 & C & Aug 2009 & Jan 2022\\
-%\textbf{SExpParser} & 656 & C & Sep 2016 & Sep 2016\\
-%\textbf{TinyC} & 375 & C & 2001 & Apr 2018\\
-%\hline
-%\end{tabular}
-%\label{tab:subjectprograms}
-%\end{table}
-\end{filecontents*}
 %--
 
 \begin{filecontents*}{ddmaxlimitations.tex}
@@ -665,6 +476,7 @@ data formats. We evaluate \drepair's performance against state-of-the-art
 techniques, including lexical and syntactic \ddmax, and ANTLR, using both 
 synthetic and real-world datasets.
 
+\todo{SEXP:Verify}
 Our results show that \drepair achieves 17\% more perfect repairs,
 delivers 1.7x higher-quality repairs, and recovers 23\% more valid data on
 average against the next best solution.
@@ -1573,15 +1385,50 @@ Answering this question allows us to evaluate the practicality of \drepair.
 
 
 \subsection{Subject Programs} %As subjects w
-\input{subjectprograms.tex}
-We used four data formats and their corresponding programs (\Cref{tab:subjectprograms}). These are INI (INI), JSON (cJSON), S-Expressions (SExpParser) and TinyC (TinyC). Each program is moderately large (between 375 LOC to 3062 LOC), relatively mature (6 to 21 years old), and written in \<C>.
+%\begin{filecontents*}{subjectprograms.tex}
+\begin{table}[H]\centering
+\caption{Subject programs used in the evaluation}
+\begin{tabular}{|p{4cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+\hline
+\textbf{} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
+\hline
+\textbf{LOC} & 382 & 3062 & 375\\
+\textbf{Lang.} & C & C & C \\
+\textbf{1st Commit} & 2009 & 2009 & 2011\\
+\textbf{Last Commit} & 2022 & 2022 & 2018\\
+\hline
+\end{tabular}
+\label{tab:subjectprograms}
+\end{table}
+%\end{filecontents*}
+
+We used three data formats and their corresponding programs (\Cref{tab:subjectprograms}). These are INI (INI), JSON (cJSON), and TinyC (TinyC). Each program is moderately large (between 300 LOC to 3000 LOC), relatively mature (7 to 14 years of development), and written in \<C>.
 
 \subsection{Test Data} 
-\input{inputdetails.tex}
+%\input{inputdetails.tex}
+%\begin{filecontents*}{inputdetails.tex}
+\begin{table}[!tbp]\centering
+\caption{Details of Corrupt Files}
+\begin{tabular}{|p{4cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+\hline
+&  \multicolumn{3}{c|}{\textbf{Number of Corrupt Files}}  \\
+\textbf{Type of Corrupt File} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
+\hline
+\textbf{Real-World Files} & 101 & 107 & 148 \\
+\textbf{Single Mutation} & 50 & 50    & 50 \\
+\textbf{Multiple Mutations} & 50 & 50 & 50 \\
+\hline
+\textbf{Total } (656) & 201 & 207    & 248 \\
+\hline
+\end{tabular}
+\label{tab:inputdetails}
+\end{table}
+%\end{filecontents*}
 
-We evaluate our approach using 806 corrupt files.
+% 806 - SExp  (150) = 656
+We evaluate our approach using 656 corrupt files.
 For our empirical-evaluation, we use one data-record per file. Hence, we use
-the terms \emph{file}, \emph{record}, and \emph{input} interchangeably in our evaluation.
+the terms \emph{file}, and \emph{record}, interchangeably in our evaluation.
 However, note that many real world formats can have multiple records per file.
 As test data, we crawled a large corpus of real-world files
 from GitHub~\cite{githubapi}, from which we identified corrupt files. 
@@ -1594,7 +1441,6 @@ Each mutation was randomly chosen to be either be a byte-flip, an insertion or a
 deletion to resemble real-world corruptions such as bit-rot on hard disks,
 transmission errors in network protocols, and human entry error.
 \Cref{tab:inputdetails} provides the details.
-%of the number of real-world corrupt data and artificially synthesized corrupt data employed in our experiment.
 
 \subsection{Baseline}
 In this work, we compare the performance of \drepair to the following
@@ -1658,8 +1504,56 @@ techniques on most inputs, and a longer timeout did not result in a
 significant increase in repairs for all techniques. Hence, we used four
 minutes as the timeout for repair.
 
-\input{.effectivenessnogrammar.tex}
-\input{.effectivenessgrammar.tex}
+%\input{.effectivenessnogrammar.tex}
+
+%\begin{filecontents*}{.effectivenessnogrammar.tex}
+\begin{table}[!tbp]
+\centering
+\caption{Number of repaired corrupt records for \textbf{format-agnostic} \dtask approaches.
+  The highest number of repaired inputs are in bold. The \textbf{Improvement} is the difference between \drepair and lexical \ddmax.}
+\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\hline
+&  \multicolumn{4}{c|}{\textbf{Number of Repaired Inputs}}  \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{3}{c|}{\textbf{Data Format}}  \\
+\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
+\hline
+\textbf{Baseline}   & 33 (4\%) & 27	 & 6 &	0\\
+\textbf{Lexical \ddmax} & 578 (72\%) & \textbf{201}  & 132  & 114  \\ 		
+\hline	
+\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & \textbf{154} \\
+\hline
+\textbf{Improvement} &  \textbf{8\%}  & $-$5\% & \textbf{20\%} & \textbf{35\%} \\
+\hline
+\end{tabular}
+\label{tab:effectivenessnogrammar}
+\end{table}
+%\end{filecontents*}
+
+%\begin{filecontents*}{.effectivenessgrammar.tex}
+\begin{table}[!tbp]
+\centering
+  \caption{Number of repaired corrupt records \textbf{data-format aware} repair approaches.
+  The highest number of repaired inputs are in bold. The \textbf{Improvement} is the difference between \drepair and syntactic \ddmax.
+  }
+\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\hline
+&  \multicolumn{4}{c|}{\textbf{Number of Repaired Inputs}}  \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{3}{c|}{\textbf{Data Format}}  \\
+\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
+\hline
+\textbf{ANTLR} & 344 (43\%) & 133 & 69 & 46   \\
+\textbf{Syntactic \ddmax} & 614 (76\%) & \textbf{201}  & 144  & 120  \\ 	
+\hline
+\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & \textbf{154} \\
+\hline
+  \textbf{Improvement} &  \textbf{2\%}  & $-$5\% & \textbf{10\%} & \textbf{28\%} \\
+\hline
+\end{tabular}
+\label{tab:effectivenessgrammar}
+\end{table}
+%\end{filecontents*}
+
+%\input{.effectivenessgrammar.tex}
 
 \section{Results}
 \label{sec:results}
@@ -1681,17 +1575,65 @@ For a balanced evaluation, we analyse a set of 480 invalid inputs
 that were completely repaired by all three approaches within the four minutes timeout.
 \Cref{tab:efficiency}
 reports the efficiency of all three approaches.
-\input{.datarepairquality.tex}
-\input{.efficiency.tex}
+%\begin{filecontents*}{.datarepairquality.tex}
+\begin{table}[!tbp]
+\caption{Repair effectiveness (Levenshtein distance) between corrupt data and repaired data. 
+The best data repair in bold.}
+\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\hline
+ &  \multicolumn{4}{c|}{\textbf{Average Repair Distance}}  \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} &   \multicolumn{3}{c|}{\textbf{Data Format}}  \\
+\textbf{Techniques} & \textbf{Average}  & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
+\hline
+\textbf{Lex. \ddmax} & 18.0 & {10.2} &  61.6 &  7.5 \\
+\textbf{Syn. \ddmax} & 119.6 &  258.1 & 82.7 &  33.3 \\
+\hline
+\textbf{\approach} & \textbf{10.6}  & \textbf{9.5} &  \textbf{28.7} & \textbf{1.6} \\
+\hline
+\textbf{Impr. over Lex. \ddmax} & \textbf{1.7$\times$} & \textbf{1.1$\times$} & \textbf{2.1$\times$} & \textbf{4.7$\times$} \\
+\textbf{Impr. over Syn. \ddmax} & \textbf{11.3$\times$} & \textbf{27.2$\times$} & \textbf{2.9$\times$} & \textbf{20.8$\times$} \\
+\hline
+\end{tabular}
+% \hline
+\label{tab:datarepairquality}
+\end{table}
+%\end{filecontents*}
+
+%\input{.datarepairquality.tex}
+%\input{.efficiency.tex}
+
+%\begin{filecontents*}{.efficiency.tex}
+\begin{table}[!tbp]\centering
+\caption{Efficiency of \approach vs. \ddmax, lowest runtime and smaller number of program runs %and significant \% improvement in efficiency
+are in \textbf{bold}. %, second-best time performance is in \textit{italics}
+}
+\begin{tabular}{|l |  r  r | r  r |}
+\hline
+&  \multicolumn{2}{c|}{\textbf{Runtime (s)}} & \multicolumn{2}{c|}{\textbf{\#Prog. Runs}}  \\
+\textbf{Techniques} %& \textbf{Inputs}
+&  \textbf{Avg.}  & \textbf{Total} & \textbf{Avg.}  & \textbf{Total} \\
+\hline
+\textbf{Lex. \ddmax} & 3.4 & 1653 & 3260 & 1564781 \\
+\textbf{Syn. \ddmax} & \textbf{2.0} & \textbf{982}  & \textbf{2075}  & \textbf{995802}  \\
+\hline
+\textbf{\approach} &  10.2 & 4938  & 11537 & 5537601  \\
+\hline
+\end{tabular}
+\label{tab:efficiency}
+\end{table}
+%\end{filecontents*}
+
+
+
 \begin{figure}[!tbp]\centering
 \centering
 \pgfplotstableread{
-Label      INI    cJSON    SExpParser   TinyC
-Basic   27     6        0            0
-ANTLR      133    69       96           46
-Lex.ddmax  201    132      131          114
-Syn.ddmax  201    144      149          120
-DRepair     191    158      121          154
+Label      INI    cJSON    TinyC
+Basic   27     6        0
+ANTLR      133    69       46
+Lex.ddmax  201    132      114
+Syn.ddmax  201    144      120
+DRepair     191    158     154
     }\effectivenessdata
 \begin{minipage}{.45\textwidth}
 \begin{tikzpicture}
@@ -1711,8 +1653,6 @@ DRepair     191    158      121          154
     \addlegendentry{INI}
     \addplot [fill=gray] table [y=cJSON, meta=Label, x expr=\coordindex] {\effectivenessdata};
     \addlegendentry{cJSON}
-    \addplot [fill=lightgray] table [y=SExpParser, meta=Label, x expr=\coordindex] {\effectivenessdata};
-    \addlegendentry{SExpParser}
     \addplot [fill=white,nodes near coords,point meta=y] table [y=TinyC, meta=Label, x expr=\coordindex] {\effectivenessdata};
     \addlegendentry{TinyC}
 \end{axis}
@@ -1823,7 +1763,33 @@ from 327 fully repaired files.
 \drepair achieved an average of 10.6 edits, which is \emph{1.7$\times$ fewer} than lexical \ddmax,
 which is the next best.
 
-\input{.datarecovery.tex}
+%\input{.datarecovery.tex}
+
+%\begin{filecontents*}{.datarecovery.tex}
+\begin{table*}[!tbp]\centering
+\caption{Data Recovery (percentage of original data remaining) of \approach vs
+lexical \ddmax and syntactic \ddmax. 
+The highest data recovery and lowest data loss are in bold.}
+\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\hline
+ &  \multicolumn{4}{c|}{\textbf{\% Data Recovered by Approach}} \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{3}{c|}{\textbf{Data Format}}  \\
+\textbf{Techniques} & \textbf{Average} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
+\hline
+\textbf{Lexical \ddmax} & 81\%  & 85.8\% & 82.2\%   & 47.7\% \\
+\textbf{Syntactic \ddmax} & 74\%  &  70.6\% & 81.5\%  & 47.0\% \\
+\hline
+\textbf{\approach} & \textbf{91\%}  &  \textbf{85.9\%} & \textbf{98.5\%} & \textbf{82.1\%} \\
+\hline
+\textbf{Impr. over Lex. \ddmax} & 12\% &  0.1\%  & \textbf{19.8\%} & \textbf{72.1\%} \\
+\textbf{Impr. over Syn. \ddmax} & \textbf{23\%}  &  \textbf{21.6\%}  & \textbf{20.8\%} & \textbf{74.7\% }  \\
+\hline
+\end{tabular}
+\label{tab:datarecovery}
+\end{table*}
+%\end{filecontents*}
+
+
 \noindent\emph{Data Recovery:}
 While edit-distance is a useful metric for evaluating repair quality,
 it overlooks a crucial aspect of data recovery: how much of the original
@@ -1894,20 +1860,17 @@ Although \drepair is slower than \ddmax, its average runtime of 10 seconds is
 still practical for \dtask.
 \end{result}
 
-
-
 \begin{table}[!tbp]\centering
 \caption{Number of \textit{perfectly} repaired files for \approach in comparison to \ddmax and \ddmaxg
 }
-%\begin{tabular}{|l |  r  r  r  r | r |}
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
 \hline
-\textbf{Techniques}&  \textbf{INI}&\textbf{cJSON} &\textbf{sExp}&\textbf{TinyC}&\textbf{Total}  \\
+\textbf{Techniques}&  \textbf{INI}&\textbf{cJSON} &\textbf{TinyC}&\textbf{Total}  \\
 \hline
-\textbf{Lex. \ddmax}  & 1 & 14 & 2 & 25 & 42 \\
-\textbf{Syn. \ddmaxg} & 0 & 0  & 0 & 0  & 0  \\
+\textbf{Lex. \ddmax}  & 1 & 14 & 25 & 42 \\
+\textbf{Syn. \ddmaxg} & 0 & 0  & 0  & 0  \\
 \hline
-\textbf{\approach} &  1 & 18  & 0 & 30 & 49  \\
+\textbf{\approach} &  1 & 18  & 30 & 49  \\
 \hline
 \end{tabular}
 \label{tab:perfectrepairs}
