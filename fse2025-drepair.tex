@@ -1822,24 +1822,24 @@ limiting \drepair repairs to \emph{deletions} at the cost of a smaller
 repertoire of repairs.
 
 
-How much does the \emph{insertion} operation matter? To evaluate that, let us
-consider
-
-\begin{table}[h]
-\centering
-\caption{Count of deletions from valid to repaired}
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
-\hline
-\textbf{Technique} & \textbf{INI} & \textbf{JSON} & \textbf{TinyC} & \textbf{Average} \\
-\hline
-Antlr & 256.18 & 126.58 & 0.24 & 127.67 \\
-Lex. \ddmax & 2.26 & 24.42 & 2.94 & 9.87 \\
-Syn. \ddmax & 262.90 & 183.02 & 11.38 & 152.43 \\
-\drepair & 0.44 & 4.44 & 0.62 & 1.83 \\
-\hline
-\end{tabular}
-\label{tab:delops}
-\end{table}
+% How much does the \emph{insertion} operation matter? To evaluate that, let us
+% consider
+% 
+% \begin{table}[h]
+% \centering
+% \caption{Count of deletions from valid to repaired}
+% \begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+% \hline
+% \textbf{Technique} & \textbf{INI} & \textbf{JSON} & \textbf{TinyC} & \textbf{Average} \\
+% \hline
+% Antlr & 256.18 & 126.58 & 0.24 & 127.67 \\
+% Lex. \ddmax & 2.26 & 24.42 & 2.94 & 9.87 \\
+% Syn. \ddmax & 262.90 & 183.02 & 11.38 & 152.43 \\
+% \drepair & 0.44 & 4.44 & 0.62 & 1.83 \\
+% \hline
+% \end{tabular}
+% \label{tab:delops}
+% \end{table}
 
 
 % %\begin{filecontents*}{.datarecovery.tex}
@@ -1864,13 +1864,12 @@ Syn. \ddmax & 262.90 & 183.02 & 11.38 & 152.43 \\
 % \end{table*}
 % %\end{filecontents*}
 
-
-The results indicate that \drepair recovered an average of 91\% of the input
-data, which is 23\% more than the best baseline competitor, lexical \ddmax.
-Across all input formats, \drepair recovered up to 75\% more data than both
-\ddmax variants.
-These findings demonstrate that \drepair is more effective at recovering valid
-data compared to both lexical and syntactic \ddmax.
+% The results indicate that \drepair recovered an average of 91\% of the input
+% data, which is 23\% more than the best baseline competitor, lexical \ddmax.
+% Across all input formats, \drepair recovered up to 75\% more data than both
+% \ddmax variants.
+% These findings demonstrate that \drepair is more effective at recovering valid
+% data compared to both lexical and syntactic \ddmax.
 
 % \begin{figure}[!tbp]
 % \centering
@@ -1902,7 +1901,7 @@ data compared to both lexical and syntactic \ddmax.
 
 %\input{.datarecovery.tex}
 
-\noindent\emph{Perfect repair:} While data recovery metrics offer some insight
+\noindent\textbf{Perfect repair.} While data recovery metrics offer some insight
 into the quality of repairs, the key question remains: does the repair fully and
 accurately restore the corrupted data?
 Since we introduced the corruptions synthetically, we can directly investigate
