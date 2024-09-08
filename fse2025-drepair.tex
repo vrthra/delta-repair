@@ -1527,7 +1527,7 @@ is available.
   \textbf{Impr. over Syn. \ddmax} &  \textbf{2\%}  & $-$5\% & \textbf{10\%} & \textbf{28\%} \\
 \hline
 \end{tabular}
-\label{tab:effectivenessgrammar}
+\label{tab:effectiveness}
 %\end{subtable}
 \end{table}
 %\end{filecontents*}
@@ -1577,10 +1577,10 @@ This section describes the findings of our empirical evaluation.
 
 \noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
 The repair effectiveness for format-agnostic (i.e., without the knowledge of specification)
-methods is tabulated in \Cref{tab:effectivenessnogrammar}.
+methods is tabulated in \Cref{tab:effectiveness}.
 For completeness, we also tabulate the repair effectiveness of \drepair against
 format aware methods (i.e., those that only work when the data-format specification is given)
-in \Cref{tab:effectivenessgrammar}.
+in \Cref{tab:effectiveness}.
 
 \noindent\textbf{RQ2: What is the average number of repair steps required for \dtask by \drepair?}
 The repair quality in terms of repairs required for the best repair-candidate is
@@ -1682,8 +1682,8 @@ DRepair     191    158     154
 \label{sec:discussion}
 \noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
 This experiment compares the number of files repaired by \drepair with both
-\emph{format-agnostic} (\Cref{tab:effectivenessnogrammar})
-and \emph{format-aware} (\Cref{tab:effectivenessgrammar}) techniques.
+\emph{format-agnostic}
+and \emph{format-aware}  techniques (\Cref{tab:effectiveness}).
 %In this experiment, we measure the total number of files repaired by \drepair in
 %comparison to both \emph{format-agnostic} 
 %and \emph{format-aware}  \dtask techniques. 
@@ -1723,7 +1723,7 @@ against lexical \ddmax and 28\% improvement over syntactic \ddmax.
 
 We note that \drepair outperforms even the \emph{format-aware} \dtask approaches
 in overall performance despite zero knowledge of the format
-(\Cref{tab:effectivenessgrammar}).
+(\Cref{tab:effectiveness}).
 
 \begin{figure}[!tbp]
 \centering
