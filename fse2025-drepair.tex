@@ -118,6 +118,7 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\usepackage{wrapfig}
 
 \usepackage{algorithm}
 %\usepackage{algorithmic}
@@ -1600,6 +1601,67 @@ minutes as the timeout for repair.
 % \Cref{tab:efficiency}
 % reports the efficiency of all three approaches.
 %\begin{filecontents*}{.datarepairquality.tex}
+
+\section{Results and Discussion}
+\label{sec:discussion}
+\noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
+% \noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
+% The repair effectiveness for \formatfree and \formatbased
+% methods on corrupt data records containing both real-world as well as
+% synthetically introduced corruption are tabulated in
+% \Cref{tab:effectiveness}.
+This experiment compares the number of files repaired by \drepair with both
+\emph{\formatfree} and \emph{\formatdependent}
+techniques. The results are tabulated in \Cref{tab:effectiveness}.
+%In this experiment, we measure the total number of files repaired by \drepair in
+%comparison to both \emph{\formatfree} 
+%and \emph{\formatdependent}  \dtask techniques. 
+%These results are visualized in \Cref{fig:effectiveness}.
+%\drepair is effective in repairing corrupt records. 
+Overall, \drepair repaired 77\% of corrupt data (624 out of 806).
+Notably, \drepair performed better than syntactic \ddmax (next best)
+for cJSON, and TinyC, while it performed slightly worse for SExp.
+Our analysis of SExp files
+highlights a limitation of \drepair---if the corruption does not trigger a parse
+error immediately, the effectiveness naive \drepair suffers.
+
+% \begin{figure}[!tbp]\centering
+% \centering
+% \pgfplotstableread{
+% Label      INI    cJSON    TinyC
+% Basic   27     6        0
+% ANTLR      133    69       46
+% Lex.ddmax  201    132      114
+% Syn.ddmax  201    144      120
+% DRepair     191    158     154
+%     }\effectivenessdata
+% \begin{minipage}{.45\textwidth}
+% \begin{tikzpicture}
+% \begin{axis}[
+%     ybar stacked,
+%     ymin=0,
+%     ymax=750,
+%     xtick=data,
+%     bar width=25,
+%     legend style={cells={anchor=west}, legend pos=north west},
+%     reverse legend=true,
+%     xticklabels from table={\effectivenessdata}{Label},
+%     xticklabel style={text width=2cm,align=center,font=\footnotesize},
+%     xtick style={draw=none},
+% ]
+%     \addplot [fill=darkgray] table [y=INI, meta=Label, x expr=\coordindex] {\effectivenessdata};
+%     \addlegendentry{INI}
+%     \addplot [fill=gray] table [y=cJSON, meta=Label, x expr=\coordindex] {\effectivenessdata};
+%     \addlegendentry{cJSON}
+%     \addplot [fill=white,nodes near coords,point meta=y] table [y=TinyC, meta=Label, x expr=\coordindex] {\effectivenessdata};
+%     \addlegendentry{TinyC}
+% \end{axis}
+% \end{tikzpicture}
+% \end{minipage}
+% \caption{Number of files repaired by each approach}
+% \label{fig:effectiveness}
+% \end{figure}
+
 \begin{table}[!tbp]
 \caption{Repair effectiveness (Levenshtein distance) between corrupt data and repaired data. 
 The best data repair in bold.}
@@ -1647,67 +1709,6 @@ are in \textbf{bold}. %, second-best time performance is in \textit{italics}
 %\end{filecontents*}
 
 
-
-
-\section{Results and Discussion}
-\label{sec:discussion}
-\noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
-% \noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
-% The repair effectiveness for \formatfree and \formatbased
-% methods on corrupt data records containing both real-world as well as
-% synthetically introduced corruption are tabulated in
-% \Cref{tab:effectiveness}.
-This experiment compares the number of files repaired by \drepair with both
-\emph{\formatfree} and \emph{\formatdependent}
-techniques. The results are tabulated in \Cref{tab:effectiveness}.
-%In this experiment, we measure the total number of files repaired by \drepair in
-%comparison to both \emph{\formatfree} 
-%and \emph{\formatdependent}  \dtask techniques. 
-These results are visualized in \Cref{fig:effectiveness}.
-%\drepair is effective in repairing corrupt records. 
-Overall, \drepair repaired 77\% of corrupt data (624 out of 806).
-Notably, \drepair performed better than syntactic \ddmax (next best)
-for cJSON, and TinyC, while it performed slightly worse for SExp.
-Our analysis of SExp files
-highlights a limitation of \drepair---if the corruption does not trigger a parse
-error immediately, the effectiveness naive \drepair suffers.
-
-\begin{figure}[!tbp]\centering
-\centering
-\pgfplotstableread{
-Label      INI    cJSON    TinyC
-Basic   27     6        0
-ANTLR      133    69       46
-Lex.ddmax  201    132      114
-Syn.ddmax  201    144      120
-DRepair     191    158     154
-    }\effectivenessdata
-\begin{minipage}{.45\textwidth}
-\begin{tikzpicture}
-\begin{axis}[
-    ybar stacked,
-    ymin=0,
-    ymax=750,
-    xtick=data,
-    bar width=25,
-    legend style={cells={anchor=west}, legend pos=north west},
-    reverse legend=true,
-    xticklabels from table={\effectivenessdata}{Label},
-    xticklabel style={text width=2cm,align=center,font=\footnotesize},
-    xtick style={draw=none},
-]
-    \addplot [fill=darkgray] table [y=INI, meta=Label, x expr=\coordindex] {\effectivenessdata};
-    \addlegendentry{INI}
-    \addplot [fill=gray] table [y=cJSON, meta=Label, x expr=\coordindex] {\effectivenessdata};
-    \addlegendentry{cJSON}
-    \addplot [fill=white,nodes near coords,point meta=y] table [y=TinyC, meta=Label, x expr=\coordindex] {\effectivenessdata};
-    \addlegendentry{TinyC}
-\end{axis}
-\end{tikzpicture}
-\end{minipage}
-\caption{Number of files repaired by each approach}
-\label{fig:effectiveness}
-\end{figure}
 
 
 For example, consider the SExp record \letterboxed{((()))}.
