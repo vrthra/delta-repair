@@ -1893,11 +1893,11 @@ We found that this is because the parsing process normalizes tokens such
 as whitespace, and otherwise ignores certain tokens. That is, serializing
 a parse tree does not reliably produce the original data record in many cases.
 
-We also analyzed files that were exclusively repaired by \drepair, \ddmax, or
-both, as illustrated in \Cref{fig:perfectlyrepairedvenndiagram}.
-The figure shows that 36 files were perfectly repaired by both \drepair and
-lexical \ddmax.
-Notably, \drepair repaired 2.17$\times$ more files than lexical \ddmax on its own.
+% We also analyzed files that were exclusively repaired by \drepair, \ddmax, or
+% both, as illustrated in \Cref{fig:perfectlyrepairedvenndiagram}.
+% The figure shows that 36 files were perfectly repaired by both \drepair and
+% lexical \ddmax.
+% Notably, \drepair repaired 2.17$\times$ more files than lexical \ddmax on its own.
 
 \begin{result}
 \drepair completed 17\% more perfect repairs than lexical \ddmax and
@@ -1936,37 +1936,37 @@ still practical for \dtask.
 \hline
 \textbf{Techniques}&  \textbf{INI}&\textbf{cJSON} &\textbf{TinyC}&\textbf{Total}  \\
 \hline
-\textbf{Lex. \ddmax}  & 1 & 14 & 25 & 42 \\
-\textbf{Syn. \ddmaxg} & 0 & 0  & 0  & 0  \\
+\textbf{Lex. \ddmax}  & 1 & 14 & 18 & 33 \\
+\textbf{Syn. \ddmaxg} & 0 & 1  & 0  & 1  \\
 \hline
-\textbf{\approach} &  1 & 18  & 30 & 49  \\
+\textbf{\approach} &  1 & 21  & 26 & 48  \\
 \hline
 \end{tabular}
 \label{tab:perfectrepairs}
 \end{table}
 
-\begin{figure}[!tbp]\centering
-\caption{\centering Venn Diagram showing the 
-%overlap of 
-files that were \textit{perfectly} repaired (\textit{solely}) by \approach,  \ddmax or both approaches. 
-}
-\centering
-\begin{minipage}[b]{0.45\textwidth}
-    \centering
-    \begin{tikzpicture}[circ/.style={draw=black,line width=1pt,fill=none,shape=circle,minimum width=2.0cm,minimum height=2.5cm},lbl/.style={font=\bfseries}]
-        \node[draw=none,minimum width=1.5cm,minimum height=1.29904cm,inner sep=0,outer sep=0] at (0,0) (anchor) {};
-        \node[circ] at (anchor.south west) (g1) {};
-        \node[circ] at (anchor.south east) (g2) {};
-        \node[lbl,anchor=north] at (g1.south) {\strut\ddmax};
-        \node[lbl,anchor=north] at (g2.south) {\strut\approach};
-        \node[lbl] at ($(g1)!0.5!(g2) - (0,.1)$) {36};
-        \node[lbl] at ($(g1.center) - (.2,.1)$) {6};
-        \node[lbl] at ($(g2.center) - (-.2,.1)$) {13};
-    \end{tikzpicture}
-\end{minipage}
-\vspace{-0.4cm}
-\label{fig:perfectlyrepairedvenndiagram}
-\end{figure}
+% \begin{figure}[!tbp]\centering
+% \caption{\centering Venn Diagram showing the 
+% %overlap of 
+% files that were \textit{perfectly} repaired (\textit{solely}) by \approach,  \ddmax or both approaches. 
+% }
+% \centering
+% \begin{minipage}[b]{0.45\textwidth}
+%     \centering
+%     \begin{tikzpicture}[circ/.style={draw=black,line width=1pt,fill=none,shape=circle,minimum width=2.0cm,minimum height=2.5cm},lbl/.style={font=\bfseries}]
+%         \node[draw=none,minimum width=1.5cm,minimum height=1.29904cm,inner sep=0,outer sep=0] at (0,0) (anchor) {};
+%         \node[circ] at (anchor.south west) (g1) {};
+%         \node[circ] at (anchor.south east) (g2) {};
+%         \node[lbl,anchor=north] at (g1.south) {\strut\ddmax};
+%         \node[lbl,anchor=north] at (g2.south) {\strut\approach};
+%         \node[lbl] at ($(g1)!0.5!(g2) - (0,.1)$) {36};
+%         \node[lbl] at ($(g1.center) - (.2,.1)$) {6};
+%         \node[lbl] at ($(g2.center) - (-.2,.1)$) {13};
+%     \end{tikzpicture}
+% \end{minipage}
+% \vspace{-0.4cm}
+% \label{fig:perfectlyrepairedvenndiagram}
+% \end{figure}
 %\end{comment}
 
 %\subsection{RQ5 Quality of Repaired Files}
