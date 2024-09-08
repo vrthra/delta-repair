@@ -673,8 +673,8 @@ The remainder of this paper is structured as follows:
 state-of-the-art input repair method (\ddmax).
 \Cref{sec:drepair}  
 describes the \drepair algorithm. We describe our research questions in
-\Cref{sec:evaluation}, and provide results in \Cref{sec:results}
-We further discuss the implications of this work in \Cref{sec:discussion},
+\Cref{sec:evaluation}.
+We discuss the results in \Cref{sec:discussion},
 related work in \Cref{sec:relatedwork}, and threats in \Cref{sec:threats}.
 Finally, we conclude this paper 
 with the discussion of future work in \Cref{sec:conclusion}. 
@@ -1573,26 +1573,27 @@ significant increase in repairs for all techniques. Hence, we used four
 minutes as the timeout for repair.
 
 
-\section{Results}
-\label{sec:results}
-This section describes the findings of our empirical evaluation.
-
-\noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
-The repair effectiveness for format-free
-and format-based
-methods are tabulated in \Cref{tab:effectiveness}, and compared against \drepair.
-
-\noindent\textbf{RQ2: What is the average number of repair steps required for \dtask by \drepair?}
-The repair quality in terms of repairs required for the best repair-candidate is
-tabulated in \Cref{tab:datarepairquality}. Note neither Basic nor ANTLR
-result in actual data-repair, but error-recovery. Hence, we only tabulate the
-repairs from \ddmax variants.
-
-\noindent\textbf{RQ3: How fast is \dtask compared to the state-of-the-art?}
-For a balanced evaluation, we analyse a set of 330 invalid inputs
-that were completely repaired by all three approaches within the four minutes timeout.
-\Cref{tab:efficiency}
-reports the efficiency of all three approaches.
+% \section{Results}
+% \label{sec:results}
+% This section describes the findings of our empirical evaluation.
+% 
+% \noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
+% The repair effectiveness for format-free and format-based
+% methods on corrupt data records containing both real-world as well as
+% synthetically introduced corruption are tabulated in
+% \Cref{tab:effectiveness}.
+% 
+% \noindent\textbf{RQ2: What is the average number of repair steps required for \dtask by \drepair?}
+% The repair quality in terms of repairs required for the best repair-candidate is
+% tabulated in \Cref{tab:datarepairquality}. Note neither Basic nor ANTLR
+% result in actual data-repair, but error-recovery. Hence, we only tabulate the
+% repairs from \ddmax variants.
+% 
+% \noindent\textbf{RQ3: How fast is \dtask compared to the state-of-the-art?}
+% For a balanced evaluation, we analyse a set of 330 invalid inputs
+% that were completely repaired by all three approaches within the four minutes timeout.
+% \Cref{tab:efficiency}
+% reports the efficiency of all three approaches.
 %\begin{filecontents*}{.datarepairquality.tex}
 \begin{table}[!tbp]
 \caption{Repair effectiveness (Levenshtein distance) between corrupt data and repaired data. 
@@ -1680,9 +1681,15 @@ DRepair     191    158     154
 \end{figure}
 
 
-\section{Discussion}
+\section{Results and Discussion}
 \label{sec:discussion}
 \noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
+% \noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
+% The repair effectiveness for format-free and format-based
+% methods on corrupt data records containing both real-world as well as
+% synthetically introduced corruption are tabulated in
+% \Cref{tab:effectiveness}.
+
 This experiment compares the number of files repaired by \drepair with both
 \emph{format-free}
 and \emph{format-dependent}  techniques (\Cref{tab:effectiveness}).
@@ -1774,6 +1781,12 @@ and 10\% of the inputs could only be repaired by \drepair.
 \end{result}
 
 \noindent\textbf{RQ2: What is the average number of repair steps required for \dtask by \drepair?}
+% \noindent\textbf{RQ2: What is the average number of repair steps required for \dtask by \drepair?}
+% The repair quality in terms of repairs required for the best repair-candidate is
+% tabulated in \Cref{tab:datarepairquality}. Note neither Basic nor ANTLR
+% result in actual data-repair, but error-recovery. Hence, we only tabulate the
+% repairs from \ddmax variants.
+%
 \Cref{tab:datarepairquality} presents the repair effectiveness of each technique.
 We calculated the Levenshtein distance between repaired and corrupt files
 from 327 fully repaired files.
@@ -1859,6 +1872,11 @@ repaired 2.17$\times$ as many files as lexical \ddmax exclusively.
 
 
 \noindent\textbf{RQ3: How fast is \dtask compared to the state-of-the-art?}
+% \noindent\textbf{RQ3: How fast is \dtask compared to the state-of-the-art?}
+% For a balanced evaluation, we analyse a set of 330 invalid inputs
+% that were completely repaired by all three approaches within the four minutes timeout.
+% \Cref{tab:efficiency}
+% reports the efficiency of all three approaches.
 The runtime of all three approaches is shown in \Cref{tab:efficiency}.
 Syntactic \ddmax is the fastest, with an average runtime of 2 seconds and
 requiring around 2000 program runs per repair.
