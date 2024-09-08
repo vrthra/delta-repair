@@ -1821,25 +1821,27 @@ enabling the extended \drepair at the cost of a much higher runtime or
 limiting \drepair repairs to \emph{deletions} at the cost of a smaller
 repertoire of repairs.
 
+Another key question is how much of the original data remains. This can
+be answered by counting how many \emph{delete} operations were used on average.
+This is given in \Cref{tab:delops}, which shows that \drepair achieves
+the minimal data loss, about 1.83 characters on average per repair. This
+is 5.4$\times$ fewer than the next best competitor Lexical \ddmax.
 
-% How much does the \emph{insertion} operation matter? To evaluate that, let us
-% consider
-% 
-% \begin{table}[h]
-% \centering
-% \caption{Count of deletions from valid to repaired}
-% \begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
-% \hline
-% \textbf{Technique} & \textbf{INI} & \textbf{JSON} & \textbf{TinyC} & \textbf{Average} \\
-% \hline
-% Antlr & 256.18 & 126.58 & 0.24 & 127.67 \\
-% Lex. \ddmax & 2.26 & 24.42 & 2.94 & 9.87 \\
-% Syn. \ddmax & 262.90 & 183.02 & 11.38 & 152.43 \\
-% \drepair & 0.44 & 4.44 & 0.62 & 1.83 \\
-% \hline
-% \end{tabular}
-% \label{tab:delops}
-% \end{table}
+\begin{table}[h]
+\centering
+\caption{Count of deletions from valid to repaired}
+\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\hline
+\textbf{Technique} & \textbf{INI} & \textbf{JSON} & \textbf{TinyC} & \textbf{Average} \\
+\hline
+Antlr & 256.18 & 126.58 & 0.24 & 127.67 \\
+Lex. \ddmax & 2.26 & 24.42 & 2.94 & 9.87 \\
+Syn. \ddmax & 262.90 & 183.02 & 11.38 & 152.43 \\
+\drepair & 0.44 & 4.44 & 0.62 & 1.83 \\
+\hline
+\end{tabular}
+\label{tab:delops}
+\end{table}
 
 
 % %\begin{filecontents*}{.datarecovery.tex}
