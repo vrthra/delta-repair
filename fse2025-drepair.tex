@@ -113,7 +113,7 @@
 %%
 %% end of the preamble, start of the body of the document source.
 
-
+\usepackage{subcaption}
 \usepackage{amsmath,amsfonts}
 \usepackage{graphicx}
 \usepackage{textcomp}
@@ -1467,6 +1467,57 @@ input to be accepted even under errors.
   input first. It operates on the parse tree. This was also described by Kirschner et al.~\cite{kirschner2020debugging}.
 
 \end{description}
+%\input{.effectivenessnogrammar.tex}
+
+%\begin{filecontents*}{.effectivenessnogrammar.tex}
+\begin{table}[!tbp]
+\centering
+  \caption{Repaired corrupt records. The \textbf{Improvement} is the difference between \drepair and \ddmax.}
+\begin{subtable}{\textwidth}
+\centering
+  \caption{For \textbf{format-agnostic} \dtask approaches.}
+\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\hline
+&  \multicolumn{4}{c|}{\textbf{Number of Repaired Inputs}}  \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{3}{c|}{\textbf{Data Format}}  \\
+\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
+\hline
+\textbf{Basic}   & 33 (4\%) & 27	 & 6 &	0\\
+\textbf{Lexical \ddmax} & 578 (72\%) & \textbf{201}  & 132  & 114  \\ 		
+\hline	
+\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & \textbf{154} \\
+\hline
+\textbf{Improvement} &  \textbf{8\%}  & $-$5\% & \textbf{20\%} & \textbf{35\%} \\
+\hline
+\end{tabular}
+\label{tab:effectivenessnogrammar}
+\end{subtable}
+\vspace{1cm}
+%\end{filecontents*}
+%\begin{filecontents*}{.effectivenessgrammar.tex}
+\begin{subtable}{\textwidth}
+\centering
+  \caption{For \textbf{data-format aware} repair approaches.}
+\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\hline
+&  \multicolumn{4}{c|}{\textbf{Number of Repaired Inputs}}  \\
+&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{3}{c|}{\textbf{Data Format}}  \\
+\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
+\hline
+\textbf{ANTLR} & 344 (43\%) & 133 & 69 & 46   \\
+\textbf{Syntactic \ddmax} & 614 (76\%) & \textbf{201}  & 144  & 120  \\ 	
+\hline
+\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & \textbf{154} \\
+\hline
+  \textbf{Improvement} &  \textbf{2\%}  & $-$5\% & \textbf{10\%} & \textbf{28\%} \\
+\hline
+\end{tabular}
+\label{tab:effectivenessgrammar}
+\end{subtable}
+\end{table}
+%\end{filecontents*}
+
+%\input{.effectivenessgrammar.tex}
 
 \begin{comment}
 \subsection{Metrics and Measures} We employ the following metrics and measures to evaluate repair quality: 
@@ -1504,56 +1555,6 @@ techniques on most inputs, and a longer timeout did not result in a
 significant increase in repairs for all techniques. Hence, we used four
 minutes as the timeout for repair.
 
-%\input{.effectivenessnogrammar.tex}
-
-%\begin{filecontents*}{.effectivenessnogrammar.tex}
-\begin{table}[!tbp]
-\centering
-\caption{Number of repaired corrupt records for \textbf{format-agnostic} \dtask approaches.
-  The highest number of repaired inputs are in bold. The \textbf{Improvement} is the difference between \drepair and lexical \ddmax.}
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
-\hline
-&  \multicolumn{4}{c|}{\textbf{Number of Repaired Inputs}}  \\
-&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{3}{c|}{\textbf{Data Format}}  \\
-\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
-\hline
-\textbf{Basic}   & 33 (4\%) & 27	 & 6 &	0\\
-\textbf{Lexical \ddmax} & 578 (72\%) & \textbf{201}  & 132  & 114  \\ 		
-\hline	
-\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & \textbf{154} \\
-\hline
-\textbf{Improvement} &  \textbf{8\%}  & $-$5\% & \textbf{20\%} & \textbf{35\%} \\
-\hline
-\end{tabular}
-\label{tab:effectivenessnogrammar}
-\end{table}
-%\end{filecontents*}
-
-%\begin{filecontents*}{.effectivenessgrammar.tex}
-\begin{table}[!tbp]
-\centering
-  \caption{Number of repaired corrupt records \textbf{data-format aware} repair approaches.
-  The highest number of repaired inputs are in bold. The \textbf{Improvement} is the difference between \drepair and syntactic \ddmax.
-  }
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
-\hline
-&  \multicolumn{4}{c|}{\textbf{Number of Repaired Inputs}}  \\
-&  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{3}{c|}{\textbf{Data Format}}  \\
-\textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
-\hline
-\textbf{ANTLR} & 344 (43\%) & 133 & 69 & 46   \\
-\textbf{Syntactic \ddmax} & 614 (76\%) & \textbf{201}  & 144  & 120  \\ 	
-\hline
-\textbf{\approach}  & \textbf{624} (\textbf{77\%}) & 191 & \textbf{158}  & \textbf{154} \\
-\hline
-  \textbf{Improvement} &  \textbf{2\%}  & $-$5\% & \textbf{10\%} & \textbf{28\%} \\
-\hline
-\end{tabular}
-\label{tab:effectivenessgrammar}
-\end{table}
-%\end{filecontents*}
-
-%\input{.effectivenessgrammar.tex}
 
 \section{Results}
 \label{sec:results}
