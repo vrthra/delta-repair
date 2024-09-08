@@ -1732,9 +1732,11 @@ To evaluate this, we start with the synthetically corrupted records.
 To ensure that we evaluate similar data, we choose single character
 corruptions.
 
-The edit distance between intact records and their repairs from the competing
-techniques are given in 
-\Cref{tab:invalidtorepaired}.
+The edit-distance between intact records and their repairs from the competing
+techniques are given in \Cref{tab:validtorepaired}. A related question 
+is how many repair steps it took to move from corrupt to corrected. This
+is given in \Cref{tab:invalidtorepaired}.
+
 % bRepair INI 							1	8.38	7.64	0.32	0.44	0.18
 % bRepair JSON							1	6.69	6.81	0.30	4.44	4.48
 % bRepair TinyC							1	0.96	1.42	0.16	0.62	0.94
@@ -1785,10 +1787,41 @@ Syn. \ddmax & 293.02 & 183.18 & 38.20 & 171.47 \\
 \label{tab:invalidtorepaired}
 \end{table}
 
-However, this may not be the whole story. We also capture the distance
-from corrupted to repaired in \Cref{tab:invalidtorepaired}
+As these two tables show, \drepair was able to repair the corruption with the
+minimal loss of data compared to the state-of-the-art.
 
-%To fully understand why this has happened,
+
+\begin{result}
+\drepair achieves significantly better repair quality, requiring 2$\times$
+fewer edits than its closest competitor, lexical \ddmax.
+Additionally, \drepair demonstrates a higher data recovery rate, recovering
+2.3$\times$ more data on average than its nearest competitor, lexical \ddmax.
+\end{result}
+
+We investigated why \drepair was unable to find the single
+character fix. We found that it was because the corruption did not immediately
+trigger a parse error. To illustrate,
+consider the JSON nested list \letterboxed{[[[]]]}.
+Introducing a quote--a possible corruption---can result in \letterboxed{[[["]]]}.
+However, \drepair is unable to correctly identify the error because
+feeding \letterboxed{[[["]]]} to the parser results in \Rincomplete.
+Hence, \drepair will attempt to fix this corruption by appending
+more characters to the record, which is not the minimum fix.
+%This induces the next problem:
+%Given \letterboxed{[[["]]]}, it now needs to generate three close
+%parenthesis before the parser returns \Rvalid.
+%Assuming say $n$ characters in the alphabet, and assuming
+% that any of the characters is a possible continuation, only one out of
+% $n^3$ repair threads would produce \letterboxed{)))} in the next three
+% insertions. Tracking these many repair threads affects the runtime of the
+% algorithm, and leads to a timeout.
+
+We note that, while this is a limitation, this can be worked around by
+enabling the extended \drepair at the cost of a much higher runtime or
+limiting \drepair repairs to \emph{deletions} at the cost of a smaller
+repertoire of repairs.
+
+
 How much does the \emph{insertion} operation matter? To evaluate that, let us
 consider
 
@@ -1800,9 +1833,9 @@ consider
 \textbf{Technique} & \textbf{INI} & \textbf{JSON} & \textbf{TinyC} & \textbf{Average} \\
 \hline
 Antlr & 256.18 & 126.58 & 0.24 & 127.67 \\
-DDMax & 2.26 & 24.42 & 2.94 & 9.87 \\
-DDMaxG & 262.90 & 183.02 & 11.38 & 152.43 \\
-bRepair & 0.44 & 4.44 & 0.62 & 1.83 \\
+Lex. \ddmax & 2.26 & 24.42 & 2.94 & 9.87 \\
+Syn. \ddmax & 262.90 & 183.02 & 11.38 & 152.43 \\
+\drepair & 0.44 & 4.44 & 0.62 & 1.83 \\
 \hline
 \end{tabular}
 \label{tab:delops}
@@ -1838,13 +1871,6 @@ Across all input formats, \drepair recovered up to 75\% more data than both
 \ddmax variants.
 These findings demonstrate that \drepair is more effective at recovering valid
 data compared to both lexical and syntactic \ddmax.
-
-\begin{result}
-\drepair achieves significantly better repair quality, requiring 1.7$\times$
-fewer edits than its closest competitor, lexical \ddmax.
-Additionally, \drepair demonstrates a higher data recovery rate, recovering 12\%
-more data on average than its nearest competitor.
-\end{result}
 
 % \begin{figure}[!tbp]
 % \centering
