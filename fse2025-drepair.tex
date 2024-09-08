@@ -470,7 +470,7 @@ implicitly defined by their parsers.
 
 In this paper, we introduce \drepair, a novel approach for automatic data 
 repair that does not require predefined format specifications. \drepair adopts 
-a format-agnostic strategy, relying solely on parser feedback, making it a 
+a format-free strategy, relying solely on parser feedback, making it a 
 versatile solution capable of repairing even ad-hoc or informally specified 
 data formats. We evaluate \drepair's performance against state-of-the-art 
 techniques, including lexical and syntactic \ddmax, and ANTLR, using both 
@@ -1448,7 +1448,7 @@ transmission errors in network protocols, and human entry error.
 In this work, we compare the performance of \drepair to several repair
 techniques as follows:\\
 
-\noindent{\textbf{Format-agnostic}.}
+\noindent{\textbf{Format-free}.}
 As \drepair does not require the format-specification to repair data, we
 need to compare it to similar techniques that do not require a
 format-specification. These are our baselines.
@@ -1460,20 +1460,20 @@ format-specification. These are our baselines.
   the data is made.
 
 \item[\textbf{(2) Lexical \ddmax:}] As the second baseline, we compare the
-  \emph{format-agnostic} lexical \ddmax described by Kirschner et al.~\cite{kirschner2020debugging}.
+  \emph{format-free} lexical \ddmax described by Kirschner et al.~\cite{kirschner2020debugging}.
     This is the previous state-of-the-art when compared to \drepair (which is
-    also format-agnostic).
+    also format-free).
 \end{description}
 
 
-\noindent{\textbf{Format-aware}.}
+\noindent{\textbf{Format-dependent}.}
 While \drepair is designed to use when the formal data-specification is not
 available, one may still ask. How does \drepair perform when compared to the
 data-format specification based techniques when such a formal specification
 is available.
 
 \begin{description}[wide]
-\item[\textbf{(3) ANTLR:}] We use ANTLR as the first baseline format-aware
+\item[\textbf{(3) ANTLR:}] We use ANTLR as the first baseline format-dependent
   technique for comparison. Note that this is just the number of invalid records
   which are repaired by ANTLR builtin error recovery strategy~\cite{parr2013definitive},
   allowing the input to be accepted even under errors. That is, there is no
@@ -1492,7 +1492,7 @@ is available.
   \caption{Repaired corrupt records. The \textbf{Improvement} is the difference between \drepair and \ddmax.}
 %\begin{subtable}{\textwidth}
 %\centering
-%  \caption{For \textbf{format-agnostic} \dtask approaches.}
+%  \caption{For \textbf{format-free} \dtask approaches.}
 \begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
 \hline
 &  \multicolumn{4}{c|}{\textbf{Number of Repaired Records}}  \\
@@ -1578,9 +1578,8 @@ minutes as the timeout for repair.
 This section describes the findings of our empirical evaluation.
 
 \noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
-The repair effectiveness for format-agnostic
-(i.e., without the knowledge of specification) and format-based
-(i.e., those that only work when the data-format specification is given)
+The repair effectiveness for format-free
+and format-based
 methods are tabulated in \Cref{tab:effectiveness}, and compared against \drepair.
 
 \noindent\textbf{RQ2: What is the average number of repair steps required for \dtask by \drepair?}
@@ -1685,11 +1684,11 @@ DRepair     191    158     154
 \label{sec:discussion}
 \noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
 This experiment compares the number of files repaired by \drepair with both
-\emph{format-agnostic}
-and \emph{format-aware}  techniques (\Cref{tab:effectiveness}).
+\emph{format-free}
+and \emph{format-dependent}  techniques (\Cref{tab:effectiveness}).
 %In this experiment, we measure the total number of files repaired by \drepair in
-%comparison to both \emph{format-agnostic} 
-%and \emph{format-aware}  \dtask techniques. 
+%comparison to both \emph{format-free} 
+%and \emph{format-dependent}  \dtask techniques. 
 These results are visualized in \Cref{fig:effectiveness}.
 %\drepair is effective in repairing corrupt records. 
 Overall, \drepair repaired 77\% of corrupt data (624 out of 806).
@@ -1724,7 +1723,7 @@ In cJSON and TinyC, however,
 \drepair performed much better than its competitors with up to 35\% improvement
 against lexical \ddmax and 28\% improvement over syntactic \ddmax.
 
-We note that \drepair outperforms even the \emph{format-aware} \dtask approaches
+We note that \drepair outperforms even the \emph{format-dependent} \dtask approaches
 in overall performance despite zero knowledge of the format
 (\Cref{tab:effectiveness}).
 
@@ -2024,7 +2023,7 @@ We have mitigated this threat by evaluating the amount of perfect repair accompl
 \section{Conclusion}
 \label{sec:conclusion}
 
-This paper presents \drepair, a novel format-agnostic \dtask approach that
+This paper presents \drepair, a novel format-free \dtask approach that
 leverages parse-failure feedback to repair corrupt data.
 
 Through extensive evaluation on both synthetic and real-world
