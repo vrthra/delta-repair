@@ -1753,11 +1753,15 @@ up to 35\% better than lexical \ddmax for TinyC.
 % tabulated in \Cref{tab:datarepairquality}. Note neither Basic nor ANTLR
 % result in actual data-repair, but error-recovery. Hence, we only tabulate the
 % repairs from \ddmax variants.
-\Cref{tab:datarepairquality} presents the repair effectiveness of each technique.
-We calculated the Levenshtein distance between repaired and corrupt files
-from 327 fully repaired files.
-\drepair achieved an average of 10.6 edits, which is \emph{1.7$\times$ fewer} than lexical \ddmax,
-which is the next best.
+To answer this question, we collected all corrupt data-records that could be
+successfully repaired. Next, for each pair, we computed the Levenshtein distance
+between the corrupt record and the repaired record. This is given in
+\Cref{tab:datarepairquality}.
+%\Cref{tab:datarepairquality} presents the repair effectiveness of each technique.
+%We calculated the Levenshtein distance between repaired and corrupt files
+%from 327 fully repaired files.
+\drepair achieved an average of 13.2 edits, which is \emph{2$\times$ fewer} than
+lexical \ddmax, which is the next best.
 
 %\input{.datarecovery.tex}
 
