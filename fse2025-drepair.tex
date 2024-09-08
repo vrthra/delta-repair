@@ -1442,30 +1442,45 @@ deletion to resemble real-world corruptions such as bit-rot on hard disks,
 transmission errors in network protocols, and human entry error.
 \Cref{tab:inputdetails} provides the details.
 
-\subsection{Baseline}
-In this work, we compare the performance of \drepair to the following
-techniques as baseline:
-\begin{description}[wide]
-\item[\textbf{(1) Basic:}] We leverage the built in
-  error correction in the subject programs.
-  That is, we look at the number of files that were accepted by a
-  subject program even though the file was corrupted.
+\subsection{Baseline Comparisons}
+In this work, we compare the performance of \drepair to several repair
+techniques as follows:\\
 
-\item[\textbf{(2) Lexical \ddmax:}] This is the language agnostic \ddmax described by Kirschner et al.~\cite{kirschner2020debugging}
+\noindent{\textbf{Format-agnostic}.}
+As \drepair does not require the format-specification to repair data, we
+need to compare it to similar techniques that do not require a
+format-specification. These are our baselines.
+\begin{description}[wide]
+\item[\textbf{(1) Basic:}]
+  We leverage the built in error correction in the subject programs as was 
+  used by Kirschner et al.~\cite{kirschner2020debugging} as an initial
+  baseline. Note that this is not a repair technique, as no correction to
+  the data is made.
+
+\item[\textbf{(2) Lexical \ddmax:}] As the second baseline, we compare the
+  \emph{format-agnostic} lexical \ddmax described by Kirschner et al.~\cite{kirschner2020debugging}.
+    This is the previous state-of-the-art when compared to \drepair (which is
+    also format-agnostic).
 \end{description}
 
-Beyond these format-agnostic repair methods, we also compare our approach to
-the following methods which require the data-format specification.
+
+\noindent{\textbf{Format-aware}.}
+While \drepair is designed to use when the formal data-specification is not
+available, one may still ask. How does \drepair perform when compared to the
+data-format specification based techniques when such a formal specification
+is available.
 
 \begin{description}[wide]
-\item[\textbf{(3) ANTLR:}] The number of invalid inputs which are repaired
-by ANTLR inbuilt error recovery strategy~\cite{parr2013definitive}, allowing the
-input to be accepted even under errors.
+\item[\textbf{(3) ANTLR:}] We use ANTLR as the first baseline format-aware
+  technique for comparison. Note that this is just the number of invalid records
+  which are repaired by ANTLR builtin error recovery strategy~\cite{parr2013definitive},
+  allowing the input to be accepted even under errors. That is, there is no
+  \emph{\dtask} performed.
 
-
-\item[\textbf{(4) Syntactic \ddmax:}] This version of \ddmax relies on a grammar which is used to parse the
-  input first. It operates on the parse tree. This was also described by Kirschner et al.~\cite{kirschner2020debugging}.
-
+\item[\textbf{(4) Syntactic \ddmax:}] The syntactic \ddmax uses the
+  grammar specification to parse the incoming data, and leverages the parse
+  tree thus obtained for data-repair.
+  This was also described by Kirschner et al.~\cite{kirschner2020debugging}.
 \end{description}
 %\input{.effectivenessnogrammar.tex}
 
