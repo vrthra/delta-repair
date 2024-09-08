@@ -1648,6 +1648,30 @@ are in \textbf{bold}. %, second-best time performance is in \textit{italics}
 
 
 
+
+\section{Results and Discussion}
+\label{sec:discussion}
+\noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
+% \noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
+% The repair effectiveness for \formatfree and \formatbased
+% methods on corrupt data records containing both real-world as well as
+% synthetically introduced corruption are tabulated in
+% \Cref{tab:effectiveness}.
+This experiment compares the number of files repaired by \drepair with both
+\emph{\formatfree} and \emph{\formatdependent}
+techniques. The results are tabulated in \Cref{tab:effectiveness}.
+%In this experiment, we measure the total number of files repaired by \drepair in
+%comparison to both \emph{\formatfree} 
+%and \emph{\formatdependent}  \dtask techniques. 
+These results are visualized in \Cref{fig:effectiveness}.
+%\drepair is effective in repairing corrupt records. 
+Overall, \drepair repaired 77\% of corrupt data (624 out of 806).
+Notably, \drepair performed better than syntactic \ddmax (next best)
+for cJSON, and TinyC, while it performed slightly worse for SExp.
+Our analysis of SExp files
+highlights a limitation of \drepair---if the corruption does not trigger a parse
+error immediately, the effectiveness naive \drepair suffers.
+
 \begin{figure}[!tbp]\centering
 \centering
 \pgfplotstableread{
@@ -1685,29 +1709,6 @@ DRepair     191    158     154
 \label{fig:effectiveness}
 \end{figure}
 
-
-\section{Results and Discussion}
-\label{sec:discussion}
-\noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
-% \noindent\textbf{RQ1: How many corrupt records can be repaired by \drepair?}
-% The repair effectiveness for \formatfree and \formatbased
-% methods on corrupt data records containing both real-world as well as
-% synthetically introduced corruption are tabulated in
-% \Cref{tab:effectiveness}.
-This experiment compares the number of files repaired by \drepair with both
-\emph{\formatfree}
-and \emph{\formatdependent}  techniques (\Cref{tab:effectiveness}).
-%In this experiment, we measure the total number of files repaired by \drepair in
-%comparison to both \emph{\formatfree} 
-%and \emph{\formatdependent}  \dtask techniques. 
-These results are visualized in \Cref{fig:effectiveness}.
-%\drepair is effective in repairing corrupt records. 
-Overall, \drepair repaired 77\% of corrupt data (624 out of 806).
-Notably, \drepair performed better than syntactic \ddmax (next best)
-for cJSON, and TinyC, while it performed slightly worse for SExp.
-Our analysis of SExp files
-highlights a limitation of \drepair---if the corruption does not trigger a parse
-error immediately, the effectiveness naive \drepair suffers.
 
 For example, consider the SExp record \letterboxed{((()))}.
 Introducing a quote--a possible corruption---can result in \letterboxed{(((')))}.
