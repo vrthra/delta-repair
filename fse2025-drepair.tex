@@ -234,7 +234,7 @@
 \newcommand{\approach}{\textsc{$\Delta$Repair}\xspace}
 \def\bfr{bFuzzerRepairer\xspace}
 \def\ddmin{DDMin\xspace}
-\newcommand{\ANTLR}{\textit{ANTLR}\xspace}
+\newcommand{\ANTLR}{ANTLR\xspace}
 \newcommand{\ddmax}{\textit{DDMax}\xspace}
 \newcommand{\ddmaxg}{\textit{DDmaxG}\xspace}
 \newcommand{\bsimple}{\textit{bsimple}\xspace}
@@ -1456,11 +1456,11 @@ mutation was obtained that resulted in parse-failure.
 &  \multicolumn{3}{c|}{\textbf{Number of Corrupt Files}}  \\
 \textbf{Type of Corrupt File} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
 \hline
-Real-World Files & 101 & 49 & 147 \\
+Real-World Files & 101 & 107 & 143 \\
 Synthetic Corruption & 50 & 50    & 50 \\
 %\textbf{Multiple Mutations} & 50 & 50 & 50 \\
 \hline
-\textbf{Total } (447) & 151 & 99    & 197 \\
+\textbf{Total } (501) & 151 & 157    & 193 \\
 \hline
 \end{tabular}
 \label{tab:inputdetails}
@@ -1582,14 +1582,14 @@ for cJSON, and TinyC, while it performed slightly worse for INI.
 \textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
 \hline
 % \textbf{Basic}   & 33 (5\%) & 27	 & 6 &	0\\
-% ANTLR & 248 (38\%) & 133 & 69 & 46   \\
-Lex. \ddmax & 297 (59\%) & \textbf{151}  & 82  & 64  \\ 		
-Syn. \ddmaxg & 315 (62\%) & \textbf{151}  & 94  & 70  \\ 	
-\approach  & \textbf{353} (\textbf{70\%}) & 141 & \textbf{108}  & \textbf{104} \\
+  \ANTLR & 87.8\% & 151 & 106 & 183   \\
+  Lex. \ddmax & 75.6\% & 151  & 138 & 90  \\
+  Syn. \ddmaxg & 68.4\% & 151  & 103  & 89  \\ 	
+\approach  & \textbf{100\%} & 151 & \textbf{157}  & \textbf{193} \\
 \hline
-Impr. over Lex. \ddmax &  11\%  & $-$6\% & 16.5\% & 20.2\% \\
+Impr. over Lex. \ddmax &  24.6\%  & 0\% & 12.1\% & 53.3\% \\
 % \hline
-Impr. over Syn. \ddmaxg &  7.5\%  & $-$6\% & 8.9\% & 17.1\% \\
+Impr. over Syn. \ddmaxg &  31.7.5\%  & 0\% & 34.3\% & 53.8\% \\
 \hline
 \end{tabular}
 \label{tab:effectiveness}
