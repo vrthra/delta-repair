@@ -482,9 +482,10 @@ data formats. We evaluate \drepair's performance against state-of-the-art
 techniques, including lexical and syntactic \ddmax, and ANTLR, using both 
 synthetic and real-world datasets.
 
-\todo{SEXP:Verify}
-Our results show that \drepair achieves 31\% more perfect repairs,
-delivers 2$\times$ higher-quality repairs, and recovers 2.3$\times$ more
+Our results show that \drepair achieves
+31\% more perfect repairs, % VERIFIEDA
+delivers 2$\times$ higher-quality repairs, % VERIFIEDB
+and recovers 5.4$\times$ more % VERIFIEDC
 intact data on average against the next best solution.
 Although slightly slower, with an average runtime of 10 seconds, \drepair
 provides a practical and highly effective solution, significantly
@@ -1713,8 +1714,9 @@ between the corrupt record and the repaired record. This is given in
 %\Cref{tab:datarepairquality} presents the repair effectiveness of each technique.
 %We calculated the Levenshtein distance between repaired and corrupt files
 %from 327 fully repaired files.
-\drepair achieved an average of 13.2 edits, which is \emph{2$\times$ fewer} than
-lexical \ddmax, which is the next best.
+\drepair achieved an average of 13.2 edits,
+which is \emph{2$\times$ fewer} than
+lexical \ddmax, which is the next best. % VERIFIEDB
 
 
 \noindent\textbf{Detailed Evaluation of Repair Quality:}
@@ -1795,7 +1797,7 @@ minimal loss of data compared to the state-of-the-art.
 \drepair achieves significantly better repair quality, requiring 2$\times$
 fewer edits than its closest competitor, lexical \ddmax.
 Additionally, \drepair demonstrates a higher data recovery rate, recovering
-2.3$\times$ more data on average than its nearest competitor, lexical \ddmax.
+5.4$\times$ more data on average than its nearest competitor, lexical \ddmax.
 \end{result}
 
 We investigated why \drepair was unable to find the single
@@ -1932,6 +1934,7 @@ This experiment used only synthetically corrupted records.
 
 As shown in in \Cref{tab:perfectrepairs},
 \drepair achieved 31\% more perfect repairs than lexical \ddmax.
+%VERIFIEDA
 
 % We also analyzed files that were exclusively repaired by \drepair, \ddmax, or
 % both, as illustrated in \Cref{fig:perfectlyrepairedvenndiagram}.
@@ -2128,9 +2131,9 @@ Through extensive evaluation on both synthetic and real-world
 datasets, we demonstrated that \drepair achieves significantly higher repair
 quality and data recovery rates compared to state-of-the-art techniques,
 including lexical and syntactic \ddmax and ANTLR. Specifically, \drepair
-delivered 17\% more perfect repairs,
-1.7x higher-quality repairs,
-and recovered 23\% more valid data on average.
+delivered 31\% more perfect repairs, % VERIFIEDA
+2$\times$ higher-quality repairs, % VERIFIEDB
+and recovered 5.4\% more valid data on average. % VERIFIEDC
 
 While \drepair requires slightly more time to complete repairs, with an average
 runtime of about 10 seconds per repair, this is a practical trade-off given the
