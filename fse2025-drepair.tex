@@ -234,6 +234,7 @@
 \newcommand{\approach}{\textsc{$\Delta$Repair}\xspace}
 \def\bfr{bFuzzerRepairer\xspace}
 \def\ddmin{DDMin\xspace}
+\newcommand{\ANTLR}{\textit{ANTLR}\xspace}
 \newcommand{\ddmax}{\textit{DDMax}\xspace}
 \newcommand{\ddmaxg}{\textit{DDmaxG}\xspace}
 \newcommand{\bsimple}{\textit{bsimple}\xspace}
@@ -478,9 +479,9 @@ In this paper, we introduce \drepair, a novel approach for automatic data
 repair that does not require predefined format specifications. \drepair adopts 
 a \formatfree strategy, relying solely on parser feedback, making it a 
 versatile solution capable of repairing even ad-hoc or informally specified 
-data formats. We evaluate \drepair's performance against state-of-the-art 
-techniques, including lexical and syntactic \ddmax, and ANTLR, using both 
-synthetic and real-world datasets.
+data formats. We evaluate \drepair's performance against the state-of-the-art 
+lexical and syntactic \ddmax techniques, using both synthetic and real-world
+datasets.
 
 Our results show that \drepair achieves
 31\% more perfect repairs, % VERIFIEDA
@@ -1473,18 +1474,17 @@ techniques as follows:\\
 \noindent{\textbf{\Formatfree}.}
 As \drepair does not require the format-specification to repair data, we
 need to compare it to similar techniques that do not require a
-format-specification. These are our baselines.
+format-specification.
 \begin{description}[wide]
-\item[\textbf{(1) Basic:}]
-  We leverage the built in error correction in the subject programs as was 
-  used by Kirschner et al.~\cite{kirschner2020debugging} as an initial
-  baseline. Note that this is not a repair technique, as no correction to
-  the data is made.
+%\item[\textbf{(1) Basic:}]
+%  We leverage the built in error correction in the subject programs as was 
+%  used by Kirschner et al.~\cite{kirschner2020debugging} as an initial
+%  baseline. Note that this is not a repair technique, as no correction to
+%  the data is made.
 
-\item[\textbf{(2) Lexical \ddmax:}] As the second baseline, we compare the
-  \emph{\formatfree} lexical \ddmax described by Kirschner et al.~\cite{kirschner2020debugging}.
-    This is the previous state-of-the-art when compared to \drepair (which is
-    also \formatfree).
+\item[\textbf{(1) Lexical \ddmax:}] Lexical \ddmax Kirschner et al.~\cite{kirschner2020debugging}
+  is the only option when it comes to \formatfree \dtask. Hence, this is
+  both the baseline and the state-of-the-art.
 \end{description}
 
 
@@ -1495,13 +1495,13 @@ data-format specification based techniques when such a formal specification
 is available.
 
 \begin{description}[wide]
-\item[\textbf{(3) ANTLR:}] We use ANTLR as the first baseline \formatdependent
-  technique for comparison. Note that this is just the number of invalid records
-  which are repaired by ANTLR builtin error recovery strategy~\cite{parr2013definitive},
-  allowing the input to be accepted even under errors. That is, there is no
-  \emph{\dtask} performed.
+% \item[\textbf{(2) ANTLR:}] We use ANTLR as the first baseline \formatdependent
+%   technique for comparison. Note that this is just the number of invalid records
+%   which are repaired by ANTLR builtin error recovery strategy~\cite{parr2013definitive},
+%   allowing the input to be accepted even under errors. That is, there is no
+%   \emph{\dtask} performed.
 
-\item[\textbf{(4) Syntactic \ddmax:}] The syntactic \ddmax uses the
+\item[\textbf{(2) Syntactic \ddmax:}] The syntactic \ddmaxg uses the
   grammar specification to parse the incoming data, and leverages the parse
   tree thus obtained for data-repair.
   This was also described by Kirschner et al.~\cite{kirschner2020debugging}.
@@ -1552,14 +1552,14 @@ minutes as the timeout for repair.
 % synthetically introduced corruption are tabulated in
 % \Cref{tab:effectiveness}.
 This experiment compares the number of files repaired by \drepair with both
-\emph{\formatfree} and \emph{\formatdependent}
-techniques. The results are tabulated in \Cref{tab:effectiveness}.
+lexical \ddmax and syntactic \ddmaxg techniques.
+The results are tabulated in \Cref{tab:effectiveness}.
 %In this experiment, we measure the total number of files repaired by \drepair in
 %comparison to both \emph{\formatfree} 
 %and \emph{\formatdependent}  \dtask techniques. 
 %These results are visualized in \Cref{fig:effectiveness}.
 %\drepair is effective in repairing corrupt records. 
-Overall, \drepair repaired 77\% of corrupt data (503 out of 656). % VERIFY
+Overall, \drepair repaired 70\% of corrupt data (353 out of 506). % VERIFY
 Notably, \drepair performed better than syntactic \ddmax (next best)
 for cJSON, and TinyC, while it performed slightly worse for INI.
 %Our analysis of INI repaired files highlights a limitation of
@@ -1581,17 +1581,15 @@ for cJSON, and TinyC, while it performed slightly worse for INI.
 &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{3}{c|}{\textbf{Data Format}}  \\
 \textbf{Techniques} & \textbf{Total} \textbf{(\%)} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
 \hline
-\textbf{Basic}   & 33 (5\%) & 27	 & 6 &	0\\
-\textbf{Lexical \ddmax} & 447 (68\%) & \textbf{201}  & 132  & 114  \\ 		
+% \textbf{Basic}   & 33 (5\%) & 27	 & 6 &	0\\
+% ANTLR & 248 (38\%) & 133 & 69 & 46   \\
+Lex. \ddmax & 297 (59\%) & \textbf{151}  & 82  & 64  \\ 		
+Syn. \ddmaxg & 315 (62\%) & \textbf{151}  & 94  & 70  \\ 	
+\approach  & \textbf{353} (\textbf{70\%}) & 141 & \textbf{108}  & \textbf{104} \\
 \hline
-\textbf{ANTLR} & 248 (38\%) & 133 & 69 & 46   \\
-\textbf{Syntactic \ddmax} & 465 (71\%) & \textbf{201}  & 144  & 120  \\ 	
-\hline
-\textbf{\approach}  & \textbf{503} (\textbf{77\%}) & 191 & \textbf{158}  & \textbf{154} \\
-\hline
- \textbf{Impr. over Lex. \ddmax} &  \textbf{9\%}  & $-$5\% & \textbf{20\%} & \textbf{35\%} \\
+Impr. over Lex. \ddmax &  11\%  & $-$6\% & 16.5\% & 20.2\% \\
 % \hline
-  \textbf{Impr. over Syn. \ddmax} &  \textbf{6\%}  & $-$5\% & \textbf{10\%} & \textbf{28\%} \\
+Impr. over Syn. \ddmaxg &  7.5\%  & $-$6\% & 8.9\% & 17.1\% \\
 \hline
 \end{tabular}
 \label{tab:effectiveness}
@@ -1648,7 +1646,7 @@ for cJSON, and TinyC, while it performed slightly worse for INI.
 \textbf{Techniques} & \textbf{Average}  & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
 \hline
 \textbf{Lex. \ddmax} & 26.4 & {10.2} &  61.6 &  7.5 \\
-\textbf{Syn. \ddmax} & 124.7 &  258.1 & 82.7 &  33.3 \\
+\textbf{Syn. \ddmaxg} & 124.7 &  258.1 & 82.7 &  33.3 \\
 \hline
 \textbf{\approach} & \textbf{13.2}  & \textbf{9.5} &  \textbf{28.7} & \textbf{1.6} \\
 \hline
@@ -1771,7 +1769,7 @@ is given in \Cref{tab:invalidtorepaired}.
 \hline
 \textbf{Techniques} & \textbf{INI} & \textbf{JSON} & \textbf{TinyC} & \textbf{Average} \\
 \hline
-Antlr & 287.66 & 127.22 & 40.48 & 151.79 \\
+\ANTLR & 287.66 & 127.22 & 40.48 & 151.79 \\
 Lex. \ddmax & 9.12 & 24.74 & 2.94 & 12.27 \\
 Syn. \ddmax & 293.24 & 183.08 & 38.12 & 171.48 \\
 \drepair & 8.38 & 6.69 & 0.96 & 5.34 \\
@@ -1788,7 +1786,7 @@ Syn. \ddmax & 293.24 & 183.08 & 38.12 & 171.48 \\
 \hline
 \textbf{Techniques} & \textbf{INI} & \textbf{JSON} & \textbf{TinyC} & \textbf{Average} \\
 \hline
-Antlr & 287.26 & 127.30 & 40.44 & 151.67 \\
+\ANTLR & 287.26 & 127.30 & 40.44 & 151.67 \\
 Lex. \ddmax & 8.48 & 24.52 & 3.16 & 12.05 \\
 Syn. \ddmax & 293.02 & 183.18 & 38.20 & 171.47 \\
 \drepair & 7.64 & 6.81 & 1.42 & 5.29 \\
@@ -1844,7 +1842,7 @@ is 5.4$\times$ fewer than the next best competitor Lexical \ddmax.
 \hline
 \textbf{Technique} & \textbf{INI} & \textbf{JSON} & \textbf{TinyC} & \textbf{Average} \\
 \hline
-Antlr & 256.18 & 126.58 & 0.24 & 127.67 \\
+\ANTLR & 256.18 & 126.58 & 0.24 & 127.67 \\
 Lex. \ddmax & 2.26 & 24.42 & 2.94 & 9.87 \\
 Syn. \ddmax & 262.90 & 183.02 & 11.38 & 152.43 \\
 \drepair & 0.44 & 4.44 & 0.62 & 1.83 \\
@@ -1930,9 +1928,9 @@ This experiment used only synthetically corrupted records.
 \hline
 \textbf{Techniques}&  \textbf{INI}&\textbf{cJSON} &\textbf{TinyC}&\textbf{Total}  \\
 \hline
-\textbf{Antlr}  & 0 & 21 & 0 & 21 \\
-\textbf{Lex. \ddmax}  & 1 & 14 & 18 & 33 \\
-\textbf{Syn. \ddmaxg} & 0 & 1  & 0  & 1  \\
+ANTLR  & 0 & 21 & 0 & 21 \\
+Lex. \ddmax  & 1 & 14 & 18 & 33 \\
+Syn. \ddmaxg & 0 & 1  & 0  & 1  \\
 \hline
 \textbf{\approach} &  1 & 21  & 26 & 48  \\
 \hline
