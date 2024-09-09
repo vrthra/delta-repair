@@ -667,7 +667,7 @@ the state-of-the-art language-agnostic \ddmax algorithm, which can result in sig
 \emph{empty passing configuration} and \emph{valid waypoints} constraints in \ddmax by leveraging parse-failure feedback.
 \item \textbf{Universal Data Repair.}
 We demonstrate effective \dtask using both deletions and insertions.
-\item \textbf{Empirical Evaluation.} We evaluate \drepair using 656 (real-world) nonconforming
+\item \textbf{Empirical Evaluation.} We evaluate \drepair using 506 (real-world) nonconforming
 records belonging to four well-known input formats (e.g., cJSON and TinyC). 
 Our results show that in comparison to \ddmax,
 \drepair delivers 31\% more perfect repairs, % VERIFIEDA
@@ -1420,8 +1420,9 @@ We used three data formats and their corresponding programs (\Cref{tab:subjectpr
 
 \subsection{Test Data} 
 
-% 806 - SExp  (150) = 656
-We evaluate our approach using 656 corrupt files.
+% 806 - SExp  (150) = 656 - 150 = 506
+We evaluate our approach using 506 corrupt files, which were verified to be
+rejected by the respective subject programs.
 For our empirical-evaluation, we use one data-record per file. Hence, we use
 the terms \emph{file}, and \emph{record}, interchangeably in our evaluation.
 However, note that many real world formats can have multiple records per file.
@@ -1430,13 +1431,19 @@ from GitHub~\cite{githubapi}, from which we identified corrupt files.
 
 While the real-world corrupted data provides a useful metric for comparison,
 we do not know what the intact (non-corrupt) data should be. Hence,
-for each format, we also introduced a set of 100 artificially corrupted
-files from 50 randomly selected valid real-world files.
-Half of these corrupted files contain a single mutated byte and the other half
-contains multiple (2 to 16) mutated bytes.
-Each mutation was randomly chosen to be either be a byte-flip, an insertion or a
-deletion to resemble real-world corruptions such as bit-rot on hard disks,
-transmission errors in network protocols, and human entry error.
+for each format, we selected 50 files for synthetic data corruption. On each,
+we introduced a simple corruption (one character change) that induced a
+parse failure from the respective subject program. The location of each 
+such mutation was randomly chosen. Then, the operation was randomly chosen
+from (1) deletion, (2) substitution and (3) insertion. If the mutation
+chosen was substitution or insertion, the character to be inserted was
+also chosen randomly. It was then checked to see if it would introduce
+a parse failure. If no parse failure was observed, a different mutation
+was attempted on the intact file until a corrupted file with a single
+mutation was obtained that resulted in parse-failure.
+
+% to resemble real-world corruptions such as bit-rot on hard disks,
+% transmission errors in network protocols, and human entry error.
 \Cref{tab:inputdetails} provides the details.
 
 %\input{inputdetails.tex}
@@ -1449,10 +1456,10 @@ transmission errors in network protocols, and human entry error.
 \textbf{Type of Corrupt File} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
 \hline
 \textbf{Real-World Files} & 101 & 107 & 148 \\
-\textbf{Single Mutation} & 50 & 50    & 50 \\
-\textbf{Multiple Mutations} & 50 & 50 & 50 \\
+\textbf{Synthetic Corruption} & 50 & 50    & 50 \\
+%\textbf{Multiple Mutations} & 50 & 50 & 50 \\
 \hline
-\textbf{Total } (656) & 201 & 207    & 248 \\
+\textbf{Total } (506) & 151 & 157    & 198 \\
 \hline
 \end{tabular}
 \label{tab:inputdetails}
@@ -1552,7 +1559,7 @@ techniques. The results are tabulated in \Cref{tab:effectiveness}.
 %and \emph{\formatdependent}  \dtask techniques. 
 %These results are visualized in \Cref{fig:effectiveness}.
 %\drepair is effective in repairing corrupt records. 
-Overall, \drepair repaired 77\% of corrupt data (503 out of 656).
+Overall, \drepair repaired 77\% of corrupt data (503 out of 656). % VERIFY
 Notably, \drepair performed better than syntactic \ddmax (next best)
 for cJSON, and TinyC, while it performed slightly worse for INI.
 %Our analysis of INI repaired files highlights a limitation of
