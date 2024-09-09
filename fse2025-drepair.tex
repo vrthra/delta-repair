@@ -669,9 +669,10 @@ the state-of-the-art language-agnostic \ddmax algorithm, which can result in sig
 We demonstrate effective \dtask using both deletions and insertions.
 \item \textbf{Empirical Evaluation.} We evaluate \drepair using 656 (real-world) nonconforming
 records belonging to four well-known input formats (e.g., cJSON and TinyC). 
-Our results show that
-\textit{\drepair has a high (91\%) data recovery rate}. 
-It is up to 35\% more effective than \ddmax.
+Our results show that in comparison to \ddmax,
+\drepair delivers 31\% more perfect repairs, % VERIFIEDA
+delivers 2$\times$ higher-quality repairs,  % VERIFIEDB
+and recovers 5.4$\times$ more data from intact records.   % VERIFIEDC
 
 \end{itemize}
 
