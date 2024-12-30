@@ -1,1 +1,1 @@
-hx ease2025-drepair.tex
+env TERM=xterm vim ease2025-drepair.tex

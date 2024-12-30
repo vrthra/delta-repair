@@ -1157,12 +1157,12 @@ repair the string. It has the following steps:
 % \newcommand{\refnumber}[1]{\hyperref[fig:brepair_flowchart]{Step~#1}}
 
 \begin{algorithm}[t]
-%  \footnotesize
+%\footnotesize
 \caption{Boundary search for \drepair}
 \label{alg:bsearch}
 \begin{algorithmic}[1]
 
-  \Function{BoundarySearch}{array, parser, left=0}
+  \Function{BSearch}{array, parser, left=0}
     \State bound $\gets$ \Call{len}{array}
 
     \State right $\gets$ left + 1
@@ -1220,30 +1220,33 @@ treated same as \Rincomplete if the remaining-suffix is non-empty.
 \end{enumerate}
 
 \begin{algorithm}[t]
-  %\footnotesize
+%\footnotesize
 \caption{\drepair Algorithm}
 \label{alg:drepair}
 \begin{algorithmic}[1]
 
 \Function{DRepair}{string, parser}
-    \State boundary $\gets$ \Call{BoundarySearch}{string, parser}
+    \State bndry $\gets$ \Call{BSearch}{string, parser}
     \State pq $\gets$ \Call{PriorityQueue}{}
-    \State \Call{add}{pq, (string, boundary, $\emptyset$)}
+    \State \Call{add}{pq, (string, bndry, $\emptyset$)}
 
     \While{pq $ \neq \emptyset $ }
-        \State (string, boundary, fixes) $\gets$ \Call{top}{pq}
-        \State deletes $\gets$ \{(boundary, $\emptyset$)\}
-        \State inserts $\gets$ \{(boundary, c) $\,|\, c \in \alpha,$ \Call{parser}{string[:boundary]+c} $\in$ \{ \Rincomplete, \Rvalid \}\}
+        \State (string, bndry, fixes) $\gets$ \Call{top}{pq}
+        \State deletes $\gets$ \{(bndry, $\emptyset$)\}
+        \State inserts $\gets$ \{(bndry, c) $\,|\, c \in \alpha,$ 
+        \State \,\, \Call{parser}{string[:bndry]+c} $\in$ \{ \Rincomplete, \Rvalid \}\}
 
         \For{fix \textbf{in} deletes $\cup$ inserts}
-            \State new\_string $\gets$ \Call{ApplyFixes}{string, fixes + [fix]}
-            \State new\_boundary $\gets$ \Call{BoundarySearch}{new\_string, parser, boundary}
+            \State new\_str $\gets$ \Call{ApplyFixes}{string, fixes + [fix]}
+            \State new\_bndry $\gets$ \Call{BSearch}{new\_str, parser, bndry}
 
-            \If{\Call{parser}{new\_string[:new\_boundary]} $=$ \Rvalid $\wedge$ string[new\_boundary:] $=\emptyset$ }
-                \State \Return new\_string
+            \If{\Call{parser}{new\_str[:new\_bndry]} $=$ \Rvalid }
+              \If{ string[new\_bndry:] $=\emptyset$ }
+                \State \Return new\_str
+              \EndIf
             \EndIf
 
-            \State \Call{add}{pq, (string, new\_boundary, fixes + [fix])}
+            \State \Call{add}{pq, (string, new\_bndry, fixes + [fix])}
         \EndFor
     \EndWhile
     \State \Return $\emptyset$
@@ -1459,6 +1462,7 @@ Answering this question allows us to evaluate the practicality of \drepair.
 \subsection{Subject Programs} %As subjects w
 %\begin{filecontents*}{subjectprograms.tex}
 \begin{table}[!tbp]\centering
+  \footnotesize
 \caption{Subject programs used in the evaluation}
 \begin{tabular}{|p{4cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
 \hline
