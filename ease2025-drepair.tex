@@ -112,6 +112,7 @@
 %%
 %% end of the preamble, start of the body of the document source.
 
+\usepackage{libertine}
 \usepackage{subcaption}
 \usepackage{amsmath,amsfonts}
 \usepackage{graphicx}
@@ -271,6 +272,33 @@ pics/numbering/.style args={#1}{code={
 \definecolor{light-gray}{gray}{0.77}
 \makeatletter
 
+
+\newcommand\letterboxedDDRepair[1]{%
+\textcolor{blue}{%
+\setlength{\fboxsep}{0pt}%
+  \@tfor\@ii:=#1\do{%
+    \fcolorbox{light-gray}{white}%
+    %\uline
+    %\uline
+    {\texttt{\strut\@ii}}%
+  }%
+}%
+}
+
+
+
+\newcommand\letterboxedDDMax[1]{%
+\textcolor{red}{%
+\setlength{\fboxsep}{0pt}%
+  \@tfor\@ii:=#1\do{%
+    \fcolorbox{light-gray}{white}%
+    %\uline
+    %\uline
+    {\texttt{\strut\@ii}}%
+  }%
+}%
+}
+
 \newcommand\letterboxed[1]{%
 \setlength{\fboxsep}{0pt}%
   \@tfor\@ii:=#1\do{%
@@ -287,11 +315,30 @@ pics/numbering/.style args={#1}{code={
   }%
 }
 
+\newcommand\letterboxedinTableDDMax[1]{%
+\textcolor{red}{%
+\setlength{\fboxsep}{0pt}%
+  \@tfor\@ii:=#1\do{%
+    \fcolorbox{light-gray}{white}{\texttt{\strut\@ii}}%
+  }%
+}%
+}
+
+
+\newcommand\letterboxedinTableDDRepair[1]{%
+\textcolor{blue}{%
+\setlength{\fboxsep}{0pt}%
+  \@tfor\@ii:=#1\do{%
+    \fcolorbox{light-gray}{white}{\texttt{\strut\@ii}}%
+  }%
+}%
+}
+
 
 \newcommand\letterboxedinTable[1]{%
 \setlength{\fboxsep}{0pt}%
   \@tfor\@ii:=#1\do{%
-    \fcolorbox{light-gray}{white}{\tiny \texttt{\strut\@ii}}%
+    \fcolorbox{light-gray}{white}{\texttt{\strut\@ii}}%
   }%
 }
 
@@ -320,26 +367,26 @@ pics/numbering/.style args={#1}{code={
 \textbf{Inputs} & \textbf{Result} & \textbf{Result} & \textbf{Limitation} \\
 \hline
 \letterboxedinTable{\{\ "name":\ "Dave"\ "age":\ 42\ \}} &
-\letterboxedinTable{\ \ \ \ 42\ }  &
-\letterboxedinTable{\{\ "name":\ "Dave"\ ,"age":\ 42\ \}} &
+\letterboxedinTableDDMax{\ \ \ \ 42\ }  &
+\letterboxedinTableDDRepair{\{\ "name":\ "Dave"\ ,"age":\ 42\ \}} &
 Limited repair \\
 & & & options (deletion) \\
 \hline
-\letterboxedinTable{\{\ "item":\ "Apple",\ "price"} & \letterboxedinTable{\ \ \ \
-3.45\ } & \letterboxedinTable{\{\ "item":\ "Apple",\ "price"} & Rich structure
+\letterboxedinTable{\{\ "item":\ "Apple",\ "price"} & \letterboxedinTableDDMax{\ \ \ \
+3.45\ } & \letterboxedinTableDDRepair{\{\ "item":\ "Apple",\ "price"} & Rich structure
 \\
-\letterboxedinTable{:\ ***3.45\}} & &\letterboxedinTable{:\ 3.45\}} &  (spans) \\
+\letterboxedinTable{:\ ***3.45\}} & &\letterboxedinTableDDRepair{:\ 3.45\}} &  (spans) \\
 \hline
 \letterboxedinTable{\{"ABCD":[*"1,2,3,4,5,6"]*\}} &
-\letterboxedinTable{123456} &
-\letterboxedinTable{\{"ABCD":["1,2,3,4,5,6"]\}} &
+\letterboxedinTableDDMax{123456} &
+\letterboxedinTableDDRepair{\{"ABCD":["1,2,3,4,5,6"]\}} &
 Rich structure\\
 
 & & &  (multiple-faults)  \\
 \hline
 \letterboxedinTable{2024/07/23T12:34:56Z} &
-\texttt{None}  &
-\letterboxedinTable{2024-07-23T12:34:56Z} &
+\textcolor{red}{\texttt{None}}  &
+\letterboxedinTableDDRepair{2024-07-23T12:34:56Z} &
 Require valid \\
 & & & empty data\\
 \hline
@@ -465,7 +512,7 @@ Require valid \\
 %This process is time-consuming and error-prone, especially when format specifications are incomplete or defined solely by their parsers.
 \begin{abstract}
 In data processing, engineers often work with datasets expected to conform to 
-specific formats, but variations due to factors like human error or data 
+specific formats, but variations due to factors such as human error or data 
 corruption can cause inconsistencies. These inconsistencies prevent standard 
 programs from processing the data correctly. As a result, data engineers must 
 perform \emph{\dtask}, manually adjusting nonconforming data to match the 
@@ -481,6 +528,7 @@ data formats. We evaluate \drepair's performance against the state-of-the-art
 lexical and syntactic \ddmax techniques, using both synthetic and real-world
 datasets.
 
+% RESULTS
 Our results show that \drepair achieves
 31\% more perfect repairs, % VERIFIEDA
 delivers 2$\times$ higher-quality repairs, % VERIFIEDB
@@ -649,8 +697,7 @@ processor indicate whether a given nonconforming record is \emph{incomplete}
 \emph{incorrect} (i.e., no suffix to this record fragment will result in a
 conforming record). This feedback is typically provided by most parsers, and
 when it is not, it can be obtained through external instrumentation or by
-modifying the parser to provide such feedback, as demonstrated by Björn et
-al.~\cite{mathis2019parser}.
+modifying the parser to provide such feedback~\cite{mathis2019parser}.
 
 %We also emphasize that similar to \ddmax, satisfying the requirements for
 %\drepair does not require using a formal grammar for parsing, and indeed, there are several
@@ -666,7 +713,8 @@ the state-of-the-art language-agnostic \ddmax algorithm, which can result in sig
 \emph{empty passing configuration} and \emph{valid waypoints} constraints in \ddmax by leveraging parse-failure feedback.
 \item \textbf{Universal Data Repair.}
 We demonstrate effective \dtask using both deletions and insertions.
-\item \textbf{Empirical Evaluation.} We evaluate \drepair using
+\item \textbf{Empirical Evaluation.} % RESULTS
+We evaluate \drepair using
 447 corrupted records belonging to four well-known data-formats (e.g., cJSON and TinyC). 
 Our results show that in comparison to \ddmax,
 \drepair delivers 31\% more perfect repairs, % VERIFIEDA
@@ -787,11 +835,12 @@ That is, \ddmax is unable to optimally repair inputs of this kind which
 contains multiple errors. While in this example, the data loss that occurred
 may seem somewhat limited, this need not always be the case. A similar example
 is given in \Cref{tab:ddmaxlimitations}.
-Here, \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}} contains two distinct
+Here, \\
+\letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}} contains two distinct
 corruptions.
 As in the previous case, \ddmax attempts to fix this input by dividing it into
 smaller and smaller fragments, none of which isolates an error that when
-removed. This results in the solution \letterboxed{123456} with
+removed. This results in the solution \letterboxedDDMax{123456} with
 significant data loss, including the loss of structure and change in
 input fragment type from string to number.
 Hence, \ddmax cannot effectively repair such inputs containing multiple faults.
@@ -839,7 +888,7 @@ Consider
 \letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\ \}} in
 \Cref{tab:ddmaxlimitations} which is similar to
 Kirchner et al.~\cite[Fig. 1]{kirschner2020debugging} but with an extra
-\letterboxed{*}. \ddmax repairs this input to \letterboxed{\ \ \ \ 3.45},
+\letterboxed{*}. \ddmax repairs this input to \letterboxedDDMax{\ \ \ \ 3.45},
 resulting in loss of data and structure. % of information.
 
 The issue arises from \ddmax's partitioning strategy, which fails to isolate
@@ -855,14 +904,20 @@ the process.
 
 Another major limitation of
 \ddmax is that the only operation in its toolbox is \emph{deletion} of tokens.
-Consider \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}.
-Here, there is a missing comma. \ddmax repair of this string will
-result in
-\letterboxed{\ \ \ \ 42}.
-The problem is that, deletion of fragments alone can lead to significant
+Consider the following fragment:\\
+ \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}}.
+Here, there is a missing comma. The \ddmax repair of this string will
+result in just
+\textcolor{red}{%
+\letterboxed{\ \ \ \ 42}%
+}, which is an \emph{unexpected and significant reduction} from  the original string.
+The issue is that, deletion of fragments alone can lead to significant
 corruption of information. In this instance, the availability of \emph{insertion}
-could have repaired the input string to
-\letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}}. Unfortunately, because
+could have repaired the input string to \\
+\textcolor{blue}{%
+\letterboxed{\{\ "name":\ "Dave",\ "age":\ 42\ \}}%
+}%
+. Unfortunately, because
 \ddmax is unable to insert any tokens, opportunities for repair can be
 missed.
 
@@ -886,7 +941,7 @@ For example, consider a parser for date-time. It expects strings that follow
 the format \texttt{YYYY-MM-DDTHH:MM:SSZ}. 
 
 Given corrupt inputs such as
-\letterboxed{X2024-07-23T12:34:56Z},
+\letterboxed{X2024-07-23T12:34:56Z},\\
 \letterboxed{1925X-09-13T10:14:16Z}, and
 \letterboxed{1999-12-20T12:34:56ZX},
 there is no ideal \emph{empty date} that \ddmax can start from, that is applicable
@@ -989,9 +1044,9 @@ Consider the output of processing
 from \<jq>, a \<JSON> processor that is often used for processing JSON data.
 %\begin{flushleft}
 %                                ^
-\begin{lstlisting}[xleftmargin=10pt,escapeinside={(*@}{@*)}, basicstyle=\ttfamily\small,numbers=none]
+\begin{lstlisting}[xleftmargin=0pt,escapeinside={(*@}{@*)}, basicstyle=\ttfamily\small,numbers=none]
 $ echo -n '{"name": "Dave" "age":42}' | jq .
-(*@\textcolor{red}{parse error: Expected separator between values at line 1, column 21}@*)
+(*@\textcolor{red}{parse error: Expected separator at line 1, column 21}@*)
 \end{lstlisting}
 On providing an input that contains the missing comma, the parser responds with an
 \emph{approximate} location of the error.
@@ -999,7 +1054,7 @@ On providing an input that contains the missing comma, the parser responds with 
 If we instead provide \<jq> with a truncated input,
 the parser responds with \<EOF> 
 %                           ^
-\begin{lstlisting}[xleftmargin=10pt,escapeinside={(*@}{@*)}, basicstyle=\ttfamily\small,numbers=none]
+\begin{lstlisting}[xleftmargin=0pt,escapeinside={(*@}{@*)}, basicstyle=\ttfamily\small,numbers=none]
 $ echo -n '{"name": "Dave" ' | jq .
 (*@\textcolor{red}{parse error: Unfinished JSON term at EOF at line 1, column 16}@*)
 \end{lstlisting}
@@ -1135,7 +1190,7 @@ repair the string. It has the following steps:
 
 
 
-\begin{enumerate}
+\begin{enumerate}[leftmargin=*]
 \item \emph{Boundary search.} Given any corrupt string, \drepair starts by a
   search of the input to determine the parse-boundary (\Cref{alg:bsearch}).
 This is then used to construct the \emph{thread-queue} containing a single empty repair-thread,
@@ -1204,23 +1259,25 @@ ranking of further repair-candidates. We have formalized this algorithm in \Cref
 
 \subsection{\drepair in action}
 For example, let us consider the following input to the JSON processor from
-Table~\ref{tab:ddmaxlimitations}:\\
+Table~\ref{tab:ddmaxlimitations}:
 \letterboxed{\{\ "name":\ "Dave"\ "age":\ 42\ \}} %We follow repair threads serially for ease of explanation.
-\begin{enumerate}
+\begin{enumerate}[leftmargin=*]
 \item \approach starts by executing a binary search for the boundary where the
 input prefix changes from \Rincomplete to \Rincorrect. This is
 obtained at index 17, providing the viable-prefix\\
-\letterboxed{\{\ "name":\ "Dave"\ } and the remaining-suffix \letterboxed{"age":\ 42\ \}}
+\letterboxed{\{\ "name":\ "Dave"\ } and the remaining-suffix
+\letterboxed{"age":\ 42\ \}}
 \item There are three possibilities for repair here. The first is to delete the next character
 \letterboxed{"} 
-from the remaining-suffix. This however, does not change the parse-boundary, as the string
+from the remaining-suffix. This however, does not change the parse-boundary, as the string\\
 \letterboxed{\{\ "name":\ "Dave"\ a} still results in \Rincorrect response from
 the JSON processor. The second is to insert a character. We only insert characters that will lead
 to an improvement in the parse-boundary. Here, the only possibility is
 \letterboxed{,}, resulting in the string\\
 \letterboxed{\{\ "name":\ "Dave"\ ,}.
 \item Extending the parser-boundary by appending remaining characters in the
- remaining-suffix, we have \letterboxed{\{\ "name":\ "Dave"\ ,"age":\ 42\ \}},
+ remaining-suffix, we have\\
+\letterboxedDDRepair{\{\ "name":\ "Dave"\ ,"age":\ 42\ \}},
   and the response \Rvalid from the JSON processor.
 \end{enumerate}
 %\subsection{Repair of rich inputs with \approach}
@@ -1228,7 +1285,7 @@ to an improvement in the parse-boundary. Here, the only possibility is
 Here is a second example, 
 \letterboxed{\{"ABCD":[*"1,2,3,4,5,6"]*\}} again from Table~\ref{tab:ddmaxlimitations}.
 We only follow one repair thread for ease of explanation.
-\begin{enumerate}
+\begin{enumerate}[leftmargin=*]
 \item \approach starts by finding the parse-boundary. This is
 obtained at index 9, providing the viable-prefix
     \letterboxed{\{"ABCD":[} and remaining-suffix \letterboxed{*"1,2,3,4,5,6"]*\}}.
@@ -1248,7 +1305,7 @@ processor.
 at which point, we again have the response \Rincorrect from the JSON
 processor. Hence, we discard this character, and try the next character,
 resulting in
-\letterboxed{\{"ABCD":["1,2,3,4,5,6"]\}}.
+\letterboxedDDRepair{\{"ABCD":["1,2,3,4,5,6"]\}}.
 \item The JSON processor responds with \Rvalid.
 \end{enumerate}
 This completes the repair of the given input with two repairs.
@@ -1256,14 +1313,14 @@ This demonstrates that \approach has no problem repairing inputs
 containing multiple errors.
 
 Let us now consider two cases where \approach has counterintuitive behavior.
-Let us examine the input 
+Let us examine the input \\
 \letterboxed{\{\ "item":\ "Apple",\ "price":\ ***3.45\ \}}.
-\begin{enumerate}
+\begin{enumerate}[leftmargin=*]
 \item As usual, \approach starts by finding the parse-boundary, and the viable-prefix which is \\
 \letterboxed{\{"item":\ "Apple",\ "price":\ }, followed by the remaining-suffix
 \letterboxed{***3.45\ \}}.
  %*"1,2,3,4,5,6"]*\}}.
-\item \approach Since \letterboxed{*}
+\item Since \letterboxed{*}
 is not a valid character to add, \approach deletes this character. Deletion of
 the two remaining characters will result in \letterboxed{\{"item":\ "Apple",\ "price":\ 3.45\ \}},
 which is accepted by the JSON processor.
@@ -1275,11 +1332,12 @@ On continuation, \drepair finds that the following result with three insertions 
 in an accepted string.\\
 \letterboxed{\{"item":\ "Apple",\ "price":\ "***3.45\ \}"\}}.
 \end{enumerate}
-That is, as \drepair operates without human intervention, it is unable to distinguish
-the input semantics, which may demand different repairs.
+That is, there may be multiple repair candidates, and as \drepair operates
+without human intervention, it is unable to distinguish
+the input semantics, which may affect the optimal repair.
 
 Another example is the input \letterboxed{"abcd":[1,2,3]\}}.
-\begin{enumerate}
+\begin{enumerate}[leftmargin=*]
 \item \approach starts by finding the parse-boundary and the corresponding viable-prefix, which is
 \letterboxed{"abcd"}.
 \item The possible extensions are to delete \letterboxed{:} or to insert
@@ -1292,7 +1350,7 @@ This leads to the string \letterboxed{"abcd"}, which is suboptimal.
 That is, \drepair can also result in suboptimal repairs.
 
 A final example is the input \letterboxed{"[1,2,3,4]}.
-\begin{enumerate}
+\begin{enumerate}[leftmargin=*]
 \item \approach starts by finding the parse-boundary and the corresponding viable-prefix, which is
 \letterboxed{"[1,2,3,4]}.
 \item The possible extension here is to append a character \letterboxed{"},
@@ -1314,7 +1372,8 @@ thus obtained.
 However, as we saw in the previous section, this need not be the case. For example, 
 given \letterboxed{"abcd":[1,2,3]\}}, the parser returns \Rvalid for the string
 \letterboxed{"abcd"}. However, as we found, a repair inserting \letterboxed{\{} in
-the beginning of the string, resulting in \letterboxed{\{"abcd":[1,2,3]\}}
+the beginning of the string, resulting in \\
+\letterboxed{\{"abcd":[1,2,3]\}}
 can lead to more data recovery.
 To allow such repairs to take place, we extend the \drepair potential candidates in the following fashion.
 
