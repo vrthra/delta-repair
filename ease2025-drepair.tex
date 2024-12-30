@@ -1322,7 +1322,7 @@ Let us examine the input \\
  %*"1,2,3,4,5,6"]*\}}.
 \item Since \letterboxed{*}
 is not a valid character to add, \approach deletes this character. Deletion of
-the two remaining characters will result in \letterboxed{\{"item":\ "Apple",\ "price":\ 3.45\ \}},
+the two remaining characters will result in \letterboxedDDRepair{\{"item":\ "Apple",\ "price":\ 3.45\ \}},
 which is accepted by the JSON processor.
 \item However, we also have possible characters that can be inserted at the first parse-boundary,
 which results in a parse-boundary extension. That is \letterboxed{"} will extend the parse-boundary
@@ -1330,7 +1330,7 @@ to \\
 \letterboxed{\{"item":\ "Apple",\ "price":\ "***3.45\ \}}.
 On continuation, \drepair finds that the following result with three insertions also result
 in an accepted string.\\
-\letterboxed{\{"item":\ "Apple",\ "price":\ "***3.45\ \}"\}}.
+\letterboxedDDRepair{\{"item":\ "Apple",\ "price":\ "***3.45\ \}"\}}.
 \end{enumerate}
 That is, there may be multiple repair candidates, and as \drepair operates
 without human intervention, it is unable to distinguish
@@ -1344,7 +1344,7 @@ Another example is the input \letterboxed{"abcd":[1,2,3]\}}.
 one of the characters at this point. Unfortunately, none of the characters
 in the alphabet can increase the parse-boundary. Hence, the only option that
 is possible is to continue to delete characters from the remaining-suffix.
-This leads to the string \letterboxed{"abcd"}, which is suboptimal.
+This leads to the string \letterboxedDDRepair{"abcd"}, which is suboptimal.
 \end{enumerate}
 
 That is, \drepair can also result in suboptimal repairs.
@@ -1354,7 +1354,7 @@ A final example is the input \letterboxed{"[1,2,3,4]}.
 \item \approach starts by finding the parse-boundary and the corresponding viable-prefix, which is
 \letterboxed{"[1,2,3,4]}.
 \item The possible extension here is to append a character \letterboxed{"},
-leading to the string \letterboxed{"[1,2,3,4]"}.
+leading to the string \letterboxedDDRepair{"[1,2,3,4]"}.
 %to the end of the input.
 \end{enumerate}
 That is, it ignores the possibility of deletion of the first character as the
