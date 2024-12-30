@@ -1464,7 +1464,7 @@ Answering this question allows us to evaluate the practicality of \drepair.
 \begin{table}[!tbp]\centering
   \footnotesize
 \caption{Subject programs used in the evaluation}
-\begin{tabular}{|p{4cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+\begin{tabular}{|p{4cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 \hline
 \textbf{} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
 \hline
@@ -1511,8 +1511,9 @@ mutation was obtained that resulted in parse-failure.
 %\input{inputdetails.tex}
 %\begin{filecontents*}{inputdetails.tex}
 \begin{table}[!tbp]\centering
+  \footnotesize
 \caption{Details of Corrupt Files}
-\begin{tabular}{|p{4cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
+\begin{tabular}{|p{4cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 \hline
 &  \multicolumn{3}{c|}{\textbf{Number of Corrupt Files}}  \\
 \textbf{Type of Corrupt File} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
@@ -1631,12 +1632,13 @@ for cJSON, and TinyC, while it performed slightly worse for INI.
 
 %\begin{filecontents*}{.effectivenessnogrammar.tex}
 \begin{table}[!tbp]
+  \footnotesize
 \centering
   \caption{Repaired corrupt records. The \textbf{Improvement} is the difference between \drepair and \ddmax.}
 %\begin{subtable}{\textwidth}
 %\centering
 %  \caption{For \textbf{\formatfree} \dtask approaches.}
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\begin{tabular}{|p{3.0cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 \hline
 &  \multicolumn{4}{c|}{\textbf{Number of Repaired Records}}  \\
 &  \multicolumn{1}{c|}{\textbf{ALL}} & \multicolumn{3}{c|}{\textbf{Data Format}}  \\
@@ -1698,9 +1700,10 @@ Impr. over Syn. \ddmaxg &  31.7.5\%  & 0\% & 34.3\% & 53.8\% \\
 % \end{figure}
 
 \begin{table}[!tbp]
+\footnotesize
 \caption{Repair effectiveness (Levenshtein distance) between corrupt data and repaired data.}
 %The best data repair in bold.}
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\begin{tabular}{|p{3.0cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 \hline
  &  \multicolumn{4}{c|}{\textbf{Average Repair Distance}}  \\
 &  \multicolumn{1}{c|}{\textbf{ALL}} &   \multicolumn{3}{c|}{\textbf{Data Format}}  \\
@@ -1826,7 +1829,7 @@ is given in \Cref{tab:invalidtorepaired}.
 \begin{table}[!tbp]
 \centering
 \caption{Distance from valid to repaired 1 character corruption}
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\begin{tabular}{|p{3.0cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 \hline
 \textbf{Techniques} & \textbf{INI} & \textbf{JSON} & \textbf{TinyC} & \textbf{Average} \\
 \hline
@@ -1843,7 +1846,7 @@ Syn. \ddmax & 293.24 & 183.08 & 38.12 & 171.48 \\
 \centering
 \caption{Distance from invalid to repaired 1 character corruption}
 %\begin{tabular}{|p{4cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\begin{tabular}{|p{3.0cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 \hline
 \textbf{Techniques} & \textbf{INI} & \textbf{JSON} & \textbf{TinyC} & \textbf{Average} \\
 \hline
@@ -1899,7 +1902,7 @@ is 5.4$\times$ fewer than the next best competitor Lexical \ddmax.
 \begin{table}[h]
 \centering
 \caption{Count of deletions from valid to repaired}
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\begin{tabular}{|p{3.0cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 \hline
 \textbf{Technique} & \textbf{INI} & \textbf{JSON} & \textbf{TinyC} & \textbf{Average} \\
 \hline
@@ -1985,7 +1988,7 @@ This experiment used only synthetically corrupted records.
 \begin{table}[!tbp]\centering
 \caption{Number of \textit{perfectly} repaired files for \approach in comparison to \ddmax and \ddmaxg
 }
-\begin{tabular}{|p{4.0cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|p{1.5cm}|}
+\begin{tabular}{|p{3.0cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 \hline
 \textbf{Techniques}&  \textbf{INI}&\textbf{cJSON} &\textbf{TinyC}&\textbf{Total}  \\
 \hline
