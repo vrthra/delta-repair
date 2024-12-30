@@ -1,4 +1,4 @@
-all: fse2025-drepair.pdf
+all: ease2025-drepair.pdf
 
 %.pdf: %.tex %.bib
 	rm -f .*.tex

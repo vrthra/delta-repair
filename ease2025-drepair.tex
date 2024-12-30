@@ -47,7 +47,7 @@
 %%
 %%
 \PassOptionsToPackage{noend}{algorithmic} % before \documentclass
-\documentclass[acmsmall,screen,review,anonymous]{acmart}
+\documentclass[sigconf,review,anonymous]{acmart}
 
 %%
 %% \BibTeX command to typeset BibTeX logo in the docs
@@ -60,22 +60,20 @@
 %% values in them; it is your responsibility as an author to replace
 %% the commands and values with those provided to you when you
 %% complete the rights form.
-\setcopyright{acmlicensed}
+\setcopyright{none}
 \copyrightyear{2018}
 \acmYear{2018}
 \acmDOI{XXXXXXX.XXXXXXX}
 
 %% These commands are for a PROCEEDINGS abstract or paper.
-\acmConference[Conference acronym 'XX]{Make sure to enter the correct
-  conference title from your rights confirmation emai}{June 03--05,
-  2018}{Woodstock, NY}
+\acmConference[EASE 2025]{}{}{}
 %%
 %%  Uncomment \acmBooktitle if the title of the proceedings is different
 %%  from ``Proceedings of ...''!
 %%
 %%\acmBooktitle{Woodstock '18: ACM Symposium on Neural Gaze Detection,
 %%  June 03--05, 2018, Woodstock, NY}
-\acmISBN{978-1-4503-XXXX-X/18/06}
+\acmISBN{}
 
 
 %%
@@ -152,7 +150,6 @@
 \usepackage{framed}
 \usepackage{tikz,pgfplots,pgfplotstable}
 \usetikzlibrary{calc,positioning,patterns}
-\usepackage{hyperref}
 \usepackage{cleveref}
 \usepackage{boxedminipage}
 \usepackage[inline]{enumitem}
@@ -2154,7 +2151,7 @@ We provide our implementation, experimental data and results for review:
 
 
 \bibliographystyle{ACM-Reference-Format}
-\bibliography{fse2025-drepair}
+\bibliography{ease2025-drepair}
 
 \end{document}
 \endinput
