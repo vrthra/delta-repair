@@ -1460,25 +1460,39 @@ Answering this question allows us to evaluate the practicality of \drepair.
 
 
 \subsection{Subject Programs} %As subjects w
-%\begin{filecontents*}{subjectprograms.tex}
 \begin{table}[!tbp]\centering
   \footnotesize
 \caption{Subject programs used in the evaluation}
-\begin{tabular}{|p{4cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
+\begin{tabular}{|p{3cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}}
 \hline
-\textbf{} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
+\textbf{} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
 \hline
-\textbf{LOC} & 382 & 3062 & 375\\
-\textbf{Lang.} & C & C & C \\
-\textbf{1st Commit} & 2009 & 2009 & 2011\\
-\textbf{Last Commit} & 2022 & 2022 & 2018\\
+\textbf{LOC} & 511 & 3413 & 978 & 421\\
+\textbf{Lang.} & C & C & C & C \\
+\textbf{1st Commit} & 2009 & 2009 & 2016 & 2011\\
+\textbf{Last Commit} & 2022 & 2022 & 2016 & 2018\\
 \hline
 \end{tabular}
+% \begin{comment}
+% \begin{tabular}{|p{3cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
+% \hline
+% \textbf{} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
+% \hline
+% \textbf{LOC} & 382 & 3062 & 375\\
+% \textbf{Lang.} & C & C & C \\
+% \textbf{1st Commit} & 2009 & 2009 & 2011\\
+% \textbf{Last Commit} & 2022 & 2022 & 2018\\
+% \hline
+% \end{tabular}
+% \end{comment}
 \label{tab:subjectprograms}
 \end{table}
-%\end{filecontents*}
 
-We used three data formats and their corresponding programs (\Cref{tab:subjectprograms}). These are INI (INI), JSON (cJSON), and TinyC (TinyC). Each program is moderately large (between 300 LOC to 3000 LOC), relatively mature (7 to 14 years of development), and written in \<C>.
+We used four data formats and their corresponding programs
+(\Cref{tab:subjectprograms}).
+These are INI (INI), JSON (cJSON), s-exprssions (SExp), and TinyC (TinyC).
+Each program is moderately large (between 300 LOC to 3000 LOC), relatively
+mature (7 to 14 years of development), and written in \<C>.
 
 \subsection{Test Data} 
 
@@ -1508,26 +1522,36 @@ mutation was obtained that resulted in parse-failure.
 % transmission errors in network protocols, and human entry error.
 \Cref{tab:inputdetails} provides the details.
 
-%\input{inputdetails.tex}
-%\begin{filecontents*}{inputdetails.tex}
 \begin{table}[!tbp]\centering
   \footnotesize
 \caption{Details of Corrupt Files}
-\begin{tabular}{|p{4cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
+\begin{tabular}{|p{3cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
 \hline
-&  \multicolumn{3}{c|}{\textbf{Number of Corrupt Files}}  \\
-\textbf{Type of Corrupt File} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
+&  \multicolumn{4}{c|}{\textbf{Number of Invalid Inputs}}  \\
+\textbf{Type of Invalid Inputs} & \textbf{INI} & \textbf{cJSON} & \textbf{SExp} & \textbf{TinyC} \\
 \hline
-Real-World Files & 101 & 107 & 143 \\
-Synthetic Corruption & 50 & 50    & 50 \\
-%\textbf{Multiple Mutations} & 50 & 50 & 50 \\
+\textbf{Real-World Inputs} & 101 & 107 & 50 & 148 \\
+\textbf{Single Mutation} & 50 & 50 & 50 & 50 \\
+\textbf{Multiple Mutations} & 50 & 50 & 50 & 50 \\
 \hline
-\textbf{Total } (501) & 151 & 157    & 193 \\
+\textbf{Total } (806) & 201 & 207 & 150 & 248 \\
 \hline
 \end{tabular}
+% \begin{comment}
+% \begin{tabular}{|p{3cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
+% \hline
+% &  \multicolumn{3}{c|}{\textbf{Number of Corrupt Files}}  \\
+% \textbf{Type of Corrupt File} & \textbf{INI} & \textbf{cJSON} & \textbf{TinyC} \\
+% \hline
+% Real-World Files & 101 & 107 & 143 \\
+% Synthetic Corruption & 50 & 50    & 50 \\
+% \hline
+% \textbf{Total } (501) & 151 & 157    & 193 \\
+% \hline
+% \end{tabular}
+% \end{comment}
 \label{tab:inputdetails}
 \end{table}
-%\end{filecontents*}
 
 \subsection{Baseline Comparisons}
 In this work, we compare the performance of \drepair to several repair
